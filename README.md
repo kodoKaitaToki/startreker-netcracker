@@ -53,3 +53,5 @@ To setup angular use `npm install -g @angular/cli` in your cmd or another comman
 When you clone the project from GitHub, you need to download all the dependencies using `mvn clean install` on the root directory (or you can you use install goal on the Maven tool window)
 
 Building only backend does not work  
+
+BEFORE PUSHING CHECK WHETHER YOUR PROJECT WORKS OR NOT
