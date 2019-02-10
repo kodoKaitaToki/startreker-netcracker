@@ -38,6 +38,6 @@ after_success:
   - git remote rm origin
   - git remote add origin https://EugeneLokotariev:$GITHUB_API_KEY@github.com/EugeneLokotariev/startreker-netcracker.git
   - git add -f
-  - git commit -m "Travis build $Travis_BUILD_NUMBER pushed with magic"
+  - git commit -m "Travis build $TRAVIS_BUILD_NUMBER pushed with magic"
   - git push -fq origin master
   - echo -e "Done"
