@@ -18,10 +18,6 @@
         <start-class>edu.netcracker.backend.BackendApplication</start-class>
     </properties>
 
-    <name>JaCoCo Maven plug-in example for Java project</name>
-    <url>http://www.eclemma.org/jacoco</url>
-
-
     <dependencies>
         <dependency>
             <groupId>edu.netcracker</groupId>
@@ -87,6 +83,8 @@
     </dependencies>
 
     <build>
+
+        <finalName>Startreker-Netcracker-v1</finalName>
 
         <sourceDirectory>src/main/java</sourceDirectory>
 
