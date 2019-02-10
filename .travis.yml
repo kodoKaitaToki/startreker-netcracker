@@ -2,10 +2,11 @@ language: java
 deploy:
   provider: releases
   api-key: $GITHUB_API_KEY
-  file: backend/target/backend-0.0.1-SNAPSHOT.jar
+  file: backend/target/Startreker-Netcracker-v1.jar
   skip_cleanup: true
   on:
-    branch: master
+    all_branches: true
+    tags: true
 
 instal: true
 
