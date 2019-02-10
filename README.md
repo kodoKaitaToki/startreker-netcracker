@@ -60,4 +60,4 @@ When you clone the project from GitHub, you need to download all the dependencie
 
 If you try to build only backend via Maven, you won't do it because backend part can't find frontend. But if you just start backend via IDE, it work properly
 
-_**BEFORE PUSH TO GITHUB:**_ RUN **`mvn clean install`** IN YOUR ROOT DIRECTORY AND CHECK WHETHER THE PROJECT BUILD SUCCESSFULLY OR NOT
+_**BEFORE PUSH TO GITHUB:**_ RUN **`mvn clean install`** IN YOUR ROOT DIRECTORY AND CHECK WHETHER THE PROJECT BUILDS SUCCESSFULLY OR NOT
