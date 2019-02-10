@@ -1,11 +1,12 @@
 language: java
-sudo: false
 deploy:
   provider: releases
   api-key: $GITHUB_API_KEY
   skip_cleanup: true
   on:
     branch: master
+
+instal: true
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
@@ -16,4 +17,27 @@ addons:
     token:
       secure: $SONAR_TOKEN
 script:
+  - mvn install
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+
+after_success:
+  - pwd
+  - mkdir $HOME/buildApk/
+  - ls -1
+  - cd $HOME/buildApk/
+  - pwd
+  - ls -1
+  - git config --global user.email "evgenlokotarov@gmail.com"
+  - git config --global user.name "Eugene Lokotariev"
+  - git clone --depth=50 --branch=master https://github.com/EugeneLokotariev/startreker-netcracker.git
+  - cd startreker-netcracker
+  - ls -1
+  - cp -r /home/travis/build/EugeneLokotariev/startreker-netcracker/target $HOME/buildApk/startreker-netcracker
+  - ls -1
+  - git add -f
+  - git remote rm origin
+  - git remote add origin https://EugeneLokotariev:$GITHUB_API_KEY@github.com/EugeneLokotariev/startreker-netcracker.git
+  - git add -f
+  - git commit -m "Travis build $Travis_BUILD_NUMBER pushed with magic"
+  - git push -fq origin master
+  - echo -e "Done"
