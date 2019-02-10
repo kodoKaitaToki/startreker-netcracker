@@ -3,11 +3,9 @@ sudo: false
 deploy:
   provider: releases
   api-key: $GITHUB_API_KEY
-  file: "backend-0.0.1-SNAPSHOT.jar"
   skip_cleanup: true
   on:
     branch: master
-
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
