@@ -5,8 +5,7 @@ deploy:
   file: backend/target/Startreker-Netcracker-v1.jar
   skip_cleanup: true
   on:
-    all_branches: true
-    tags: true
+    branch: master
 
 instal: true
 
