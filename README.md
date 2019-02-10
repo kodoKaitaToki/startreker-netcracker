@@ -1,14 +1,14 @@
-A short description:
+**A short description:**
 
 This project implements a system, which allows to order space trips with services.
 
-Technology stack:
+**Technology stack:**
 
-Back-end: Spring Boot, Oracle 11 XE, Spring JDBC, Maven, Lombok
+_Back-end:_ Spring Boot, Oracle 11 XE, Spring JDBC, Maven, Lombok
 
-Front-end: Angular 2, Bootstrap
+_Front-end:_ Angular 2, Bootstrap
 
-The project is being developed by:
+**The project is being developed by:**
 
 Eugene Lokotariev
 
@@ -40,10 +40,12 @@ To start developing this project
 
 You need to have in your computer JDK (backend developing) and Node.js (frontend developing)
 
-To start developing frontend, you need to setup Node.js Angular 2 in your computer
+To start developing frontend, you need to setup Node.js and Angular 2 in your computer
 
-Node.js you can download at https://nodejs.org/en/ . To check the version on cmd you can do via node -v
+Node.js you can download at `https://nodejs.org/en/` . To check the version on cmd you can do via `node -v`
 
-The node package manager needs to be installed. In your command line write npm install setup
+The node package manager needs to be installed. In your command line write `npm install setup`
 
-To setup angular use npm install -g @angular/cli in your cmd or another command line
+To setup angular use `npm install -g @angular/cli` in your cmd or another command line
+
+When you clone the project from GitHub, you need to download all the dependencies using `mvn clean install` on the root directory (or you can you use install goal on the Maven tool window)
