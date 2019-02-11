@@ -6,15 +6,11 @@ deploy:
   api-key: $GITHUB_API_KEY
   file: backend/target/Startreker-Netcracker-v1.jar
   skip_cleanup: true
+  tag_name: $TRAVIS_TAG
+  target_commitish: $TRAVIS_COMMIT
   on:
     branch: master
     tags: true
-
-before_deploy:
-      - git config --local user.name "EugeneLokotariev"
-      - git config --local user.email "evgenlokotarov@gmaill.com"
-      - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-      - git tag $TRAVIS_TAG
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
