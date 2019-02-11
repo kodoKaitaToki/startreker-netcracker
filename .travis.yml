@@ -1,4 +1,7 @@
 language: java
+
+sudo: false
+
 deploy:
   provider: releases
   api-key: $GITHUB_API_KEY
@@ -6,6 +9,8 @@ deploy:
   skip_cleanup: true
   on:
     branch: master
+
+instal: true
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
@@ -16,5 +21,5 @@ addons:
     token:
       secure: $SONAR_TOKEN
 script:
-  - mvn install
+  - mvn clean install
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
