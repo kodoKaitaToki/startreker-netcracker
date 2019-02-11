@@ -1,4 +1,6 @@
 language: java
+sudo: required
+
 deploy:
   provider: releases
   api-key: $GITHUB_API_KEY
@@ -15,6 +17,7 @@ addons:
     organization: eugenelokotariev-github
     token:
       secure: $SONAR_TOKEN
+
 script:
   - mvn install
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
