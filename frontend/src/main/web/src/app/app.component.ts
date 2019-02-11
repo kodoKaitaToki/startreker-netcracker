@@ -26,6 +26,6 @@ export class AppComponent implements OnInit {
 
   getRequest() {
 
-    return this.http.get('http://localhost:8090/api/user');
+    return this.http.get('http://localhost:8090/api/');
   }
 }
