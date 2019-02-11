@@ -7,8 +7,6 @@ deploy:
   on:
     branch: master
 
-instal: true
-
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
