@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
 
@@ -26,6 +26,6 @@ export class AppComponent implements OnInit {
 
   getRequest() {
 
-    return this.http.get('http://localhost:8090/api/');
+    return this.http.get('http://localhost:8090/api');
   }
 }
