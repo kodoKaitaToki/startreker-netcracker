@@ -12,6 +12,8 @@ public class UserController {
     @RequestMapping("/api")
     public User getUser() {
 
+        // minor  changes
+
         return new User("Hello", "World");
     }
 }
