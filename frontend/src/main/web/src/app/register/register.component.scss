@@ -1,0 +1,27 @@
+h1 {
+	 font-size: 2rem;
+ }
+
+.login-form__redirect {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 15px;
+}
+
+.bg-alice-blue {
+    background-color: rgba(240, 248, 255, 0.9);
+}
+
+.usernameInput, .emailInput, .passwordInput, .repeatPasswordInput {
+     text-align: left;
+	 font-size: 1.15rem;
+ }
+
+ .register-body {
+    padding: 2rem;
+}
+
+.registerAsCarrierCheckInput {
+    margin-top: 8px;
+    margin-left: -15px;
+}

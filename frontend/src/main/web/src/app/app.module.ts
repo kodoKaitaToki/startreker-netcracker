@@ -5,11 +5,19 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HttpClientModule} from "@angular/common/http";
 import {TestComponent} from './test/test.component';
+import { RegisterComponent } from './register/register.component';
+import { LoginComponent } from './login/login.component';
+import { RecoveryComponent } from './recovery/recovery.component';
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TestComponent
+    TestComponent,
+    RegisterComponent,
+    LoginComponent,
+    RecoveryComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

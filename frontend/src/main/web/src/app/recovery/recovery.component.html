@@ -1,0 +1,79 @@
+<div class="container">
+
+  <div class="row h-100 justify-content-center">
+
+    <div class="col-md-5 my-auto">
+
+      <div class="card bg-alice-blue" style="margin-top:5%;">
+
+        <div class="card-body register-body">
+
+          <h1 class="card-title text-center">Password recovery</h1>
+
+          <form method="POST" action="">
+
+            <hr class="hr-xs">
+
+            <div class="form-group">
+
+              <div class="input-group mb-3">
+
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                </div>
+
+                <input type="text" class="form-control emailInput"
+                       placeholder="Your email address"
+                       name="recInput"/>
+              </div>
+
+            </div>
+
+            <hr class="hr-xs">
+
+            <input type="button" value="Recover password"
+                   class="btn btn-primary btn-block "
+                   name="recBut"
+                   onclick="sendPass()">
+
+
+          </form>
+
+          <hr class="hr-xs">
+
+          <form method="POST" action="">
+
+            <div class="form-group">
+
+              <div class="input-group mb-3">
+
+                <div class="input-group-prepend">
+                  <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                </div>
+
+                <input type="text" class="form-control emailInput"
+                       placeholder="Input the received password"
+                       name="logInput"/>
+              </div>
+
+            </div>
+
+            <hr class="hr-xs">
+
+            <input type="submit" value="Login"
+                   class="btn btn-primary btn-block "
+                   name="logBut">
+            <div class="col-xs-1 text-center ">or <a routerLink="/">Cancel</a></div>
+
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

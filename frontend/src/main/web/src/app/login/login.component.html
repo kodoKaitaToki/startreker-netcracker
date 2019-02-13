@@ -1,0 +1,77 @@
+<div class="container">
+
+  <div class="row h-100 justify-content-center">
+
+    <div class="col-md-5 my-auto">
+
+      <div class="card bg-alice-blue" style="margin-top:5%;">
+
+        <div class="card-body register-body">
+
+          <h1 class="card-title text-center">Log In</h1>
+
+          <form method="POST" action="">
+
+            <hr class="hr-xs">
+
+            <div class="form-group">
+
+              <div class="input-group mb-3">
+
+                <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fa fa-user"></i>
+                                        </span>
+                </div>
+
+                <input type="text" class="form-control usernameInput" placeholder="Enter username" />
+              </div>
+
+            </div>
+
+            <hr class="hr-xs">
+
+            <div class="form-group">
+
+              <div class="input-group mb-3">
+
+                <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fa fa-lock"></i>
+                                        </span>
+                </div>
+
+                <input type="password" class="form-control passwordInput" placeholder="Enter password" />
+              </div>
+
+            </div>
+
+            <hr class="hr-xs">
+
+            <input type="submit" value="Log In" class="btn btn-primary btn-block ">
+            <div class="row login-form__redirect">
+              <div class="text-left ">or
+                <a routerLink="/">Cancel</a>
+              </div>
+              <div class="text-right ">
+                <a routerLink="/recovery">Forgot password?</a>
+              </div>
+
+            </div>
+
+          </form>
+
+          <hr class="hr-xs">
+
+          <p class="text-left">Want to create a new account?
+            <a routerLink="/register">Sign up</a>.</p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
