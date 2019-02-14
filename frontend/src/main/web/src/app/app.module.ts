@@ -5,11 +5,17 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HttpClientModule} from "@angular/common/http";
 import {TestComponent} from './test/test.component';
+import { AdminComponent } from './admin/admin.component';
+import { NavbarComponent } from './admin/navbar/navbar.component';
+import { ApproverCrudComponent } from './admin/approver-crud/approver-crud.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TestComponent
+    TestComponent,
+    AdminComponent,
+    NavbarComponent,
+    ApproverCrudComponent
   ],
   imports: [
     BrowserModule,
