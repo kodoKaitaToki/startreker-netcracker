@@ -1,4 +1,4 @@
-package edu.netcracker.backend;
+package edu.netcracker.backend.config.security;
 
 import org.springframework.web.filter.GenericFilterBean;
 
