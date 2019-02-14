@@ -25,7 +25,12 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [],
+            "scripts": [ "../web/node_modules/jquery/dist/jquery.min.js",
+                        "../web/node_modules/bootstrap/dist/js/bootstrap.js",
+                        "src/assets/js/three.min.js",
+                        "src/assets/js/controls.js",
+                        "src/assets/js/three.js",
+                        "src/assets/js/solarSystem.js"],
             "es5BrowserSupport": true
           },
           "configurations": {
