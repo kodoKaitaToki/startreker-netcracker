@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: backend
+  profiles:
+    active: prod
+
+server:
+  port: 80
+
+postgres:
+  servername: localhost
+  port: 5432
+  database: <>
+  username: <>
+  password: <>
+
+mail:
+  host: smtp.gmail.com
+  port: 587
+  username: <>
+  password: <>
