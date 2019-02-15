@@ -25,8 +25,7 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [ "../web/node_modules/jquery/dist/jquery.min.js",
-              "../web/node_modules/bootstrap/dist/js/bootstrap.js"],
+            "scripts": [],
             "es5BrowserSupport": true
           },
           "configurations": {
