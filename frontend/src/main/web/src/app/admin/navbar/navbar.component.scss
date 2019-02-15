@@ -1,102 +1,102 @@
 @font-face {
-font-family: "bahnschrift";
-src: url(src/assets/fonts/bahnschrift.ttf) format("truetype");
+    font-family: "bahnschrift";
+    src: url(src/assets/fonts/bahnschrift.ttf) format("truetype");
 }
 
 .login-form {
-display: flex;
-justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .login-form__container {
-padding: 20px;
-width: 550px;
+  padding: 20px;
+  width: 550px;
 }
 
 .input-group-addon {
-display: flex;
-align-items: center;
-padding: .375rem .75rem;
-font-size: 1rem;
-font-weight: 400;
-line-height: 1;
-color: #55595c;
-text-align: center;
-background-color: #eceeef;
-border: 1px solid #ccc;
-border-radius: .25rem;
-border-right: none;
-border-radius: .25rem 0 0 .25rem;
+  display: flex;
+  align-items: center;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
+  color: #55595c;
+  text-align: center;
+  background-color: #eceeef;
+  border: 1px solid #ccc;
+  border-radius: .25rem;
+  border-right: none;
+  border-radius: .25rem 0 0 .25rem;
 }
 
 .login-form__link {
-color: #0275d8;
+  color: #0275d8;
 }
 
 .login-form__link:hover {
-color: #014c8c;
+  color: #014c8c;
 }
 
 .login-form__navbar-font {
-font-size: 130%;
+  font-size: 130%;
 }
 
 a{
-color: #D5DBe6;
-font-family: "bahnschrift", fantasy;
+  color: #D5DBe6;
+  font-family: "bahnschrift", fantasy;
 }
 
 a:hover {
-color: #fff;
+  color: #fff;
 }
 
 .main {
-padding-bottom: 120px;
+  padding-bottom: 120px;
 }
 
 .custom-font {
-font-family: "bahnschrift";
+  font-family: "bahnschrift";
 }
 
-/*Кнопки логина*/
+  /*Кнопки логина*/
 .slide-btn{
-font-size: 15px;
-text-decoration: none;
-outline: none;
-display: inline-block;
-margin: 10px;
-color: darkblue;
-box-shadow: 0 0 0 2px darkblue;
-padding: 10px 0;
-width: 70px;
-text-align: center;
-text-transform: uppercase;
-position: relative;
-overflow: hidden;
-border-radius: 2%;
-transition: all .2s cubic-bezier(.16,.73,.58,.62) .2s;
+  font-size: 15px;
+  text-decoration: none;
+  outline: none;
+  display: inline-block;
+  margin: 10px;
+  color: darkblue;
+  box-shadow: 0 0 0 2px darkblue;
+  padding: 10px 0;
+  width: 70px;
+  text-align: center;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+  border-radius: 2%;
+  transition: all .2s cubic-bezier(.16,.73,.58,.62) .2s;
 }
 
 span{
-font-family: "bahnschrift", sans-serif;
-position: relative;
-z-index: 5;
+  font-family: "bahnschrift", sans-serif;
+  position: relative;
+  z-index: 5;
 }
 
 .slide-btn:before,
 .slide-btn:after {
-content: "";
-position: absolute;
-top: 0;
-bottom: 0;
-right: 0;
-left: 0;
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
 }
 
 .slide-btn:after {
-background: darkblue;
-transform: translateX(100%);
-transition: transform .2s cubic-bezier(.16,.73,.58,.62) .2s;
+  background: darkblue;
+  transform: translateX(100%);
+  transition: transform .2s cubic-bezier(.16,.73,.58,.62) .2s;
 }
 
 .slide-btn:hover:before,
@@ -104,69 +104,70 @@ transition: transform .2s cubic-bezier(.16,.73,.58,.62) .2s;
 color: white}
 
 .slide-btn:hover {
-transition: all .2s cubic-bezier(.16,.73,.58,.62) .2s;
-color: #fff;
+  transition: all .2s cubic-bezier(.16,.73,.58,.62) .2s;
+  color: #fff;
 }
 
 .nav-item {
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
 }
 
 .logo {
-width: 25%;
+  width: 25%;
 }
 
 @media only screen and (max-width: 600px) {
-.navbar {
-display: flex;
-}
+  .navbar {
+    display: flex;
+  }
 
-.navbar-brand {
-flex: 1;
-}
+  .navbar-brand {
+    flex: 1;
+  }
 }
 
 @media only screen and (max-width: 768px) {
-.logo {
-width: 70%;
-}
+  .logo {
+    width: 70%;
+  }
 
-.search-bar__heading {
-text-align: left;
-}
+  .search-bar__heading {
+    text-align: left;
+  }
 
-.footer-list__item {
-display: flex;
-justify-content: center;
-}
+  .footer-list__item {
+    display: flex;
+    justify-content: center;
+  }
 
-.footer-list {
-padding: 0;
-}
+  .footer-list {
+    padding: 0;
+  }
 
-.footer__img {
-margin: 20px auto;
-}
+  .footer__img {
+    margin: 20px auto;
+  }
 }
 
 @media only screen and (max-width: 425px) {
-.slide-btn {
-color: darkblue;
-box-shadow: none;
-padding: 0;
-text-transform: capitalize;
-font-size: 20px;
+  .slide-btn {
+    color: darkblue;
+    box-shadow: none;
+    padding: 0;
+    text-transform: capitalize;
+    font-size: 20px;
+  }
+
+  .login-form__container {
+    padding: 20px;
+    width: 300px;
+  }
+
+  .login-form__signup {
+    font-size: 15px;
+  }
 }
 
-.login-form__container {
-padding: 20px;
-width: 300px;
-}
-
-.login-form__signup {
-font-size: 15px;
-}
-}
