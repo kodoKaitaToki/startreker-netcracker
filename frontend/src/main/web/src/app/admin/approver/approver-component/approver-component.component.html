@@ -5,6 +5,7 @@
     <div class="col-md-3">
 
       <div class="row">
+
         <select class="form-control col-md-12 col-sm-12 col-lg-4" (click)="chooseNewFilter($event.target)">
 
           <option *ngFor="let filters of filterCriteria" [value]="filters.name">
@@ -24,9 +25,10 @@
 
       <div class="row">
 
-        <div class="btn btn-primary col-md-12" type="button" (click)="openAddApproverForm()">
+        <button class="btn btn-primary col-md-12" type="button" (click)="openAddApproverForm()">
           Show add form
-        </div>
+        </button>
+
 
       </div>
 
