@@ -10,6 +10,9 @@ import { MapComponent } from './map/map.component';
 import { SearchMenuComponent } from './search-menu/search-menu.component';
 import { FeaturesComponent } from './features/features.component';
 import { FooterComponent } from './footer/footer.component';
+import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
+import { LandingComponent } from './landing/landing.component';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +22,10 @@ import { FooterComponent } from './footer/footer.component';
     MapComponent,
     SearchMenuComponent,
     FeaturesComponent,
-    FooterComponent
+    FooterComponent,
+    NotFoundPageComponent,
+    LandingComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
