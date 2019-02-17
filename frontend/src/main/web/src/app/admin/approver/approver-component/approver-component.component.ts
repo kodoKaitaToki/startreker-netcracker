@@ -167,14 +167,6 @@ export class ApproverComponentComponent implements OnInit {
     this.isUpdateEvent = false;
   }
 
-  openAddApproverForm() {
-
-    this.isAddEvent = true;
-    this.isUpdateEvent = false;
-
-    this.currentApproverForUpdate = null;
-  }
-
   onSubmit() {
 
     console.log(this.form);
