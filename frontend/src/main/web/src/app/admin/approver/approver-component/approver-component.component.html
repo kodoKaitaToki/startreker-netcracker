@@ -82,28 +82,31 @@
 
           <h4>Status</h4>
 
-          <div class="radio col-12">
+          <div class="custom-control custom-radio">
 
-            <label>
-              <input type="radio" name="status"
-                     formControlName="status"
-                     checked
-                     value="activated"
-              >
-              Activated
-            </label>
+            <input type="radio"
+                   id="activated"
+                   name="status"
+                   class="custom-control-input"
+                   value="activated"
+                   formControlName="status"
+            >
+
+            <label class="custom-control-label" for="activated">Activated</label>
 
           </div>
 
-          <div class="radio col-12">
+          <div class="custom-control custom-radio">
 
-            <label><input type="radio"
-                          name="status"
-                          formControlName="status"
-                          value="deactivated"
+            <input type="radio"
+                   id="deactivated"
+                   name="status"
+                   class="custom-control-input"
+                   value="deactivated"
+                   formControlName="status"
             >
-              Deactivated
-            </label>
+
+            <label class="custom-control-label" for="deactivated">Deactivated</label>
 
           </div>
 

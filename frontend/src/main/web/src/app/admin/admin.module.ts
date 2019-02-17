@@ -15,6 +15,7 @@ import {ApproverComponentComponent} from './approver/approver-component/approver
 import {ApproverTableComponent} from './approver/approver-table/approver-table.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FilterPipePipe } from './approver/shared/pipes/filter-pipe.pipe';
+import { AprroverShowStatusPipe } from './approver/shared/pipes/aprrover-show-status.pipe';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { FilterPipePipe } from './approver/shared/pipes/filter-pipe.pipe';
     ApproverComponentComponent,
     ApproverTableComponent,
     ApproverCrudComponent,
-    FilterPipePipe
+    FilterPipePipe,
+    AprroverShowStatusPipe
   ],
   imports: [
     CommonModule,
