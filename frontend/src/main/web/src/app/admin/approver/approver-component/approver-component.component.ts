@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Approver} from '../shared/model/approver';
 
@@ -10,6 +10,7 @@ import {Approver} from '../shared/model/approver';
 export class ApproverComponentComponent implements OnInit {
 
   defaultApprovers: Approver[] = [];
+  currentApproverForUpdate: Approver;
 
   filterCriteria = [
     {name: 'id'},
@@ -39,9 +40,11 @@ export class ApproverComponentComponent implements OnInit {
         email: new FormControl('', [Validators.required, Validators.email]),
         name: new FormControl('', Validators.required),
         tel: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
-        status: new FormControl('', )
+        status: new FormControl('',)
       }
     );
+
+    this.setRadioButtonDefaultStatus();
   }
 
   getDefaultApprovers() {
@@ -137,6 +140,12 @@ export class ApproverComponentComponent implements OnInit {
     ];
   }
 
+  setRadioButtonDefaultStatus() {
+    this.form.patchValue({
+      status: 'activated'
+    });
+  }
+
   chooseNewFilter(chosenFilterName) {
 
     this.currentFilter = chosenFilterName.value;
@@ -144,10 +153,12 @@ export class ApproverComponentComponent implements OnInit {
     this.currentFilterPlaceholder = `Search by ${this.currentFilter}`;
   }
 
-  processUpdateEvent() {
+  processUpdateEvent(event) {
 
     this.isUpdateEvent = true;
     this.isAddEvent = false;
+
+    this.currentApproverForUpdate = event;
   }
 
   processDeleteNotification() {
@@ -160,6 +171,8 @@ export class ApproverComponentComponent implements OnInit {
 
     this.isAddEvent = true;
     this.isUpdateEvent = false;
+
+    this.currentApproverForUpdate = null;
   }
 
   onSubmit() {

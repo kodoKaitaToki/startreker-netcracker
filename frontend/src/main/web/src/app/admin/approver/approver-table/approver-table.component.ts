@@ -8,7 +8,8 @@ import {Approver} from '../shared/model/approver';
 })
 export class ApproverTableComponent implements OnInit {
 
-  @Input() approvers: Approver[];
+  @Input() approvers: Approver;
+
   @Input() filterCriteria: string;
   @Input() filterContent: string;
 
@@ -22,9 +23,9 @@ export class ApproverTableComponent implements OnInit {
 
   }
 
-  onUpdate() {
+  onUpdate(event) {
 
-    this.notifyAboutUpdate.emit();
+    this.notifyAboutUpdate.emit(event);
   }
 
   onDelete() {
