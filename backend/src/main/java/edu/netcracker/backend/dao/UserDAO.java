@@ -7,19 +7,20 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Component
+@Repository
 public class UserDAO extends CrudDAO<User> implements UserDetailsService {
 
     private final RoleDAO roleDAO;
-    private final String findByUsernameSql = "SELECT * FROM usr WHERE user_name = ?";
-    private final String findByEmailSql = "SELECT * FROM usr WHERE user_email = ?";
+    // Using * because dao is supposed to get all attributes and map them to java object
+    private final String findByUsernameSql = "SELECT * FROM user_a WHERE user_name = ?";
+    private final String findByEmailSql = "SELECT * FROM user_a WHERE user_email = ?";
     private final String findAllRolesSql = "SELECT role_id FROM assigned_role WHERE user_id = ?";
     private final String removeAllUserRolesSql = "DELETE FROM assigned_role WHERE user_id = ?";
     private final String addRoleSql = "INSERT INTO assigned_role (user_id, role_id) VALUES (?, ?)";
@@ -47,11 +48,11 @@ public class UserDAO extends CrudDAO<User> implements UserDetailsService {
     }
 
     public Optional<User> findByUsername(String userName) {
-        return findBySingleAttribute(findByUsernameSql, userName);
+        return findSingleUserByAttributes(findByUsernameSql, new Object[]{userName});
     }
 
     public Optional<User> findByEmail(String email) {
-        return findBySingleAttribute(findByEmailSql, email);
+        return findSingleUserByAttributes(findByEmailSql, new Object[]{email});
     }
 
     @Override
@@ -76,11 +77,11 @@ public class UserDAO extends CrudDAO<User> implements UserDetailsService {
         return Optional.of(user);
     }
 
-    private Optional<User> findBySingleAttribute(String sql, Object attr) {
+    private Optional<User> findSingleUserByAttributes(String sql, Object[] attrs) {
         try{
             User user = getJdbcTemplate().queryForObject(
                     sql,
-                    new Object[]{attr},
+                    attrs,
                     getGenericMapper());
             return user != null ? attachRoles(user) : Optional.empty();
         }catch (EmptyResultDataAccessException e){
@@ -89,17 +90,17 @@ public class UserDAO extends CrudDAO<User> implements UserDetailsService {
     }
 
     private void updateRoles(User user) {
-        List<Long> dbRoleIds = getJdbcTemplate().queryForList(findAllRolesSql, Long.class, user.getUserId());
-        List<Long> userRoleIds = user.getUserRoles()
+        List<Integer> dbRoleIds = getJdbcTemplate().queryForList(findAllRolesSql, Integer.class, user.getUserId());
+        List<Integer> userRoleIds = user.getUserRoles()
                 .stream()
                 .map(Role::getRoleId)
                 .collect(Collectors.toList());
-        for (Long role_id : userRoleIds) {
+        for (Integer role_id : userRoleIds) {
             if (!dbRoleIds.contains(role_id)) {
                 getJdbcTemplate().update(addRoleSql, user.getUserId(), role_id);
             }
         }
-        for (Long db_role : dbRoleIds) {
+        for (Integer db_role : dbRoleIds) {
             if (!userRoleIds.contains(db_role)) {
                 getJdbcTemplate().update(removeRoleSql, user.getUserId(), db_role);
             }

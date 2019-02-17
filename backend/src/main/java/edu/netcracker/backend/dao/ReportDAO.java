@@ -1,9 +1,9 @@
 package edu.netcracker.backend.dao;
 
-import edu.netcracker.backend.model.Role;
+import edu.netcracker.backend.model.Report;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RoleDAO extends CrudDAO<Role> {
+public class ReportDAO extends CrudDAO<Report> {
 
 }
