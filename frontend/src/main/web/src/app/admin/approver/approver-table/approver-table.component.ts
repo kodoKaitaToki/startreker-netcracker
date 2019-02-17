@@ -1,5 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Approver} from '../shared/model/approver';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-approver-table',
@@ -13,24 +14,56 @@ export class ApproverTableComponent implements OnInit {
   @Input() filterCriteria: string;
   @Input() filterContent: string;
 
-  @Output() notifyAboutUpdate = new EventEmitter();
-  @Output() notifyAboutDelete = new EventEmitter();
+  currentApproverForUpdate = new Approver();
+  isForUpdateMessage = false;
+
+  form: FormGroup;
+  isEditButtonBlockedAfterSubmit = true;
 
   constructor() {
+
   }
 
   ngOnInit() {
 
+    this.setFormInDefault();
+  }
+
+  setFormInDefault() {
+
+    const radioButtonStatus = this.currentApproverForUpdate.is_activated === 'true'? 'activated' : 'deactivated';
+
+    this.form = new FormGroup(
+      {
+        email: new FormControl('', [Validators.required, Validators.email]),
+        name: new FormControl('', Validators.required),
+        tel: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        status: new FormControl(radioButtonStatus)
+      }
+    );
   }
 
   onUpdate(event) {
 
-    this.notifyAboutUpdate.emit(event);
+    this.currentApproverForUpdate = event;
+    this.setFormInDefault();
   }
 
   onDelete() {
 
-    this.notifyAboutDelete.emit();
   }
 
+  onSubmit() {
+    console.log(this.form);
+
+    this.isForUpdateMessage = true;
+    this.isEditButtonBlockedAfterSubmit = false;
+
+    setTimeout(() => {
+
+      this.isForUpdateMessage = false;
+      this.currentApproverForUpdate = new Approver();
+
+    }, 5000);
+  }
 }

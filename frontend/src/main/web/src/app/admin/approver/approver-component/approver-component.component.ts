@@ -23,9 +23,6 @@ export class ApproverComponentComponent implements OnInit {
   currentFilter = this.filterCriteria[0].name;
   currentFilterPlaceholder = `Search by ${this.currentFilter}`;
 
-  isUpdateEvent = false;
-  isAddEvent = true;
-
   form: FormGroup;
 
   constructor() {
@@ -40,11 +37,9 @@ export class ApproverComponentComponent implements OnInit {
         email: new FormControl('', [Validators.required, Validators.email]),
         name: new FormControl('', Validators.required),
         tel: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
-        status: new FormControl('',)
+        status: new FormControl('activated')
       }
     );
-
-    this.setRadioButtonDefaultStatus();
   }
 
   getDefaultApprovers() {
@@ -140,12 +135,6 @@ export class ApproverComponentComponent implements OnInit {
     ];
   }
 
-  setRadioButtonDefaultStatus() {
-    this.form.patchValue({
-      status: 'activated'
-    });
-  }
-
   chooseNewFilter(chosenFilterName) {
 
     this.currentFilter = chosenFilterName.value;
@@ -155,24 +144,10 @@ export class ApproverComponentComponent implements OnInit {
 
   processUpdateEvent(event) {
 
-    this.isUpdateEvent = true;
-    this.isAddEvent = false;
-
     this.currentApproverForUpdate = event;
   }
 
   processDeleteNotification() {
-
-    this.isAddEvent = true;
-    this.isUpdateEvent = false;
-  }
-
-  openAddApproverForm() {
-
-    this.isAddEvent = true;
-    this.isUpdateEvent = false;
-
-    this.currentApproverForUpdate = null;
   }
 
   onSubmit() {

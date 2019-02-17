@@ -20,48 +20,19 @@
                [placeholder]="currentFilterPlaceholder"
                [(ngModel)]="filterContent"
         />
-      </div>
-
-      <hr>
-
-      <div class="row">
-
-        <button class="btn btn-primary col-md-12" type="button" (click)="openAddApproverForm()">
-          Add an approver
-        </button>
-
 
       </div>
 
       <hr>
 
-      <div class="row col-md-12" style="justify-content: center">
-
-        <div *ngIf="isUpdateEvent">
-          <h2
-            class="text-center"
-          >Editing
-          </h2>
-
-          <hr>
-
-          <h4 class="text-center">Id - {{currentApproverForUpdate.id}}</h4>
-          <h4 class="text-center">Name - {{currentApproverForUpdate.name}}</h4>
-          <h4 class="text-center">Email - {{currentApproverForUpdate.email}}</h4>
-          <h4 class="text-center">Telephone - {{currentApproverForUpdate.telephone}}</h4>
-          <h4 class="text-center">Status - {{currentApproverForUpdate.is_activated}}</h4>
-        </div>
-
-
-        <h2 *ngIf="isAddEvent"
-            class="text-center"
-        >
-          Add an approver
-        </h2>
-
-      </div>
+      <h2
+        class="text-center"
+      >
+        New Approver
+      </h2>
 
       <hr>
+
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
@@ -111,28 +82,31 @@
 
           <h4>Status</h4>
 
-          <div class="radio col-12">
+          <div class="custom-control custom-radio">
 
-            <label>
-              <input type="radio" name="status"
-                     formControlName="status"
-                     checked
-                     value="activated"
-              >
-              Activated
-            </label>
+            <input type="radio"
+                   id="activated"
+                   name="status"
+                   class="custom-control-input"
+                   value="activated"
+                   formControlName="status"
+            >
+
+            <label class="custom-control-label" for="activated">Activated</label>
 
           </div>
 
-          <div class="radio col-12">
+          <div class="custom-control custom-radio">
 
-            <label><input type="radio"
-                          name="status"
-                          formControlName="status"
-                          value="deactivated"
+            <input type="radio"
+                   id="deactivated"
+                   name="status"
+                   class="custom-control-input"
+                   value="deactivated"
+                   formControlName="status"
             >
-              Deactivated
-            </label>
+
+            <label class="custom-control-label" for="deactivated">Deactivated</label>
 
           </div>
 
@@ -143,19 +117,10 @@
         <div class="text-center">
 
           <button class="btn-success btn col-md-12"
-                  *ngIf="isAddEvent"
                   type="submit"
                   [disabled]="form.invalid"
           >
-            Confirm the adding
-          </button>
-
-          <button class="btn-success btn col-md-12"
-                  *ngIf="isUpdateEvent"
-                  type="submit"
-                  [disabled]="form.invalid"
-          >
-            Confirm the editing
+            Add
           </button>
 
         </div>
