@@ -14,11 +14,11 @@ import { LoginResponse } from './interfaces/login-response.interface';
 })
 
 export class ApiUserService {
-  userData: object = {
+  userData = {
     username: '',
     email: '',
     phone: '',
-    role: []
+    authorities: []
   }
 
   constructor(

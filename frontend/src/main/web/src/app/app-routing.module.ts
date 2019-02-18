@@ -4,7 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { LandingComponent } from './pages/landing/landing.component';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import {LoginComponent} from './pages/login/login.component';
-import {RegistrationComponent} from './pages/registration/registration.component'
+import {RegistrationComponent} from './pages/registration/registration.component';
+import {Role} from './guards/role';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -14,9 +15,10 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'sign-up', component: RegistrationComponent},
   { path: '**', redirectTo: '/notFound'},
-  { path: 'succes-page', component: RegistrationComponent, canActivate: [AuthGuard] },
   { path: 'admin',
-    loadChildren: './admin/admin.module#AdminModule',
+    loadChildren: './pages/admin/admin.module#AdminModule',
+    canActivate: [AuthGuard],
+    data: {roles: [Role.Admin]}
   }
 ];
 

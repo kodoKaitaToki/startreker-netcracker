@@ -1,6 +1,6 @@
 export enum Role {
-    User = 'User',
-    Admin = 'Admin',
-    Approver = 'Approver',
-    Carrier = 'Carrier'
+    User = 'ROLE_USER',
+    Admin = 'ROLE_ADMIN',
+    Approver = 'ROLE_APPROVER',
+    Carrier = 'ROLE_CARRIER'
   }
