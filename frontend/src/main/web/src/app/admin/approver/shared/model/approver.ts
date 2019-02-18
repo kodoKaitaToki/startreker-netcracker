@@ -3,6 +3,6 @@ export class Approver {
   name: string;
   email: string;
   telephone: string;
-  is_activated: string;
+  status: string;
   creation_date: Date;
 }

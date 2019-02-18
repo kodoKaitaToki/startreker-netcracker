@@ -7,6 +7,6 @@ import {Approver} from '../model/approver';
 export class AprroverShowStatusPipe implements PipeTransform {
 
   transform(text: string): string {
-    return text === 'true' ? 'Activated' : 'Deactivated';
+    return text === 'on' ? 'On' : 'Off';
   }
 }

@@ -49,7 +49,7 @@ export class ApproverComponentComponent implements OnInit {
         name: 'testName',
         email: 'test@mail.com',
         telephone: '111-22-33',
-        is_activated: 'true',
+        status: 'on',
         creation_date: new Date()
       },
       {
@@ -57,7 +57,7 @@ export class ApproverComponentComponent implements OnInit {
         name: 'testName',
         email: 'test@mail.com',
         telephone: '111-22-33',
-        is_activated: 'true',
+        status: 'on',
         creation_date: new Date()
       },
       {
@@ -65,7 +65,7 @@ export class ApproverComponentComponent implements OnInit {
         name: 'testName',
         email: 'test@mail.com',
         telephone: '111-22-33',
-        is_activated: 'true',
+        status: 'on',
         creation_date: new Date()
       },
       {
@@ -73,7 +73,7 @@ export class ApproverComponentComponent implements OnInit {
         name: 'testName',
         email: 'test@mail.com',
         telephone: '111-22-33',
-        is_activated: 'true',
+        status: 'on',
         creation_date: new Date()
       },
       {
@@ -81,7 +81,7 @@ export class ApproverComponentComponent implements OnInit {
         name: 'testName',
         email: 'test@mail.com',
         telephone: '111-22-33',
-        is_activated: 'true',
+        status: 'on',
         creation_date: new Date()
       },
       {
@@ -89,7 +89,7 @@ export class ApproverComponentComponent implements OnInit {
         name: 'testName',
         email: 'test@mail.com',
         telephone: '111-22-33',
-        is_activated: 'true',
+        status: 'on',
         creation_date: new Date()
       },
       {
@@ -97,7 +97,7 @@ export class ApproverComponentComponent implements OnInit {
         name: 'testName',
         email: 'test@mail.com',
         telephone: '111-22-33',
-        is_activated: 'true',
+        status: 'on',
         creation_date: new Date()
       },
       {
@@ -105,7 +105,7 @@ export class ApproverComponentComponent implements OnInit {
         name: 'anotherName1',
         email: 'test@mail.com',
         telephone: '111-22-33',
-        is_activated: 'true',
+        status: 'on',
         creation_date: new Date()
       },
       {
@@ -113,7 +113,7 @@ export class ApproverComponentComponent implements OnInit {
         name: 'anotherName2',
         email: 'test@mail.com',
         telephone: '111-22-33',
-        is_activated: 'false',
+        status: 'off',
         creation_date: new Date()
       },
       {
@@ -121,7 +121,7 @@ export class ApproverComponentComponent implements OnInit {
         name: 'testName',
         email: 'test@mail.com',
         telephone: '111-22-33',
-        is_activated: 'true',
+        status: 'on',
         creation_date: new Date()
       },
       {
@@ -129,7 +129,7 @@ export class ApproverComponentComponent implements OnInit {
         name: 'testName',
         email: 'test@mail.com',
         telephone: '111-22-33',
-        is_activated: 'true',
+        status: 'off',
         creation_date: new Date()
       }
     ];
