@@ -113,7 +113,7 @@ public abstract class CrudDAO<T> {
         return objects.toArray();
     }
 
-    protected Object[] resolveUpdateParameters(T entity) {
+    private Object[] resolveUpdateParameters(T entity) {
         List<Object> objects = new ArrayList<>();
         addMapperParams(objects, entity, mapper);
         addMapperParams(objects, entity, primaryMapper);
