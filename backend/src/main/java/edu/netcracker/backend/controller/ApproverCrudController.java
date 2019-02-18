@@ -22,7 +22,7 @@ public class ApproverCrudController {
     @RequestMapping("api/admin/approvers")
     //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<User> getAllApprovers() {
-        return acs.getAllAprovers();
+       return acs.getAllAprovers();
     }
 
 
@@ -31,7 +31,8 @@ public class ApproverCrudController {
     @RequestMapping("api/admin/approvers/{id}")
     //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public User getApprover(@PathVariable Number id) {
-        return null;
+        Optional<User> user = acs.getApprover(id);
+        return user.orElse(null);
     }
 
     @PostMapping("api/admin/approvers/")
@@ -41,7 +42,7 @@ public class ApproverCrudController {
     }
 
     @PutMapping("api/admin/approvers/{id}")
-   // @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void updateApprover(@PathVariable Number id, @RequestBody User approver) {
         acs.updateApprover(id, approver);
     }

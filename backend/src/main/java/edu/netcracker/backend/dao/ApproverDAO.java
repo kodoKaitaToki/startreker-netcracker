@@ -1,21 +1,17 @@
 package edu.netcracker.backend.dao;
 
-import edu.netcracker.backend.dao.annotations.PrimaryKey;
+import edu.netcracker.backend.dao.mapper.ApproverRowMapper;
 import edu.netcracker.backend.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.sql.Date;
 
 @Component
 public class ApproverDAO extends CrudDAO<User> {
@@ -27,13 +23,13 @@ public class ApproverDAO extends CrudDAO<User> {
             "user_email, " +
             "user_telephone, " +
             "user_activated, " +
-            "user_created, " +
+            "user_created " +
             "FROM user_a u ";
 
     private final String SELECT_ALL_APPROVERS = SELECT_COLUMNS_FROM_USER +
             "INNER JOIN assigned_role ar ON u.user_id = ar.user_id " +
             "INNER JOIN role_a r ON ar.role_id = r.role_id " +
-            "WHERE r.role_name = 'role_approver' " +
+            "WHERE r.role_id = 2 " +
             "ORDER BY u.user_id ASC ";
 
     private final String SELECT_APPROVER_BY_ID = SELECT_COLUMNS_FROM_USER +
@@ -49,13 +45,15 @@ public class ApproverDAO extends CrudDAO<User> {
 
     private final String DELETE_APPROVER = "DELETE FROM user_a WHERE user_id = ?";
 
-    private final String INSERT_APPROVER = "INSERT INTO USER_A (\n" +
-            "\t  USER_NAME,\n" +
-            "\t  USER_EMAIL,\n" +
-            "\t  USER_TELEPHONE,\n" +
-            "\t  USER_ACTIVATED,\n" +
-            "\t  USER_CREATED\n" +
-            ") VALUES (?, ?, ?, ?, ?); ";
+    private final String INSERT_APPROVER = "INSERT INTO USER_A ( " +
+            "USER_NAME, " +
+            "USER_PASSWORD, " +
+            "USER_EMAIL, " +
+            "USER_TELEPHONE, " +
+            "USER_ACTIVATED, " +
+            "USER_CREATED " +
+            ") " +
+            "VALUES (?, ?, ?, ?, ?, statement_timestamp());";
 
     private final String ASSIGN_ROLE = "INSERT INTO assigned_role (user_id, role_id) VALUES (?, " +
             APPROVER_ROLE_ID
@@ -63,32 +61,57 @@ public class ApproverDAO extends CrudDAO<User> {
 
     private final String DELETE_APPROVER_ROLES = "DELETE FROM assigned_role WHERE user_id = ?";
 
+    private ApproverRowMapper rowMapper;
     private final Logger logger = LoggerFactory.getLogger(ApproverDAO.class);
+
+    public ApproverDAO() {
+        rowMapper = new ApproverRowMapper();
+    }
 
 
     public List<User> findAllApprovers() {
         logger.debug("Querying all approvers");
-        return getJdbcTemplate().query(SELECT_ALL_APPROVERS, getGenericMapper());
+        List<User> approvers = new ArrayList<>();
+        List<Map<String, Object>> rows = getJdbcTemplate().queryForList(SELECT_ALL_APPROVERS);
+
+        logger.debug("Mapping approvers");
+        for(Map row : rows) {
+            approvers.add((User) rowMapper.mapRow(row));
+        }
+        return approvers;
     }
 
     @Override
     public Optional<User> find(Number id) {
-        logger.info("Querying approver with id: %s", id);
+        logger.info(String.format("Querying approver with id: %s", id));
         try{
-            User entity = getJdbcTemplate().queryForObject(
+            User entity = (User) getJdbcTemplate().queryForObject(
                     SELECT_APPROVER_BY_ID,
-                    new Object[]{id},
-                    getGenericMapper());
+                    new Object[]{id}, rowMapper);
+            logger.info("Got object");
             return Optional.ofNullable(entity);
         }catch (EmptyResultDataAccessException e){
+            logger.info("Got nothing");
             return Optional.empty();
         }
     }
 
     @Override
-    public void update(User approver) {
-        logger.info("preparing object", approver);
-        getJdbcTemplate().update(UPDATE_APPROVER, resolveUpdateParameters(approver));
+    public void save(User entity) {
+        getJdbcTemplate().update(INSERT_APPROVER,
+                entity.getUsername(),
+                entity.getPassword(),
+                entity.getUserEmail(),
+                entity.getUserTelephone(),
+                entity.isUserIsActivated()
+        );
     }
+
+    @Override
+    public void update(User approver) {
+        //TODO update of User
+    }
+
+
 
 }

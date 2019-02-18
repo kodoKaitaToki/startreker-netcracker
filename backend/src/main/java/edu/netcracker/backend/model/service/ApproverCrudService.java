@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public class ApproverCrudService {
      * @return List<User> with approvers or empty list if there's not any approvers
      */
     public List<User> getAllAprovers() {
-        logger.info("%s: getting all approvers.", ApproverCrudService.class);
+        logger.info("getting all approvers.");
         return approverDAO.findAllApprovers();
     }
 
@@ -35,7 +36,7 @@ public class ApproverCrudService {
      * @return {@link Optional} with approver or empty if such approver doesn't existt
      */
     public Optional<User> getApprover(Number id) {
-        logger.info("%s: getting approver with id: %s.", ApproverCrudService.class, id);
+        logger.info(String.format("getting approver with id: %s.", id));
         return approverDAO.find(id);
     }
 
@@ -43,7 +44,7 @@ public class ApproverCrudService {
      * @param approver - user with role of approver
      */
     public void addApprover(User approver) {
-        logger.info("%s: saving approver %s.", ApproverCrudService.class, approver);
+        logger.info("saving approver.");
         approverDAO.save(approver);
     }
 
@@ -51,7 +52,7 @@ public class ApproverCrudService {
      * @param id - id of user to update
      */
     public void updateApprover(Number id, User approver) {
-        logger.info("%s: updating approver %s with id: ", ApproverCrudService.class, approver, id);
+        logger.info("updating approver %s with id: ");
         approverDAO.update(approver);
     }
 
@@ -62,7 +63,7 @@ public class ApproverCrudService {
      * @param approver - approver to delete
      */
     public void deleteApprover(Number id, User approver) {
-        logger.info("%s: deleting approver with id: %s.", ApproverCrudService.class, id);
+        logger.info("deleting approver with id");
         approverDAO.delete(approver);
     }
 }
