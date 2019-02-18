@@ -15,7 +15,7 @@ public class Role {
 
     @PrimaryKey("role_id")
     @EqualsAndHashCode.Include
-    private Long roleId;
+    private Integer roleId;
     @Attribute("role_name")
     private String roleName;
 }

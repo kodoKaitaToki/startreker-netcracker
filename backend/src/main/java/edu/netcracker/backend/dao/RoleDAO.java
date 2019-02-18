@@ -1,9 +1,9 @@
 package edu.netcracker.backend.dao;
 
 import edu.netcracker.backend.model.Role;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-@Component
+@Repository
 public class RoleDAO extends CrudDAO<Role> {
 
 }

@@ -1,0 +1,111 @@
+<div class="row custom-font"  id="search">
+  <div class="col-lg-12">
+    <div class="card" style="background-color: rgba(240, 248, 255, 0.9);">
+      <div class="card-body card-block container-fluid">
+        <h1 class="card-title text-left">Choose your flight</h1>
+        <form method="POST" action="">
+
+          <hr class="hr-xs">
+
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="one_way" (click)='disableDatepicker()'>
+            <label class="form-check-label" for="inlineRadio1">One way</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="return" checked="checked" (click)='enableDatepicker()'>
+            <label class="form-check-label" for="inlineRadio2">Return</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="withConnections" id="connections">
+            <label class="form-check-label" for="connections">
+              Suggest fligts with connection(s)
+            </label>
+          </div>
+
+          <br/>
+
+          <div class="row justify-content-center">
+            <div class="col-lg-1">
+              <h6 class= "search-bar__heading">From:</h6>
+            </div>
+            <div class="col-lg-2">
+              <select class="custom-select" onclick='setPoint("start")' id="select_from">
+                <option selected>Choose a planet</option>
+                <option value="mercury">Mercury</option>
+                <option value="venus">Venus</option>
+                <option value="earth">Earth</option>
+                <option value="mars">Mars</option>
+                <option value="jupiter">Jupiter</option>
+                <option value="saturn">Saturn</option>
+                <option value="uranus">Uranus</option>
+                <option value="neptune">Neptune</option>
+                <option value="pluto">Pluto</option>
+              </select>
+            </div>
+            <div class="col-lg-2">
+              <select class="custom-select">
+                <option selected>Choose cosmoport</option>
+                <option value="port1">1</option>
+                <option value="port2">2</option>
+                <option value="port3">3</option>
+              </select>
+            </div>
+            <div class="col-lg-1">
+              <h6 class= "search-bar__heading">To:</h6>
+            </div>
+            <div class="col-lg-2">
+              <select class="custom-select" onclick='setPoint("finish")'  id="select_to">
+                <option selected>Choose a planet</option>
+                <option value="mercury">Mercury</option>
+                <option value="venus">Venus</option>
+                <option value="earth">Earth</option>
+                <option value="mars">Mars</option>
+                <option value="jupiter">Jupiter</option>
+                <option value="saturn">Saturn</option>
+                <option value="uranus">Uranus</option>
+                <option value="neptune">Neptune</option>
+                <option value="pluto">Pluto</option>
+              </select>
+            </div>
+            <div class="col-lg-2">
+              <select class="custom-select">
+                <option selected>Choose cosmoport</option>
+                <option value="port1">1</option>
+                <option value="port2">2</option>
+                <option value="port3">3</option>
+              </select>
+            </div>
+          </div>
+
+          <br/>
+
+          <div class="row justify-content-center">
+      <div class="col-lg-1"></div>
+            <div class="col-lg-2">
+              <h6 class="search-bar__heading">Pick a date of flight:</h6>
+            </div>
+            <div class="col-lg-2">
+              <input type="date" name="flightDate" class="form-control">
+            </div>
+            <div class="col-lg-1"></div>
+            <div class="col-lg-2">
+              <h6 class="search-bar__heading">Pick a date of return:</h6>
+            </div>
+            <div class="col-lg-2">
+              <input type="date" name="returnDate" id="returnDate" class="form-control datepicker">
+            </div>
+          </div>
+
+          <hr class="hr-xs">
+
+          <div class="row">
+            <div class="col-lg-5"></div>
+            <div class="col-lg-2">
+              <input type="submit" value="Search" class="btn btn-primary btn-block">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
