@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
-@Table("usr")
+@Table("user_a")
 public class User implements UserDetails {
 
     @PrimaryKey("user_id")

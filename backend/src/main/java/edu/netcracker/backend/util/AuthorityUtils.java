@@ -27,11 +27,11 @@ public class AuthorityUtils {
     public void init() {
         ROLE_ADMIN = roleDAO.find(1).orElseThrow(
                 () -> new BeanInitializationException("AuthorityUtils: ROLE_ADMIN Not Found in the Database"));
-        ROLE_USER = roleDAO.find(2).orElseThrow(
-                () -> new BeanInitializationException("AuthorityUtils: ROLE_USER Not Found in the Database"));
+        ROLE_APPROVER = roleDAO.find(2).orElseThrow(
+                () -> new BeanInitializationException("AuthorityUtils: ROLE_APPROVER Not Found in the Database"));
         ROLE_CARRIER = roleDAO.find(3).orElseThrow(
                 () -> new BeanInitializationException("AuthorityUtils: ROLE_CARRIER Not Found in the Database"));
-        ROLE_APPROVER = roleDAO.find(4).orElseThrow(
-                () -> new BeanInitializationException("AuthorityUtils: ROLE_APPROVER Not Found in the Database"));
+        ROLE_USER = roleDAO.find(4).orElseThrow(
+                () -> new BeanInitializationException("AuthorityUtils: ROLE_USER Not Found in the Database"));
     }
 }

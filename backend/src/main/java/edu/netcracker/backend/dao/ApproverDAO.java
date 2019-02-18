@@ -1,17 +1,26 @@
 package edu.netcracker.backend.dao;
 
+import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class ApproverDAO extends CrudDAO<User> {
-
     //role_id of approver role
-    private final int APPROVER_ROLE_ID = 4;
+    private final int APPROVER_ROLE_ID = 2;
 
     private final String SELECT_COLUMNS_FROM_USER = "SELECT u.user_id," +
             "user_name, " +
@@ -56,12 +65,12 @@ public class ApproverDAO extends CrudDAO<User> {
 
     private final Logger logger = LoggerFactory.getLogger(ApproverDAO.class);
 
+
     public List<User> findAllApprovers() {
         logger.debug("Querying all approvers");
         return getJdbcTemplate().query(SELECT_ALL_APPROVERS, getGenericMapper());
     }
 
-    /*
     @Override
     public Optional<User> find(Number id) {
         logger.info("Querying approver with id: %s", id);
@@ -75,22 +84,11 @@ public class ApproverDAO extends CrudDAO<User> {
             return Optional.empty();
         }
     }
-    */
 
-    /*
     @Override
     public void update(User approver) {
         logger.info("preparing object", approver);
         getJdbcTemplate().update(UPDATE_APPROVER, resolveUpdateParameters(approver));
     }
-    */
-    public void save(User approver) {
-        logger.info("Saving object", approver);
-        // TODO: 18.02.2019 inserting approver and creation of assigned_role of approver
-    }
-    public void delete(User approver) {
-        // TODO: 18.02.2019 deleting approver and deleting of assigned_role of approver
-    }
-
 
 }
