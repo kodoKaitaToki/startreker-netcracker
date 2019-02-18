@@ -36,7 +36,7 @@ public class ApproverDAO extends CrudDAO<User> {
             "WHERE u.user_id = ?";
 
     private final String UPDATE_APPROVER = "UPDATE user_a\n" +
-            "  SET\n" +
+            "SET\n" +
             "\tuser_name = ?,\n" +
             "\tuser_email = ?,\n" +
             "\tuser_telephone = ?,\n" +
@@ -109,7 +109,13 @@ public class ApproverDAO extends CrudDAO<User> {
 
     @Override
     public void update(User approver) {
-        //TODO update of User
+        getJdbcTemplate().update(UPDATE_APPROVER,
+                approver.getUsername(),
+                approver.getUserEmail(),
+                approver.getUserTelephone(),
+                approver.isUserIsActivated(),
+                approver.getUserId()
+                );
     }
 
 

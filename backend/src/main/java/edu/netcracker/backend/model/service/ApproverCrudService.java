@@ -51,7 +51,7 @@ public class ApproverCrudService {
     /**
      * @param id - id of user to update
      */
-    public void updateApprover(Number id, User approver) {
+    public void updateApprover(User approver) {
         logger.info("updating approver %s with id: ");
         approverDAO.update(approver);
     }

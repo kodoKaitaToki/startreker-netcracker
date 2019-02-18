@@ -41,10 +41,10 @@ public class ApproverCrudController {
         acs.addApprover(approver);
     }
 
-    @PutMapping("api/admin/approvers/{id}")
+    @PutMapping("api/admin/approvers/")
     //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void updateApprover(@PathVariable Number id, @RequestBody User approver) {
-        acs.updateApprover(id, approver);
+    public void updateApprover(@RequestBody User approver) {
+        acs.updateApprover(approver);
     }
 
     @DeleteMapping("api/admin/approvers/{id}")
