@@ -10,12 +10,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table("role")
+@Table("role_a")
 public class Role {
 
     @PrimaryKey("role_id")
     @EqualsAndHashCode.Include
-    private Long roleId;
+    private Integer roleId;
     @Attribute("role_name")
     private String roleName;
 }

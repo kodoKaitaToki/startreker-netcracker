@@ -14,7 +14,10 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'sign-up', component: RegistrationComponent},
   { path: '**', redirectTo: '/notFound'},
-  { path: 'succes-page', component: RegistrationComponent, canActivate: [AuthGuard] }
+  { path: 'succes-page', component: RegistrationComponent, canActivate: [AuthGuard] },
+  { path: 'admin',
+    loadChildren: './admin/admin.module#AdminModule',
+  }
 ];
 
 @NgModule({
