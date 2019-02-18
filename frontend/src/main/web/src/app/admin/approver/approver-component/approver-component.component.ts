@@ -153,6 +153,7 @@ export class ApproverComponentComponent implements OnInit {
   onSubmit() {
 
     console.log(this.form);
+    this.form.reset();
   }
 
 }

@@ -31,14 +31,12 @@ export class ApproverTableComponent implements OnInit {
 
   setFormInDefault() {
 
-    const radioButtonStatus = this.currentApproverForUpdate.is_activated === 'true'? 'activated' : 'deactivated';
-
     this.form = new FormGroup(
       {
         email: new FormControl('', [Validators.required, Validators.email]),
         name: new FormControl('', Validators.required),
         tel: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
-        status: new FormControl(radioButtonStatus)
+        status: new FormControl('activated')
       }
     );
   }
@@ -46,7 +44,18 @@ export class ApproverTableComponent implements OnInit {
   onUpdate(event) {
 
     this.currentApproverForUpdate = event;
-    this.setFormInDefault();
+    this.isEditButtonBlockedAfterSubmit = true;
+
+    const radioButtonStatus = this.currentApproverForUpdate.is_activated === 'true'? 'activated' : 'deactivated';
+
+    this.form = new FormGroup(
+      {
+        email: new FormControl(this.currentApproverForUpdate.email, [Validators.required, Validators.email]),
+        name: new FormControl(this.currentApproverForUpdate.name, Validators.required),
+        tel: new FormControl(this.currentApproverForUpdate.telephone, [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        status: new FormControl(radioButtonStatus)
+      }
+    );
   }
 
   onDelete() {
@@ -54,7 +63,6 @@ export class ApproverTableComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.form);
 
     this.isForUpdateMessage = true;
     this.isEditButtonBlockedAfterSubmit = false;
