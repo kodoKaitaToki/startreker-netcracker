@@ -1,0 +1,70 @@
+a{
+  color: #D5DBe6;
+  font-family: "bahnschrift", fantasy;
+}
+
+a:hover {
+  color: #fff;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: rgba(240, 248, 255, 0.9);
+    padding: 0 30px;
+    margin: 0;
+  }
+  
+  .footer__item {
+    color: darkblue;
+  }
+  
+  .footer__logo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .footer__img {
+    width: 50%;
+  }
+  
+  .footer-list {
+    list-style-type: none;
+  }
+  
+  .footer-list__link {
+    color: darkblue;
+  }
+  
+  .footer-list__link:hover {
+    color: black;
+    text-decoration: none;
+    font-weight: 800;
+  }
+  
+  .footer-list__heading {
+    font-weight: 800;
+    margin-top: 2%;
+  }
+  
+  .footer-list_links {
+    margin-top: 20px
+  }
+  
+  @media only screen and (max-width: 768px) {
+    .footer-list__item {
+      display: flex;
+      justify-content: center;
+    }
+  
+    .footer-list {
+      padding: 0;
+    }
+  
+    .footer__img {
+      margin: 20px auto;
+    }
+  }

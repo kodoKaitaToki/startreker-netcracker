@@ -11,6 +11,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,17 +27,19 @@ public class User implements UserDetails {
 
     @PrimaryKey("user_id")
     @EqualsAndHashCode.Include
-    private Long userId;
+    private Integer userId;
     @Attribute("user_name")
     private String userName;
     @Attribute("user_password")
     private String userPassword;
     @Attribute("user_email")
     private String userEmail;
-    @Attribute("user_refresh_token")
+    @Attribute("user_token")
     private String userRefreshToken;
-    @Attribute("user_is_activated")
+    @Attribute("user_activated")
     private boolean userIsActivated;
+    @Attribute("user_created")
+    private LocalDate registrationDate;
 
     private List<Role> userRoles = new ArrayList<>();
 
