@@ -16,6 +16,7 @@ import {ApproverTableComponent} from './approver/approver-table/approver-table.c
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FilterPipePipe } from './approver/shared/pipes/filter-pipe.pipe';
 import { AprroverShowStatusPipe } from './approver/shared/pipes/aprrover-show-status.pipe';
+import { DashboardDeltaComponent } from './dashboard-delta/dashboard-delta.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { AprroverShowStatusPipe } from './approver/shared/pipes/aprrover-show-st
     ApproverTableComponent,
     ApproverCrudComponent,
     FilterPipePipe,
-    AprroverShowStatusPipe
+    AprroverShowStatusPipe,
+    DashboardDeltaComponent
   ],
   imports: [
     CommonModule,
