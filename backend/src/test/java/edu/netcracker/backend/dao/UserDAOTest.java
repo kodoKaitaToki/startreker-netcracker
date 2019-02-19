@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,7 @@ public class UserDAOTest {
         user.setUserPassword("testpassword");
         user.setUserEmail("testemail");
         user.setUserRefreshToken("testrefreshtoken");
+        user.setRegistrationDate(LocalDate.now());
         List<Role> expectedRoles = new ArrayList<>();
         expectedRoles.add(roleDAO.find(1).get());
         expectedRoles.add(roleDAO.find(2).get());
