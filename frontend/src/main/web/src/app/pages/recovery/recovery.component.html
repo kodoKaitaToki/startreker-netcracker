@@ -1,0 +1,61 @@
+<div class="wrapper container-fluid">
+  <div class="row h-100 justify-content-center">
+    <div class="col-lg-4 col-md-6 my-auto">
+      <div class="card recovery-form__bg">
+        <div class="card-body register-body">
+          <h1 class="card-title text-center recovery-form__header">Password recovery</h1>
+          
+          <form [formGroup]="recoveryForm" (ngSubmit)="onSubmit()">
+            
+            <hr class="hr-xs">
+            
+            <p class="recovery-form__text">
+              To recover your password enter email address assosiated with your account:
+            </p>
+            
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fa fa-envelope"></i>
+                  </span>
+                </div>
+                <label for="email"></label>
+                <input
+                  type="text"
+                  class="form-control recovery-form__input"
+                  placeholder="Enter email address"
+                  id="email"
+                  formControlName="email"
+                  [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+                />
+              </div>
+              <div *ngIf="submitted && f.email.errors" class="recovery-form__invalid">
+                <div *ngIf="f.email.errors.required">This field is required</div>
+                <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+              </div>
+            </div>
+            
+            <hr class="hr-xs">
+            
+            <button
+              type="submit"
+              class="btn btn-primary btn-block"
+            >
+              Send new password
+            </button>
+            
+            <div class="row recovery-form__redirect">
+              <div class="text-left ">or
+                <a routerLink="/">Cancel</a>
+              </div>
+            </div>
+          </form>
+          
+          <hr class="hr-xs">
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

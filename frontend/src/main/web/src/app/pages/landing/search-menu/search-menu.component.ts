@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 declare function setPoint(point): any;
 
@@ -9,7 +10,12 @@ declare function setPoint(point): any;
 })
 export class SearchMenuComponent implements OnInit {
 
-  constructor() { }
+  searchForm: FormGroup;
+
+  constructor() {
+    this.searchForm = new FormGroup({
+    });
+   }
 
   ngOnInit() {
   }
