@@ -10,12 +10,12 @@ server:
 postgres:
   servername: localhost
   port: 5432
-  database: <>
-  username: <>
-  password: <>
+  database: postgres
+  username: postgres
+  password: root
 
 mail:
   host: smtp.gmail.com
   port: 587
-  username: <>
-  password: <>
+  username: ivan.viktor.nc@gmail.com
+  password: D$h%0WHpdx81
