@@ -33,7 +33,7 @@ export class ApiUserService {
 
     
     loginUser(userData: LoginFormData) {
-      this.http.post<any>(Api.auth.registerUser(), userData, HttpOptions)
+      this.http.post<any>(Api.auth.loginUser(), userData, HttpOptions)
         .subscribe(
           (userData: LoginResponse) => {
             this.userData = clone(userData);
@@ -77,10 +77,20 @@ export class ApiUserService {
     }
 
     logoutUser() {
-      this.http.post<any>(Api.auth.registerUser(), {}, HttpOptionsAuthorized)
+      this.http.post<any>(Api.auth.logoutUser(), {}, HttpOptionsAuthorized);
       localStorage.removeItem('at');
       localStorage.removeItem('rt');
       this.userData = clone({});
       window.location.href = 'http://127.0.0.1:4200';
+    }
+
+    async recoverPassword(userData: any) {
+      try {
+        console.log(userData);
+        const data: any = await this.http.post(Api.auth.recoverPassword(), userData, HttpOptions).toPromise();
+        this.userData = clone(data);
+      } catch (error) {
+          console.error(error);
+        }
     }
   }

@@ -30,6 +30,9 @@ const auth = {
   },
   logoutUser() {
     return `${baseUrl}api/log-out`;
+  },
+  recoverPassword() {
+    return `${baseUrl}api/auth/password-recovery`;
   }
 }
 

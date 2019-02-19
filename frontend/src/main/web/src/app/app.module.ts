@@ -18,6 +18,7 @@ import { HeaderComponent } from './pages/landing/header/header.component';
 import { RegistrationComponent } from './pages/registration/registration.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { RecoveryComponent } from './pages/recovery/recovery.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
     LandingComponent,
     HeaderComponent,
     RegistrationComponent,
-    LoginComponent
+    LoginComponent,
+    RecoveryComponent
   ],
   imports: [
     BrowserModule,
