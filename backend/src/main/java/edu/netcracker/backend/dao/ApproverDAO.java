@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.sql.Date;
 
 @Component
 public class ApproverDAO extends CrudDAO<User> {
+
     //role_id of approver role
     private final int APPROVER_ROLE_ID = 2;
 
@@ -30,7 +32,7 @@ public class ApproverDAO extends CrudDAO<User> {
             "INNER JOIN assigned_role ar ON u.user_id = ar.user_id " +
             "INNER JOIN role_a r ON ar.role_id = r.role_id " +
             "WHERE r.role_id = 2 " +
-            "ORDER BY u.user_id ASC ";
+            "ORDER BY u.user_id DESC ";
 
     private final String SELECT_APPROVER_BY_ID = SELECT_COLUMNS_FROM_USER +
             "WHERE u.user_id = ?";
@@ -43,8 +45,6 @@ public class ApproverDAO extends CrudDAO<User> {
             "\tuser_activated = ?\n" +
             "WHERE user_id = ?;";
 
-    private final String DELETE_APPROVER = "DELETE FROM user_a WHERE user_id = ?";
-
     private final String INSERT_APPROVER = "INSERT INTO USER_A ( " +
             "USER_NAME, " +
             "USER_PASSWORD, " +
@@ -55,11 +55,14 @@ public class ApproverDAO extends CrudDAO<User> {
             ") " +
             "VALUES (?, ?, ?, ?, ?, statement_timestamp());";
 
-    private final String ASSIGN_ROLE = "INSERT INTO assigned_role (user_id, role_id) VALUES (?, " +
-            APPROVER_ROLE_ID
-            + ")";
+    private final String PAGING_SELECT = SELECT_ALL_APPROVERS + "LIMIT ? OFFSET ?;";
 
-    private final String DELETE_APPROVER_ROLES = "DELETE FROM assigned_role WHERE user_id = ?";
+
+    private final String COUNT_STATEMENT = "SELECT count(*) FROM user_a u\n" +
+            "INNER JOIN assigned_role ar ON u.user_id = ar.user_id \n" +
+            "INNER JOIN role_a r ON ar.role_id = r.role_id \n" +
+            "WHERE r.role_id = 2;";
+
 
     private ApproverRowMapper rowMapper;
     private final Logger logger = LoggerFactory.getLogger(ApproverDAO.class);
@@ -75,7 +78,7 @@ public class ApproverDAO extends CrudDAO<User> {
         List<Map<String, Object>> rows = getJdbcTemplate().queryForList(SELECT_ALL_APPROVERS);
 
         logger.debug("Mapping approvers");
-        for(Map row : rows) {
+        for (Map row : rows) {
             approvers.add((User) rowMapper.mapRow(row));
         }
         return approvers;
@@ -84,16 +87,36 @@ public class ApproverDAO extends CrudDAO<User> {
     @Override
     public Optional<User> find(Number id) {
         logger.info(String.format("Querying approver with id: %s", id));
-        try{
+        try {
             User entity = (User) getJdbcTemplate().queryForObject(
                     SELECT_APPROVER_BY_ID,
                     new Object[]{id}, rowMapper);
             logger.info("Got object");
             return Optional.ofNullable(entity);
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             logger.info("Got nothing");
             return Optional.empty();
         }
+    }
+
+    /**
+     * Finds specified number of approvers starting from offset number
+     *
+     * @param limit  - offset number
+     * @param offset - number of rows to select
+     * @return list of users
+     */
+    public List<User> find(Number limit, Number offset) {
+        logger.debug(String.format("Querying %s approvers from %s", limit, offset));
+
+        List<User> approvers = new ArrayList<>();
+        List<Map<String, Object>> rows = getJdbcTemplate().queryForList(PAGING_SELECT, limit, offset);
+
+        logger.debug("Mapping approvers");
+        for (Map row : rows) {
+            approvers.add((User) rowMapper.mapRow(row));
+        }
+        return approvers;
     }
 
     @Override
@@ -115,9 +138,10 @@ public class ApproverDAO extends CrudDAO<User> {
                 approver.getUserTelephone(),
                 approver.isUserIsActivated(),
                 approver.getUserId()
-                );
+        );
     }
 
-
-
+    public BigInteger count() {
+        return getJdbcTemplate().queryForObject(COUNT_STATEMENT, BigInteger.class);
+    }
 }
