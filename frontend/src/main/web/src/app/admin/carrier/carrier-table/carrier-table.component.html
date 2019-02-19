@@ -51,10 +51,10 @@
               {{carrier.name}}</h3>
 
             <input type="text" class="form-control"
-                   [placeholder]="currentCarrierForUpdate.name"
-                   formControlName="name" *ngIf="currentCarrierForUpdate === carrier"
+                   [value]="currentCarrierForUpdate.name"
+                   formControlName="name" *ngIf="currentCarrierForUpdate === carrier && !isForUpdateMessage"
                    [ngClass]="{
-                   'is-invalid':form.get('name').touched && form.get('name').invalid,
+                    'is-invalid':form.get('name').invalid,
                    'is-valid': form.get('name').valid
                    }"
             >
@@ -70,10 +70,10 @@
               {{carrier.email}}</p>
 
             <input type="text" class="form-control"
-                   [placeholder]="currentCarrierForUpdate.email"
-                   formControlName="email" *ngIf="currentCarrierForUpdate === carrier"
+                   [value]="currentCarrierForUpdate.email"
+                   formControlName="email" *ngIf="currentCarrierForUpdate === carrier && !isForUpdateMessage"
                    [ngClass]="{
-                   'is-invalid':form.get('email').touched && form.get('email').invalid,
+                    'is-invalid':form.get('email').invalid,
                    'is-valid': form.get('email').valid
                    }"
             >
@@ -88,11 +88,12 @@
               {{carrier.telephone}}</p>
 
 
-            <input type="tel" class="form-control" placeholder="Telephone" formControlName="tel"
-                   *ngIf="currentCarrierForUpdate === carrier"
-                   [placeholder]="currentCarrierForUpdate.telephone"
+            <input type="tel" class="form-control" formControlName="tel"
+                   *ngIf="currentCarrierForUpdate === carrier && !isForUpdateMessage"
+                   [value]="currentCarrierForUpdate.telephone"
+                   [disabled]="isForUpdateMessage"
                    [ngClass]="{
-                   'is-invalid':form.get('tel').touched && form.get('tel').invalid,
+                    'is-invalid':form.get('tel').invalid,
                    'is-valid': form.get('tel').valid
                    }"
             >
@@ -106,45 +107,45 @@
             <h5 class="col-2">Status</h5>
             <div class="col-4 offset-3 alert text-center" *ngIf="currentCarrierForUpdate !== carrier"
                  [ngClass]="{
-               'alert-success': (carrier.is_activated === 'true'),
-               'alert-danger': (carrier.is_activated === 'false')
+               'alert-success': (carrier.status === 'true'),
+               'alert-danger': (carrier.status === 'false')
                }"
             >
-              {{carrier.is_activated | carrierShowStatus}}
+              {{carrier.status | carrierShowStatus}}
             </div>
 
           </div>
 
 
           <div class="custom-control custom-radio custom-control-inline"
-               *ngIf="currentCarrierForUpdate === carrier"
+               *ngIf="currentCarrierForUpdate === carrier && !isForUpdateMessage"
           >
 
             <input type="radio"
-                   id="activated"
+                   id="updateActivated"
                    name="status"
                    class="custom-control-input"
-                   value="activated"
+                   value="on"
                    formControlName="status"
             >
 
-            <label class="custom-control-label" for="activated">Activated</label>
+            <label class="custom-control-label" for="updateActivated">Activated</label>
 
           </div>
 
           <div class="custom-control custom-radio custom-control-inline"
-               *ngIf="currentCarrierForUpdate === carrier"
+               *ngIf="currentCarrierForUpdate === carrier && !isForUpdateMessage"
           >
 
             <input type="radio"
-                   id="deactivated"
+                   id="updateDeactivated"
                    name="status"
                    class="custom-control-input"
-                   value="deactivated"
+                   value="off"
                    formControlName="status"
             >
 
-            <label class="custom-control-label" for="deactivated">Deactivated</label>
+            <label class="custom-control-label" for="updateDeactivated">Deactivated</label>
 
           </div>
 
@@ -160,7 +161,7 @@
 
           <hr>
 
-          <div class="row" *ngIf="currentCarrierForUpdate === carrier && isEditButtonBlockedAfterSubmit"
+          <div class="row" *ngIf="currentCarrierForUpdate === carrier && isEditButtonBlockedAfterSubmit && !isForUpdateMessage"
           >
 
             <button class="btn btn-success col-4"
