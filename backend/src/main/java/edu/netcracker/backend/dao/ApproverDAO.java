@@ -17,9 +17,6 @@ import java.sql.Date;
 @Component
 public class ApproverDAO extends CrudDAO<User> {
 
-    //role_id of approver role
-    private final int APPROVER_ROLE_ID = 2;
-
     private final String SELECT_COLUMNS_FROM_USER = "SELECT u.user_id," +
             "user_name, " +
             "user_email, " +
@@ -31,7 +28,7 @@ public class ApproverDAO extends CrudDAO<User> {
     private final String SELECT_ALL_APPROVERS = SELECT_COLUMNS_FROM_USER +
             "INNER JOIN assigned_role ar ON u.user_id = ar.user_id " +
             "INNER JOIN role_a r ON ar.role_id = r.role_id " +
-            "WHERE r.role_id = 2 " +
+            "WHERE r.role_name = 'ROLE_APPROVER' " +
             "ORDER BY u.user_id DESC ";
 
     private final String SELECT_APPROVER_BY_ID = SELECT_COLUMNS_FROM_USER +
@@ -61,7 +58,7 @@ public class ApproverDAO extends CrudDAO<User> {
     private final String COUNT_STATEMENT = "SELECT count(*) FROM user_a u\n" +
             "INNER JOIN assigned_role ar ON u.user_id = ar.user_id \n" +
             "INNER JOIN role_a r ON ar.role_id = r.role_id \n" +
-            "WHERE r.role_id = 2;";
+            "WHERE r.role_name = 'ROLE_APPROVER' ";
 
 
     private ApproverRowMapper rowMapper;
