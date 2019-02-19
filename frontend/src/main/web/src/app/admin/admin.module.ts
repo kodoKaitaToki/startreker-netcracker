@@ -6,7 +6,9 @@ import {NavbarComponent} from './navbar/navbar.component';
 import {IndexComponent} from './index/index.component';
 import {ApproverCrudComponent} from './approver/approver-crud/approver-crud.component';
 import {CarrierCrudComponent} from './carrier-crud/carrier-crud.component';
-import {BundlesCrudComponent} from './bundles-crud/bundles-crud.component';
+import {BundlesCrudComponent} from './bundles/bundles-crud/bundles-crud.component';
+import {BundlesComponentComponent} from './bundles/bundles-component/bundles-component.component';
+import {BundlesTableComponent} from './bundles/bundles-table/bundles-table.component';
 import {DashboardsComponent} from './dashboards/dashboards.component';
 import {UserDetailsComponent} from './user-details/user-details.component';
 import {DashboardChartsComponent} from './dashboard-charts/dashboard-charts.component';
@@ -24,6 +26,8 @@ import { AprroverShowStatusPipe } from './approver/shared/pipes/aprrover-show-st
     IndexComponent,
     CarrierCrudComponent,
     BundlesCrudComponent,
+    BundlesComponentComponent,
+    BundlesTableComponent,
     DashboardsComponent,
     UserDetailsComponent,
     DashboardChartsComponent,

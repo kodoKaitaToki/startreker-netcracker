@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IndexComponent } from './index/index.component';
 import { ApproverCrudComponent } from './approver/approver-crud/approver-crud.component';
 import { CarrierCrudComponent } from './carrier-crud/carrier-crud.component';
-import { BundlesCrudComponent } from './bundles-crud/bundles-crud.component';
+import { BundlesCrudComponent } from './bundles/bundles-crud/bundles-crud.component';
 import { DashboardsComponent } from './dashboards/dashboards.component';
 import { UserDetailsComponent } from './user-details/user-details.component';
 
