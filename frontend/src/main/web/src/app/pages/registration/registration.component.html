@@ -1,0 +1,131 @@
+<div class="wrapper container-fluid">
+  <div class="row h-100 justify-content-center">
+    <div class="col-lg-5 col-md-7 my-auto">
+      <div class="card register-form__bg">
+        <div class="card-body">
+          <h1 class="card-title text-center register-form__header">Register your account</h1>
+          <hr class="hr-xs">
+
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fa fa-user"></i>
+                  </span>
+                </div>
+                <label for="username"></label>
+                <input
+                  type="text"
+                  class="form-control register-form__input"
+                  placeholder="Your username"
+                  id="username"
+                  formControlName="username"
+                  [ngClass]="{ 'is-invalid': submitted && f.username.errors }"
+                  />
+              </div>
+              <div class="register-form__invalid" *ngIf="submitted && f.username.errors">
+                <div *ngIf="f.username.errors.required">
+                  This field is required
+                </div>
+              </div>
+            </div>
+
+            <hr class="hr-xs">
+
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fa fa-envelope"></i>
+                  </span>
+                </div>
+                <label for="email"></label>
+                <input
+                  type="text"
+                  class="form-control register-form__input"
+                  placeholder="Your email address"
+                  id="email"
+                  formControlName="email"
+                  [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+                />
+              </div>
+              <div *ngIf="submitted && f.email.errors" class="register-form__invalid">
+                <div *ngIf="f.email.errors.required">This field is required</div>
+                <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+              </div>
+            </div>
+
+            <hr class="hr-xs">
+
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fa fa-lock"></i>
+                  </span>
+                </div>
+                <label for="password"></label>
+                <input
+                  type="password"
+                  class="form-control register-form__input"
+                  placeholder="Choose a password"
+                  id="password"
+                  formControlName="password"
+                  [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+                  />
+              </div>
+              <div *ngIf="submitted && f.password.errors" class="register-form__invalid">
+                <div *ngIf="f.password.errors.required">This field is required</div>
+                <div *ngIf="f.password.errors.minlength">Password must be at least 8 characters</div>
+              </div>
+            </div>
+
+            <hr class="hr-xs">
+
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <i class="fa fa-lock"></i>
+                  </span>
+                </div>
+                <label for="match_password"></label>
+                <input
+                  type="password"
+                  class="form-control register-form__input"
+                  placeholder="Repeat password"
+                  id="match_password"
+                  formControlName="match_password"
+                  [ngClass]="{ 'is-invalid': submitted && f.match_password.errors }"
+                  />
+              </div>
+              <div *ngIf="submitted && f.match_password.errors" class="register-form__invalid">
+                <div *ngIf="f.match_password.errors.required">This field is required</div>
+                <div *ngIf="f.match_password.errors.mustMatch">Passwords must match</div>
+              </div>
+            </div>
+
+            <hr class="hr-xs">
+
+            <button
+                type="submit"
+                class="btn btn-primary btn-block"
+                >
+                Sign up
+            </button>
+
+            <div class="col-xs-1 text-left ">or
+              <a routerLink="/">Cancel</a>
+            </div>
+          </form>
+
+          <hr class="hr-xs">
+          <p class="text-left">Already have an account?
+            <a routerLink="/login">Log In</a>.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

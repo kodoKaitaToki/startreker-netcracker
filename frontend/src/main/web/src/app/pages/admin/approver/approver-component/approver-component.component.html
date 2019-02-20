@@ -1,0 +1,109 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="row">
+        <select class="form-control col-md-12 col-sm-12 col-lg-4" (click)="chooseNewFilter($event.target)">
+          <option *ngFor="let filters of filterCriteria" [value]="filters.name">
+            {{filters.name}}
+          </option>
+        </select>
+
+        <input type="text" class="form-control col-md-12 col-sm-12 col-lg-7 offset-lg-1"
+               [placeholder]="currentFilterPlaceholder"
+               [(ngModel)]="filterContent"
+        />
+      </div>
+
+      <hr>
+
+      <h2
+        class="text-center"
+      >
+        New Approver
+      </h2>
+
+      <hr>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <input type="text" class="form-control"
+                 [ngClass]="{
+                   'is-invalid':form.get('email').touched && form.get('email').invalid,
+                   'is-valid': form.get('email').valid
+                   }"
+                 formControlName="email"
+                 placeholder="Email"
+          >
+          <span *ngIf="form.get('email').touched && form.get('email').invalid" class="invalid-feedback">Input the correct email</span>
+        </div>
+
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Name" formControlName="name"
+                 [ngClass]="{
+                   'is-invalid':form.get('name').touched && form.get('name').invalid,
+                   'is-valid': form.get('name').valid
+                   }"
+          >
+          <span *ngIf="form.get('name').touched && form.get('name').invalid"
+                class="invalid-feedback">Input the name</span>
+        </div>
+
+        <div class="form-group">
+          <input type="tel" class="form-control" placeholder="Telephone" formControlName="tel"
+                 [ngClass]="{
+                   'is-invalid':form.get('tel').touched && form.get('tel').invalid,
+                   'is-valid': form.get('tel').valid
+                   }"
+          >
+          <span *ngIf="form.get('tel').touched && form.get('tel').invalid" class="invalid-feedback">Input the correct telephone number</span>
+        </div>
+
+        <div class="container statusRadio" style="text-align: center">
+          <h4>Status</h4>
+          <div class="custom-control custom-radio">
+            <input type="radio"
+                   id="activated"
+                   name="status"
+                   class="custom-control-input"
+                   value="activated"
+                   formControlName="status"
+            >
+            <label class="custom-control-label" for="activated">Activated</label>
+          </div>
+
+          <div class="custom-control custom-radio">
+            <input type="radio"
+                   id="deactivated"
+                   name="status"
+                   class="custom-control-input"
+                   value="deactivated"
+                   formControlName="status"
+            >
+            <label class="custom-control-label" for="deactivated">Deactivated</label>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="text-center">
+          <button class="btn-success btn col-md-12"
+                  type="submit"
+                  [disabled]="form.invalid"
+          >
+            Add
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-9">
+      <app-approver-table [approvers]="defaultApprovers"
+                          (notifyAboutUpdate)="processUpdateEvent($event)"
+                          (notifyAboutDelete)="processDeleteNotification()"
+                          [filterCriteria]="currentFilter"
+                          [filterContent]="filterContent"
+      >
+      </app-approver-table>
+    </div>
+  </div>
+</div>
