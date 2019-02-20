@@ -68,32 +68,32 @@ public class UserDAOImpl extends CrudDAO<User> implements UserDAO {
     }
 
     public Optional<User> findByUsername(String userName) {
-        try{
+        try {
             User user = getJdbcTemplate().queryForObject(
                     findByUsernameSql,
                     new Object[]{userName},
-                   getGenericMapper());
+                    getGenericMapper());
             return user != null ? attachRoles(user) : Optional.empty();
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
     public Optional<User> findByEmail(String email) {
-        try{
+        try {
             User user = getJdbcTemplate().queryForObject(
                     findByEmailSql,
                     new Object[]{email},
                     getGenericMapper());
             return user != null ? attachRoles(user) : Optional.empty();
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
     @Override
     public Optional<User> findByUsernameWithRole(String userName, Role role) {
-        return executeSqlWithParam(findByUsernameWithRoleSql,new Object[]{role.getRoleName(), userName});
+        return executeSqlWithParam(findByUsernameWithRoleSql, new Object[]{role.getRoleName(), userName});
     }
 
     @Override
@@ -125,9 +125,9 @@ public class UserDAOImpl extends CrudDAO<User> implements UserDAO {
         List<User> users = new ArrayList<>();
 
         users.addAll(getJdbcTemplate().query(
-                    findAllByRoleSql,
-                    new Object[]{role.getRoleName()},
-                    getGenericMapper()));
+                findAllByRoleSql,
+                new Object[]{role.getRoleName()},
+                getGenericMapper()));
 
         users.forEach(this::attachRoles);
 
@@ -161,13 +161,13 @@ public class UserDAOImpl extends CrudDAO<User> implements UserDAO {
     }
 
     private Optional<User> executeSqlWithParam(String sql, Object[] params) {
-        try{
+        try {
             User user = getJdbcTemplate().queryForObject(
                     sql,
                     params,
                     getGenericMapper());
             return user != null ? attachRoles(user) : Optional.empty();
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }

@@ -39,7 +39,7 @@ public class ValidationExceptionMessage extends RequestExceptionMessage {
         return validationExceptionMessage;
     }
 
-    private static String createJsonProperty(String fieldName, Class errorClass) {
+    private static String createJsonProperty(String fieldName, Class<?> errorClass) {
         String jsonFieldName = fieldName;
 
         Field field = null;
@@ -48,7 +48,8 @@ public class ValidationExceptionMessage extends RequestExceptionMessage {
                 field = errorClass.getDeclaredField(fieldName);
 
                 break;
-            } catch (NoSuchFieldException ignored){}
+            } catch (NoSuchFieldException ignored) {
+            }
 
             errorClass = errorClass.getSuperclass();
         }

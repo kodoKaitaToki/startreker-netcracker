@@ -14,9 +14,7 @@ public class AppController {
     @PreAuthorize("hasRole('ADMIN')")
     public String forAdmin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
         return "Admin " + userDetails.getUsername();
     }
 
@@ -24,9 +22,7 @@ public class AppController {
     @PreAuthorize("hasRole('USER')")
     public String forUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
         return "User " + userDetails.getUsername();
     }
 
@@ -34,9 +30,7 @@ public class AppController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public String forAll() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
         return "All " + userDetails.getUsername();
     }
 }

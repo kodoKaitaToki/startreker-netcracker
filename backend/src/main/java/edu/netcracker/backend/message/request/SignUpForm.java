@@ -21,10 +21,12 @@ public class SignUpForm extends SignInForm {
     @NotBlank
     @Email
     private String email;
+
     @NotBlank
     @Size(min = 6, max = 64)
     @JsonProperty("match_password")
     private String matchPassword;
+
     @NotBlank
     @JsonProperty("telephone_number")
     private String telephoneNumber;

@@ -5,9 +5,9 @@ import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.stream.Collectors;
 
 public class PasswordGeneratorUtils {
 
@@ -21,20 +21,19 @@ public class PasswordGeneratorUtils {
             EnglishCharacterData.Digit
     };
 
+    private static final List<CharacterRule> characterRules = createCharacterRules();
+
     public static String generatePassword() {
-        return passwordGenerator.generatePassword(PASSWORD_LENGTH, createCharacterRules());
+        return passwordGenerator.generatePassword(PASSWORD_LENGTH, characterRules);
     }
 
     private static List<CharacterRule> createCharacterRules() {
-        List<CharacterRule> characterRules = new ArrayList<>();
-        IntStream.range(0, CHARACTER_DATA.length).forEach(i ->
-                characterRules.add(createCharacterRule(CHARACTER_DATA[i])));
-
-        return characterRules;
+        return Arrays.stream(CHARACTER_DATA).
+                map(PasswordGeneratorUtils::createCharacterRule).
+                collect(Collectors.toList());
     }
 
     private static CharacterRule createCharacterRule(CharacterData characterData) {
         return new CharacterRule(characterData, PASSWORD_LENGTH / CHARACTER_DATA.length);
     }
-
 }

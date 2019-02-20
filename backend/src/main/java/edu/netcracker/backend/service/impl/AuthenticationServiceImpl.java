@@ -37,7 +37,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private JwtProvider jwtProvider;
 
-
     @Override
     public User signUp(SignUpForm signUpForm, HttpServletRequest request) {
         if (userService.ifUsernameExist(signUpForm.getUsername())) {
@@ -49,7 +48,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         User user = userService.createUser(signUpForm, false, Collections.singletonList(AuthorityUtils.ROLE_USER));
-
         emailService.sendRegistrationMessage(signUpForm.getEmail(),
                 getContextPath(request),
                 jwtProvider.generateMailRegistrationToken(user.getUsername()));
@@ -62,7 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userService.findByEmail(emailFrom.getEmail());
 
         if (user == null) {
-            throw new RequestException("User not found",  HttpStatus.NOT_FOUND);
+            throw new RequestException("User not found", HttpStatus.NOT_FOUND);
         }
 
         String newUserPassword = userService.changePasswordForUser(user);
@@ -102,7 +100,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userService.findByUsername(jwtProvider.retrieveSubject(token));
 
         if (user == null) {
-            throw new RequestException("User not found",  HttpStatus.NOT_FOUND);
+            throw new RequestException("User not found", HttpStatus.NOT_FOUND);
         }
 
         user.setUserIsActivated(true);
@@ -114,14 +112,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public Message logOut() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
         User user = userService.findByUsername(userDetails.getUsername());
 
-        if (user == null)
-            throw new RequestException("User not found",  HttpStatus.NOT_FOUND);
-
+        if (user == null) {
+            throw new RequestException("User not found", HttpStatus.NOT_FOUND);
+        }
 
         user.setUserRefreshToken(null);
         userService.save(user);

@@ -11,11 +11,16 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class JwtResponse {
+
     @JsonProperty("access_token")
     private String accessToken;
+
     @JsonProperty("refresh_token")
     private String refreshToken;
+
     private String type;
+
     private String username;
+
     private List<String> roles;
 }

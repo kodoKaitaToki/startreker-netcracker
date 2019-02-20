@@ -9,7 +9,6 @@ public class RequestException extends RuntimeException {
     private HttpStatus httpStatus;
 
     public RequestException() {
-
     }
 
     public RequestException(String message, HttpStatus httpStatus) {

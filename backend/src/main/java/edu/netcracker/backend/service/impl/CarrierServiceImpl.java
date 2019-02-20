@@ -51,7 +51,7 @@ public class CarrierServiceImpl implements CarrierService {
 
         if (user == null) {
             throw new RequestException("Carrier with id " + userId + " not found", HttpStatus.NOT_FOUND);
-    }
+        }
 
         return UserDTO.from(user);
     }
@@ -151,7 +151,7 @@ public class CarrierServiceImpl implements CarrierService {
         return UserDTO.from(user);
     }
 
-    private List<Role> carrierRoles(){
+    private List<Role> carrierRoles() {
         return Arrays.asList(AuthorityUtils.ROLE_USER, AuthorityUtils.ROLE_CARRIER);
     }
 

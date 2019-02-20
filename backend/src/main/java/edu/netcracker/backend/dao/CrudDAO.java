@@ -57,13 +57,13 @@ public abstract class CrudDAO<T> {
     }
 
     public Optional<T> find(Number id) {
-        try{
+        try {
             T entity = jdbcTemplate.queryForObject(
                     selectSql,
                     new Object[]{id},
                     genericMapper);
             return Optional.ofNullable(entity);
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
@@ -75,28 +75,26 @@ public abstract class CrudDAO<T> {
                         createSql,
                         Statement.RETURN_GENERATED_KEYS);
                 int i = 1;
-                for(Object obj : resolveCreateParameters(entity)) {
+                for (Object obj : resolveCreateParameters(entity)) {
                     ps.setObject(i++, obj);
                 }
                 return ps;
             };
             KeyHolder holder = new GeneratedKeyHolder();
             jdbcTemplate.update(psc, holder);
-            for(Field field : fieldPrimaryKeyMap.keySet()){
+            for (Field field : fieldPrimaryKeyMap.keySet()) {
                 try {
                     Number result = (Number) holder.getKeys().get(field.getAnnotation(PrimaryKey.class).value());
-                    if(field.getType().equals(Long.class)){
+                    if (field.getType().equals(Long.class)) {
                         field.set(entity, result.longValue());
-                    }
-                    else if(field.getType().equals(Integer.class)){
+                    } else if (field.getType().equals(Integer.class)) {
                         field.set(entity, toIntExact(result.longValue()));
                     }
                 } catch (IllegalAccessException e) {
                     logger.warn(e.toString());
                 }
             }
-        }
-        else update(entity);
+        } else update(entity);
     }
 
     public void delete(T entity) {

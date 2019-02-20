@@ -42,10 +42,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (jwtProvider.validateToken(accessToken, httpServletRequest) && jwtProvider.isAccessToken(accessToken)) {
             handleToken(accessToken, httpServletRequest);
-
         } else if (httpServletRequest.getAttribute("isExpired") != null &&
-                (Boolean) httpServletRequest.getAttribute("isExpired")){
-
+                (Boolean) httpServletRequest.getAttribute("isExpired")) {
             handleExpiredToken(httpServletRequest, httpServletResponse);
         }
 
@@ -58,12 +56,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (newAccessToken == null) return;
 
         httpServletResponse.setHeader("New-Access-Token", newAccessToken);
-
         handleToken(newAccessToken, httpServletRequest);
     }
 
     private String createNewAccessTokenIfRefreshTokenIsValid(HttpServletRequest request) {
-        String refreshToken =  JwtUtils.getRefreshToken(request);
+        String refreshToken = JwtUtils.getRefreshToken(request);
         if (!jwtProvider.validateToken(refreshToken) || !jwtProvider.isRefreshToken(refreshToken)) return null;
 
         User user = userService.findByUsername(jwtProvider.retrieveSubject(refreshToken));
@@ -76,7 +73,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         UserDetails userDetails = userService.
                 createUserDetails(userInformationHolderService.
                         convertAsUserInfo(jwtProvider.retrieveSubject(accessToken)));
-
         createAuthentication(userDetails, request);
     }
 

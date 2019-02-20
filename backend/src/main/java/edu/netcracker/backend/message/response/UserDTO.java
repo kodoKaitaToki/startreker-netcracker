@@ -15,15 +15,21 @@ import java.util.stream.Collectors;
 public class UserDTO {
 
     private Integer id;
+
     private String username;
+
     @JsonProperty("user_email")
     private String userEmail;
+
     @JsonProperty("user_telephone")
     private String userTelephone;
+
     @JsonProperty("user_is_activated")
     private boolean userIsActivated;
+
     @JsonProperty("user_created_cate")
     private String userCreatedDate;
+
     private List<String> roles;
 
     private UserDTO(Integer id,
@@ -42,7 +48,7 @@ public class UserDTO {
         this.roles = authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
     }
 
-    public static UserDTO from(User user){
+    public static UserDTO from(User user) {
         return new UserDTO(user.getUserId(),
                 user.getUsername(),
                 user.getUserEmail(),

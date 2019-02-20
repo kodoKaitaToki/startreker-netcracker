@@ -20,20 +20,20 @@ public class TroubleTicketController {
 
     @PostMapping("/api/trouble/statistics")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ReportStatisticsResponse getStatistics(){
+    public ReportStatisticsResponse getStatistics() {
         return fullStatBuilder()
                 .build();
     }
 
     @PostMapping("/api/trouble/statistics/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ReportStatisticsResponse getStatistics(@PathVariable Long id){
+    public ReportStatisticsResponse getStatistics(@PathVariable Long id) {
         return fullStatBuilder()
                 .forUser(id)
                 .build();
     }
 
-    private ReportStatisticsBuilder fullStatBuilder(){
+    private ReportStatisticsBuilder fullStatBuilder() {
         return reportStatisticsBuilder
                 .addTotalAnsweredCount()
                 .addTotalCount()
