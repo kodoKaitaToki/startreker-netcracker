@@ -4,14 +4,14 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HttpClientModule} from "@angular/common/http";
-import {CarouselComponent} from './carousel/carousel.component';
-import { MapComponent } from './map/map.component';
-import { SearchMenuComponent } from './search-menu/search-menu.component';
-import { FeaturesComponent } from './features/features.component';
-import { FooterComponent } from './footer/footer.component';
-import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
-import { LandingComponent } from './landing/landing.component';
-import { HeaderComponent } from './header/header.component';
+import {CarouselComponent} from './pages/landing/carousel/carousel.component';
+import { MapComponent } from './pages/landing/map/map.component';
+import { SearchMenuComponent } from './pages/landing/search-menu/search-menu.component';
+import { FeaturesComponent } from './pages/landing/features/features.component';
+import { FooterComponent } from './pages/landing/footer/footer.component';
+import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
+import { LandingComponent } from './pages/landing/landing.component';
+import { HeaderComponent } from './pages/landing/header/header.component';
 
 @NgModule({
   declarations: [

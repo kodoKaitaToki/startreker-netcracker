@@ -2,7 +2,7 @@ import { HttpClient, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../../app.constants';
+import { Configuration } from '../../../app.constants';
 
 @Injectable()
 export class DashCostService {
