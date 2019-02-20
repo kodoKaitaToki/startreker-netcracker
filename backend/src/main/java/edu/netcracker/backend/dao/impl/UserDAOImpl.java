@@ -43,7 +43,7 @@ public class UserDAOImpl extends CrudDAO<User> implements UserDetailsService, Us
     private final String findPerPeriodByRole = "SELECT * FROM user_a " +
             "INNER JOIN assigned_role ON assigned_role.user_id = user_a.user_id " +
             "INNER JOIN role ON assigned_role.role_id = role.role_id " +
-            "WHERE role_id = ? AND user_created BETWEEN ? AND ?";
+            "WHERE role.role_id = ? AND user_created BETWEEN ? AND ?";
 
 
     @Autowired
@@ -115,7 +115,6 @@ public class UserDAOImpl extends CrudDAO<User> implements UserDetailsService, Us
 
         return users;
     }
-
 
     @Override
     public List<User> findPerPeriod(LocalDate from, LocalDate to) {
