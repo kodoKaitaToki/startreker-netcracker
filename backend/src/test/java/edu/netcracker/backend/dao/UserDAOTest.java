@@ -1,5 +1,6 @@
 package edu.netcracker.backend.dao;
 
+import edu.netcracker.backend.dao.impl.UserDAOImpl;
 import edu.netcracker.backend.model.Role;
 import edu.netcracker.backend.model.User;
 import org.junit.Test;
@@ -25,7 +26,7 @@ import static org.hamcrest.Matchers.equalTo;
 public class UserDAOTest {
 
     @Autowired
-    private UserDAO userDAO;
+    private UserDAOImpl userDAO;
     @Autowired
     private RoleDAO roleDAO;
 

@@ -1,10 +1,11 @@
-package edu.netcracker.backend.model.service;
+package edu.netcracker.backend.service.impl;
 
-import edu.netcracker.backend.dao.UserDAO;
+import edu.netcracker.backend.dao.impl.UserDAOImpl;
 import edu.netcracker.backend.message.request.SignUpForm;
 import edu.netcracker.backend.model.Role;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.security.jwt.UserInformationHolder;
+import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.util.AuthorityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,8 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,25 +21,30 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService {
+public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserDAO userDAO;
+    private UserDAOImpl userDAO;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Override
     public boolean ifUsernameExist(String username) {
         return userDAO.findByUsername(username).isPresent();
     }
 
+    @Override
     public boolean ifEmailExist(String email) {
         return userDAO.findByEmail(email).isPresent();
     }
 
+    @Override
     public User getUserByEmail(String email) {
         return userDAO.findByEmail(email).orElse(null);
     }
 
+    @Override
     public String changePasswordForUser(User user) {
         String newPassword = "asdasd";
         user.setUserPassword(passwordEncoder.encode(newPassword));
@@ -49,6 +53,7 @@ public class UserService {
         return newPassword;
     }
 
+    @Override
     public User createUser(SignUpForm signUpForm, boolean isActivated) {
         User user = new User(signUpForm.getUsername(),
                 passwordEncoder.encode(signUpForm.getPassword()),
@@ -62,6 +67,7 @@ public class UserService {
         return user;
     }
 
+    @Override
     public UserDetails createUserDetails(UserInformationHolder userInformationHolder) {
         return new org.springframework.security.core.userdetails.User(userInformationHolder.getUsername(),
                 userInformationHolder.getPassword(),

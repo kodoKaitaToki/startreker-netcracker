@@ -1,7 +1,7 @@
 package edu.netcracker.backend.controller;
 
 import com.google.gson.Gson;
-import edu.netcracker.backend.model.service.AdminService;
+import edu.netcracker.backend.service.impl.AdminServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,10 +17,10 @@ import java.util.Date;
 @RestController
 public class AdminController {
 
-    private AdminService adminService;
+    private AdminServiceImpl adminService;
 
     @Autowired
-    public AdminController(AdminService adminService) {
+    public AdminController(AdminServiceImpl adminService) {
         this.adminService = adminService;
     }
 

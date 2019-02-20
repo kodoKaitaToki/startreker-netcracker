@@ -1,6 +1,6 @@
 package edu.netcracker.backend.config.security;
 
-import edu.netcracker.backend.dao.UserDAO;
+import edu.netcracker.backend.dao.impl.UserDAOImpl;
 import edu.netcracker.backend.security.jwt.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -24,10 +24,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDAO userDAO;
+    private final UserDAOImpl userDAO;
 
     @Autowired
-    public SecurityConfig(UserDAO userDAO) {
+    public SecurityConfig(UserDAOImpl userDAO) {
         this.userDAO = userDAO;
     }
 

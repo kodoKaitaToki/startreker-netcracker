@@ -1,6 +1,6 @@
 package edu.netcracker.backend.security.jwt;
 
-import edu.netcracker.backend.model.service.UserInformationHolderService;
+import edu.netcracker.backend.service.impl.UserInformationHolderServiceImpl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ public class JwtProvider {
     private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
     @Autowired
-    private UserInformationHolderService userInformationHolderService;
+    private UserInformationHolderServiceImpl userInformationHolderService;
 
     @Value("${jwt.jwtSecret}")
     private String jwtSecret;

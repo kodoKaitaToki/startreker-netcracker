@@ -1,7 +1,7 @@
 package edu.netcracker.backend.security.jwt;
 
-import edu.netcracker.backend.model.service.UserInformationHolderService;
-import edu.netcracker.backend.model.service.UserService;
+import edu.netcracker.backend.service.impl.UserInformationHolderServiceImpl;
+import edu.netcracker.backend.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,10 +21,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private JwtProvider jwtProvider;
 
     @Autowired
-    private UserInformationHolderService userInformationHolderService;
+    private UserInformationHolderServiceImpl userInformationHolderService;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {

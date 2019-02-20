@@ -1,7 +1,7 @@
 package edu.netcracker.backend.controller;
 
 import edu.netcracker.backend.controller.exception.RequestException;
-import edu.netcracker.backend.dao.UserDAO;
+import edu.netcracker.backend.dao.impl.UserDAOImpl;
 import edu.netcracker.backend.message.request.EmailFrom;
 import edu.netcracker.backend.message.request.SignUpForm;
 import edu.netcracker.backend.message.request.UserForm;
@@ -9,8 +9,8 @@ import edu.netcracker.backend.message.response.UserResponse;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.security.jwt.JwtProvider;
 import edu.netcracker.backend.security.jwtResponse.JwtResponse;
-import edu.netcracker.backend.model.service.EmailService;
-import edu.netcracker.backend.model.service.UserService;
+import edu.netcracker.backend.service.impl.EmailServiceImpl;
+import edu.netcracker.backend.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,16 +33,16 @@ public class AuthController {
 
     private AuthenticationManager authenticationManager;
     private JwtProvider jwtProvider;
-    private UserDAO userDAO;
-    private UserService userService;
-    private EmailService emailService;
+    private UserDAOImpl userDAO;
+    private UserServiceImpl userService;
+    private EmailServiceImpl emailService;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager,
                           JwtProvider jwtProvider,
-                          UserDAO userDAO,
-                          UserService userService,
-                          EmailService emailService) {
+                          UserDAOImpl userDAO,
+                          UserServiceImpl userService,
+                          EmailServiceImpl emailService) {
         this.authenticationManager = authenticationManager;
         this.jwtProvider = jwtProvider;
         this.userDAO = userDAO;

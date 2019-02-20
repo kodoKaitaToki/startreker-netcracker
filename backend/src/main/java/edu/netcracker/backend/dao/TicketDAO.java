@@ -1,31 +1,16 @@
 package edu.netcracker.backend.dao;
 
 import edu.netcracker.backend.model.Ticket;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-@Repository
-public class TicketDAO extends CrudDAO<Ticket> {
+public interface TicketDAO {
+    void save(Ticket ticket);
 
-    private final String findAllByClass = "SELECT * FROM ticket WHERE class_id = ?";
+    Optional<Ticket> find(Number id);
 
-    public List<Ticket> findAllByClass(Number id) {
-        ArrayList<Ticket> tickets = new ArrayList<>();
+    void delete(Ticket ticket);
 
-        try {
-            tickets.addAll(getJdbcTemplate().query(
-                    findAllByClass,
-                    new Object[]{id},
-                    getGenericMapper()));
-
-
-        } catch (EmptyResultDataAccessException e) {
-            logger.error(e.getMessage());
-        }
-
-        return tickets;
-    }
+    List<Ticket> findAllByClass(Number id);
 }

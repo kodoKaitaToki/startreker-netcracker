@@ -1,5 +1,6 @@
-package edu.netcracker.backend.model.service;
+package edu.netcracker.backend.service.impl;
 
+import edu.netcracker.backend.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -11,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 
 @Component
 @PropertySource("classpath:mail.properties")
-public class EmailService {
+public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private JavaMailSender emailSender;
@@ -31,6 +32,7 @@ public class EmailService {
     @Value("${mail.password-recovery.text}")
     private String passwordRecoveryText;
 
+    @Override
     public void sendRegistrationMessage(String to, String contextPath, String token) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject(getSubject(registrationSubject, contextPath));
@@ -39,6 +41,7 @@ public class EmailService {
         sendSimpleMessage(message, to);
     }
 
+    @Override
     public void sendPasswordRecoveryMessage(String to, String username, String password) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setSubject(getSubject(passwordRecoverySubject, username));

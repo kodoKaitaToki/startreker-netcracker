@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -28,6 +29,6 @@ public class Ticket {
     private Integer seat;
 
     @Attribute("purchase_date")
-    private LocalDate purchaseDate;
+    private LocalDateTime purchaseDate;
 
 }

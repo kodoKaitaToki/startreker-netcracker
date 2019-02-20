@@ -1,7 +1,6 @@
-package edu.netcracker.backend.model.service;
+package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.dao.TicketDAO;
-import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.dao.VehicleDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,13 +11,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class AdminService {
+public class AdminServiceImpl {
 
     private VehicleDAO vehicleDAO;
     private TicketDAO ticketDAO;
 
     @Autowired
-    public AdminService(VehicleDAO vehicleDAO, TicketDAO ticketDAO) {
+    public AdminServiceImpl(VehicleDAO vehicleDAO, TicketDAO ticketDAO) {
         this.vehicleDAO = vehicleDAO;
         this.ticketDAO = ticketDAO;
     }
