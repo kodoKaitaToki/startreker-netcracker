@@ -1,4 +1,23 @@
 <app-navbar></app-navbar>
 
-<app-dashboard-charts></app-dashboard-charts>
-<app-lists-charts></app-lists-charts>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
+        <h1 class="card-title text-center">Dashboard charts:</h1>
+        <div class="card-body">
+          <a class="nav-link" routerLink="/admin/dashboards/popularity">
+            Increasing of carriers, locations, users
+          </a>
+          <a class="nav-link" routerLink="/admin/dashboards/popularity">Popularity</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <app-dashboard-charts></app-dashboard-charts>
+      <app-lists-charts></app-lists-charts>
+    </div>
+  </div>
+</div>
+
+
