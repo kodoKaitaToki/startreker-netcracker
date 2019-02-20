@@ -51,8 +51,8 @@ public class ApproverDAOTest {
         }
 
         //Saving them
-        for (int i = 0; i < users.size(); i++) {
-            userDAO.save(users.get(i));
+        for (User user : users) {
+            userDAO.save(user);
         }
 
         //Must be approvers ONLY
