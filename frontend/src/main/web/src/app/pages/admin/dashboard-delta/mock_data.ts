@@ -1,5 +1,3 @@
-import { DataModel } from './data_model';
-
 export const CARRIER_DATA: Array<[number, string]> = [
   [50, "2019-02-18"],
   [55, "2019-02-14"],

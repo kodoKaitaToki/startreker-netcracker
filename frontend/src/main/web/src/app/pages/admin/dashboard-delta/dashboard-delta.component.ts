@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import * as CanvasJS from '../canvasjs.min';
-import { DataModel } from './data_model';
 import { CARRIER_DATA } from './mock_data';
 import { USER_DATA } from './mock_data';
 import { LOCATION_DATA } from './mock_data';
