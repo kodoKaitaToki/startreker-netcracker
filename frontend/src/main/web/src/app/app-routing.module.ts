@@ -16,12 +16,15 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'sign-up', component: RegistrationComponent},
   { path: 'password-recovery', component: RecoveryComponent},
-  { path: '**', redirectTo: '/notFound'},
   { path: 'admin',
     loadChildren: './pages/admin/admin.module#AdminModule',
-    canActivate: [AuthGuard],
-    data: {roles: [Role.Admin]}
-  }
+
+    //IMPORTANT! Lines below should be uncommented later to activate Auth guard 
+
+    // canActivate: [AuthGuard],
+    // data: {roles: [Role.Admin]}
+  },
+  { path: '**', redirectTo: '/notFound'}
 ];
 
 @NgModule({
