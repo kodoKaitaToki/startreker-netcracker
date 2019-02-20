@@ -1,8 +1,7 @@
 package edu.netcracker.backend.controller;
 
-import edu.netcracker.backend.dao.ApproverDAO;
-import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.model.User;
+import edu.netcracker.backend.model.service.ApproverCrudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,54 +13,56 @@ import java.util.Optional;
 @RestController
 public class ApproverCrudController {
 
-    private ApproverDAO approverDAO;
-    private UserDAO userDAO;
+    private ApproverCrudService acs;
 
     @Autowired
-    public ApproverCrudController(ApproverDAO approverDAO, UserDAO userDAO) {
-        this.approverDAO = approverDAO;
-        this.userDAO = userDAO;
+    public ApproverCrudController(ApproverCrudService acs) {
+        this.acs = acs;
     }
 
-    @RequestMapping("api/admin/approvers")
+    @GetMapping("v1/api/admin/approvers/all")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<User> getAllApprovers() {
-       return approverDAO.findAllApprovers();
+       return acs.getAllApprovers();
     }
 
-    @GetMapping("api/admin/approvers/{limit}/{offset}")
-    public List<User> getApprovers(@PathVariable Number limit, @PathVariable Number offset){
-        return approverDAO.find(limit, offset);
-    }
-
-    @RequestMapping("api/admin/approvers/{id}")
+    @GetMapping("v1/api/admin/approvers/paging")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public User getApprover(@PathVariable Number id) {
-        Optional<User> user = approverDAO.find(id);
+    public List<User> getApprovers(@RequestParam("limit") Number limit, @RequestParam("offset") Number offset){
+        return acs.getApprovers(limit, offset);
+    }
+
+    @GetMapping("v1/api/admin/approvers")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public User getApprover(@RequestParam("id") Number id) {
+        Optional<User> user = acs.getById(id);
         return user.orElse(null);
     }
 
-    @PostMapping("api/admin/approvers/")
+    @PostMapping("v1/api/admin/approvers")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void addApprover(@RequestBody User approver) {
-        approverDAO.save(approver);
+        acs.add(approver);
     }
 
-    @PutMapping("api/admin/approvers/")
+
+    @PutMapping("v1/api/admin/approvers")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void updateApprover(@RequestBody User approver) {
-        approverDAO.update(approver);
+        acs.update(approver);
     }
 
-    @DeleteMapping("api/admin/approvers/")
+    @DeleteMapping("v1/api/admin/approvers")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void deleteApprover(@RequestBody User approver) {
-        userDAO.delete(approver);
+        acs.delete(approver);
     }
 
-    @GetMapping("api/admin/approvers/count")
+
+    @GetMapping("v1/api/admin/approvers/count")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public BigInteger getRecordsCount() {
-        return approverDAO.count();
+        return acs.getRecordsCount();
     }
 
 }

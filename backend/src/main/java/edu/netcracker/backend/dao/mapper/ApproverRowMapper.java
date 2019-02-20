@@ -25,7 +25,8 @@ public class ApproverRowMapper implements RowMapper {
 
     public Object mapRow(Map row) {
         User usr = new User();
-        usr.setUserId((Integer) row.get("user_id"));
+        Number id = (Number) row.get("user_id");
+        usr.setUserId(id.intValue());
         usr.setUserName((String) row.get("user_name"));
         usr.setUserEmail((String) row.get("user_email"));
         usr.setUserTelephone((String) row.get("user_telephone"));

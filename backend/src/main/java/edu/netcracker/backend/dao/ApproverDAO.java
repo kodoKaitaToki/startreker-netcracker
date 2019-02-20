@@ -12,12 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.sql.Date;
 
 @Component
 public class ApproverDAO extends CrudDAO<User> {
 
-    private final String SELECT_COLUMNS_FROM_USER = "SELECT u.user_id," +
+    private final String SELECT_COLUMNS_FROM_USER = "SELECT u.user_id, " +
             "user_name, " +
             "user_email, " +
             "user_telephone, " +
@@ -29,17 +28,17 @@ public class ApproverDAO extends CrudDAO<User> {
             "INNER JOIN assigned_role ar ON u.user_id = ar.user_id " +
             "INNER JOIN role_a r ON ar.role_id = r.role_id " +
             "WHERE r.role_name = 'ROLE_APPROVER' " +
-            "ORDER BY u.user_id DESC ";
+            "ORDER BY u.user_id ";
 
     private final String SELECT_APPROVER_BY_ID = SELECT_COLUMNS_FROM_USER +
             "WHERE u.user_id = ?";
 
     private final String UPDATE_APPROVER = "UPDATE user_a\n" +
-            "SET\n" +
-            "\tuser_name = ?,\n" +
-            "\tuser_email = ?,\n" +
-            "\tuser_telephone = ?,\n" +
-            "\tuser_activated = ?\n" +
+            "SET " +
+            "user_name = ?, " +
+            "user_email = ?, " +
+            "user_telephone = ?, " +
+            "user_activated = ? " +
             "WHERE user_id = ?;";
 
     private final String INSERT_APPROVER = "INSERT INTO USER_A ( " +
@@ -50,16 +49,14 @@ public class ApproverDAO extends CrudDAO<User> {
             "USER_ACTIVATED, " +
             "USER_CREATED " +
             ") " +
-            "VALUES (?, ?, ?, ?, ?, statement_timestamp());";
+            "VALUES (?, ?, ?, ?, ?, ?);";
 
     private final String PAGING_SELECT = SELECT_ALL_APPROVERS + "LIMIT ? OFFSET ?;";
 
-
-    private final String COUNT_STATEMENT = "SELECT count(*) FROM user_a u\n" +
-            "INNER JOIN assigned_role ar ON u.user_id = ar.user_id \n" +
-            "INNER JOIN role_a r ON ar.role_id = r.role_id \n" +
-            "WHERE r.role_name = 'ROLE_APPROVER' ";
-
+    private final String COUNT_STATEMENT = "SELECT count(*) FROM user_a u " +
+            "INNER JOIN assigned_role ar ON u.user_id = ar.user_id " +
+            "INNER JOIN role_a r ON ar.role_id = r.role_id " +
+            "WHERE r.role_name = 'ROLE_APPROVER';";
 
     private ApproverRowMapper rowMapper;
     private final Logger logger = LoggerFactory.getLogger(ApproverDAO.class);
@@ -67,7 +64,6 @@ public class ApproverDAO extends CrudDAO<User> {
     public ApproverDAO() {
         rowMapper = new ApproverRowMapper();
     }
-
 
     public List<User> findAllApprovers() {
         logger.debug("Querying all approvers");
@@ -114,17 +110,6 @@ public class ApproverDAO extends CrudDAO<User> {
             approvers.add((User) rowMapper.mapRow(row));
         }
         return approvers;
-    }
-
-    @Override
-    public void save(User entity) {
-        getJdbcTemplate().update(INSERT_APPROVER,
-                entity.getUsername(),
-                entity.getPassword(),
-                entity.getUserEmail(),
-                entity.getUserTelephone(),
-                entity.isUserIsActivated()
-        );
     }
 
     @Override
