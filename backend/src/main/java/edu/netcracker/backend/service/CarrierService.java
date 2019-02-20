@@ -1,7 +1,5 @@
 package edu.netcracker.backend.service;
 
-
-
 import edu.netcracker.backend.message.request.UserCreateForm;
 import edu.netcracker.backend.message.request.UserUpdateForm;
 import edu.netcracker.backend.message.response.UserDTO;

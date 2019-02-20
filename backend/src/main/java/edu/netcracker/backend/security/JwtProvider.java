@@ -1,6 +1,5 @@
 package edu.netcracker.backend.security;
 
-
 import edu.netcracker.backend.service.impl.UserInformationHolderService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
