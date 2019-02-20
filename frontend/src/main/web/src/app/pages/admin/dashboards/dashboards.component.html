@@ -1,4 +1,30 @@
 <app-navbar></app-navbar>
 
-<app-dashboard-charts></app-dashboard-charts>
-<app-lists-charts></app-lists-charts>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
+        <h3 class="card-title text-center">Dashboard charts:</h3>
+        <div class="card-body">
+          <a class="nav-link" routerLink="/admin/dashboards/popularity">
+            Increasing of carriers, locations, users
+          </a>
+          <a class="nav-link" routerLink="/admin/dashboards/costs">
+            The costs (per day, per week, per month per carrier)
+          </a>
+          <a class="nav-link" routerLink="/admin/dashboards/trips-services-distribution">
+            The trip’s and the service’s distribution
+          </a>
+          <a class="nav-link" routerLink="/admin/dashboards/trouble-tickets">
+            The trouble tickets statistics
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+
+

@@ -19,14 +19,13 @@ const routes: Routes = [
   { path: 'admin',
     loadChildren: './pages/admin/admin.module#AdminModule',
 
-    //IMPORTANT! Lines below should be uncommented later to activate Auth guard 
+    //IMPORTANT! Lines below should be uncommented later to activate Auth guard
 
     // canActivate: [AuthGuard],
     // data: {roles: [Role.Admin]}
   },
   { path: '**', redirectTo: '/notFound'}
 ];
-
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
