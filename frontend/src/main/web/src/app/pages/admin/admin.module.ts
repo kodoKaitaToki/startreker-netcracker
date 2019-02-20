@@ -17,6 +17,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FilterPipePipe } from './approver/shared/pipes/filter-pipe.pipe';
 import { AprroverShowStatusPipe } from './approver/shared/pipes/aprrover-show-status.pipe';
 import { DashboardDeltaComponent } from './dashboard-delta/dashboard-delta.component';
+import { TroubleStatisticsComponent } from './trouble-statistics/trouble-statistics.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { DashboardDeltaComponent } from './dashboard-delta/dashboard-delta.compo
     ApproverCrudComponent,
     FilterPipePipe,
     AprroverShowStatusPipe,
-    DashboardDeltaComponent
+    DashboardDeltaComponent,
+    TroubleStatisticsComponent
   ],
   imports: [
     CommonModule,
