@@ -6,6 +6,8 @@ import { CarrierCrudComponent } from './carrier-crud/carrier-crud.component';
 import { BundlesCrudComponent } from './bundles-crud/bundles-crud.component';
 import { DashboardsComponent } from './dashboards/dashboards.component';
 import { UserDetailsComponent } from './user-details/user-details.component';
+import {DashboardChartsComponent} from './dashboard-charts/dashboard-charts.component';
+import {ListsChartsComponent} from './lists-charts/lists-charts.component';
 
 const routes: Routes = [
   {
@@ -26,7 +28,11 @@ const routes: Routes = [
   },
   {
       path: 'dashboards',
-      component: DashboardsComponent
+      component: DashboardsComponent,
+      children: [
+              { path: 'popularity', component: DashboardChartsComponent },
+              { path: 'costs', component: ListsChartsComponent }
+          ]
   },
   {
       path: 'user-details/:id',
