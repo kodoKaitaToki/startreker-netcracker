@@ -1,20 +1,21 @@
 package edu.netcracker.backend.message.request;
 
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmailFrom {
+public class UserUpdateForm extends UserForm {
 
-    @Email
-    @NotBlank
-    private String email;
+    @NotNull
+    @JsonProperty("user_id")
+    private Integer userId;
 }

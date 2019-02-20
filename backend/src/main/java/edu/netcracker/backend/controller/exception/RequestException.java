@@ -1,16 +1,20 @@
 package edu.netcracker.backend.controller.exception;
 
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+@Getter
 public class RequestException extends RuntimeException {
 
-    private int errorCode;
+    private HttpStatus httpStatus;
 
     public RequestException() {
-        super();
+
     }
 
-    public RequestException(String message, int errorCode) {
+    public RequestException(String message, HttpStatus httpStatus) {
         super(message);
-        this.errorCode = errorCode;
+        this.httpStatus = httpStatus;
     }
 
     public RequestException(String message, Throwable cause) {
@@ -23,9 +27,5 @@ public class RequestException extends RuntimeException {
 
     protected RequestException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
-    }
-
-    public int getErrorCode() {
-        return errorCode;
     }
 }

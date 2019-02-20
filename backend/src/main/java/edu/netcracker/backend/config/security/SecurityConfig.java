@@ -1,7 +1,8 @@
 package edu.netcracker.backend.config.security;
 
-import edu.netcracker.backend.dao.UserDAO;
-import edu.netcracker.backend.security.jwt.JwtAuthFilter;
+import edu.netcracker.backend.security.JwtAuthFilter;
+import edu.netcracker.backend.service.UserService;
+import edu.netcracker.backend.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -23,13 +24,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private final UserDAO userDAO;
-
-    @Autowired
-    public SecurityConfig(UserDAO userDAO) {
-        this.userDAO = userDAO;
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -53,9 +47,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public UserService userService() {
+        return new UserServiceImpl();
+    }
+
+    @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-        auth.setUserDetailsService(userDAO); //set the custom user details service
+        auth.setUserDetailsService(userService()); //set the custom user details service
         auth.setPasswordEncoder(passwordEncoder()); //set the password encoder - bcrypt
         return auth;
     }

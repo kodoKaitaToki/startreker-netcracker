@@ -1,4 +1,4 @@
-package edu.netcracker.backend.security.jwt;
+package edu.netcracker.backend.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

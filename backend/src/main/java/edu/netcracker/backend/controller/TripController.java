@@ -1,6 +1,6 @@
 package edu.netcracker.backend.controller;
 
-import edu.netcracker.backend.dao.StatisticsDAO;
+import edu.netcracker.backend.dao.impl.StatisticsDAO;
 import edu.netcracker.backend.message.response.TripDistributionElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

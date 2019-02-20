@@ -1,6 +1,6 @@
-package edu.netcracker.backend.model.service;
+package edu.netcracker.backend.service.impl;
 
-import edu.netcracker.backend.dao.StatisticsDAO;
+import edu.netcracker.backend.dao.impl.StatisticsDAO;
 import edu.netcracker.backend.message.response.ReportStatisticsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
