@@ -31,7 +31,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private UserService userService;
     @Autowired
-    private EmailService emailService;
+    private EmailServiceImpl emailService;
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired

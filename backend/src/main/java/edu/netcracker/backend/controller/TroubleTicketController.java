@@ -1,7 +1,7 @@
 package edu.netcracker.backend.controller;
 
 import edu.netcracker.backend.message.response.ReportStatisticsResponse;
-import edu.netcracker.backend.service.impl.ReportStatisticsBuilder;
+import edu.netcracker.backend.service.impl.ReportStatisticsBuilderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TroubleTicketController {
 
-    private ReportStatisticsBuilder reportStatisticsBuilder;
+    private ReportStatisticsBuilderImpl reportStatisticsBuilder;
 
     @Autowired
-    public TroubleTicketController(ReportStatisticsBuilder reportStatisticsBuilder) {
+    public TroubleTicketController(ReportStatisticsBuilderImpl reportStatisticsBuilder) {
         this.reportStatisticsBuilder = reportStatisticsBuilder;
     }
 
@@ -33,7 +33,7 @@ public class TroubleTicketController {
                 .build();
     }
 
-    private ReportStatisticsBuilder fullStatBuilder() {
+    private ReportStatisticsBuilderImpl fullStatBuilder() {
         return reportStatisticsBuilder
                 .addTotalAnsweredCount()
                 .addTotalCount()
