@@ -16,12 +16,14 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FilterPipePipe } from './approver/shared/pipes/filter-pipe.pipe';
 import { AprroverShowStatusPipe } from './approver/shared/pipes/aprrover-show-status.pipe';
 import { DashboardDeltaComponent } from './dashboard-delta/dashboard-delta.component';
-import { TroubleStatisticsComponent } from './trouble-statistics/trouble-statistics.component';
+import { TroubleStatisticsComponent } from './dashboard/trouble-statistics/trouble-statistics.component';
 import { CarrierShowStatusPipe } from './carrier/carrier-show-status.pipe';
 import { CommonChartComponent } from './dashboard/common-chart/common-chart.component';
 import { CarCostDashComponent } from './dashboard/car-cost-dash/car-cost-dash.component';
 import { CarrierComponentComponent } from './carrier/carrier-component/carrier-component.component';
 import { CarrierTableComponent } from './carrier/carrier-table/carrier-table.component';
+
+import { TroubleStatisticsService } from './dashboard/trouble-statistics.service';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,7 @@ import { CarrierTableComponent } from './carrier/carrier-table/carrier-table.com
     FilterPipePipe,
     AprroverShowStatusPipe,
     DashboardDeltaComponent,
-    TroubleStatisticsComponent
+    TroubleStatisticsComponent,
     CarrierComponentComponent,
     CarrierTableComponent,
     CarrierShowStatusPipe,
@@ -52,7 +54,10 @@ import { CarrierTableComponent } from './carrier/carrier-table/carrier-table.com
     FormsModule,
     ReactiveFormsModule
   ],
-  providers: [FilterPipePipe]
+  providers: [
+    FilterPipePipe,
+    TroubleStatisticsService,
+  ]
 })
 export class AdminModule {
 }
