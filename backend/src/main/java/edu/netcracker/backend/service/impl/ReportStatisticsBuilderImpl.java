@@ -1,5 +1,6 @@
 package edu.netcracker.backend.service.impl;
 
+import edu.netcracker.backend.dao.StatisticsDAO;
 import edu.netcracker.backend.dao.impl.StatisticsDAOImpl;
 import edu.netcracker.backend.message.response.ReportStatisticsResponse;
 import edu.netcracker.backend.service.ReportStatisticsBuilder;
@@ -16,7 +17,7 @@ import java.util.Map;
 @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ReportStatisticsBuilderImpl implements ReportStatisticsBuilder {
 
-    private StatisticsDAOImpl statisticsDAO;
+    private StatisticsDAO statisticsDAO;
     private ReportStatisticsResponse resp;
     private Long userId;
 

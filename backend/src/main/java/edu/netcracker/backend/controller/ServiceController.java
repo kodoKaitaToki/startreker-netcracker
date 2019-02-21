@@ -1,6 +1,6 @@
 package edu.netcracker.backend.controller;
 
-import edu.netcracker.backend.dao.impl.StatisticsDAOImpl;
+import edu.netcracker.backend.dao.StatisticsDAO;
 import edu.netcracker.backend.message.response.ServiceDistributionElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,10 +12,10 @@ import java.util.List;
 @RestController
 public class ServiceController {
 
-    private final StatisticsDAOImpl statisticsDAO;
+    private final StatisticsDAO statisticsDAO;
 
     @Autowired
-    public ServiceController(StatisticsDAOImpl statisticsDAO) {
+    public ServiceController(StatisticsDAO statisticsDAO) {
         this.statisticsDAO = statisticsDAO;
     }
 

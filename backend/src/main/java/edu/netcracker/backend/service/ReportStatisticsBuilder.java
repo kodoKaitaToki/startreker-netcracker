@@ -5,13 +5,13 @@ import edu.netcracker.backend.service.impl.ReportStatisticsBuilderImpl;
 
 public interface ReportStatisticsBuilder {
     ReportStatisticsResponse build();
-    ReportStatisticsBuilderImpl addTotalCount();
-    ReportStatisticsBuilderImpl addTotalOpenedCount();
-    ReportStatisticsBuilderImpl addTotalAnsweredCount();
-    ReportStatisticsBuilderImpl addTotalRatedCount();
-    ReportStatisticsBuilderImpl addTotalReOpenedCount();
-    ReportStatisticsBuilderImpl addTotalInProgressCount();
-    ReportStatisticsBuilderImpl addTotalFinishedCount();
-    ReportStatisticsBuilderImpl forUser(Long id);
-    ReportStatisticsBuilderImpl addAverageRate();
+    ReportStatisticsBuilder addTotalCount();
+    ReportStatisticsBuilder addTotalOpenedCount();
+    ReportStatisticsBuilder addTotalAnsweredCount();
+    ReportStatisticsBuilder addTotalRatedCount();
+    ReportStatisticsBuilder addTotalReOpenedCount();
+    ReportStatisticsBuilder addTotalInProgressCount();
+    ReportStatisticsBuilder addTotalFinishedCount();
+    ReportStatisticsBuilder forUser(Long id);
+    ReportStatisticsBuilder addAverageRate();
 }
