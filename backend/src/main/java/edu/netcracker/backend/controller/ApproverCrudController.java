@@ -1,7 +1,7 @@
 package edu.netcracker.backend.controller;
 
 import edu.netcracker.backend.model.User;
-import edu.netcracker.backend.model.service.ApproverCrudService;
+import edu.netcracker.backend.service.ApproverCrudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

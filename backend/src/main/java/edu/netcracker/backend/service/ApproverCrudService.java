@@ -1,4 +1,4 @@
-package edu.netcracker.backend.model.service;
+package edu.netcracker.backend.service;
 
 import edu.netcracker.backend.dao.ApproverDAO;
 import edu.netcracker.backend.dao.UserDAO;

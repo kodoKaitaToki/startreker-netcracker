@@ -42,8 +42,6 @@ public class User implements UserDetails {
     private boolean userIsActivated;
     @Attribute("user_created")
     private LocalDate registrationDate;
-    @Attribute("user_telephone")
-    private String userTelephone;
 
     private List<Role> userRoles = new ArrayList<>();
 
