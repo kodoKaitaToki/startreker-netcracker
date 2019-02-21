@@ -1,7 +1,7 @@
 package edu.netcracker.backend.controller;
 
 import edu.netcracker.backend.message.response.ReportStatisticsResponse;
-import edu.netcracker.backend.service.impl.ReportStatisticsBuilder;
+import edu.netcracker.backend.service.ReportStatisticsBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;

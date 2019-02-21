@@ -10,9 +10,9 @@ server:
 postgres:
   servername: localhost
   port: 5432
-  database: startracker
-  username: postgres
-  password: startracker
+  database: <>
+  username: <>
+  password: <>
 
 mail:
   host: smtp.gmail.com

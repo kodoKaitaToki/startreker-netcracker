@@ -9,6 +9,7 @@ import edu.netcracker.backend.message.response.Message;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.security.JwtProvider;
 import edu.netcracker.backend.service.AuthenticationService;
+import edu.netcracker.backend.service.EmailService;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.util.AuthorityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Autowired
     private UserService userService;
+
     @Autowired
     private EmailService emailService;
+
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @Autowired
     private JwtProvider jwtProvider;
 

@@ -1,6 +1,6 @@
 package edu.netcracker.backend.security;
 
-import edu.netcracker.backend.service.impl.UserInformationHolderService;
+import edu.netcracker.backend.service.impl.UserInformationHolderServiceImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -29,7 +29,7 @@ public class JwtProvider {
     }
 
     @Autowired
-    private UserInformationHolderService userInformationHolderService;
+    private UserInformationHolderServiceImpl userInformationHolderService;
 
     @Value("${jwt.jwtSecret}")
     private String jwtSecret;

@@ -1,5 +1,6 @@
 package edu.netcracker.backend.dao.impl;
 
+import edu.netcracker.backend.dao.StatisticsDAO;
 import edu.netcracker.backend.message.response.ServiceDistributionElement;
 import edu.netcracker.backend.message.response.TripDistributionElement;
 import edu.netcracker.backend.util.ReportStatus;
@@ -14,13 +15,13 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class StatisticsDAO {
+public class StatisticsDAOImpl implements StatisticsDAO {
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
     @Autowired
-    public StatisticsDAO(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedJdbcTemplate) {
+    public StatisticsDAOImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedJdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedJdbcTemplate = namedJdbcTemplate;
     }
@@ -75,7 +76,8 @@ public class StatisticsDAO {
             "(SELECT AVG(report_rate) FROM report WHERE approver_id = :approver) avg_rate," +
             "(SELECT COUNT(report_id) FROM report WHERE status IN (:answered, :rated) AND approver_id = :approver) total_resolved";
 
-    public List<TripDistributionElement> getTripsStatistics(){
+    @Override
+    public List<TripDistributionElement> getTripsStatistics() {
         return jdbcTemplate.query(selectRoutesDistribution, (rs, rowNum) -> {
             TripDistributionElement rstat = new TripDistributionElement();
             rstat.setArrival_id(rs.getLong("arrival_id"));
@@ -92,7 +94,8 @@ public class StatisticsDAO {
         });
     }
 
-    public List<ServiceDistributionElement> getServicesDistribution(){
+    @Override
+    public List<ServiceDistributionElement> getServicesDistribution() {
         return jdbcTemplate.query(selectServicesDistribution, (rs, rowNum) -> {
             ServiceDistributionElement rstat = new ServiceDistributionElement();
             rstat.setService_id(rs.getLong("service_id"));
@@ -103,20 +106,22 @@ public class StatisticsDAO {
         });
     }
 
-    public Map<String, Double> getTroubleTicketStatistics(){
+    @Override
+    public Map<String, Double> getTroubleTicketStatistics() {
         SqlRowSet data = namedJdbcTemplate.queryForRowSet(selectAllTroubleTicketsCounts,
                 getStatisticsParameters());
         return toMap(data);
     }
 
-    public Map<String, Double> getTroubleTicketStatisticsByApprover(Long approverId){
+    @Override
+    public Map<String, Double> getTroubleTicketStatisticsByApprover(Long approverId) {
         Map<String, Object> parameters = getStatisticsParameters();
         parameters.put("approver", approverId);
         SqlRowSet data = namedJdbcTemplate.queryForRowSet(selectAllTroubleTicketsByApprover, parameters);
         return toMap(data);
     }
 
-    private Map<String, Object> getStatisticsParameters(){
+    private Map<String, Object> getStatisticsParameters() {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("opened", ReportStatus.OPEN.getDatabaseValue());
         parameters.put("in_progress", ReportStatus.IN_PROGRESS.getDatabaseValue());
@@ -126,11 +131,11 @@ public class StatisticsDAO {
         return parameters;
     }
 
-    private Map<String, Double> toMap(SqlRowSet data){
+    private Map<String, Double> toMap(SqlRowSet data) {
         data.next();
         Map<String, Double> result = new HashMap<>();
         int colCount = data.getMetaData().getColumnCount();
-        for (int i = 1; i <= colCount; i++){
+        for (int i = 1; i <= colCount; i++) {
             result.put(data.getMetaData().getColumnLabel(i).toLowerCase(), data.getDouble(i));
         }
         return result;
