@@ -15,6 +15,8 @@ public class AuthorityUtils {
     public static Role ROLE_ADMIN;
     public static Role ROLE_USER;
     public static Role ROLE_CARRIER;
+    public static Role ROLE_APPROVER;
+
 
     @Autowired
     public AuthorityUtils(RoleDAO roleDAO) {
@@ -29,5 +31,7 @@ public class AuthorityUtils {
                 () -> new BeanInitializationException("AuthorityUtils: ROLE_USER Not Found in the Database"));
         ROLE_CARRIER = roleDAO.find(3).orElseThrow(
                 () -> new BeanInitializationException("AuthorityUtils: ROLE_CARRIER Not Found in the Database"));
+        ROLE_APPROVER = roleDAO.find(4).orElseThrow(
+                () -> new BeanInitializationException("AuthorityUtils: ROLE_APPROVER Not Found in the Database"));
     }
 }
