@@ -1,6 +1,8 @@
 package edu.netcracker.backend.controller;
 
+import edu.netcracker.backend.message.request.UserCreateForm;
 import edu.netcracker.backend.message.request.UserForm;
+import edu.netcracker.backend.message.request.UserUpdateForm;
 import edu.netcracker.backend.message.response.UserDTO;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.ApproverCrudService;
@@ -44,20 +46,20 @@ public class ApproverCrudController {
 
     @PostMapping("v1/api/admin/approvers")
     //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void addApprover(@RequestBody UserForm approver) {
-        acs.add(from(approver));
+    public void addApprover(@RequestBody UserCreateForm approver) {
+        acs.add(fromUserCreateForm(approver));
     }
 
     @PutMapping("v1/api/admin/approvers")
     //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void updateApprover(@RequestBody UserForm approver) {
-        acs.update(from(approver));
+    public void updateApprover(@RequestBody UserUpdateForm approver) {
+        acs.update(fromUserUpdateForm(approver));
     }
 
     @DeleteMapping("v1/api/admin/approvers")
     //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public void deleteApprover(@RequestBody UserForm approver) {
-        acs.delete(from(approver));
+    public void deleteApprover(@RequestBody UserUpdateForm approver) {
+        acs.delete(fromUserUpdateForm(approver));
     }
 
     @GetMapping("v1/api/admin/approvers/count")
@@ -74,7 +76,7 @@ public class ApproverCrudController {
         return userDTOS;
     }
 
-    private static User from(UserForm approver) {
+    private static User fromUserForm(UserForm approver) {
         User user = new User();
         user.setUserName(approver.getUsername());
         user.setUserEmail(approver.getEmail());
@@ -82,4 +84,17 @@ public class ApproverCrudController {
         user.setUserIsActivated(approver.getIsActivated());
         return user;
     }
+
+    private static User fromUserCreateForm(UserCreateForm approver) {
+        User user = fromUserForm(approver);
+        user.setUserPassword(approver.getPassword());
+        return user;
+    }
+
+    private static User fromUserUpdateForm(UserUpdateForm approver) {
+        User user = fromUserForm(approver);
+        user.setUserId(approver.getUserId());
+        return user;
+    }
+
 }
