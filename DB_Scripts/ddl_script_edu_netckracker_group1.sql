@@ -264,6 +264,7 @@ insert into USER_A (USER_NAME, USER_PASSWORD, USER_EMAIL, USER_TELEPHONE, USER_T
 insert into ROLE_A (ROLE_NAME) values ('ROLE_ADMIN');
 insert into ROLE_A (ROLE_NAME) values ('ROLE_USER');
 insert into ROLE_A (ROLE_NAME) values ('ROLE_CARRIER');
+insert into ROLE_A (ROLE_NAME) values ('ROLE_APPROVER');
 
 insert into ASSIGNED_ROLE (USER_ID, ROLE_ID) values (1,1);
 insert into ASSIGNED_ROLE (USER_ID, ROLE_ID) values (1, 2);
