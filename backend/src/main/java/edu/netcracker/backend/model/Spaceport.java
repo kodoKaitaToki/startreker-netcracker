@@ -18,7 +18,7 @@ public class Spaceport {
     @EqualsAndHashCode.Include
     private Long spaceportId;
 
-    @Attribute("spaceport-name")
+    @Attribute("spaceport_name")
     private String spaceportName;
 
     @Attribute("creation_date")

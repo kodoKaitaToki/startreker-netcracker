@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +52,14 @@ public class UserDAOImpl extends CrudDAO<User> implements UserDAO {
             "  INNER JOIN assigned_role ON assigned_role.user_id = USER_A.user_id\n" +
             "  INNER JOIN ROLE_A ON assigned_role.role_id = ROLE_A.role_id WHERE role_name = ?" +
             "ORDER BY USER_A.user_id ASC LIMIT ? OFFSET ?";
+
+    private final String findPerPeriod = "SELECT * FROM user_a " +
+            "WHERE user_created BETWEEN ? AND ?";
+
+    private final String findPerPeriodByRole = "SELECT * FROM user_a " +
+            "INNER JOIN assigned_role ON assigned_role.user_id = user_a.user_id " +
+            "INNER JOIN role ON assigned_role.role_id = role.role_id " +
+            "WHERE role.role_id = ? AND user_created BETWEEN ? AND ?";
 
     @Autowired
     public UserDAOImpl(RoleDAO roleDAO) {
@@ -144,6 +153,38 @@ public class UserDAOImpl extends CrudDAO<User> implements UserDAO {
                 getGenericMapper()));
 
         users.forEach(this::attachRoles);
+
+        return users;
+    }
+
+    @Override
+    public List<User> findPerPeriod(LocalDate from, LocalDate to) {
+        List<User> users = new ArrayList<>();
+        users.addAll(getJdbcTemplate().query(
+                findPerPeriod,
+                new Object[]{from, to},
+                getGenericMapper()));
+
+        for (User user : users) {
+            attachRoles(user);
+        }
+
+        return users;
+
+    }
+
+    @Override
+    public List<User> findPerPeriodByRole(Number id, LocalDate from, LocalDate to) {
+        List<User> users = new ArrayList<>();
+
+        users.addAll(getJdbcTemplate().query(
+                findPerPeriodByRole,
+                new Object[]{id, from, to},
+                getGenericMapper()));
+
+        for (User user : users) {
+            attachRoles(user);
+        }
 
         return users;
     }
