@@ -33,8 +33,8 @@ public class ApproverCrudService {
         return approverDAO.find(limit, offset);
     }
 
-    public Optional<User> getById(Number id) {
-        return approverDAO.find(id);
+    public User getById(Number id) {
+        return approverDAO.find(id).get();
     }
 
     public void add(User approver) {
