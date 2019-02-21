@@ -11,6 +11,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.sql.DataSource;
 import javax.validation.constraints.NotNull;
+import java.sql.SQLException;
 
 @Configuration
 @ConfigurationProperties("postgres")
@@ -38,6 +39,8 @@ public class PostgreSQLConfig {
         dataSource.setDatabaseName(database);
         dataSource.setPassword(password);
         dataSource.setPortNumber(port);
+        //dataSource.setSsl(true);
+        //dataSource.setSslfactory(org.postgresql.ssl.NonValidatingFactory.class.getName());
         return dataSource;
     }
 
