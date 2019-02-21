@@ -1,6 +1,6 @@
 package edu.netcracker.backend.controller;
 
-import edu.netcracker.backend.dao.impl.StatisticsDAO;
+import edu.netcracker.backend.dao.impl.StatisticsDAOImpl;
 import edu.netcracker.backend.message.response.TripDistributionElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,10 +12,10 @@ import java.util.List;
 @RestController
 public class TripController {
 
-    private final StatisticsDAO statisticsDAO;
+    private final StatisticsDAOImpl statisticsDAO;
 
     @Autowired
-    public TripController(StatisticsDAO statisticsDAO) {
+    public TripController(StatisticsDAOImpl statisticsDAO) {
         this.statisticsDAO = statisticsDAO;
     }
 

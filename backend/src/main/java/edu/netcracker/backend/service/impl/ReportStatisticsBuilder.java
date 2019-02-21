@@ -1,6 +1,6 @@
 package edu.netcracker.backend.service.impl;
 
-import edu.netcracker.backend.dao.impl.StatisticsDAO;
+import edu.netcracker.backend.dao.impl.StatisticsDAOImpl;
 import edu.netcracker.backend.message.response.ReportStatisticsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -15,12 +15,12 @@ import java.util.Map;
 @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class ReportStatisticsBuilder {
 
-    private StatisticsDAO statisticsDAO;
+    private StatisticsDAOImpl statisticsDAO;
     private ReportStatisticsResponse resp;
     private Long userId;
 
     @Autowired
-    public ReportStatisticsBuilder(StatisticsDAO statisticsDAO) {
+    public ReportStatisticsBuilder(StatisticsDAOImpl statisticsDAO) {
         this.statisticsDAO = statisticsDAO;
         this.resp = new ReportStatisticsResponse();
         this.resp.setAmount(new HashMap<>());
