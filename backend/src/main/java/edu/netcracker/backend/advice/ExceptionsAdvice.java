@@ -2,39 +2,75 @@ package edu.netcracker.backend.advice;
 
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.message.response.RequestExceptionMessage;
-import edu.netcracker.backend.message.response.ValidationExceptionResponse;
+import edu.netcracker.backend.message.response.ValidationExceptionMessage;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ExceptionsAdvice {
 
-    @ExceptionHandler(BindException.class)
-    public ResponseEntity<List<ValidationExceptionResponse>> handleException(BindException ex){
-
-        return ResponseEntity.badRequest().body(
-                ex.getAllErrors()
-                        .stream()
-                        .map(ValidationExceptionResponse::from)
-                        .collect(Collectors.toList())
-        );
-    }
-
     @ExceptionHandler(RequestException.class)
     public ResponseEntity<RequestExceptionMessage> handleException(RequestException ex, WebRequest request){
-        RequestExceptionMessage exceptionMessage = new RequestExceptionMessage(
-                ex.getErrorCode(),
-                ex.getMessage(),
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        return  ResponseEntity.
+                status(ex.getHttpStatus()).
+                body(RequestExceptionMessage.createRequestExceptionMessage(ex));
+    }
 
-        return ResponseEntity.badRequest().body(exceptionMessage);
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<RequestExceptionMessage> handleException(MethodArgumentNotValidException ex){
+
+        Class errorClass = ex.getParameter().getNestedParameterType();
+
+        BindingResult result = ex.getBindingResult();
+        List<FieldError> fieldErrors = result.getFieldErrors();
+
+        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ValidationExceptionMessage.
+                createValidationExceptionMessage(fieldErrors, errorClass));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<RequestExceptionMessage> handleException(ConstraintViolationException ex){
+        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(requestExceptionMessage(ex,
+                HttpStatus.BAD_REQUEST));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<RequestExceptionMessage> handleException(BadCredentialsException ex){
+        return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(requestExceptionMessage(ex,
+                HttpStatus.UNAUTHORIZED));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<RequestExceptionMessage> handleException(AccessDeniedException ex){
+        return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(requestExceptionMessage(ex,
+                HttpStatus.UNAUTHORIZED));
+    }
+
+    @ExceptionHandler(LockedException.class)
+    public ResponseEntity<RequestExceptionMessage> handleException(LockedException ex){
+        return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(requestExceptionMessage(ex,
+                HttpStatus.UNAUTHORIZED));
+    }
+
+    private RequestExceptionMessage requestExceptionMessage(Exception e, HttpStatus httpStatus) {
+        RequestExceptionMessage message = new RequestExceptionMessage();
+        message.setStatus(httpStatus.value());
+        message.setError(httpStatus.name());
+        message.setTimestamp(System.currentTimeMillis());
+        message.setMessage(e.getMessage());
+
+        return message;
     }
 }
