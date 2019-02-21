@@ -1,8 +1,8 @@
-package edu.netcracker.backend.model.service;
+package edu.netcracker.backend.service.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.netcracker.backend.security.jwt.UserInformationHolder;
+import edu.netcracker.backend.security.UserInformationHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

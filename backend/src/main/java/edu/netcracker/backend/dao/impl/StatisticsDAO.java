@@ -1,4 +1,4 @@
-package edu.netcracker.backend.dao;
+package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.message.response.ServiceDistributionElement;
 import edu.netcracker.backend.message.response.TripDistributionElement;

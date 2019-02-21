@@ -47,14 +47,14 @@ public class GenericMapper<T> implements RowMapper<T> {
                 entry.getKey().set(entity, attr);
             }
             return entity;
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.toString());
             return null;
         }
     }
 
     private Object castTypes(Object attr, Class<?> fieldType) {
-        if(attr == null) return null;
+        if (attr == null) return null;
         if (attr instanceof BigDecimal) {
             BigDecimal bd = (BigDecimal) attr;
             if (fieldType.equals(Integer.class)) {
@@ -62,18 +62,17 @@ public class GenericMapper<T> implements RowMapper<T> {
             } else if (fieldType.equals(Long.class)) {
                 attr = bd.longValueExact();
             }
-        }
-        else if(attr instanceof Number){
+        } else if (attr instanceof Number) {
             Number bd = (Number) attr;
             if (fieldType.equals(Integer.class)) {
                 attr = toIntExact(bd.longValue());
             } else if (fieldType.equals(Long.class)) {
                 attr = bd.longValue();
             }
-        } else if(attr instanceof Date && fieldType.equals(LocalDate.class)){
+        } else if (attr instanceof Date && fieldType.equals(LocalDate.class)) {
             Date date = (Date) attr;
             attr = date.toLocalDate();
-        } else if(attr instanceof Timestamp && fieldType.equals(LocalDateTime.class)){
+        } else if (attr instanceof Timestamp && fieldType.equals(LocalDateTime.class)) {
             Timestamp timestamp = (Timestamp) attr;
             attr = timestamp.toLocalDateTime();
         }
