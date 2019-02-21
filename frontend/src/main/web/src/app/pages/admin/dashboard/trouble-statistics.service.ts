@@ -27,8 +27,11 @@ export class TroubleStatisticsService {
       //TODO: replace with get
   }
 
-  public getStatisticForApprover<T>(id: number): Observable<T>{
-      return this.http.post<T>(this.actionUrl + '/' + id, {});
+  public getStatisticForApprover(id: number): Observable<TroubleStatisticsModel>{
+      return this.http.post<any>(this.actionUrl + "/" + id, {})
+        .pipe(map(res => {
+          return res.amount;
+        }))
       //TODO: replace with get
   }
 }
