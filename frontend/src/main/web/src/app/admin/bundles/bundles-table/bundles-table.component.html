@@ -1,6 +1,6 @@
 <div class="list-group">
 
-  <li class="list-group-item" *ngFor="let bundle of bundles">
+  <li class="list-group-item" *ngFor="let bundle of bundles  | filter: filterCriteria: filterContent">
 
     <div class="row">
 
