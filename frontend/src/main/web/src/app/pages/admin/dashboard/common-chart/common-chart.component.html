@@ -1,0 +1,31 @@
+<div class="row justify-content-center">
+    <div class="col-md-12 my-auto">
+      <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
+        <div class="card-body">
+          <h1 class='title'>All costs</h1>
+          <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+          <div class="row">
+              <div class="col-md-4 chart-btn">
+                <button class="btn btn-primary" (click)='getWeakStat()' id='perWeak' [disabled]="butWeak">Per weak</button>
+              </div>
+              <div class="col-md-4 chart-btn">
+                <button class="btn btn-primary" (click)='getMonthStat()' id='perMonth' [disabled]="butMonth">Per month</button>
+              </div>
+              <div class="col-md-4 chart-btn">
+
+                  <form method="POST" action="">
+                    <div>
+                      <input class="fromInput" type="date" [value]="dateFrom | date:'yyyy-MM-dd'" (input)="dateFrom=parseDate($event.target.value,fromFlag)" />
+                      <input type="date" [value]="dateTo | date:'yyyy-MM-dd'" (input)="dateTo=parseDate($event.target.value,toFlag)" />
+                    </div>
+                    <div>
+                      <button type="submit" class="btn btn-primary btnSet" (click)='getInterStat()' [disabled]='checkBut'>Check</button>
+                    </div>
+                  </form>
+
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
