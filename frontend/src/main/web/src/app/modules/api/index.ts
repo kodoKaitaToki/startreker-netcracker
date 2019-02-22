@@ -36,8 +36,18 @@ const auth = {
   }
 }
 
+const dashboard = {
+  tripDistribution() {
+    return `${baseUrl}api/trip/distribution`;
+  },
+  serviceDistribution() {
+    return `${baseUrl}api/service/distribution`;
+  }
+}
+
 export const Api = {
-  auth
+  auth,
+  dashboard
 }
 
 export const options = {
