@@ -34,6 +34,8 @@ public class User implements UserDetails {
     private String userPassword;
     @Attribute("user_email")
     private String userEmail;
+    @Attribute("user_telephone")
+    private String userTelephone;
     @Attribute("user_token")
     private String userRefreshToken;
     @Attribute("user_activated")

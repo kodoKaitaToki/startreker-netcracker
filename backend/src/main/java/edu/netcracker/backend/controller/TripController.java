@@ -21,8 +21,7 @@ public class TripController {
 
     @PostMapping("api/trip/distribution")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public List<TripDistributionElement> getTripsStatistics(){
+    public List<TripDistributionElement> getTripsStatistics() {
         return statisticsDAO.getTripsStatistics();
     }
-
 }
