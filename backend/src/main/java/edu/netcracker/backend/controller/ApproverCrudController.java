@@ -101,6 +101,7 @@ public class ApproverCrudController {
         User user = fromUserForm(approver);
         user.setUserPassword(approver.getPassword());
         return user;
+
     }
 
     private static User fromUserUpdateForm(UserUpdateForm approver) {
