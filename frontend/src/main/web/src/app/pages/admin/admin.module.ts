@@ -15,7 +15,7 @@ import {ApproverTableComponent} from './approver/approver-table/approver-table.c
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { FilterPipePipe } from './approver/shared/pipes/filter-pipe.pipe';
 import { AprroverShowStatusPipe } from './approver/shared/pipes/aprrover-show-status.pipe';
-import { DashboardDeltaComponent } from './dashboard-delta/dashboard-delta.component';
+import { DashboardDeltaComponent } from './dashboard/dashboard-delta/dashboard-delta.component';
 import { TroubleStatisticsComponent } from './dashboard/trouble-statistics/trouble-statistics.component';
 import { CarrierShowStatusPipe } from './carrier/carrier-show-status.pipe';
 import { CommonChartComponent } from './dashboard/common-chart/common-chart.component';
