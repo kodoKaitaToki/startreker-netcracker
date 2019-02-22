@@ -13,6 +13,7 @@ import java.util.Optional;
 
 @Repository
 public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
+
     private TicketClassDAO ticketClassDAO;
     private final String findAllTicketTrips = "SELECT class_id FROM ticket_class WHERE trip_id = ?";
 
