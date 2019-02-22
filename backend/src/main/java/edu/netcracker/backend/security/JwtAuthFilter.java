@@ -4,6 +4,7 @@ import edu.netcracker.backend.model.User;
 
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.service.impl.UserInformationHolderServiceImpl;
+import edu.netcracker.backend.util.AuthorityUtils;
 import edu.netcracker.backend.util.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,25 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String accessToken = JwtUtils.getAccessToken(httpServletRequest);
+
+        // debug superuser features
+        if(accessToken == null && AuthorityUtils.DEBUG_SU){
+            String debugLogin = httpServletRequest.getHeader("Authorization");
+            if(debugLogin != null && debugLogin.startsWith("debug_login ")){
+                long userId = Long.parseLong(debugLogin.substring(12));
+                UserDetails userDetails = userService.find(userId);
+                createAuthentication(userDetails, httpServletRequest);
+                logger.info("DEBUG_LOGIN: " + userId);
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
+                return;
+            }
+            else{
+                createAuthentication(AuthorityUtils.DEBUG_SUPERUSER, httpServletRequest);
+                logger.info("DEBUG_LOGIN: SU");
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
+                return;
+            }
+        }
 
         if (jwtProvider.validateToken(accessToken, httpServletRequest) && jwtProvider.isAccessToken(accessToken)) {
             handleToken(accessToken, httpServletRequest);

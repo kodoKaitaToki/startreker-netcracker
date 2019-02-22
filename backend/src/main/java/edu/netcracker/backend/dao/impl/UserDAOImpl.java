@@ -1,7 +1,6 @@
 package edu.netcracker.backend.dao.impl;
 
 
-import edu.netcracker.backend.dao.CrudDAO;
 import edu.netcracker.backend.dao.RoleDAO;
 import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.model.Role;
@@ -16,7 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-public class UserDAOImpl extends CrudDAO<User> implements UserDAO {
+public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
 
     private final RoleDAO roleDAO;
 
@@ -178,7 +177,7 @@ public class UserDAOImpl extends CrudDAO<User> implements UserDAO {
         for (Long role_id : rows) {
             roles.add(roleDAO.find(role_id).orElse(null));
         }
-        user.setUserRoles(roles);
+        user.setUserRoles(roleDAO.findIn(rows));
         return Optional.of(user);
     }
 

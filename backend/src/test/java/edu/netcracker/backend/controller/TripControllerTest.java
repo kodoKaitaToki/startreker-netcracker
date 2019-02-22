@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -29,7 +29,7 @@ public class TripControllerTest {
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void shouldBeCorrectTestDistribution() throws Exception {
-        mockMvc.perform(post("/api/trip/distribution"))
+        mockMvc.perform(get("/v1/api/trip/distribution"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(
                         "{\"departure_id\":19,\"arrival_id\":9,\"departure_planet_id\":2,\"arrival_planet_id\":1,\"departure_spaceport_name\":\"porta\",\"arrival_spaceport_name\":\"neque\",\"departure_planet_name\":\"MOON\",\"arrival_planet_name\":\"EARTH\",\"occurrence_count\":2,\"percentage\":28.57142857142857}")));

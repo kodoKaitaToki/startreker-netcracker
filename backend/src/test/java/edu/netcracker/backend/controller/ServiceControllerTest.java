@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -29,7 +29,7 @@ public class ServiceControllerTest {
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void shouldBeCorrectTestDistribution() throws Exception {
-        mockMvc.perform(post("/api/service/distribution"))
+        mockMvc.perform(get("/v1/api/service/distribution"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(
                         "{\"service_id\":1,\"service_name\":\"ultrices\",\"occurrence_count\":7,\"percentage\":14.000000000000002},{\"service_id\":4,\"service_name\":\"nulla\",\"occurrence_count\":7,\"percentage\":14.000000000000002}")));
