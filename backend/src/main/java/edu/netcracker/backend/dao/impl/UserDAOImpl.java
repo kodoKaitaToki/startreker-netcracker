@@ -173,10 +173,6 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
 
     private Optional<User> attachRoles(User user) {
         List<Long> rows = getJdbcTemplate().queryForList(findAllRolesSql, Long.class, user.getUserId());
-        List<Role> roles = new ArrayList<>();
-        for (Long role_id : rows) {
-            roles.add(roleDAO.find(role_id).orElse(null));
-        }
         user.setUserRoles(roleDAO.findIn(rows));
         return Optional.of(user);
     }
