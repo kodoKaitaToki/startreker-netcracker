@@ -15,7 +15,7 @@ public class PossibleService extends Service {
     private Integer id;
 
     @Attribute("class_id")
-    private TicketClass classId;
+    private Integer classId;
 
     @Attribute("service_price")
     private Integer servicePrice;
