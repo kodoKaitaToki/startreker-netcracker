@@ -170,7 +170,6 @@ public class UserDAOImpl extends CrudDAO<User> implements UserDAO {
         }
 
         return users;
-
     }
 
     @Override
