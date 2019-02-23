@@ -1,6 +1,6 @@
 <div class="list-group">
 
-  <li class="list-group-item" *ngFor="let bundle of bundles  | filter: filterCriteria: filterContent">
+  <li class="list-group-item" *ngFor="let bundle of bundles | filter: filterCriteria: filterContent">
 
     <div class="row">
 
@@ -50,12 +50,12 @@
             <p class="col-2 offset-3" *ngIf="currentBundlesForUpdate !== bundle">
               {{bundle.start_date}}</p>
 
-            <input type="Date" class="form-control"
+            <input type="Date" class="form-control" max="currentBundlesForUpdate.finsih_date" required
                    [placeholder]="currentBundlesForUpdate.start_date"
                    formControlName="start_date" *ngIf="currentBundlesForUpdate === bundle"
                    [ngClass]="{
                    'is-invalid':form.get('start_date').touched && form.get('start_date').invalid,
-                   'is-valid': form.get('start_date').valid
+                   'is-valid': form.get('start_date').valid && form.get('start_date')
                    }"
             >
 
@@ -69,7 +69,7 @@
             <p class="col-2 offset-3" *ngIf="currentBundlesForUpdate !== bundle">
               {{bundle.finish_date}}</p>
 
-            <input type="Date" class="form-control"
+            <input type="Date" class="form-control" min="currentBundlesForUpdate.start_date" required
                    [placeholder]="currentBundlesForUpdate.finish_date"
                    formControlName="finish_date" *ngIf="currentBundlesForUpdate === bundle"
                    [ngClass]="{
@@ -83,12 +83,12 @@
           <hr>
 
           <div class="row">
-            <h5 class="col-2">Bundle Price</h5>
+            <h5 class="col-2">Price</h5>
             <p class="col-2 offset-3" *ngIf="currentBundlesForUpdate !== bundle">
               {{bundle.bundle_price}}</p>
 
 
-            <input type="number" class="form-control" placeholder="Bundle Price" formControlName="bundle_price"
+            <input type="number" class="form-control" placeholder="Price" formControlName="bundle_price"
                    *ngIf="currentBundlesForUpdate === bundle"
                    [placeholder]="currentBundlesForUpdate.bundle_price"
                    [ngClass]="{
@@ -102,16 +102,19 @@
           <hr>
 
           <div class="row">
-
             <h5 class="col-2">Description</h5>
-            <div class="col-4 offset-3" *ngIf="currentBundlesForUpdate !== bundle">
-              <input type="text" class="form-control"
-                     formControlName="bundle_description"
-                     placeholder="Description"
-              >
-            </div>
+            <p class="col-2 offset-3" *ngIf="currentBundlesForUpdate !== bundle">
+              {{bundle.bundle_description}}</p>
+
+
+            <input type="text" class="form-control" placeholder="Description" formControlName="bundle_description"
+                   *ngIf="currentBundlesForUpdate === bundle"
+                   [placeholder]="currentBundlesForUpdate.bundle_description"
+            >
 
           </div>
+
+          <hr>
 
           <div class="row" *ngIf="currentBundlesForUpdate === bundle && isEditButtonBlockedAfterSubmit"
           >
@@ -166,4 +169,3 @@
     </a>
   </li>
 </ul>
-

@@ -38,7 +38,7 @@
 
         <div class="form-group">
 
-          <input type="Date" class="form-control"
+          <input type="Date" class="form-control" max="currentBundlesForUpdate.finish_date" required
                  [ngClass]="{
                    'is-invalid':form.get('start_date').untouched && form.get('start_date').invalid,
                    'is-valid': form.get('start_date').valid
@@ -53,7 +53,7 @@
 
         <div class="form-group">
 
-          <input type="Date" class="form-control"
+          <input type="Date" class="form-control" min="currentBundlesForUpdate.start_date" required
                  [ngClass]="{
                    'is-invalid':form.get('finish_date').touched && form.get('finish_date').invalid,
                    'is-valid': form.get('finish_date').valid

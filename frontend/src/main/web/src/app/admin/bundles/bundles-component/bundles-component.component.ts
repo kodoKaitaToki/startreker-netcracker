@@ -34,9 +34,9 @@ export class BundlesComponentComponent implements OnInit {
 
     this.form = new FormGroup(
       {
-        start_date: new FormControl(new Date()),
-        finish_date: new FormControl(new Date()),
-        bundle_price: new FormControl(0),
+        start_date: new FormControl('', Validators.required),
+        finish_date: new FormControl('', Validators.required),
+        bundle_price: new FormControl(0,Validators.min(0)),
         bundle_description: new FormControl('')
       }
     );

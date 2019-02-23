@@ -32,9 +32,9 @@ export class BundlesTableComponent implements OnInit {
   setFormInDefault() {
     this.form = new FormGroup(
       {
-        start_date: new FormControl(new Date(), Validators.required),
-        finish_date: new FormControl(new Date(), Validators.required),
-        bundle_price: new FormControl(0,Validators.required),
+        start_date: new FormControl('', [Validators.required, Validators.max(Number(this.currentBundlesForUpdate.finish_date))]),
+        finish_date: new FormControl('', [Validators.required, Validators.max(Number(this.currentBundlesForUpdate.start_date))]),
+        bundle_price: new FormControl('',Validators.min(0)),
         bundle_description: new FormControl('')
       }
     );
