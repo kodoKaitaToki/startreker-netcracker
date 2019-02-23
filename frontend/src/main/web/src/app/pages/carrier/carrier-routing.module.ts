@@ -7,6 +7,8 @@ import { ServicesComponent } from './services/services.component';
 import { SuggestionsComponent } from './suggestions/suggestions.component';
 import { DiscountsComponent } from './discounts/discounts.component';
 import { DashboardsComponent } from './dashboard/dashboards/dashboards.component';
+import { SalesComponent } from './dashboard/sales/sales.component';
+import { ViewsComponent } from './dashboard/views/views.component';
 
 const routes: Routes = [
     {
@@ -35,7 +37,17 @@ const routes: Routes = [
           },
           {
               path: 'dashboards',
-              component: DashboardsComponent
+              component: DashboardsComponent,
+              children: [
+                {
+                    path: 'sales',
+                    component: SalesComponent
+                },
+                {
+                    path: 'views',
+                    component: ViewsComponent
+                }
+              ]
           },
         ]
     },

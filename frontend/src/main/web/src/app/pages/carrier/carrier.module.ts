@@ -10,9 +10,11 @@ import { SuggestionsComponent } from './suggestions/suggestions.component';
 import { DiscountsComponent } from './discounts/discounts.component';
 import { DashboardsComponent } from './dashboard/dashboards/dashboards.component';
 import { CarrierComponent } from './carrier.component';
+import { SalesComponent } from './dashboard/sales/sales.component';
+import { ViewsComponent } from './dashboard/views/views.component';
 
 @NgModule({
-  declarations: [NavbarComponent, IndexComponent, TripsComponent, ServicesComponent, SuggestionsComponent, DiscountsComponent, DashboardsComponent, CarrierComponent],
+  declarations: [NavbarComponent, IndexComponent, TripsComponent, ServicesComponent, SuggestionsComponent, DiscountsComponent, DashboardsComponent, CarrierComponent, SalesComponent, ViewsComponent],
   imports: [
     CommonModule,
     CarrierRoutingModule
