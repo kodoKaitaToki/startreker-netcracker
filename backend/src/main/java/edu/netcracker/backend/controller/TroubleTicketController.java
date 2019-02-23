@@ -19,14 +19,16 @@ public class TroubleTicketController {
     }
 
     @PostMapping("/api/trouble/statistics")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //TODO: Uncomment
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ReportStatisticsResponse getStatistics() {
         return fullStatBuilder()
                 .build();
     }
 
     @PostMapping("/api/trouble/statistics/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //TODO: Uncomment
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ReportStatisticsResponse getStatistics(@PathVariable Long id) {
         return fullStatBuilder()
                 .forUser(id)
