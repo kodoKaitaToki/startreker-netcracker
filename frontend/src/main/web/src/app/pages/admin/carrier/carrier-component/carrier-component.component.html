@@ -118,7 +118,7 @@
 
           <button class="btn-success btn col-md-12"
                   type="submit"
-                  [disabled]="form.invalid"
+                  [disabled]="form.invalid || addBut"
           >
             Add
           </button>
@@ -131,9 +131,13 @@
 
     <div class="col-md-9">
 
-      <app-carrier-table [carriers]="defaultCarriers"
+      <app-carrier-table *ngIf='dataAvailable'
+                          [allCarriers]="allCarriers"
+                          [carriers]="carriers"
+                          [butGroup]="butGroup"
                           (notifyAboutUpdate)="processUpdateEvent($event)"
-                          (notifyAboutDelete)="processDeleteNotification()"
+                          (notifyAboutDelete)="processDeleteNotification($event)"
+                          (notifyAboutChangePage)="processChangePage($event)"
                           [filterCriteria]="currentFilter"
                           [filterContent]="filterContent"
       >

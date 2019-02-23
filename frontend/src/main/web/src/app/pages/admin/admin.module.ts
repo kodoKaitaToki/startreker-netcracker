@@ -20,6 +20,7 @@ import { CommonChartComponent } from './dashboard/common-chart/common-chart.comp
 import { CarCostDashComponent } from './dashboard/car-cost-dash/car-cost-dash.component';
 import { CarrierComponentComponent } from './carrier/carrier-component/carrier-component.component';
 import { CarrierTableComponent } from './carrier/carrier-table/carrier-table.component';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { CarrierTableComponent } from './carrier/carrier-table/carrier-table.com
     CommonModule,
     AdminRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxPaginationModule
   ],
   providers: [FilterPipePipe]
 })

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Carrier} from '../carrier';
+import {AddCarrier} from '../addCarrier';
+import {CarrierCrudService} from '../carrier-crud.service';
 
 @Component({
   selector: 'app-carrier-component',
@@ -9,14 +11,25 @@ import {Carrier} from '../carrier';
 })
 export class CarrierComponentComponent implements OnInit {
 
-  defaultCarriers: Carrier[] = [];
+  carPerPage = 10;
+
+  carriers;
+  allCarriers;
   currentCarrierForUpdate: Carrier;
+  addBut: boolean = false;
+  curPage: number = 1;
 
   filterCriteria = [
     {name: 'id'},
     {name: 'name'},
     {name: 'status'},
   ];
+
+  butGroup = {
+    editBut: false,
+    updateBut: false,
+    deleteBut: false
+  };
 
   filterContent = '';
 
@@ -25,114 +38,18 @@ export class CarrierComponentComponent implements OnInit {
 
   form: FormGroup;
 
-  constructor() {
+  dataAvailable: boolean = false;
+
+  constructor(private carCrudService: CarrierCrudService) {
+
   }
 
   ngOnInit(): void {
 
-    this.defaultCarriers = this.getDefaultCarriers();
+    this.getCarriers();
+    this.getCarriersPagin();
 
-    this.form = new FormGroup(
-      {
-        email: new FormControl('', [Validators.required, Validators.email]),
-        name: new FormControl('', Validators.required),
-        tel: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
-        status: new FormControl('activated')
-      }
-    );
-  }
-
-  getDefaultCarriers() {
-    return [
-      {
-        id: '1',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '2',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '3',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '4',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '5',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '6',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '7',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '8',
-        name: 'anotherName1',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '9',
-        name: 'anotherName2',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'off',
-        creation_date: new Date()
-      },
-      {
-        id: '10',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '11',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      }
-    ];
+    this.createNewForm();
   }
 
   chooseNewFilter(chosenFilterName) {
@@ -143,16 +60,149 @@ export class CarrierComponentComponent implements OnInit {
   }
 
   processUpdateEvent(event) {
-
+    this.butGroup.updateBut = true;
+    this.butGroup.editBut = true;
     this.currentCarrierForUpdate = event;
+    this.carCrudService.updateCarrier(event)
+                      .subscribe(
+                        (resp: Response) => {
+                          /*if (resp.headers.get('New-Access-Token')) {
+                            localStorage.removeItem('at');
+                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
+                          }*/
+                          console.log('carrier is updated');
+                          this.butGroup.updateBut = false;
+                          this.butGroup.editBut = false;
+                          this.getCarriersPagin();
+                         },
+                        error => {
+                          console.log(error);
+                          this.butGroup.updateBut = false;
+                          this.butGroup.editBut = false;
+                        }
+                      );
   }
 
-  processDeleteNotification() {
+  processDeleteNotification(event) {
+    this.butGroup.deleteBut = true;
+    this.butGroup.editBut = true;
+    this.carCrudService.deleteCarrier(event)
+                      .subscribe(
+                        (resp: Response) => {
+                          /*if (resp.headers.get('New-Access-Token')) {
+                            localStorage.removeItem('at');
+                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
+                          }*/
+                          console.log('carrier is deleted');
+                          this.butGroup.deleteBut = false;
+                          this.butGroup.editBut = false;
+                          this.getCarriers();
+                          this.getCarriersPagin();
+                         },
+                        error => {
+                          console.log(error);
+                          this.butGroup.deleteBut = false;
+                          this.butGroup.editBut = false;
+                        }
+                      );
+    
+  }
+
+  processChangePage(event){
+    this.curPage = event;
+    this.getCarriersPagin();
   }
 
   onSubmit() {
+    this.addBut = true;
+    let newUser = this.getAddingUser();
+    this.addCarrier(newUser);
+  }
 
-    console.log(this.form);
+  getCarriers(){
+    this.carCrudService.getAllCarriers()
+                      .subscribe(
+                        (resp: Response) => {
+                          /*if (resp.headers.get('New-Access-Token')) {
+                            localStorage.removeItem('at');
+                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
+                          }*/
+                          this.allCarriers = resp;
+                        },
+                        error => console.log(error)
+                      );
+  }
+
+  getCarriersPagin(){
+    let from = (this.curPage*this.carPerPage)-(this.carPerPage-1);
+    let to = this.curPage*this.carPerPage;
+    console.log(from + ',' + to)
+    this.carCrudService.getCarriersPagin(from, to)
+                      .subscribe(
+                        (resp: Response) => {
+                          /*if (resp.headers.get('New-Access-Token')) {
+                            localStorage.removeItem('at');
+                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
+                          }*/
+                          this.carriers = resp;
+                          console.log(this.carriers);
+                          this.dataAvailable = true;
+                         },
+                        error => console.log(error)
+                      );
+   }
+
+   getAddingUser(){
+     let newUser: AddCarrier;
+     let status: boolean;
+     if(this.form.value['status'] == 'activated'){
+       status = true;
+     }else{
+       status = false;
+     }
+     newUser = {username: this.form.value['name'],
+                password: '1111111',
+                email: this.form.value['email'],
+                telephone_number: this.form.value['tel'],
+                is_activated: status};
+      return newUser;
+  }
+
+  addCarrier(carrier: AddCarrier){
+    this.carCrudService.addCarrier(carrier)
+                      .subscribe(
+                        (resp: Response) => {
+                          /*if (resp.headers.get('New-Access-Token')) {
+                            localStorage.removeItem('at');
+                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
+                          }*/
+                          this.getCarriers();
+                          this.getCarriersPagin();
+                          this.clearform();
+                          console.log('carrier is added');
+                         },
+                        error => {
+                          this.clearform();
+                          console.log(error);
+                        }
+                      );
+  }
+
+  createNewForm(){
+    this.form = new FormGroup(
+      {
+        email: new FormControl('', [Validators.required, Validators.email]),
+        name: new FormControl('', Validators.required),
+        tel: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        status: new FormControl('activated')
+      }
+    );
+  }
+
+  clearform(){
+    this.form.reset();
+    this.createNewForm();
+    this.addBut = false;
   }
 
 }

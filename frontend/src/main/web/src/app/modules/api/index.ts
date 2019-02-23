@@ -1,7 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 
 let baseUrl;
-const apiPort = ':3000/'
+const apiPort = ':80/'
 
 baseUrl = `http://127.0.0.1${apiPort}`
 
@@ -36,8 +36,17 @@ const auth = {
   }
 }
 
+const carrier = {
+  carriers(){
+    return `${baseUrl}api/v1/admin/carrier`;
+  },
+  getCarriersPagin(){
+    return `${baseUrl}api/v1/admin/pagination`;
+  }
+}
+
 export const Api = {
-  auth
+  auth, carrier
 }
 
 export const options = {
