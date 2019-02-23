@@ -22,6 +22,7 @@ import { CarrierComponentComponent } from './carrier/carrier-component/carrier-c
 import { CarrierTableComponent } from './carrier/carrier-table/carrier-table.component';
 
 import { TroubleStatisticsService } from './dashboard/trouble-statistics.service';
+import {NgxPaginationModule} from "ngx-pagination";
 
 @NgModule({
   declarations: [
@@ -42,13 +43,15 @@ import { TroubleStatisticsService } from './dashboard/trouble-statistics.service
     CarrierTableComponent,
     CarrierShowStatusPipe,
     CommonChartComponent,
-    CarCostDashComponent
+    CarCostDashComponent,
+
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxPaginationModule
   ],
   providers: [
     FilterPipePipe,

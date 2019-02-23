@@ -1,6 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Approver} from '../shared/model/approver';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {ApproverService} from "../shared/services/approver.service";
 
 @Component({
   selector: 'app-approver-table',
@@ -9,55 +10,75 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 })
 export class ApproverTableComponent implements OnInit {
 
-  @Input() approvers: Approver;
-
+  @Input() approvers: Approver[];
   @Input() filterCriteria: string;
   @Input() filterContent: string;
 
   currentApproverForUpdate = new Approver();
+  approverId: number;
   isForUpdateMessage = false;
 
   form: FormGroup;
   isEditButtonBlockedAfterSubmit = true;
 
-  constructor() {
+  totalRec: number;
+  page: number = 1;
+  entriesAmountOnPage = 10;
+
+  @Output() emittedApprovers = new EventEmitter<any[]>();
+
+  constructor(private approverService: ApproverService) {
 
   }
 
   ngOnInit() {
 
     this.setFormInDefault();
+    this.totalRec = this.approvers.length;
   }
 
   setFormInDefault() {
 
     this.form = new FormGroup(
       {
-        email: new FormControl('', [Validators.required, Validators.email]),
-        name: new FormControl('', Validators.required),
-        tel: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
-        status: new FormControl('on')
+        user_email: new FormControl('', [Validators.required, Validators.email]),
+        username: new FormControl('', Validators.required),
+        user_telephone: new FormControl('', Validators.required),
+        user_is_activated: new FormControl(false, Validators.required),
       }
     );
   }
 
   onUpdate(event) {
 
-    this.currentApproverForUpdate = event;
+    this.approverId = event.id;
     this.isEditButtonBlockedAfterSubmit = true;
+    this.currentApproverForUpdate = event;
+
+    console.log(this.currentApproverForUpdate);
 
     this.form = new FormGroup(
       {
-        email: new FormControl(this.currentApproverForUpdate.email, [Validators.required, Validators.email]),
-        name: new FormControl(this.currentApproverForUpdate.name, Validators.required),
-        tel: new FormControl(this.currentApproverForUpdate.telephone, [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
-        status: new FormControl(this.currentApproverForUpdate.status)
+        user_email: new FormControl(this.currentApproverForUpdate.user_email, [Validators.required, Validators.email]),
+        username: new FormControl(this.currentApproverForUpdate.user_email, Validators.required),
+        user_telephone: new FormControl(this.currentApproverForUpdate.user_telephone, Validators.required),
+        user_is_activated: new FormControl(this.currentApproverForUpdate.user_is_activated, Validators.required)
       }
     );
   }
 
-  onDelete() {
+  onDelete(event) {
 
+    // this.approverService.deleteApprover(event).subscribe(
+    //   () => {
+    //     this.approverService.getAll()
+    //       .subscribe((data) => {
+    //         this.emittedApprovers.emit(data);
+    //       })
+    //   }
+    // );
+
+    console.log(event);
   }
 
   onSubmit() {
@@ -65,11 +86,26 @@ export class ApproverTableComponent implements OnInit {
     this.isForUpdateMessage = true;
     this.isEditButtonBlockedAfterSubmit = false;
 
-    setTimeout(() => {
+    this.currentApproverForUpdate = this.form.value;
+    this.currentApproverForUpdate.id = this.approverId;
 
-      this.isForUpdateMessage = false;
-      this.currentApproverForUpdate = new Approver();
+    console.log(this.currentApproverForUpdate);
 
-    }, 5000);
+    // this.approverService.putApprover(this.currentApproverForUpdate)
+    //   .subscribe(() => {
+    //     this.isForUpdateMessage = false;
+    //     this.currentApproverForUpdate = new Approver();
+    //
+    //     this.approverService.getAll()
+    //       .subscribe((data) => {
+    //         this.emittedApprovers.emit(data);
+    //       })
+    //   });
+  }
+
+  onChangePage($event) {
+
+    this.page = $event;
+    window.scrollTo(0, 0);
   }
 }

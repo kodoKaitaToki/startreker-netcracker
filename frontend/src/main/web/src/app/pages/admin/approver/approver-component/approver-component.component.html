@@ -28,58 +28,56 @@
         <div class="form-group">
           <input type="text" class="form-control"
                  [ngClass]="{
-                   'is-invalid':form.get('email').touched && form.get('email').invalid,
-                   'is-valid': form.get('email').valid
+                   'is-invalid':form.get('user_email').touched && form.get('user_email').invalid,
+                   'is-valid': form.get('user_email').valid
                    }"
-                 formControlName="email"
+                 formControlName="user_email"
                  placeholder="Email"
           >
-          <span *ngIf="form.get('email').touched && form.get('email').invalid" class="invalid-feedback">Input the correct email</span>
+          <span *ngIf="form.get('user_email').touched && form.get('user_email').invalid" class="invalid-feedback">Input the correct email</span>
         </div>
 
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="Name" formControlName="name"
+          <input type="text" class="form-control" placeholder="Name" formControlName="username"
                  [ngClass]="{
-                   'is-invalid':form.get('name').touched && form.get('name').invalid,
-                   'is-valid': form.get('name').valid
+                   'is-invalid':form.get('username').touched && form.get('username').invalid,
+                   'is-valid': form.get('username').valid
                    }"
           >
-          <span *ngIf="form.get('name').touched && form.get('name').invalid"
+          <span *ngIf="form.get('username').touched && form.get('username').invalid"
                 class="invalid-feedback">Input the name</span>
         </div>
 
         <div class="form-group">
-          <input type="tel" class="form-control" placeholder="Telephone" formControlName="tel"
+          <input type="tel" class="form-control" placeholder="Telephone" formControlName="user_telephone"
                  [ngClass]="{
-                   'is-invalid':form.get('tel').touched && form.get('tel').invalid,
-                   'is-valid': form.get('tel').valid
+                   'is-invalid':form.get('user_telephone').touched && form.get('user_telephone').invalid,
+                   'is-valid': form.get('user_telephone').valid
                    }"
           >
-          <span *ngIf="form.get('tel').touched && form.get('tel').invalid" class="invalid-feedback">Input the correct telephone number</span>
+          <span *ngIf="form.get('user_telephone').touched && form.get('user_telephone').invalid" class="invalid-feedback">Input the correct telephone number</span>
         </div>
 
         <div class="container statusRadio" style="text-align: center">
           <h4>Status</h4>
           <div class="custom-control custom-radio">
             <input type="radio"
-                   id="activated"
-                   name="status"
                    class="custom-control-input"
-                   value="activated"
-                   formControlName="status"
+                   [value]="true"
+                   formControlName="user_is_activated"
+                   id="new_activated"
             >
-            <label class="custom-control-label" for="activated">Activated</label>
+            <label class="custom-control-label" for="new_activated">Activated</label>
           </div>
 
           <div class="custom-control custom-radio">
             <input type="radio"
-                   id="deactivated"
-                   name="status"
                    class="custom-control-input"
-                   value="deactivated"
-                   formControlName="status"
+                   [value]="false"
+                   formControlName="user_is_activated"
+                   id="new_deactivated"
             >
-            <label class="custom-control-label" for="deactivated">Deactivated</label>
+            <label class="custom-control-label" for="new_deactivated">Deactivated</label>
           </div>
         </div>
 
@@ -97,11 +95,10 @@
     </div>
 
     <div class="col-md-9">
-      <app-approver-table [approvers]="defaultApprovers"
-                          (notifyAboutUpdate)="processUpdateEvent($event)"
-                          (notifyAboutDelete)="processDeleteNotification()"
+      <app-approver-table [approvers]="approvers"
                           [filterCriteria]="currentFilter"
                           [filterContent]="filterContent"
+                          (emittedApprovers)="onEmittedApprovers($event)"
       >
       </app-approver-table>
     </div>

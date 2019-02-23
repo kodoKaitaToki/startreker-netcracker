@@ -1,6 +1,8 @@
 <div class="list-group">
   <ul>
-    <li class="list-group-item" *ngFor="let approver of approvers | filter: filterCriteria: filterContent">
+    <li class="list-group-item"
+        *ngFor="let approver of approvers | filter: filterCriteria: filterContent
+        | paginate: {id: 'listing_pagination', itemsPerPage: entriesAmountOnPage, currentPage: page ,totalItems: totalRec}">
       <div class="row">
         <div class="col-1"
              title="id"
@@ -20,7 +22,7 @@
           </div>
 
           <div class="col-1 offset-1">
-            <p data-placement="top" data-toggle="tooltip" title="Delete" (click)="onDelete()" class="deletePrgph">
+            <p data-placement="top" data-toggle="tooltip" title="Delete" (click)="onDelete(approver)" class="deletePrgph">
               <button class="btn btn-danger btn-md" data-title="Delete" data-toggle="modal" data-target="#delete"><i
                 class="fa fa-trash"></i></button>
             </p>
@@ -36,13 +38,13 @@
             <div class="row">
               <h3 class="col-2">Name</h3>
               <h3 class="col-2 offset-3" *ngIf="currentApproverForUpdate !== approver">
-                {{approver.name}}</h3>
+                {{approver.username}}</h3>
               <input type="text" class="form-control"
-                     [value]="currentApproverForUpdate.name"
-                     formControlName="name" *ngIf="currentApproverForUpdate === approver && !isForUpdateMessage"
+                     [value]="currentApproverForUpdate.username"
+                     formControlName="username" *ngIf="currentApproverForUpdate === approver && !isForUpdateMessage"
                      [ngClass]="{
-                   'is-invalid':form.get('name').invalid,
-                   'is-valid': form.get('name').valid
+                   'is-invalid':form.get('username').invalid,
+                   'is-valid': form.get('username').valid
                    }"
               >
             </div>
@@ -52,13 +54,13 @@
             <div class="row">
               <h5 class="col-2">Email</h5>
               <p class="col-2 offset-3" *ngIf="currentApproverForUpdate !== approver">
-                {{approver.email}}</p>
+                {{approver.user_email}}</p>
               <input type="text" class="form-control"
-                     [value]="currentApproverForUpdate.email"
-                     formControlName="email" *ngIf="currentApproverForUpdate === approver && !isForUpdateMessage"
+                     [value]="currentApproverForUpdate.user_email"
+                     formControlName="user_email" *ngIf="currentApproverForUpdate === approver && !isForUpdateMessage"
                      [ngClass]="{
-                   'is-invalid':form.get('email').invalid,
-                   'is-valid': form.get('email').valid
+                   'is-invalid':form.get('user_email').invalid,
+                   'is-valid': form.get('user_email').valid
                    }"
               >
             </div>
@@ -68,14 +70,13 @@
             <div class="row">
               <h5 class="col-2">Telephone</h5>
               <p class="col-2 offset-3" *ngIf="currentApproverForUpdate !== approver">
-                {{approver.telephone}}</p>
-              <input type="tel" class="form-control" formControlName="tel"
+                {{approver.user_telephone}}</p>
+              <input type="tel" class="form-control" formControlName="user_telephone"
                      *ngIf="currentApproverForUpdate === approver && !isForUpdateMessage"
-                     [value]="currentApproverForUpdate.telephone"
-                     [disabled]="isForUpdateMessage"
+                     [value]="currentApproverForUpdate.user_telephone"
                      [ngClass]="{
-                   'is-invalid':form.get('tel').invalid,
-                   'is-valid': form.get('tel').valid
+                   'is-invalid':form.get('user_telephone').invalid,
+                   'is-valid': form.get('user_telephone').valid
                    }"
               >
             </div>
@@ -86,11 +87,11 @@
               <h5 class="col-2">Status</h5>
               <div class="col-4 offset-3 alert text-center" *ngIf="currentApproverForUpdate !== approver"
                    [ngClass]="{
-               'alert-success': (approver.status === 'on'),
-               'alert-danger': (approver.status === 'off')
+               'alert-success': (approver.user_is_activated === true),
+               'alert-danger': (approver.user_is_activated === false)
                }"
               >
-                {{approver.status | aprroverShowStatus}}
+                {{approver.user_is_activated | aprroverShowStatus}}
               </div>
             </div>
 
@@ -98,38 +99,37 @@
                  *ngIf="currentApproverForUpdate === approver && !isForUpdateMessage"
             >
               <input type="radio"
-                     id="updateActivated"
-                     name="status"
                      class="custom-control-input"
-                     value="on"
-                     formControlName="status"
+                     [value]="true"
+                     formControlName="user_is_activated"
+                     id="update_actived"
               >
-              <label class="custom-control-label" for="updateActivated">Activated</label>
+              <label class="custom-control-label" for="update_actived">Activated</label>
             </div>
 
             <div class="custom-control custom-radio custom-control-inline"
                  *ngIf="currentApproverForUpdate === approver && !isForUpdateMessage"
             >
               <input type="radio"
-                     id="updateDeactivated"
-                     name="status"
                      class="custom-control-input"
-                     value="off"
-                     formControlName="status"
+                     [value]="false"
+                     formControlName="user_is_activated"
+                     id="update_inactived"
               >
-              <label class="custom-control-label" for="updateDeactivated">Deactivated</label>
+              <label class="custom-control-label" for="update_inactived">Deactivated</label>
             </div>
 
             <hr>
 
             <div class="row">
               <h5 class="col-2">Date of creation</h5>
-              <p class="col-2 offset-3">{{approver.creation_date | date}}</p>
+              <p class="col-2 offset-3">{{approver.user_created_cate | date}}</p>
             </div>
 
             <hr>
 
-            <div class="row" *ngIf="currentApproverForUpdate === approver && isEditButtonBlockedAfterSubmit && !isForUpdateMessage"
+            <div class="row"
+                 *ngIf="currentApproverForUpdate === approver && isEditButtonBlockedAfterSubmit && !isForUpdateMessage"
             >
               <button class="btn btn-success col-4"
                       type="submit"
@@ -150,25 +150,8 @@
       </form>
     </li>
   </ul>
+  <pagination-controls id="listing_pagination" maxSize=5 (pageChange)="onChangePage($event)"
+                       class="text-center"></pagination-controls>
 </div>
 
 <hr>
-
-<div class="clearfix"></div>
-<ul class="pagination" style="justify-content: center">
-  <li class="page-item">
-    <a class="page-link" href="#" aria-label="Previous">
-      <span aria-hidden="true">&laquo;</span>
-      <span class="sr-only">Previous</span>
-    </a>
-  </li>
-  <li class="page-item"><a class="page-link" href="#">1</a></li>
-  <li class="page-item"><a class="page-link" href="#">2</a></li>
-  <li class="page-item"><a class="page-link" href="#">3</a></li>
-  <li class="page-item">
-    <a class="page-link" href="#" aria-label="Next">
-      <span aria-hidden="true">&raquo;</span>
-      <span class="sr-only">Next</span>
-    </a>
-  </li>
-</ul>

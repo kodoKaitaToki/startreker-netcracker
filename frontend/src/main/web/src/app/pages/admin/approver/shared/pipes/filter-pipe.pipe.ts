@@ -7,6 +7,6 @@ export class FilterPipePipe implements PipeTransform {
 
   transform(object: any[], fieldName: string, searchStr: string): any {
 
-    return object.filter(obj => obj[fieldName].toLowerCase().indexOf(searchStr.toLowerCase()) !== -1);
+    return object.filter(obj => obj[fieldName].toString().toLowerCase().indexOf(searchStr.toString().toLowerCase()) !== -1);
   }
 }
