@@ -35,8 +35,8 @@ public class Bundle {
     @Attribute("start_date")
     private String bundlePhotoUri;
 
-    private List<TicketClass> bundle_tickets;
+    private List<TicketClass> bundleTickets;
 
-    private List<Service> bundle_services;
+    private List<Service> bundleServices;
 
 }

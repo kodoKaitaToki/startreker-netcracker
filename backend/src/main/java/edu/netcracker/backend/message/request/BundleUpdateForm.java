@@ -6,12 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class BundleUpdateForm extends BundleForm {
 
-    @JsonProperty("bundle_id")
-    private Integer bundleId;
+    @NotNull
+    @JsonProperty("id")
+    private Integer id;
 }
