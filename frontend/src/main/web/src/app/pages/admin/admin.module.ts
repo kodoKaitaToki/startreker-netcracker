@@ -8,8 +8,6 @@ import {ApproverCrudComponent} from './approver/approver-crud/approver-crud.comp
 import {CarrierCrudComponent} from './carrier/carrier-crud/carrier-crud.component';
 import {DashboardsComponent} from './dashboard/dashboards/dashboards.component';
 import {BundlesCrudComponent} from './bundles-crud/bundles-crud.component';
-import {UserDetailsComponent} from './user-details/user-details.component';
-import {ListsChartsComponent} from './lists-charts/lists-charts.component';
 import {ApproverComponentComponent} from './approver/approver-component/approver-component.component';
 import {ApproverTableComponent} from './approver/approver-table/approver-table.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -33,8 +31,6 @@ import { TroubleStatisticsService } from './dashboard/trouble-statistics.service
     CarrierCrudComponent,
     BundlesCrudComponent,
     DashboardsComponent,
-    UserDetailsComponent,
-    ListsChartsComponent,
     ApproverComponentComponent,
     ApproverTableComponent,
     ApproverCrudComponent,

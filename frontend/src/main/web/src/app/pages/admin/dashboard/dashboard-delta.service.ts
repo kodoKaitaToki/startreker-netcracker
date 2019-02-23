@@ -15,18 +15,36 @@ export class DashboardDeltaService {
     this.actionUrl = _configuration.ServerWithApiUrl + 'v1/admin/increasing';
   }
 
-  public getUsersIncreasingPerPeriod(from: string, to: string): Observable<Map<string, number>>{
+  public getUsersIncreasingPerPeriod(from: string, to: string): Observable<Map<Date, number>>{
+      return this.getIncreasingPerPeriod(from, to, "users")
+  }
+
+  public getCarriersIncreasingPerPeriod(from: string, to: string): Observable<Map<Date, number>>{
+      return this.getIncreasingPerPeriod(from, to, "carriers")
+  }
+
+  public getLocationsIncreasingPerPeriod(from: string, to: string): Observable<Map<Date, number>>{
+      return this.getIncreasingPerPeriod(from, to, "locations")
+  }
+
+  public getIncreasingPerPeriod(from: string, to: string, type: string): Observable<Map<Date, number>>{
       let headers = new HttpHeaders();
       headers.append('Content-Type', 'application/json');
 
       let params = new HttpParams().set("from", from).set("to", to);
 
-      return this.http.get<any>(this.actionUrl + "/users", {headers: headers, params: params})
+      return this.http.get<any>(this.actionUrl + "/" + type, {headers: headers, params: params})
         .pipe(map(res => {
           let map = new Map();
           for (let key of Object.keys(res)) {
-            map.set(key, res[key]);
+            map.set(new Date(key), res[key]);
           }
+          map = new Map([...map.entries()].sort(function compare(a, b) {
+            var dateA = new Date(a[0]);
+            var dateB = new Date(b[0]);
+            return dateA.getTime() - dateB.getTime();
+          }));
+
           return map;
       }))
   }

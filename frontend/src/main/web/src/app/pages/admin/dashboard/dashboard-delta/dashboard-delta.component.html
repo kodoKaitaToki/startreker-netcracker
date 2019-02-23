@@ -1,40 +1,71 @@
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-6 my-3">
-      <div id="carrierChartContainer" style="height: 370px; width: 100%;"></div>
-    </div>
-    <div class="col-md-6 my-3">
-      <div id="userChartContainer" style="height: 370px; width: 100%;"></div>
-    </div>
-  </div>
-  <div class="row justify-content-center">
-    <div class="col-md-6 my-3">
-      <div id="locationChartContainer" style="height: 370px; width: 100%;"></div>
-    </div>
-    <div class="col-md-6 my-3">
-      <div class="row justify-content-center">
-        <div class="col-lg-6">
-          <h6 class="search-bar__heading">From:</h6>
-        </div>
-        <div class="col-lg-6">
-          <h6 class="search-bar__heading">To:</h6>
-        </div>
-      </div>
-      <div class="row justify-content-center">
-        <div class="col-lg-6">
-          <input type="date" id="fromDate" class="form-control datepicker">
-        </div>
-        <div class="col-lg-6">
-          <input type="date" id="toDate" class="form-control datepicker">
-        </div>
-      </div>
-      <hr class="hr-xs">
-      <div class="row justify-content-around">
-        <div class="col-lg-5">
-          <input type="submit" value="Last week" class="btn btn-primary btn-block">
-        </div>
-        <div class="col-lg-5">
-          <input type="submit" value="Last month" class="btn btn-primary btn-block">
+    <div class="col-md-12 my-auto">
+      <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
+        <div class="card-body">
+          <h3 class='title'>Popularity statistics</h3>
+          <div class="row justify-content-center">
+            <div class="col-md-6 my-3">
+              <div id="carrierChartContainer" style="height: 370px; width: 100%;"></div>
+            </div>
+            <div class="col-md-6 my-3">
+              <div id="userChartContainer" style="height: 370px; width: 100%;"></div>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-md-6 my-3">
+              <div id="locationChartContainer" style="height: 370px; width: 100%;"></div>
+            </div>
+            <div class="col-md-6 my-3">
+              <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="row justify-content-center">
+                  <div class="col-lg-6">
+                    <h6 class="search-bar__heading">From:</h6>
+                  </div>
+                  <div class="col-lg-6">
+                    <h6 class="search-bar__heading">To:</h6>
+                  </div>
+                </div>
+
+                <div class="row justify-content-center">
+                  <div class="col-lg-6">
+                    <input
+                      type="date"
+                      id="fromDate"
+                      [value]="form.value.fromDate | date:'yyyy-MM-dd'"
+                      (input)="form.value.fromDate = $event.target.valueAsDate"
+                      class="form-control datepicker"
+                    >
+                  </div>
+                  <div class="col-lg-6">
+                    <input
+                      type="date"
+                      id="toDate"
+                      [value]="form.value.toDate | date:'yyyy-MM-dd'"
+                      (input)="form.value.toDate = $event.target.valueAsDate"
+                      class="form-control datepicker"
+                    >
+                  </div>
+                </div>
+
+                <hr class="hr-xs">
+
+                <div class="row justify-content-around">
+                  <div class="col-lg-5">
+                    <button type="button" (click)="setToWeek()" class="btn btn-primary btn-block">Last week</button>
+                  </div>
+                  <div class="col-lg-5">
+                    <button type="button" (click)="setToMonth()" class="btn btn-primary btn-block">Last month</button>
+                  </div>
+                </div>
+
+                <hr>
+
+                <button type="submit" class="btn-success btn col-md-12">Update statistics</button>
+              </form>
+
+            </div>
+          </div>
         </div>
       </div>
     </div>
