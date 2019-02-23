@@ -1,7 +1,32 @@
 <app-navbar></app-navbar>
 
 <div class="container">
-    <app-car-cost-dash [carriers]="defaultCarriers"></app-car-cost-dash>
+    <h2>Choose a carrier:</h2>
+    <div class="row">
+              
+        <select class="form-control col-md-12 col-sm-12 col-lg-4" (click)="chooseNewFilter($event.target)">
+              
+            <option *ngFor="let filters of filterCriteria" [value]="filters.name">
+              
+                {{filters.name}}
+              
+            </option>
+              
+        </select>
+              
+        <input type="text" class="form-control col-md-12 col-sm-12 col-lg-7 offset-lg-1"
+                [placeholder]="currentFilterPlaceholder"
+                [(ngModel)]="filterContent"
+        />
+              
+    </div>
     
-    <app-common-chart></app-common-chart>
+    <app-car-cost-dash [carriers]="defaultCarriers"
+                        [carTickets]="carTickets"
+                        [carName]='carName'
+                        (sendCarCosts)="processCarCosts($event)">
+    </app-car-cost-dash>
+    
+    <app-common-chart [tickets]="tickets"
+                    (sendCosts)="processCosts($event)"></app-common-chart>
 </div>

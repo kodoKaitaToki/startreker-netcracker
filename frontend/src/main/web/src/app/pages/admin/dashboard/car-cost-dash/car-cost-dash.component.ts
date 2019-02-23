@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import * as CanvasJS from '../../canvasjs.min';
 import { Data } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { DashCostService } from '../dashCostService';
 
 @Component({
   selector: 'app-car-cost-dash',
@@ -20,6 +19,8 @@ export class CarCostDashComponent implements OnInit {
   intervalBut = false;
   checkBut = true;
 
+  intervalDataPoints = [100,100,100];
+
   filterCriteria = [
     {name: 'id'},
     {name: 'name'},
@@ -31,14 +32,10 @@ export class CarCostDashComponent implements OnInit {
   currentFilter = this.filterCriteria[0].name;
   currentFilterPlaceholder = `Search by ${this.currentFilter}`;
 
-  weakDataPoints = [21,15,10];
-  monthDataPoints = [71,55,50];
-  intervalDataPoints = [100,100,100];
-
   dateFrom:Data;
   dateTo:Data;
 
-  private dashCostService: DashCostService;
+  carTickets: number[] = [];
 
   constructor(private datePipe: DatePipe) { }
 
@@ -67,8 +64,6 @@ export class CarCostDashComponent implements OnInit {
 			}]
 		});
 
-		console.log(chart);
-
 		chart.render();
 	}
 
@@ -82,17 +77,8 @@ export class CarCostDashComponent implements OnInit {
 	getWeakStat(){
 		this.butWeak = true;
 		this.butMonth = false;
-
-		/*let id;
-
-		this.dashCostService
-			.getCarrierPerWeak(id)
-			.subscribe((data: {}) => {
-				console.log(data);
-			});*/
-
-
-		this.getStatistics(this.carriers[0].weak, 'per weak');
+					  
+		this.getStatistics(this.carriers[0].weak, 'per week');
 	}
 
 	getMonthStat(){

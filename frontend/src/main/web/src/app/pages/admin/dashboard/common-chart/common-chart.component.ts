@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import * as CanvasJS from '../../canvasjs.min';
 import { Data } from '@angular/router';
 import { DatePipe } from '@angular/common';
@@ -23,14 +23,24 @@ export class CommonChartComponent implements OnInit {
 
 
   currentFilter = this.filterCriteria[0].name;
-  currentFilterPlaceholder = `Search by ${this.currentFilter}`;
+	currentFilterPlaceholder = `Search by ${this.currentFilter}`;
+	
+	tickets: number[] = [];
 
   weakDataPoints = [21,15,10];
   monthDataPoints = [71,55,50];
   intervalDataPoints = [100,100,100];
 
   dateFrom:Data;
-  dateTo:Data;
+	dateTo:Data;
+	
+	data = {
+		from: '',
+		to: ''
+	}
+
+	@Output() 
+  sendCarCosts: EventEmitter<number[]> = new EventEmitter<number[]>();
 
   constructor(private datePipe: DatePipe) {
   }
@@ -64,6 +74,15 @@ export class CommonChartComponent implements OnInit {
 	getWeakStat(){
 		this.butWeak = true;
 		this.butMonth = false;
+
+		/*this.data = {
+			from: new Date(),
+			to: 
+		};
+
+		this.sendCarCosts.emit(this.data);*/
+
+		this.getStatistics(this.tickets, 'per weak');
 		this.getStatistics(this.weakDataPoints, 'per weak');
 	}
 

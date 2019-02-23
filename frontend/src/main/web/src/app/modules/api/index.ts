@@ -45,8 +45,14 @@ const carrier = {
   }
 }
 
+const costDash = {
+  getCosts(){
+    return `${baseUrl}api/v1/admin/costs`;
+  }
+}
+
 export const Api = {
-  auth, carrier
+  auth, carrier, costDash
 }
 
 export const options = {

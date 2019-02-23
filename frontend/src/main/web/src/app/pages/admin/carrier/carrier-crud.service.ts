@@ -11,7 +11,6 @@ import { AddCarrier } from './addCarrier';
 })
 export class CarrierCrudService {
 
-    private actionUrl: string;
     allCarrier;
 
     constructor(private http: HttpClient) {
