@@ -1,4 +1,4 @@
-package edu.netcracker.backend.util;
+package edu.netcracker.backend.utils;
 
 import edu.netcracker.backend.dao.RoleDAO;
 import edu.netcracker.backend.model.Role;

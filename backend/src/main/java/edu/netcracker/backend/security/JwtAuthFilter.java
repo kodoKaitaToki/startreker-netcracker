@@ -4,8 +4,8 @@ import edu.netcracker.backend.model.User;
 
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.service.impl.UserInformationHolderServiceImpl;
-import edu.netcracker.backend.util.AuthorityUtils;
-import edu.netcracker.backend.util.JwtUtils;
+import edu.netcracker.backend.utils.AuthorityUtils;
+import edu.netcracker.backend.utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

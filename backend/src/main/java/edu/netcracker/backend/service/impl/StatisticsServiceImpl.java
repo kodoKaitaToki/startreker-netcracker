@@ -4,6 +4,7 @@ import edu.netcracker.backend.dao.StatisticsDAO;
 import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
 import edu.netcracker.backend.message.response.ServiceDistributionElement;
 import edu.netcracker.backend.message.response.TripDistributionElement;
+import edu.netcracker.backend.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,12 +12,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class StatisticsService {
+public class StatisticsServiceImpl implements StatisticsService {
 
     private final StatisticsDAO statisticsDAO;
 
     @Autowired
-    public StatisticsService(StatisticsDAO statisticsDAO) {
+    public StatisticsServiceImpl(StatisticsDAO statisticsDAO) {
         this.statisticsDAO = statisticsDAO;
     }
 

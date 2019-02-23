@@ -1,7 +1,7 @@
 package edu.netcracker.backend.service;
 
 import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
-import edu.netcracker.backend.service.impl.StatisticsService;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +24,34 @@ public class StatisticsServiceTest {
     @Autowired
     private StatisticsService statisticsService;
 
+    private static CarrierStatisticsResponse tripsSalesTestExpected;
+    private static CarrierStatisticsResponse tripsSalesTestWithTimeLimitsExpected;
+    private static CarrierStatisticsResponse servicesSalesTestExpected;
+    private static CarrierStatisticsResponse servicesSalesTestWithTimeLimitsExpected;
+
+    @BeforeClass
+    public static void init() {
+        tripsSalesTestExpected = new CarrierStatisticsResponse();
+        tripsSalesTestExpected.setSold(17L);
+        tripsSalesTestExpected.setRevenue(480026L);
+
+        tripsSalesTestWithTimeLimitsExpected = new CarrierStatisticsResponse();
+        tripsSalesTestWithTimeLimitsExpected.setSold(5L);
+        tripsSalesTestWithTimeLimitsExpected.setRevenue(140749L);
+
+        servicesSalesTestExpected = new CarrierStatisticsResponse();
+        servicesSalesTestExpected.setSold(7L);
+        servicesSalesTestExpected.setRevenue(3156L);
+
+        servicesSalesTestWithTimeLimitsExpected = new CarrierStatisticsResponse();
+        servicesSalesTestWithTimeLimitsExpected.setSold(3L);
+        servicesSalesTestWithTimeLimitsExpected.setRevenue(1546L);
+    }
+
     @Test
     public void getTripsSalesStatisticsTest(){
         CarrierStatisticsResponse cres = statisticsService.getTripsSalesStatistics(21);
-        CarrierStatisticsResponse expectedCres = new CarrierStatisticsResponse();
-        expectedCres.setSold(17L);
-        expectedCres.setRevenue(480026L);
-        assertThat(cres, equalTo(expectedCres));
+        assertThat(cres, equalTo(tripsSalesTestExpected));
     }
 
     @Test
@@ -39,19 +60,13 @@ public class StatisticsServiceTest {
                 21,
                 LocalDate.of(2015, 1, 1),
                 LocalDate.of(2020, 1, 1));
-        CarrierStatisticsResponse expectedCres = new CarrierStatisticsResponse();
-        expectedCres.setSold(5L);
-        expectedCres.setRevenue(140749L);
-        assertThat(cres, equalTo(expectedCres));
+        assertThat(cres, equalTo(tripsSalesTestWithTimeLimitsExpected));
     }
 
     @Test
     public void getServicesSalesStatisticsTest(){
         CarrierStatisticsResponse cres = statisticsService.getServicesSalesStatistics(21);
-        CarrierStatisticsResponse expectedCres = new CarrierStatisticsResponse();
-        expectedCres.setSold(7L);
-        expectedCres.setRevenue(3156L);
-        assertThat(cres, equalTo(expectedCres));
+        assertThat(cres, equalTo(servicesSalesTestExpected));
     }
 
     @Test
@@ -60,9 +75,6 @@ public class StatisticsServiceTest {
                 21,
                 LocalDate.of(2015, 1, 1),
                 LocalDate.of(2020, 1, 1));
-        CarrierStatisticsResponse expectedCres = new CarrierStatisticsResponse();
-        expectedCres.setSold(3L);
-        expectedCres.setRevenue(1546L);
-        assertThat(cres, equalTo(expectedCres));
+        assertThat(cres, equalTo(servicesSalesTestWithTimeLimitsExpected));
     }
 }

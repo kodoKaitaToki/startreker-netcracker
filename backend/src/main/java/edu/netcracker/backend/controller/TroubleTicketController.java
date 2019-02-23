@@ -18,14 +18,14 @@ public class TroubleTicketController {
         this.reportStatisticsBuilder = reportStatisticsBuilder;
     }
 
-    @GetMapping("v1/api/trouble/statistics")
+    @GetMapping("api/v1/trouble/statistics")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ReportStatisticsResponse getStatistics(){
         return fullStatBuilder()
                 .build();
     }
 
-    @GetMapping("v1/api/trouble/statistics/{id}")
+    @GetMapping("api/v1/trouble/statistics/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ReportStatisticsResponse getStatistics(@PathVariable Long id){
         return fullStatBuilder()

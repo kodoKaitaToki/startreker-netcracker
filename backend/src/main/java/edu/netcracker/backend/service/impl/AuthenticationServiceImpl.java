@@ -11,7 +11,7 @@ import edu.netcracker.backend.security.JwtProvider;
 import edu.netcracker.backend.service.AuthenticationService;
 import edu.netcracker.backend.service.EmailService;
 import edu.netcracker.backend.service.UserService;
-import edu.netcracker.backend.util.AuthorityUtils;
+import edu.netcracker.backend.utils.AuthorityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;

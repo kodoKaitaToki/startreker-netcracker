@@ -5,7 +5,7 @@ import edu.netcracker.backend.dao.mapper.StatMapper;
 import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
 import edu.netcracker.backend.message.response.ServiceDistributionElement;
 import edu.netcracker.backend.message.response.TripDistributionElement;
-import edu.netcracker.backend.util.ReportStatus;
+import edu.netcracker.backend.utils.ReportStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
-import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;

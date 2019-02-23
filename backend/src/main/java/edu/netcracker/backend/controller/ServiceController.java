@@ -4,7 +4,7 @@ import edu.netcracker.backend.message.request.TimeInterval;
 import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
 import edu.netcracker.backend.message.response.ServiceDistributionElement;
 import edu.netcracker.backend.security.SecurityContext;
-import edu.netcracker.backend.service.impl.StatisticsService;
+import edu.netcracker.backend.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +23,13 @@ public class ServiceController {
         this.securityContext = securityContext;
     }
 
-    @GetMapping("v1/api/service/distribution")
+    @GetMapping("api/v1/service/distribution")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<ServiceDistributionElement> getServiceStatistics(){
         return statisticsService.getServiceStatistics();
     }
 
-    @GetMapping(value = "v1/api/service/sales")
+    @GetMapping(value = "api/v1/service/sales")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public CarrierStatisticsResponse getServicesSalesStatistics(TimeInterval timeInterval){
         return timeInterval != null && timeInterval.isProvided()

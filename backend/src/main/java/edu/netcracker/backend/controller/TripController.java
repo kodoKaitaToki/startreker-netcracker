@@ -4,7 +4,7 @@ import edu.netcracker.backend.message.request.TimeInterval;
 import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
 import edu.netcracker.backend.message.response.TripDistributionElement;
 import edu.netcracker.backend.security.SecurityContext;
-import edu.netcracker.backend.service.impl.StatisticsService;
+import edu.netcracker.backend.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +23,13 @@ public class TripController {
         this.securityContext = securityContext;
     }
 
-    @GetMapping("v1/api/trip/distribution")
+    @GetMapping("api/v1/trip/distribution")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<TripDistributionElement> getTripsStatistics(){
         return statisticsService.getTripsStatistics();
     }
 
-    @GetMapping(value = "v1/api/trip/sales")
+    @GetMapping(value = "api/v1/trip/sales")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public CarrierStatisticsResponse getTripsSalesStatistics(TimeInterval timeInterval){
         return timeInterval != null && timeInterval.isProvided()
