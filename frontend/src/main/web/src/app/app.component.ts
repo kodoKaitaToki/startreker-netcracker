@@ -18,14 +18,5 @@ export class AppComponent implements OnInit {
 
   ngOnInit()  {
 
-    this.getRequest()
-      .subscribe(data => {
-        this.user = data;
-      })
-  }
-
-  getRequest() {
-
-    return this.http.get('http://localhost:8090/api');
   }
 }
