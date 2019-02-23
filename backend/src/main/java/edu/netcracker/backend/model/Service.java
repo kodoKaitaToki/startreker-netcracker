@@ -21,4 +21,6 @@ public class Service {
 
     @Attribute("service_description")
     private String serviceDescription;
+
+    private Integer servicePrice;
 }

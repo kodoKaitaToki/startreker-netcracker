@@ -1,6 +1,5 @@
 package edu.netcracker.backend.dao;
 
-import edu.netcracker.backend.model.Role;
 import edu.netcracker.backend.model.Service;
 
 import java.util.List;
@@ -13,7 +12,7 @@ public interface ServiceDAO {
 
     void delete(Service service);
 
-    List<Service> findAll(Role role);
+    List<Service> findAll();
 
     List<Service> findAllByTicketId(Number id);
 
