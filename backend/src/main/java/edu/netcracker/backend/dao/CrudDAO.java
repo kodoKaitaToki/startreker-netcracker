@@ -35,7 +35,7 @@ public abstract class CrudDAO<T> {
     private GenericMapper<T> genericMapper;
     private Map<Field, PrimaryKey> fieldPrimaryKeyMap = new HashMap<>();
     private Map<Field, Attribute> fieldAttributeMap = new HashMap<>();
-    private final Logger logger = LoggerFactory.getLogger(CrudDAO.class);
+    protected final Logger logger = LoggerFactory.getLogger(CrudDAO.class);
 
     @Autowired
     public CrudDAO() {

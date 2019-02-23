@@ -18,6 +18,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { RecoveryComponent } from './pages/recovery/recovery.component';
 
+import { Configuration } from './app.constants';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,7 +42,7 @@ import { RecoveryComponent } from './pages/recovery/recovery.component';
     AngularFontAwesomeModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [Configuration],
   bootstrap: [AppComponent]
 })
 export class AppModule {
