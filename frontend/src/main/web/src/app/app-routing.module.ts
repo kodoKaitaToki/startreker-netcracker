@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
 import { LandingComponent } from './pages/landing/landing.component';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -23,6 +22,14 @@ const routes: Routes = [
 
     // canActivate: [AuthGuard],
     // data: {roles: [Role.Admin]}
+  },
+  { path: 'carrier',
+    loadChildren: './pages/carrier/carrier.module#CarrierModule',
+
+    //IMPORTANT! Lines below should be uncommented later to activate Auth guard
+
+    // canActivate: [AuthGuard],
+    // data: {roles: [Role.Carrier]}
   },
   { path: '**', redirectTo: '/notFound'}
 ];

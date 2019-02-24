@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -69,10 +68,5 @@ public class UserDAOTest {
 
         check = userDAO.findByUsername("testuser").get();
         assertThat(check.getUsername(), equalTo("testuser"));
-    }
-
-    @Test(expected = UsernameNotFoundException.class)
-    public void shouldThrowUsernameNotFoundException(){
-        userDAO.loadUserByUsername("notexisting");
     }
 }

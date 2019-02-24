@@ -24,5 +24,4 @@ public class TripController {
     public List<TripDistributionElement> getTripsStatistics(){
         return statisticsDAO.getTripsStatistics();
     }
-
 }
