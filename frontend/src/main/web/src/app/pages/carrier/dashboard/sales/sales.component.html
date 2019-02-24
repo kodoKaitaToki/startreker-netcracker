@@ -16,17 +16,9 @@
           <hr class="hr-xs">
 
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            <div class="row justify-content-center">
+            <div class="form-row justify-content-center">
               <div class="col-lg-6">
                 <h6 class="search-bar__heading">From:</h6>
-              </div>
-              <div class="col-lg-6">
-                <h6 class="search-bar__heading">To:</h6>
-              </div>
-            </div>
-
-            <div class="row justify-content-center">
-              <div class="col-lg-6">
                 <input
                   type="date"
                   id="fromDate"
@@ -36,6 +28,7 @@
                 >
               </div>
               <div class="col-lg-6">
+                <h6 class="search-bar__heading">To:</h6>
                 <input
                   type="date"
                   id="toDate"
