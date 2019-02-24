@@ -4,25 +4,30 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ApproverService} from "../shared/services/approver.service";
 
 @Component({
-  selector: 'app-approver-table',
-  templateUrl: './approver-table.component.html',
-  styleUrls: ['./approver-table.component.scss']
-})
+             selector: 'app-approver-table',
+             templateUrl: './approver-table.component.html',
+             styleUrls: ['./approver-table.component.scss']
+           })
 export class ApproverTableComponent implements OnInit {
 
   @Input() approvers: Approver[];
+
   @Input() filterCriteria: string;
+
   @Input() filterContent: string;
 
   currentApproverForUpdate: Approver;
 
   isForUpdateAlertMessage = false;
+
   isEditButtonBlockedAfterSubmit = true;
 
   form: FormGroup;
 
   totalRec: number;
+
   page: number = 1;
+
   entriesAmountOnPage = 10;
 
   @Output() onUpdateDataNotifier = new EventEmitter();
@@ -56,21 +61,21 @@ export class ApproverTableComponent implements OnInit {
     this.currentApproverForUpdate = onClickedApproverForUpdate;
 
     this.form.patchValue({
-      email: this.currentApproverForUpdate.email,
-      username: this.currentApproverForUpdate.username,
-      telephone_number: this.currentApproverForUpdate.telephone_number,
-      is_activated: this.currentApproverForUpdate.is_activated
-    });
+                           email: this.currentApproverForUpdate.email,
+                           username: this.currentApproverForUpdate.username,
+                           telephone_number: this.currentApproverForUpdate.telephone_number,
+                           is_activated: this.currentApproverForUpdate.is_activated
+                         });
   }
 
   onApproverDelete(onClickedApproverForDelete) {
 
     this.approverSrvc.deleteApprover((ApproverTableComponent.deleteUnnecessaryFieldAfterClick(onClickedApproverForDelete)))
-      .subscribe(
-        () => {
-          this.onUpdateDataNotifier.emit();
-        },
-        () => alert('On updating an error occurred'));
+        .subscribe(
+          () => {
+            this.onUpdateDataNotifier.emit();
+          },
+          () => alert('On updating an error occurred'));
   }
 
   onSubmitUpdate() {
@@ -80,18 +85,19 @@ export class ApproverTableComponent implements OnInit {
 
     this.form.value.id = this.currentApproverForUpdate.id;
 
-    this.approverSrvc.putApprover(this.form.value).subscribe(
-      () => {
-      },
-      () => alert('On updating an error occurred')
-    );
+    this.approverSrvc.putApprover(this.form.value)
+        .subscribe(
+          () => {
+          },
+          () => alert('On updating an error occurred')
+        );
 
     setTimeout(() => {
-        this.closeUpdateForm();
+                 this.closeUpdateForm();
 
-        this.onUpdateDataNotifier.emit();
-      },
-      5000);
+                 this.onUpdateDataNotifier.emit();
+               },
+               5000);
   }
 
   onChangePage($event) {
@@ -107,7 +113,7 @@ export class ApproverTableComponent implements OnInit {
     return approver;
   }
 
-  closeUpdateForm(){
+  closeUpdateForm() {
     this.currentApproverForUpdate = null;
     this.isForUpdateAlertMessage = false;
   }

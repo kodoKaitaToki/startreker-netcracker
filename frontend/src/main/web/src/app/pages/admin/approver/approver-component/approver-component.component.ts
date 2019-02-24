@@ -4,10 +4,10 @@ import {Approver} from '../shared/model/approver';
 import {ApproverService} from "../shared/services/approver.service";
 
 @Component({
-  selector: 'app-approver-component',
-  templateUrl: './approver-component.component.html',
-  styleUrls: ['./approver-component.component.scss']
-})
+             selector: 'app-approver-component',
+             templateUrl: './approver-component.component.html',
+             styleUrls: ['./approver-component.component.scss']
+           })
 export class ApproverComponentComponent implements OnInit {
 
   approvers: Approver[] = [];
@@ -21,6 +21,7 @@ export class ApproverComponentComponent implements OnInit {
   filterContent = '';
 
   currentFilter = this.filterCriteria[0].name;
+
   currentFilterPlaceholder = `Search by ${this.currentFilter}`;
 
   form: FormGroup;
@@ -36,7 +37,7 @@ export class ApproverComponentComponent implements OnInit {
       {
         email: new FormControl('', [Validators.required, Validators.email]),
         username: new FormControl('', Validators.required),
-        password: new FormControl('', [Validators.required,  Validators.minLength(this.passwordMinLength)]),
+        password: new FormControl('', [Validators.required, Validators.minLength(this.passwordMinLength)]),
         telephone_number: new FormControl('', [Validators.required, Validators.pattern('[\\s\\d+(d+)\\s]+')]),
         is_activated: new FormControl(true, Validators.required)
       }
@@ -56,9 +57,9 @@ export class ApproverComponentComponent implements OnInit {
     const approver: Approver = this.form.value;
 
     this.approverSrvc.postApprover(approver)
-      .subscribe(() => {
-        this.getAllApprovers();
-      });
+        .subscribe(() => {
+          this.getAllApprovers();
+        });
 
     this.form.reset({is_activated: true});
   }
@@ -70,6 +71,6 @@ export class ApproverComponentComponent implements OnInit {
   getAllApprovers() {
 
     this.approverSrvc.getAll()
-      .subscribe(data => this.approvers = data);
+        .subscribe(data => this.approvers = data);
   }
 }

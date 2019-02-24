@@ -1,9 +1,8 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import {Approver} from '../model/approver';
+import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'aprroverShowStatus'
-})
+        name: 'aprroverShowStatus'
+      })
 export class AprroverShowStatusPipe implements PipeTransform {
 
   transform(text: boolean): string {
