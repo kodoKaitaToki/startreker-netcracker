@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Approver} from '../shared/model/approver';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {ApproverService} from "../shared/services/approver.service";
+import {ApproverService} from "../shared/service/approver.service";
 
 @Component({
              selector: 'app-approver-table',

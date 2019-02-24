@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Approver} from '../shared/model/approver';
-import {ApproverService} from "../shared/services/approver.service";
+import {ApproverService} from "../shared/service/approver.service";
 
 @Component({
              selector: 'app-approver-component',
