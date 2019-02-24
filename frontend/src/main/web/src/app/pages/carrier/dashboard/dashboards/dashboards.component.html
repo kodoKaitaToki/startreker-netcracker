@@ -1,0 +1,26 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
+        <h3 class="card-title text-center">Dashboard charts:</h3>
+        <div class="card-body">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+              <a class="nav-link" routerLink="/carrier/dashboards/sales">
+                Sales (by trips, by services, per week, per month);
+              </a>
+            </li>
+            <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+              <a class="nav-link" routerLink="/carrier/dashboards/views">
+                Views (by trips, by services, per day, per week, per month).
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

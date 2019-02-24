@@ -57,8 +57,8 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
 
     private final String findPerPeriodByRole = "SELECT * FROM user_a " +
             "INNER JOIN assigned_role ON assigned_role.user_id = user_a.user_id " +
-            "INNER JOIN role ON assigned_role.role_id = role.role_id " +
-            "WHERE role.role_id = ? AND user_created BETWEEN ? AND ?";
+            "INNER JOIN role_a ON assigned_role.role_id = role_a.role_id " +
+            "WHERE role_a.role_id = ? AND user_created BETWEEN ? AND ?";
 
     @Autowired
     public UserDAOImpl(RoleDAO roleDAO) {

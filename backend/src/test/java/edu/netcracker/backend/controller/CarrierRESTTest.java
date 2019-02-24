@@ -25,11 +25,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.support.EncodedResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
@@ -516,7 +512,7 @@ public class CarrierRESTTest {
     public void updateCarrierTestGood() throws JSONException, JsonProcessingException {
         User user = userService.findByUsernameWithRole("vitya", AuthorityUtils.ROLE_CARRIER);
         String body = "{\n" +
-                "\"user_id\":\"" + user.getUserId() + "\",\n" +
+                "\"id\":\"" + user.getUserId() + "\",\n" +
                 "\"username\":\"masha\",\n" +
                 "\"email\":\"masha@gmail.com\",\n" +
                 "\"telephone_number\":\"12344\",\n" +
@@ -535,7 +531,7 @@ public class CarrierRESTTest {
 
         user = userService.findByUsernameWithRole("dddd", AuthorityUtils.ROLE_CARRIER);
         body = "{\n" +
-                "\"user_id\":\"" + user.getUserId() + "\",\n" +
+                "\"id\":\"" + user.getUserId() + "\",\n" +
                 "\"username\":\"dddd\",\n" +
                 "\"email\":\"d@gmail.com\",\n" +
                 "\"telephone_number\":\"88888888888888\",\n" +
