@@ -3,6 +3,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Carrier} from '../carrier';
 import {AddCarrier} from '../addCarrier';
 import {CarrierCrudService} from '../carrier-crud.service';
+import { clone } from 'ramda';
 
 @Component({
   selector: 'app-carrier-component',
@@ -105,7 +106,7 @@ export class CarrierComponentComponent implements OnInit {
                           this.butGroup.editBut = false;
                         }
                       );
-    
+
   }
 
   processChangePage(event){
@@ -127,7 +128,7 @@ export class CarrierComponentComponent implements OnInit {
                             localStorage.removeItem('at');
                             localStorage.setItem('at', resp.headers.get('New-Access-Token'));
                           }*/
-                          this.allCarriers = resp;
+                          this.allCarriers = clone(resp);
                         },
                         error => console.log(error)
                       );
@@ -144,8 +145,7 @@ export class CarrierComponentComponent implements OnInit {
                             localStorage.removeItem('at');
                             localStorage.setItem('at', resp.headers.get('New-Access-Token'));
                           }*/
-                          this.carriers = resp;
-                          console.log(this.carriers);
+                          this.carriers = clone(resp);
                           this.dataAvailable = true;
                          },
                         error => console.log(error)
@@ -155,11 +155,7 @@ export class CarrierComponentComponent implements OnInit {
    getAddingUser(){
      let newUser: AddCarrier;
      let status: boolean;
-     if(this.form.value['status'] == 'activated'){
-       status = true;
-     }else{
-       status = false;
-     }
+     status = this.form.value['status'] == 'activated';
      newUser = {username: this.form.value['name'],
                 password: '1111111',
                 email: this.form.value['email'],

@@ -42,6 +42,9 @@ const carrier = {
   },
   getCarriersPagin(){
     return `${baseUrl}api/v1/admin/pagination`;
+  },
+  getCarrierByUsername(){
+    return `${baseUrl}api/v1/admin/carrier-by-username?username=`;
   }
 }
 

@@ -24,6 +24,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
 
 import { TroubleStatisticsService } from './dashboard/trouble-statistics.service';
 
+
 @NgModule({
   declarations: [
     NavbarComponent,
