@@ -45,7 +45,6 @@ import {ApproverService} from "./approver/shared/service/approver.service";
               CarrierShowStatusPipe,
               CommonChartComponent,
               CarCostDashComponent,
-
             ],
             imports: [
               CommonModule,
