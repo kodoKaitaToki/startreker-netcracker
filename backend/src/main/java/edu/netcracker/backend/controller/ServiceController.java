@@ -1,28 +1,61 @@
 package edu.netcracker.backend.controller;
 
-import edu.netcracker.backend.dao.StatisticsDAO;
+import edu.netcracker.backend.message.request.TimeInterval;
+import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
 import edu.netcracker.backend.message.response.ServiceDistributionElement;
+import edu.netcracker.backend.security.SecurityContext;
+import edu.netcracker.backend.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 public class ServiceController {
 
-    private final StatisticsDAO statisticsDAO;
+    private final StatisticsService statisticsService;
+    private final SecurityContext securityContext;
 
     @Autowired
-    public ServiceController(StatisticsDAO statisticsDAO) {
-        this.statisticsDAO = statisticsDAO;
+    public ServiceController(StatisticsService statisticsService, SecurityContext securityContext) {
+        this.statisticsService = statisticsService;
+        this.securityContext = securityContext;
     }
 
-    @PostMapping("api/service/distribution")
+    @GetMapping("api/v1/service/distribution")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public List<ServiceDistributionElement> getRouteStatistics(){
-        return statisticsDAO.getServicesDistribution();
+    public List<ServiceDistributionElement> getServiceStatistics(){
+        return statisticsService.getServiceStatistics();
     }
 
+    @GetMapping(value = "api/v1/service/sales")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public CarrierStatisticsResponse getServicesSalesStatistics(TimeInterval timeInterval){
+        return timeInterval != null && timeInterval.isProvided()
+                ? statisticsService.getServicesSalesStatistics(
+                securityContext.getUser().getUserId(),
+                timeInterval.getFrom(),
+                timeInterval.getTo())
+
+                : statisticsService.getServicesSalesStatistics(securityContext.getUser().getUserId());
+    }
+
+    @GetMapping(value = "api/v1/service/sales/per_week")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<CarrierStatisticsResponse> getServicesSalesStatisticsByWeek(TimeInterval timeInterval){
+        return statisticsService.getServicesSalesStatisticsByWeek(
+                securityContext.getUser().getUserId(),
+                timeInterval.getFrom(),
+                timeInterval.getTo());
+    }
+
+    @GetMapping(value = "api/v1/service/sales/per_month")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<CarrierStatisticsResponse> getServicesSalesStatisticsByMonth(TimeInterval timeInterval){
+        return statisticsService.getServicesSalesStatisticsByMonth(
+                securityContext.getUser().getUserId(),
+                timeInterval.getFrom(),
+                timeInterval.getTo());
+    }
 }

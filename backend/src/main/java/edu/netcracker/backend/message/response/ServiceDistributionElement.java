@@ -1,5 +1,6 @@
 package edu.netcracker.backend.message.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,8 +8,12 @@ import lombok.Setter;
 @Setter
 public class ServiceDistributionElement {
 
-    private Long service_id;
-    private String service_name;
-    private Long occurrence_count;
+    @JsonProperty("service_id")
+    private Long serviceId;
+    @JsonProperty("service_name")
+    private String serviceName;
+    @JsonProperty("occurrence_count")
+    private Long occurrenceCount;
+    @JsonProperty("percentage")
     private Double percentage;
 }

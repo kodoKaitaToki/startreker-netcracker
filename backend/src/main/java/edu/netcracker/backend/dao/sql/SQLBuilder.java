@@ -7,4 +7,5 @@ public interface SQLBuilder {
     String assembleDeleteSql();
     String assembleExistsSql();
     String assembleSelectSql();
+    String assembleVariableSelectInSql(int size);
 }
