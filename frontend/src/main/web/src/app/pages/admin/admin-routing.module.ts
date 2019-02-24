@@ -4,11 +4,12 @@ import { IndexComponent } from './index/index.component';
 import { CarrierCrudComponent } from './carrier/carrier-crud/carrier-crud.component';
 import { BundlesCrudComponent } from './bundles-crud/bundles-crud.component';
 
-// import { UserDetailsComponent } from './user-details/user-details.component';
-// import { ListsChartsComponent } from './lists-charts/lists-charts.component';
 import { TripsServicesComponent } from './dashboards/trips-services/trips-services.component';
-import { DashboardsComponent } from './dashboard/dashboards/dashboards.component';
+import { DashboardsComponent } from './dashboards/dashboards.component';
 import { ApproverCrudComponent } from './approver/approver-crud/approver-crud.component';
+import { CostsComponent } from './dashboards/costs/costs.component';
+import { DashboardDeltaComponent } from './dashboards/dashboard-delta/dashboard-delta.component';
+import { TroubleStatisticsComponent } from './dashboards/trouble-statistics/trouble-statistics.component';
 
 const routes: Routes = [
   {
@@ -31,7 +32,9 @@ const routes: Routes = [
       path: 'dashboards',
       component: DashboardsComponent,
       children: [
-            //   { path: 'costs', component: ListsChartsComponent },
+              { path: 'costs', component: CostsComponent },
+              { path: 'popularity', component: DashboardDeltaComponent},
+              { path: 'trouble-tickets', component: TroubleStatisticsComponent},
               { path: 'trips-services-distribution', component: TripsServicesComponent}
           ]
   },

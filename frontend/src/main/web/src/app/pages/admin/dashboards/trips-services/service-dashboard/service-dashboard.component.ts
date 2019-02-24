@@ -11,20 +11,9 @@ import * as CanvasJS from '../../../../../../assets/js/canvasjs.min';
 })
 export class ServiceDashboardComponent implements OnInit {
   title = 'Services distribution';
-  // serviceData: Service[] = [
-  //   {
-  //     service_name: 'serv1',
-  //     percentage: 25
-  //   },
-  //   {
-  //     service_name: 'serv2',
-  //     percentage: 75
-  //   }
-  // ]
   serviceData: ServiceList = {
     services: []
   };
-
 
   constructor(private serviceService: ApiDashboardService) { }
 

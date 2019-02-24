@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import * as CanvasJS from '../../canvasjs.min';
+import * as CanvasJS from '../../../../../assets/js/canvasjs.min';
 
 import { FormGroup, FormControl } from '@angular/forms';
 import {formatDate} from '@angular/common';

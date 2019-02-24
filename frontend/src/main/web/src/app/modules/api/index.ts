@@ -3,7 +3,7 @@ import { HttpHeaders } from '@angular/common/http';
 let baseUrl;
 const apiPort = ':80/'
 
-baseUrl = `http://192.168.0.102${apiPort}`
+baseUrl = `http://localhost${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({

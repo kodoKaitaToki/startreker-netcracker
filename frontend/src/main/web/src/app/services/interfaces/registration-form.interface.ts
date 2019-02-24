@@ -3,5 +3,6 @@ export interface RegisterFormData {
     password: string;
     match_password: string;
     email: string;
+    telephone_number: string;
   }
   
