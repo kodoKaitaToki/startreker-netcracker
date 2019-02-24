@@ -10,6 +10,41 @@ import java.util.List;
 @Repository
 public class BundleDAOImpl extends CrudDAO<Bundle> implements BundleDAO {
 
+    private final String ORDER_BY = "ORDER BY bundle_id ";
+
+    private final String SELECT_ALL_BUNDLES = "SELECT bundle_id, " +
+            "start_date, " +
+            "finish_date, " +
+            "bundle_price, " +
+            "bundle_description, " +
+            "bundle_photo " +
+            "FROM bundle" +
+            ORDER_BY;
+
+    private final String PAGING_SELECT_BUNDLES = SELECT_ALL_BUNDLES + "LIMIT ? OFFSET ?;";
+
+    private final String SELECT_BY_ID = SELECT_ALL_BUNDLES + "WHERE bundle_id = ?" + ORDER_BY;
+
+    private final String INSERT_BUNDLE = "INSERT INTO bundle ( " +
+            "start_date, " +
+            "finish_date, " +
+            "bundle_price, " +
+            "bundle_description, " +
+            "bundle_photo " +
+            " ) VALUES ( ?, ?, ?, ?, ?);";
+
+    private final String UPDATE_BUNDLE = "UPDATE bundle " +
+            "SET start_date   = ?, " +
+            "    finish_date  = ?, " +
+            "    bundle_price = ?, " +
+            "    bundle_description = ?, " +
+            "    bundle_photo = ? " +
+            "WHERE bundle_id = ?;";
+
+    private final String DELETE_BUNDLE = "";
+
+    private final String COUNT_BUNDLES = "";
+
     @Override
     public List<Bundle> findAll() {
         return null;
@@ -23,5 +58,10 @@ public class BundleDAOImpl extends CrudDAO<Bundle> implements BundleDAO {
     @Override
     public void update(Bundle bundle) {
         super.update(bundle);
+    }
+
+    @Override
+    public Long count() {
+        return null;
     }
 }

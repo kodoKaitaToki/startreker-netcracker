@@ -66,6 +66,11 @@ public class BundleCrudController {
         bcs.delete(convertFromDTO(bundleDTO));
     }
 
+    @GetMapping("api/v1/admin/bundles")
+    public Long countBundles() {
+        return bcs.count();
+    }
+
     private BundleDTO convertToDTO(Bundle bundle) {
         BundleDTO bundleDTO = modelMapper.map(bundle, BundleDTO.class);
         bundleDTO.setStartDate(BundleDTO.convertToString(bundle.getStartDate()));
