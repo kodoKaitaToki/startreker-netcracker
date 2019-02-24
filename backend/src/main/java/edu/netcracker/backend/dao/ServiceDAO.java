@@ -14,7 +14,5 @@ public interface ServiceDAO {
 
     List<Service> findAll();
 
-    List<Service> findAllByTicketId(Number id);
-
     List<Service> findAllByTicketClass(Number id);
 }
