@@ -7,6 +7,8 @@ import { Api, HttpOptionsAuthorized } from '../modules/api';
 
 import { ServiceList } from './interfaces/service-dashboard.interface';
 import { TripList } from './interfaces/trip-dashboard.interface';
+import { Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
@@ -25,36 +27,16 @@ export class ApiDashboardService {
         return this.tripData;
     }
 
-    
+
     get getService() {
         return this.serviceData;
-    } 
-
-    setTripDistribution() {
-        this.http.get<any>(Api.dashboard.tripDistribution(), HttpOptionsAuthorized)
-            .subscribe(
-                (resp: Response) => {
-                    if (resp.headers.get('New-Access-Token')) {
-                        localStorage.removeItem('at');
-                        localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                    }
-                    this.tripData = clone(resp.body);
-                },
-                error => console.log(error)
-            );
     }
 
-    setServiceDistribution() {
-        this.http.get<any>(Api.dashboard.serviceDistribution(), HttpOptionsAuthorized)
-        .subscribe(
-            (resp: Response) => {
-                if (resp.headers.get('New-Access-Token')) {
-                    localStorage.removeItem('at');
-                    localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                }
-                this.serviceData = clone(resp.body);
-            },
-            error => console.log(error)
-        );
+    setTripDistribution(): Observable<any> {
+        return this.http.post<any>(Api.dashboard.tripDistribution(), {}, HttpOptionsAuthorized);
+    }
+
+    setServiceDistribution(): Observable<any> {
+        return this.http.post<any>(Api.dashboard.serviceDistribution(), {}, HttpOptionsAuthorized);
     }
 }

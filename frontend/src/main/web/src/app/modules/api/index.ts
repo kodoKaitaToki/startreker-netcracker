@@ -1,23 +1,23 @@
 import { HttpHeaders } from '@angular/common/http';
 
 let baseUrl;
-const apiPort = ':3000/'
+const apiPort = ':80/'
 
-baseUrl = `http://127.0.0.1${apiPort}`
+baseUrl = `http://192.168.0.102${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
-    'Access-Control-Allow-Origin': '*'
+    // 'Access-Control-Allow-Origin': '*'
   })
 }
 
 export const HttpOptionsAuthorized = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Authorization': `Bearer ${localStorage.getItem('at')}`,
-    'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
+    // 'Access-Control-Allow-Origin': '*',
+    // 'Authorization': `Bearer ${localStorage.getItem('at')}`,
+    // 'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
   })
 }
 

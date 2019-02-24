@@ -21,15 +21,14 @@ export class ServiceDashboardComponent implements OnInit {
   //     percentage: 75
   //   }
   // ]
-  serviceData: ServiceList;
+  serviceData: ServiceList = {
+    services: []
+  };
 
 
   constructor(private serviceService: ApiDashboardService) { }
 
-  ngOnInit() {
-    this.serviceService.setTripDistribution();
-    this.serviceData = clone(this.serviceService.getTrip);
-
+  buildChart(serviceData: ServiceList) {
     let chart = new CanvasJS.Chart("servicesChart", {
       animationEnabled: true,
       title:{
@@ -46,10 +45,25 @@ export class ServiceDashboardComponent implements OnInit {
         dataPoints: []
       }]
     });
-    this.serviceData.services.forEach(service => {
+    serviceData.services.forEach(service => {
         chart.options.data[0].dataPoints.push({y: service.percentage, label: service.service_name})
     })
-    
-    chart.render();    
+
+    chart.render();
+  }
+
+  ngOnInit() {
+    this.serviceService.setServiceDistribution()
+    .subscribe(
+      (resp: Response) => {
+          // if (resp.headers.get('New-Access-Token')) {
+          //     localStorage.removeItem('at');
+          //     localStorage.setItem('at', resp.headers.get('New-Access-Token'));
+          // }
+          this.serviceData.services = clone(resp);
+          this.buildChart(this.serviceData);
+      },
+      error => console.log(error)
+  );
   }
 }

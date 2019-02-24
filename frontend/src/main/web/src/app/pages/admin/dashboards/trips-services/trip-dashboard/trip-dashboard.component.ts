@@ -24,15 +24,19 @@ export class TripDashboardComponent implements OnInit {
   //     percentage: 75
   //   }
   // ]
-  tripData: TripList;
+  tripData: TripList = {
+    trips: []
+  };
+
+  // get test() {
+  //   return this.tripService.tripData;
+  // }
 
 
-  constructor(private tripService: ApiDashboardService) { }
+  constructor(private tripService: ApiDashboardService) {}
 
-  ngOnInit() {
-    this.tripService.setTripDistribution();
-    this.tripData = clone(this.tripService.getTrip);
-
+  buildChart(tripData: TripList) {
+    console.log('buildTrips')
     let chart = new CanvasJS.Chart("tripsChart", {
       animationEnabled: true,
       title:{
@@ -49,10 +53,29 @@ export class TripDashboardComponent implements OnInit {
         dataPoints: []
       }]
     });
-    this.tripData.trips.forEach(trip => {
-        chart.options.data[0].dataPoints.push({y: trip.percentage, label: `From ${trip.departure_planet_name} to ${trip.arrival_planet_name}`})
+    tripData.trips.forEach(trip => {
+      chart.options.data[0].dataPoints.push({y: trip.percentage, label: `From ${trip.departure_planet_name} to ${trip.arrival_planet_name}`})
     })
-    
-    chart.render();    
+
+    chart.render();
+  }
+
+  ngOnInit() {
+      this.tripService.setTripDistribution()
+      .subscribe(
+        (resp: Response) => {
+            // console.log(resp)
+            // if (resp.headers.get('New-Access-Token')) {
+            //     localStorage.removeItem('at');
+            //     localStorage.setItem('at', resp.headers.get('New-Access-Token'));
+            // }
+            console.log(resp)
+            this.tripData.trips = clone(resp);
+            // console.log(this.tripData.trips);
+            this.buildChart(this.tripData);
+        },
+        error => console.log(error)
+    );
+    // this.tripData = clone(this.tripService.getTrip);
   }
 }
