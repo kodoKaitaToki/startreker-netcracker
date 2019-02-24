@@ -18,16 +18,16 @@ public class UserDTO {
 
     private String username;
 
-    @JsonProperty("user_email")
+    @JsonProperty("email")
     private String userEmail;
 
-    @JsonProperty("user_telephone")
+    @JsonProperty("telephone_number")
     private String userTelephone;
 
-    @JsonProperty("user_is_activated")
+    @JsonProperty("is_activated")
     private boolean userIsActivated;
 
-    @JsonProperty("user_created_cate")
+    @JsonProperty("user_created_date")
     private String userCreatedDate;
 
     private List<String> roles;
