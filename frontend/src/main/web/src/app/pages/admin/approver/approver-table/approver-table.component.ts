@@ -6,7 +6,8 @@ import {ApproverService} from "../shared/service/approver.service";
 @Component({
              selector: 'app-approver-table',
              templateUrl: './approver-table.component.html',
-             styleUrls: ['./approver-table.component.scss']
+             styleUrls: ['./approver-table.component.scss'],
+             providers: [ApproverService]
            })
 export class ApproverTableComponent implements OnInit {
 

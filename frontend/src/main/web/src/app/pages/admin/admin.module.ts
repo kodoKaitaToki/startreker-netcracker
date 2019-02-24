@@ -23,7 +23,6 @@ import {CarrierTableComponent} from './carrier/carrier-table/carrier-table.compo
 
 import {TroubleStatisticsService} from './dashboard/trouble-statistics.service';
 import {NgxPaginationModule} from "ngx-pagination";
-import {ApproverService} from "./approver/shared/service/approver.service";
 
 @NgModule({
             declarations: [
@@ -56,8 +55,7 @@ import {ApproverService} from "./approver/shared/service/approver.service";
             ],
             providers: [
               FilterPipePipe,
-              TroubleStatisticsService,
-              ApproverService
+              TroubleStatisticsService
             ]
           })
 export class AdminModule {
