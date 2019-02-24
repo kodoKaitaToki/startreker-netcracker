@@ -5,7 +5,6 @@ import { CarrierCrudComponent } from './carrier/carrier-crud/carrier-crud.compon
 import { BundlesCrudComponent } from './bundles-crud/bundles-crud.component';
 import { DashboardsComponent } from './dashboard/dashboards/dashboards.component';
 import { ApproverCrudComponent } from './approver/approver-crud/approver-crud.component';
-import { UserDetailsComponent } from './user-details/user-details.component';
 
 const routes: Routes = [
   {
@@ -28,10 +27,6 @@ const routes: Routes = [
       path: 'dashboards',
       component: DashboardsComponent
   },
-  {
-      path: 'user-details/:id',
-      component: UserDetailsComponent
-  }
 ];
 
 @NgModule({
