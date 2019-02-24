@@ -18,4 +18,8 @@ public interface StatisticsDAO {
     CarrierStatisticsResponse getTripsSalesStatistics(long carrierId, LocalDate from, LocalDate to);
     Map<String, Double> getTroubleTicketStatistics();
     Map<String, Double> getTroubleTicketStatisticsByApprover(Long approverId);
+    List<CarrierStatisticsResponse> getTripsSalesStatisticsByWeek(long carrierId, LocalDate from, LocalDate to);
+    List<CarrierStatisticsResponse> getTripsSalesStatisticsByMonth(long carrierId, LocalDate from, LocalDate to);
+    List<CarrierStatisticsResponse> getServicesSalesStatisticsByWeek(long carrierId, LocalDate from, LocalDate to);
+    List<CarrierStatisticsResponse> getServicesSalesStatisticsByMonth(long carrierId, LocalDate from, LocalDate to);
 }

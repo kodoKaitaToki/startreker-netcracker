@@ -44,4 +44,20 @@ public class StatisticsServiceImpl implements StatisticsService {
     public CarrierStatisticsResponse getServicesSalesStatistics(long id, LocalDate from, LocalDate to){
         return statisticsDAO.getServiceSalesStatistics(id, from, to);
     }
+
+    public List<CarrierStatisticsResponse> getTripSalesStatisticsByWeek(long id, LocalDate from, LocalDate to){
+        return statisticsDAO.getTripsSalesStatisticsByWeek(id, from, to);
+    }
+
+    public List<CarrierStatisticsResponse> getTripSalesStatisticsByMonth(long id, LocalDate from, LocalDate to){
+        return statisticsDAO.getTripsSalesStatisticsByMonth(id, from, to);
+    }
+
+    public List<CarrierStatisticsResponse> getServicesSalesStatisticsByWeek(long id, LocalDate from, LocalDate to){
+        return statisticsDAO.getServicesSalesStatisticsByWeek(id, from, to);
+    }
+
+    public List<CarrierStatisticsResponse> getServicesSalesStatisticsByMonth(long id, LocalDate from, LocalDate to){
+        return statisticsDAO.getServicesSalesStatisticsByMonth(id, from, to);
+    }
 }

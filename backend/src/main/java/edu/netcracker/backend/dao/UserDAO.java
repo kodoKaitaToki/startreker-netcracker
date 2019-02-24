@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserDAO {
+public interface UserDAO extends CrudDAO<User> {
 
     void save(User user);
 

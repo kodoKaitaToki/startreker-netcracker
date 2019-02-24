@@ -9,6 +9,7 @@ import edu.netcracker.backend.utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class JwtAuthFilter extends OncePerRequestFilter {
 
@@ -33,10 +35,26 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private Environment env;
+
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
+
+        // debug superuser features
+        if(Arrays.asList(env.getActiveProfiles()).contains("debug_su")){
+            String debugLogin = httpServletRequest.getHeader("Authorization");
+            if(debugLogin != null && debugLogin.startsWith("debug_log ")){
+                long userId = Long.parseLong(debugLogin.substring(10));
+                UserDetails userDetails = userService.find(userId);
+                createAuthentication(userDetails, httpServletRequest);
+                logger.info("DEBUG_LOG: " + userId);
+                filterChain.doFilter(httpServletRequest, httpServletResponse);
+                return;
+            }
+        }
 
         String accessToken = JwtUtils.getAccessToken(httpServletRequest);
 

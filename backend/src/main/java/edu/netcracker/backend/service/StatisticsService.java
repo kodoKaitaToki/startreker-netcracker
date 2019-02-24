@@ -15,4 +15,8 @@ public interface StatisticsService {
     CarrierStatisticsResponse getTripsSalesStatistics(long id, LocalDate from, LocalDate to);
     CarrierStatisticsResponse getServicesSalesStatistics(long id);
     CarrierStatisticsResponse getServicesSalesStatistics(long id, LocalDate from, LocalDate to);
+    List<CarrierStatisticsResponse> getTripSalesStatisticsByWeek(long id, LocalDate from, LocalDate to);
+    List<CarrierStatisticsResponse> getTripSalesStatisticsByMonth(long id, LocalDate from, LocalDate to);
+    List<CarrierStatisticsResponse> getServicesSalesStatisticsByWeek(long id, LocalDate from, LocalDate to);
+    List<CarrierStatisticsResponse> getServicesSalesStatisticsByMonth(long id, LocalDate from, LocalDate to);
 }

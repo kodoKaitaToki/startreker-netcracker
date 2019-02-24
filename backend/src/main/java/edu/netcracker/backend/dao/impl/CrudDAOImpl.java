@@ -168,7 +168,7 @@ public abstract class CrudDAOImpl<T> implements CrudDAO<T> {
         return jdbcTemplate;
     }
 
-    protected GenericMapper<T> getGenericMapper() {
+    public GenericMapper<T> getGenericMapper() {
         return genericMapper;
     }
 

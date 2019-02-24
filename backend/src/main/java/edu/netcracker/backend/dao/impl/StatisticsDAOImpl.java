@@ -56,6 +56,18 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     @Value("${selectServicesSoldAndRevenueWithTimeLimits.sql}")
     private String selectServicesSoldAndRevenueWithTimeLimits;
 
+    @Value("${selectTicketsSoldAndRevenueByWeekInInterval.sql}")
+    private String selectTicketsSoldAndRevenueByWeekInInterval;
+
+    @Value("${selectTicketsSoldAndRevenueByMonthInInterval.sql}")
+    private String selectTicketsSoldAndRevenueByMonthInInterval;
+
+    @Value("${selectServicesTotalSoldAndRevenueByWeek.sql}")
+    private String selectServicesTotalSoldAndRevenueByWeek;
+
+    @Value("${selectServicesTotalSoldAndRevenueByMonth.sql}")
+    private String selectServicesTotalSoldAndRevenueByMonth;
+
     public List<TripDistributionElement> getTripsStatistics(){
         return jdbcTemplate.query(selectRoutesDistribution, (rs, rowNum) -> {
             TripDistributionElement rstat = new TripDistributionElement();
@@ -84,6 +96,34 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         return jdbcTemplate.queryForObject(
                 selectTicketsSoldAndRevenue,
                 new Object[]{carrierId},
+                new StatMapper());
+    }
+
+    public List<CarrierStatisticsResponse> getTripsSalesStatisticsByWeek(long carrierId, LocalDate from, LocalDate to){
+        return jdbcTemplate.query(
+                selectTicketsSoldAndRevenueByWeekInInterval,
+                new Object[]{carrierId, from, to},
+                new StatMapper());
+    }
+
+    public List<CarrierStatisticsResponse> getServicesSalesStatisticsByWeek(long carrierId, LocalDate from, LocalDate to){
+        return jdbcTemplate.query(
+                selectServicesTotalSoldAndRevenueByWeek,
+                new Object[]{carrierId, from, to},
+                new StatMapper());
+    }
+
+    public List<CarrierStatisticsResponse> getServicesSalesStatisticsByMonth(long carrierId, LocalDate from, LocalDate to){
+        return jdbcTemplate.query(
+                selectServicesTotalSoldAndRevenueByMonth,
+                new Object[]{carrierId, from, to},
+                new StatMapper());
+    }
+
+    public List<CarrierStatisticsResponse> getTripsSalesStatisticsByMonth(long carrierId, LocalDate from, LocalDate to){
+        return jdbcTemplate.query(
+                selectTicketsSoldAndRevenueByMonthInInterval,
+                new Object[]{carrierId, from, to},
                 new StatMapper());
     }
 

@@ -40,4 +40,22 @@ public class ServiceController {
 
                 : statisticsService.getServicesSalesStatistics(securityContext.getUser().getUserId());
     }
+
+    @GetMapping(value = "api/v1/service/sales/per_week")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<CarrierStatisticsResponse> getServicesSalesStatisticsByWeek(TimeInterval timeInterval){
+        return statisticsService.getServicesSalesStatisticsByWeek(
+                securityContext.getUser().getUserId(),
+                timeInterval.getFrom(),
+                timeInterval.getTo());
+    }
+
+    @GetMapping(value = "api/v1/service/sales/per_month")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<CarrierStatisticsResponse> getServicesSalesStatisticsByMonth(TimeInterval timeInterval){
+        return statisticsService.getServicesSalesStatisticsByMonth(
+                securityContext.getUser().getUserId(),
+                timeInterval.getFrom(),
+                timeInterval.getTo());
+    }
 }
