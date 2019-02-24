@@ -6,11 +6,9 @@ import {ApproverService} from "../shared/service/approver.service";
 @Component({
              selector: 'app-approver-component',
              templateUrl: './approver-component.component.html',
-             styleUrls: ['./approver-component.component.scss'],
-             providers: [ApproverService]
+             styleUrls: ['./approver-component.component.scss']
            },
-
-           )
+)
 export class ApproverComponentComponent implements OnInit {
 
   approvers: Approver[] = [];
