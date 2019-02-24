@@ -65,8 +65,20 @@ export class ApproverComponentComponent implements OnInit {
     this.form.reset({is_activated: true});
   }
 
-  getNotificationAboutRefreshData() {
-    this.getAllApprovers();
+  getApproverForUpdate(approver) {
+
+    this.approverSrvc.putApprover(approver)
+        .subscribe(() => {
+          this.getAllApprovers();
+        });
+  }
+
+  getApproverForDelete(approver) {
+
+    this.approverSrvc.deleteApprover(approver)
+        .subscribe(() => {
+          this.getAllApprovers();
+        });
   }
 
   getAllApprovers() {

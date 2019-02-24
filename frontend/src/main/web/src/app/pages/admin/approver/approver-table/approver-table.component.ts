@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Approver} from '../shared/model/approver';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {ApproverService} from "../shared/service/approver.service";
 
 @Component({
              selector: 'app-approver-table',
@@ -32,7 +31,9 @@ export class ApproverTableComponent implements OnInit {
 
   @Output() onUpdateDataNotifier = new EventEmitter();
 
-  constructor(private approverSrvc: ApproverService) {
+  @Output() onDeleteDataNotifier = new EventEmitter();
+
+  constructor() {
 
   }
 
@@ -70,12 +71,7 @@ export class ApproverTableComponent implements OnInit {
 
   onApproverDelete(onClickedApproverForDelete) {
 
-    this.approverSrvc.deleteApprover((ApproverTableComponent.deleteUnnecessaryFieldAfterClick(onClickedApproverForDelete)))
-        .subscribe(
-          () => {
-            this.onUpdateDataNotifier.emit();
-          },
-          () => alert('On updating an error occurred'));
+    this.onDeleteDataNotifier.emit((ApproverTableComponent.deleteUnnecessaryFieldAfterClick(onClickedApproverForDelete)));
   }
 
   onSubmitUpdate() {
@@ -85,19 +81,8 @@ export class ApproverTableComponent implements OnInit {
 
     this.form.value.id = this.currentApproverForUpdate.id;
 
-    this.approverSrvc.putApprover(this.form.value)
-        .subscribe(
-          () => {
-          },
-          () => alert('On updating an error occurred')
-        );
-
-    setTimeout(() => {
-                 this.closeUpdateForm();
-
-                 this.onUpdateDataNotifier.emit();
-               },
-               5000);
+    this.onUpdateDataNotifier.emit(this.form.value);
+    this.closeUpdateForm();
   }
 
   onChangePage($event) {
