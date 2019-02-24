@@ -16,6 +16,6 @@ import javax.validation.constraints.NotNull;
 public class UserUpdateForm extends UserForm {
 
     @NotNull
-    @JsonProperty("user_id")
+    @JsonProperty("id")
     private Integer userId;
 }
