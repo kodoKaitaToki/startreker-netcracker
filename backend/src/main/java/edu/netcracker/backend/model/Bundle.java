@@ -29,10 +29,10 @@ public class Bundle {
     @Attribute("bundle_price")
     private Integer bundlePrice;
 
-    @Attribute("start_date")
+    @Attribute("start_description")
     private String bundleDescription;
 
-    @Attribute("start_date")
+    @Attribute("bundle_photo")
     private String bundlePhotoUri;
 
     private List<TicketClass> bundleTickets;
