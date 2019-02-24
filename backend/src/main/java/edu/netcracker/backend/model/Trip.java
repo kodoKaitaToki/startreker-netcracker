@@ -20,19 +20,31 @@ public class Trip {
 
     @PrimaryKey("trip_id")
     @EqualsAndHashCode.Include
-    private Long tripId;
+    private Integer tripId;
 
-    @Attribute("vehicle_id")
-    private Long vehicleId;
+    @Attribute("carrier_id")
+    private Integer vehicleId;
 
     @Attribute("trip_status")
     private Integer tripStatus;
 
-    @Attribute("creation_date")
-    private LocalDate creationDate;
-
     @Attribute("departure_date")
     private LocalDateTime departureDate;
+
+    @Attribute("arrival_date")
+    private LocalDateTime arrivalDate;
+
+    @Attribute("departure_id")
+    private Integer departureId;
+
+    @Attribute("arrival_id")
+    private Integer arrivalId;
+
+    @Attribute("trip_photo")
+    private String tripPhoto;
+
+    @Attribute("creation_date")
+    private LocalDateTime creationDate;
 
     private List<TicketClass> ticketClasses = new ArrayList<>();
 

@@ -15,10 +15,10 @@ public class TicketClass {
 
     @PrimaryKey("class_id")
     @EqualsAndHashCode.Include
-    private Long classId;
+    private Integer classId;
 
     @Attribute("trip_id")
-    private Long tripId;
+    private Integer tripId;
 
     @Attribute("ticket_price")
     private Integer ticketPrice;

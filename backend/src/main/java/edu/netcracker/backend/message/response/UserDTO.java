@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
@@ -37,7 +38,7 @@ public class UserDTO {
                     String userEmail,
                     String userTelephone,
                     boolean userIsActivated,
-                    LocalDate userCreatedDate,
+                    LocalDateTime userCreatedDate,
                     Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;

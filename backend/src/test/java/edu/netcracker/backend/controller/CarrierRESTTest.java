@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -675,7 +676,7 @@ public class CarrierRESTTest {
         user.setUserPassword(passwordEncoder.encode(password));
         user.setUserEmail(mail);
         user.setUserTelephone(telephone);
-        user.setRegistrationDate(LocalDate.now());
+        user.setRegistrationDate(LocalDateTime.now());
         user.setUserRoles(roles);
 
         return user;

@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Map;
 
 public class ApproverRowMapper implements RowMapper {
@@ -18,8 +19,8 @@ public class ApproverRowMapper implements RowMapper {
         usr.setUserTelephone(rs.getString("user_telephone"));
         usr.setUserIsActivated(rs.getBoolean("user_activated"));
 
-        Date date = rs.getDate("user_created");
-        usr.setRegistrationDate(date.toLocalDate());
+        Timestamp timestamp = rs.getTimestamp("user_created");
+        usr.setRegistrationDate(timestamp.toLocalDateTime());
         return usr;
     }
 
@@ -32,8 +33,8 @@ public class ApproverRowMapper implements RowMapper {
         usr.setUserTelephone((String) row.get("user_telephone"));
         usr.setUserIsActivated((Boolean) row.get("user_activated"));
 
-        Date date = (Date) row.get("user_created");
-        usr.setRegistrationDate(date.toLocalDate());
+        Timestamp timestamp = (Timestamp) row.get("user_created");
+        usr.setRegistrationDate(timestamp.toLocalDateTime());
         return usr;
     }
 }
