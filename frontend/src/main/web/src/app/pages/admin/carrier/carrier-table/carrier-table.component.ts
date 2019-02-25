@@ -4,7 +4,6 @@ import { Component,
         OnInit, 
         EventEmitter} from '@angular/core';
 import {Carrier} from '../carrier';
-import {UpdCarrier} from '../updCarrier';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
@@ -18,6 +17,7 @@ export class CarrierTableComponent implements OnInit {
   @Input() allCarriers: Carrier[] = [];
   @Input() numpages: Number;
   @Input() butGroup = {};
+  @Input() updateError;
 
   @Input() filterCriteria: string;
   @Input() filterContent: string;
@@ -26,7 +26,7 @@ export class CarrierTableComponent implements OnInit {
   notifyAboutDelete: EventEmitter<number> = new EventEmitter<number>();
 
   @Output() 
-  notifyAboutUpdate: EventEmitter<UpdCarrier> = new EventEmitter<UpdCarrier>();
+  notifyAboutUpdate = new EventEmitter();
 
   @Output() 
   notifyAboutChangePage: EventEmitter<number> = new EventEmitter<number>();
@@ -51,8 +51,8 @@ export class CarrierTableComponent implements OnInit {
       {
         email: new FormControl('', [Validators.required, Validators.email]),
         name: new FormControl('', Validators.required),
-        tel: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
-        status: new FormControl('on')
+        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        is_activated: new FormControl('on')
       }
     );
   }
@@ -64,7 +64,7 @@ export class CarrierTableComponent implements OnInit {
     this.editBut = true;
 
     let status: string;
-     if(this.currentCarrierForUpdate.user_is_activated == true){
+     if(this.currentCarrierForUpdate.is_activated == true){
        status = 'on';
      }else{
        status = 'off';
@@ -72,10 +72,10 @@ export class CarrierTableComponent implements OnInit {
 
     this.form = new FormGroup(
       {
-        email: new FormControl(this.currentCarrierForUpdate.user_email, [Validators.required, Validators.email]),
-        name: new FormControl(this.currentCarrierForUpdate.username, Validators.required),
-        tel: new FormControl(this.currentCarrierForUpdate.user_telephone, [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
-        status: new FormControl(status)
+        email: new FormControl(this.currentCarrierForUpdate.email, [Validators.required, Validators.email]),
+        username: new FormControl(this.currentCarrierForUpdate.username, Validators.required),
+        telephone_number: new FormControl(this.currentCarrierForUpdate.telephone_number, [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        is_activated: new FormControl(status)
       }
     );
 
@@ -85,17 +85,26 @@ export class CarrierTableComponent implements OnInit {
     this.notifyAboutDelete.emit(id);
   }
 
-  onSubmit(id: number) {
-    
-    let updUser: UpdCarrier;
-    updUser = {user_id: id,
-              username: this.form.value['name'],
-              email: this.form.value['email'],
-              telephone_number: this.form.value['tel'],
-              is_activated: true
-            };
+  onSubmit() {
+    this.form.value.id = this.currentCarrierForUpdate.id;
+    let status: boolean;
+    if(this.form.value['is_activated'] == 'on'){
+      status = true;
+    }else{
+      status = false;
+    }
 
-    this.notifyAboutUpdate.emit(updUser);
+    let event = {id: this.currentCarrierForUpdate.id,
+                username: this.form.value['username'],
+                email: this.form.value['email'],
+                telephone_number: this.form.value['telephone_number'],
+                is_activated: status,
+                user_created_date: this.form.value['user_created_date']
+    }
+
+    console.log(event);
+
+    this.notifyAboutUpdate.emit(event);
             
     this.editBut = false;
   }

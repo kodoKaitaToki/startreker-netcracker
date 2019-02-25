@@ -1,7 +1,9 @@
 <div class="list-group">
 
-  <!--<li class="list-group-item" *ngFor="let carrier of carriers | filter: filterCriteria: filterContent">-->
-      <li class="list-group-item" *ngFor="let carrier of carriers">
+  <li class="list-group-item" *ngFor="let carrier of carriers 
+                              | filter: filterCriteria: filterContent
+                              | paginate: {id: 'listing_pagination', itemsPerPage: 10, currentPage: page ,totalItems: totalRec}">
+      <!--<li class="list-group-item" *ngFor="let carrier of carriers">-->
 
     <div class="row">
 
@@ -44,7 +46,7 @@
 
     </div>
 
-    <form [formGroup]="form" (ngSubmit)="onSubmit(carrier.id)">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
       <div class="row">
 
@@ -58,10 +60,10 @@
 
             <input type="text" class="form-control"
                    [value]="currentCarrierForUpdate.username"
-                   formControlName="name" *ngIf="currentCarrierForUpdate === carrier && !isForUpdateMessage"
+                   formControlName="username" *ngIf="currentCarrierForUpdate === carrier && !isForUpdateMessage"
                    [ngClass]="{
-                    'is-invalid':form.get('name').invalid,
-                   'is-valid': form.get('name').valid
+                    'is-invalid':form.get('username').invalid,
+                   'is-valid': form.get('username').valid
                    }"
             >
 
@@ -73,10 +75,10 @@
 
             <h5 class="col-2">Email</h5>
             <p class="col-2 offset-3" *ngIf="currentCarrierForUpdate !== carrier">
-              {{carrier.user_email}}</p>
+              {{carrier.email}}</p>
 
             <input type="text" class="form-control"
-                   [value]="currentCarrierForUpdate.user_email"
+                   [value]="currentCarrierForUpdate.email"
                    formControlName="email" *ngIf="currentCarrierForUpdate === carrier && !isForUpdateMessage"
                    [ngClass]="{
                     'is-invalid':form.get('email').invalid,
@@ -91,16 +93,16 @@
           <div class="row">
             <h5 class="col-2">Telephone</h5>
             <p class="col-2 offset-3" *ngIf="currentCarrierForUpdate !== carrier">
-              {{carrier.user_telephone}}</p>
+              {{carrier.telephone_number}}</p>
 
 
-            <input type="tel" class="form-control" formControlName="tel"
+            <input type="tel" class="form-control" formControlName="telephone_number"
                    *ngIf="currentCarrierForUpdate === carrier && !isForUpdateMessage"
-                   [value]="currentCarrierForUpdate.user_telephone"
+                   [value]="currentCarrierForUpdate.telephone_number"
                    [disabled]="isForUpdateMessage"
                    [ngClass]="{
-                    'is-invalid':form.get('tel').invalid,
-                   'is-valid': form.get('tel').valid
+                    'is-invalid':form.get('telephone_number').invalid,
+                   'is-valid': form.get('telephone_number').valid
                    }"
             >
 
@@ -112,11 +114,11 @@
             <h5 class="col-2">Status</h5>
             <div class="col-4 offset-3 alert text-center" *ngIf="currentCarrierForUpdate !== carrier"
                  [ngClass]="{
-               'alert-success': (carrier.user_is_activated === true),
-               'alert-danger': (carrier.user_is_activated === false)
+               'alert-success': (carrier.is_activated === true),
+               'alert-danger': (carrier.is_activated === false)
                }"
             >
-              {{carrier.user_is_activated | carrierShowStatus}}
+              {{carrier.is_activated | carrierShowStatus}}
             </div>
 
           </div>
@@ -128,10 +130,10 @@
 
             <input type="radio"
                    id="updateActivated"
-                   name="status"
+                   name="is_activated"
                    class="custom-control-input"
                    value="on"
-                   formControlName="status"
+                   formControlName="is_activated"
             >
 
             <label class="custom-control-label" for="updateActivated">Activated</label>
@@ -144,10 +146,10 @@
 
             <input type="radio"
                    id="updateDeactivated"
-                   name="status"
+                   name="is_activated"
                    class="custom-control-input"
                    value="off"
-                   formControlName="status"
+                   formControlName="is_activated"
             >
 
             <label class="custom-control-label" for="updateDeactivated">Deactivated</label>
@@ -160,23 +162,19 @@
           <div class="row">
 
             <h5 class="col-2">Date of creation</h5>
-            <p class="col-2 offset-3">{{carrier.user_created_cate | date}}</p>
+            <p class="col-2 offset-3">{{carrier.user_created_date | date}}</p>
 
           </div>
 
           <hr>
 
-          <div class="row" *ngIf="currentCarrierForUpdate === carrier && isEditButtonBlockedAfterSubmit && !isForUpdateMessage"
-          >
+          <span style='color:red;'
+                *ngIf="currentCarrierForUpdate === carrier && isEditButtonBlockedAfterSubmit && !isForUpdateMessage">{{updateError}}</span>
 
-            <button class="btn btn-success col-4"
-                    type="submit"
-                    [disabled]="form.invalid || butGroup.updateBut"
-
-
-            >Edit
-            </button>
-
+          <div class="row" *ngIf="currentCarrierForUpdate === carrier && isEditButtonBlockedAfterSubmit && !isForUpdateMessage">
+              <button class="btn btn-success col-4"
+              type="submit"
+              [disabled]="form.invalid || butGroup.updateBut">Edit</button>
           </div>
 
           <div class="alert alert-success text-center"
@@ -207,7 +205,8 @@
   <ul class="pagination" style="justify-content: center" [innerHTML]="pageshtml">
     <li *ngFor="let carrier of allCarriers | paginate: { itemsPerPage: 10, currentPage: page }"> ... </li>
   </ul>
-  <pagination-controls (pageChange)="onChange($event)"
+  <pagination-controls id='listing_pagination'
+                        (pageChange)="onChange($event)"
                         previousLabel=""
                         nextLabel=""></pagination-controls>
     

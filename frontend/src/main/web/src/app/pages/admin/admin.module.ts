@@ -11,7 +11,7 @@ import {BundlesCrudComponent} from './bundles-crud/bundles-crud.component';
 import {ApproverComponentComponent} from './approver/approver-component/approver-component.component';
 import {ApproverTableComponent} from './approver/approver-table/approver-table.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { FilterPipePipe } from './approver/shared/pipes/filter-pipe.pipe';
+import { FilterPipePipe } from './carrier/filter-pipe.pipe';
 import { AprroverShowStatusPipe } from './approver/shared/pipes/aprrover-show-status.pipe';
 import { DashboardDeltaComponent } from './dashboard/dashboard-delta/dashboard-delta.component';
 import { TroubleStatisticsComponent } from './dashboard/trouble-statistics/trouble-statistics.component';

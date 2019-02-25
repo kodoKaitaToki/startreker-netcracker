@@ -4,14 +4,12 @@ import { Observable } from 'rxjs';
 
 import { Api } from '../../../modules/api/index';
 import { HttpOptionsAuthorized } from '../../../modules/api/index';
-import { AddCarrier } from './addCarrier';
+import { Carrier } from './carrier';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CarrierCrudService {
-
-    allCarrier;
 
     constructor(private http: HttpClient) {
     }
@@ -40,7 +38,7 @@ export class CarrierCrudService {
         return this.http.get<Carrier>(url, HttpOptionsAuthorized);
     } */
 
-    public addCarrier<T>(carrier: AddCarrier): Observable<T>{
+    public addCarrier<T>(carrier: Carrier): Observable<T>{
         return this.http.post<T>(Api.carrier.carriers(), carrier);
     }
 
@@ -49,7 +47,7 @@ export class CarrierCrudService {
         return this.http.delete<T>(url);
     }
 
-    public updateCarrier<Carrier>(carrier: Carrier): Observable<Carrier>{
-        return this.http.put<Carrier>(Api.carrier.carriers(), carrier);
+    public updateCarrier<T>(carrier: Carrier): Observable<T>{
+        return this.http.put<T>(Api.carrier.carriers(), carrier);
     }
 }

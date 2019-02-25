@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Carrier} from '../carrier';
-import {AddCarrier} from '../addCarrier';
 import {CarrierCrudService} from '../carrier-crud.service';
 import { clone } from 'ramda';
 
@@ -13,6 +12,9 @@ import { clone } from 'ramda';
 export class CarrierComponentComponent implements OnInit {
 
   carPerPage = 10;
+  passwordMinLength = 6;
+  usernameMinLength = 3;
+  usernameMaxLength = 24;
 
   carriers;
   allCarriers;
@@ -41,6 +43,9 @@ export class CarrierComponentComponent implements OnInit {
 
   dataAvailable: boolean = false;
 
+  errorText:string = '';
+  updateError = '';
+
   constructor(private carCrudService: CarrierCrudService) {
 
   }
@@ -63,6 +68,7 @@ export class CarrierComponentComponent implements OnInit {
   processUpdateEvent(event) {
     this.butGroup.updateBut = true;
     this.butGroup.editBut = true;
+    this.updateError = '';
     this.currentCarrierForUpdate = event;
     this.carCrudService.updateCarrier(event)
                       .subscribe(
@@ -78,8 +84,11 @@ export class CarrierComponentComponent implements OnInit {
                          },
                         error => {
                           console.log(error);
-                          this.butGroup.updateBut = false;
-                          this.butGroup.editBut = false;
+                          if(error.error.message = 'Username already exist'){
+                            this.updateError = 'The user with this name alredy exists';
+                          }else{
+                            this.updateError = 'The user with this email alredy exists';
+                          }
                         }
                       );
   }
@@ -114,12 +123,6 @@ export class CarrierComponentComponent implements OnInit {
     this.getCarriersPagin();
   }
 
-  onSubmit() {
-    this.addBut = true;
-    let newUser = this.getAddingUser();
-    this.addCarrier(newUser);
-  }
-
   getCarriers(){
     this.carCrudService.getAllCarriers()
                       .subscribe(
@@ -136,9 +139,7 @@ export class CarrierComponentComponent implements OnInit {
 
   getCarriersPagin(){
     let from = (this.curPage*this.carPerPage)-(this.carPerPage-1);
-    let to = this.curPage*this.carPerPage;
-    console.log(from + ',' + to)
-    this.carCrudService.getCarriersPagin(from, to)
+    this.carCrudService.getCarriersPagin(from, this.carPerPage)
                       .subscribe(
                         (resp: Response) => {
                           /*if (resp.headers.get('New-Access-Token')) {
@@ -153,10 +154,9 @@ export class CarrierComponentComponent implements OnInit {
    }
 
    getAddingUser(){
-     let newUser: AddCarrier;
      let status: boolean;
      status = this.form.value['status'] == 'activated';
-     newUser = {username: this.form.value['name'],
+     let newUser = {username: this.form.value['name'],
                 password: '1111111',
                 email: this.form.value['email'],
                 telephone_number: this.form.value['tel'],
@@ -164,8 +164,10 @@ export class CarrierComponentComponent implements OnInit {
       return newUser;
   }
 
-  addCarrier(carrier: AddCarrier){
-    this.carCrudService.addCarrier(carrier)
+  addCarrier(){
+    this.addBut = true;
+    let newCar = this.form.value;
+    this.carCrudService.addCarrier(newCar)
                       .subscribe(
                         (resp: Response) => {
                           /*if (resp.headers.get('New-Access-Token')) {
@@ -178,8 +180,13 @@ export class CarrierComponentComponent implements OnInit {
                           console.log('carrier is added');
                          },
                         error => {
-                          this.clearform();
                           console.log(error);
+                          this.addBut = false;
+                          if(error.error.message = 'Username already exist'){
+                            this.errorText = 'The user with this name alredy exists';
+                          }else{
+                            this.errorText = 'The user with this email alredy exists';
+                          }
                         }
                       );
   }
@@ -188,14 +195,16 @@ export class CarrierComponentComponent implements OnInit {
     this.form = new FormGroup(
       {
         email: new FormControl('', [Validators.required, Validators.email]),
-        name: new FormControl('', Validators.required),
-        tel: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
-        status: new FormControl('activated')
+        username: new FormControl('', [Validators.required, Validators.minLength(this.usernameMinLength), Validators.maxLength(this.usernameMaxLength)]),
+        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        password: new FormControl('', [Validators.required, Validators.minLength(this.passwordMinLength)]),
+        is_activated: new FormControl(true, Validators.required)
       }
     );
   }
 
   clearform(){
+    this.errorText = '';
     this.form.reset();
     this.createNewForm();
     this.addBut = false;
