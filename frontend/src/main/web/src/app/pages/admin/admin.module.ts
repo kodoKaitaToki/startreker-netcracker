@@ -24,7 +24,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
 
 import {TroubleStatisticsService} from './dashboard/trouble-statistics.service';
 import {ApproverService} from "./approver/shared/service/approver.service";
-import {ApproverFilterPipe} from "./approver/shared/pipes/approver-filter.pipe";
+import {ApproverFilterPipe} from "./approver/shared/pipes/approverFilter.pipe";
 
 
 @NgModule({
