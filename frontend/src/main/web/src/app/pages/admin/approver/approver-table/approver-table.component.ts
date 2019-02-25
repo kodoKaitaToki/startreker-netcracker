@@ -1,33 +1,39 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Approver} from '../shared/model/approver';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {ApproverService} from "../shared/services/approver.service";
 
 @Component({
-  selector: 'app-approver-table',
-  templateUrl: './approver-table.component.html',
-  styleUrls: ['./approver-table.component.scss']
-})
+             selector: 'app-approver-table',
+             templateUrl: './approver-table.component.html',
+             styleUrls: ['./approver-table.component.scss']
+           })
 export class ApproverTableComponent implements OnInit {
 
   @Input() approvers: Approver[];
+
   @Input() filterCriteria: string;
+
   @Input() filterContent: string;
 
-  currentApproverForUpdate = new Approver();
-  approverId: number;
-  isForUpdateMessage = false;
+  currentApproverForUpdate: Approver;
 
-  form: FormGroup;
+  isForUpdateAlertMessage = false;
+
   isEditButtonBlockedAfterSubmit = true;
 
+  form: FormGroup;
+
   totalRec: number;
+
   page: number = 1;
+
   entriesAmountOnPage = 10;
 
-  @Output() emittedApprovers = new EventEmitter<any[]>();
+  @Output() onUpdateDataNotifier = new EventEmitter();
 
-  constructor(private approverService: ApproverService) {
+  @Output() onDeleteDataNotifier = new EventEmitter();
+
+  constructor() {
 
   }
 
@@ -41,71 +47,59 @@ export class ApproverTableComponent implements OnInit {
 
     this.form = new FormGroup(
       {
-        user_email: new FormControl('', [Validators.required, Validators.email]),
+        email: new FormControl('', [Validators.required, Validators.email]),
         username: new FormControl('', Validators.required),
-        user_telephone: new FormControl('', Validators.required),
-        user_is_activated: new FormControl(false, Validators.required),
+        telephone_number: new FormControl('', Validators.required),
+        is_activated: new FormControl(false, Validators.required),
       }
     );
   }
 
-  onUpdate(event) {
+  onApproverUpdate(onClickedApproverForUpdate) {
 
-    this.approverId = event.id;
     this.isEditButtonBlockedAfterSubmit = true;
-    this.currentApproverForUpdate = event;
 
-    console.log(this.currentApproverForUpdate);
+    this.currentApproverForUpdate = onClickedApproverForUpdate;
 
-    this.form = new FormGroup(
-      {
-        user_email: new FormControl(this.currentApproverForUpdate.user_email, [Validators.required, Validators.email]),
-        username: new FormControl(this.currentApproverForUpdate.user_email, Validators.required),
-        user_telephone: new FormControl(this.currentApproverForUpdate.user_telephone, Validators.required),
-        user_is_activated: new FormControl(this.currentApproverForUpdate.user_is_activated, Validators.required)
-      }
-    );
+    this.form.patchValue({
+                           email: this.currentApproverForUpdate.email,
+                           username: this.currentApproverForUpdate.username,
+                           telephone_number: this.currentApproverForUpdate.telephone_number,
+                           is_activated: this.currentApproverForUpdate.is_activated
+                         });
   }
 
-  onDelete(event) {
+  onApproverDelete(onClickedApproverForDelete) {
 
-    // this.approverService.deleteApprover(event).subscribe(
-    //   () => {
-    //     this.approverService.getAll()
-    //       .subscribe((data) => {
-    //         this.emittedApprovers.emit(data);
-    //       })
-    //   }
-    // );
-
-    console.log(event);
+    this.onDeleteDataNotifier.emit((ApproverTableComponent.deleteUnnecessaryFieldAfterClick(onClickedApproverForDelete)));
   }
 
-  onSubmit() {
+  onSubmitUpdate() {
 
-    this.isForUpdateMessage = true;
     this.isEditButtonBlockedAfterSubmit = false;
+    this.isForUpdateAlertMessage = true;
 
-    this.currentApproverForUpdate = this.form.value;
-    this.currentApproverForUpdate.id = this.approverId;
+    this.form.value.id = this.currentApproverForUpdate.id;
 
-    console.log(this.currentApproverForUpdate);
-
-    // this.approverService.putApprover(this.currentApproverForUpdate)
-    //   .subscribe(() => {
-    //     this.isForUpdateMessage = false;
-    //     this.currentApproverForUpdate = new Approver();
-    //
-    //     this.approverService.getAll()
-    //       .subscribe((data) => {
-    //         this.emittedApprovers.emit(data);
-    //       })
-    //   });
+    this.onUpdateDataNotifier.emit(this.form.value);
+    this.closeUpdateForm();
   }
 
   onChangePage($event) {
 
     this.page = $event;
     window.scrollTo(0, 0);
+  }
+
+  static deleteUnnecessaryFieldAfterClick(approver): Approver {
+    delete approver['roles'];
+    delete approver['user_created_date'];
+
+    return approver;
+  }
+
+  closeUpdateForm() {
+    this.currentApproverForUpdate = null;
+    this.isForUpdateAlertMessage = false;
   }
 }

@@ -91,9 +91,6 @@ public class ApproverCrudController {
         user.setUserTelephone(approver.getTelephoneNumber());
         user.setUserIsActivated(approver.getIsActivated());
         return user;
-
-
-
     }
 
     private static User fromUserCreateForm(UserCreateForm approver) {

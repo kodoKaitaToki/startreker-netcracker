@@ -1,49 +1,50 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Approver} from '../shared/model/approver';
-import {ApproverService} from "../shared/services/approver.service";
+import {ApproverService} from "../shared/service/approver.service";
 
 @Component({
-  selector: 'app-approver-component',
-  templateUrl: './approver-component.component.html',
-  styleUrls: ['./approver-component.component.scss']
-})
+             selector: 'app-approver-component',
+             templateUrl: './approver-component.component.html',
+             styleUrls: ['./approver-component.component.scss']
+           },
+)
 export class ApproverComponentComponent implements OnInit {
 
   approvers: Approver[] = [];
-  currentApproverForUpdate: Approver;
 
   filterCriteria = [
     {name: 'id'},
-    {name: 'username'},
-    {name: 'user_is_activated'},
+    {name: 'name'},
+    {name: 'status'},
   ];
 
   filterContent = '';
 
   currentFilter = this.filterCriteria[0].name;
-  currentFilterPlaceholder = `Search by ${this.currentFilter}`;
 
+  currentFilterPlaceholder = `Search by ${this.currentFilter}`;
 
   form: FormGroup;
 
-  constructor(private approverSrvc: ApproverService) {
+  passwordMinLength = 6;
 
+  constructor(private approverSrvc: ApproverService) {
   }
 
   ngOnInit(): void {
 
     this.form = new FormGroup(
       {
-        user_email: new FormControl('', [Validators.required, Validators.email]),
+        email: new FormControl('', [Validators.required, Validators.email]),
         username: new FormControl('', Validators.required),
-        user_telephone: new FormControl('', [Validators.required]),
-        user_is_activated: new FormControl(true, Validators.required)
+        password: new FormControl('', [Validators.required, Validators.minLength(this.passwordMinLength)]),
+        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[\\s\\d+(d+)\\s]+')]),
+        is_activated: new FormControl(true, Validators.required)
       }
     );
 
-    this.approverSrvc.getAll()
-      .subscribe(data => this.approvers = data);
+    this.getAllApprovers();
   }
 
   chooseNewFilter(chosenFilterName) {
@@ -52,14 +53,37 @@ export class ApproverComponentComponent implements OnInit {
     this.currentFilterPlaceholder = `Search by ${this.currentFilter}`;
   }
 
-  onSubmit() {
+  onPost() {
 
-    console.log(this.form.value);
-    this.form.reset();
+    const approver: Approver = this.form.value;
+
+    this.approverSrvc.postApprover(approver)
+        .subscribe(() => {
+          this.getAllApprovers();
+        });
+
+    this.form.reset({is_activated: true});
   }
 
-  onEmittedApprovers($event) {
-    this.approvers = $event;
+  getApproverForUpdate(approver) {
+
+    this.approverSrvc.putApprover(approver)
+        .subscribe(() => {
+          this.getAllApprovers();
+        });
   }
 
+  getApproverForDelete(approver) {
+
+    this.approverSrvc.deleteApprover(approver)
+        .subscribe(() => {
+          this.getAllApprovers();
+        });
+  }
+
+  getAllApprovers() {
+
+    this.approverSrvc.getAll()
+        .subscribe(data => this.approvers = data);
+  }
 }

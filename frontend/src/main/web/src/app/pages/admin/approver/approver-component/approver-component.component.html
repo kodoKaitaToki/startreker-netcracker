@@ -2,8 +2,12 @@
   <div class="row">
     <div class="col-md-3">
       <div class="row">
-        <select class="form-control col-md-12 col-sm-12 col-lg-4" (click)="chooseNewFilter($event.target)">
-          <option *ngFor="let filters of filterCriteria" [value]="filters.name">
+        <select class="form-control col-md-12 col-sm-12 col-lg-4"
+                (click)="chooseNewFilter($event.target)"
+        >
+          <option *ngFor="let filters of filterCriteria"
+                  [value]="filters.name"
+          >
             {{filters.name}}
           </option>
         </select>
@@ -16,25 +20,28 @@
 
       <hr>
 
-      <h2
-        class="text-center"
-      >
+      <h2 class="text-center">
         New Approver
       </h2>
 
       <hr>
 
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <form [formGroup]="form"
+            (ngSubmit)="onPost()">
         <div class="form-group">
           <input type="text" class="form-control"
                  [ngClass]="{
-                   'is-invalid':form.get('user_email').touched && form.get('user_email').invalid,
-                   'is-valid': form.get('user_email').valid
+                   'is-invalid':form.get('email').touched && form.get('email').invalid,
+                   'is-valid': form.get('email').valid
                    }"
-                 formControlName="user_email"
+                 formControlName="email"
                  placeholder="Email"
           >
-          <span *ngIf="form.get('user_email').touched && form.get('user_email').invalid" class="invalid-feedback">Input the correct email</span>
+          <span *ngIf="form.get('email').touched && form.get('email').invalid"
+                class="invalid-feedback"
+          >
+            Input the correct email
+          </span>
         </div>
 
         <div class="form-group">
@@ -45,17 +52,47 @@
                    }"
           >
           <span *ngIf="form.get('username').touched && form.get('username').invalid"
-                class="invalid-feedback">Input the name</span>
+                class="invalid-feedback"
+          >
+            Input the name
+          </span>
         </div>
 
         <div class="form-group">
-          <input type="tel" class="form-control" placeholder="Telephone" formControlName="user_telephone"
+          <input type="password" class="form-control" placeholder="Password" formControlName="password"
                  [ngClass]="{
-                   'is-invalid':form.get('user_telephone').touched && form.get('user_telephone').invalid,
-                   'is-valid': form.get('user_telephone').valid
+                   'is-invalid':form.get('password').touched && form.get('password').invalid,
+                   'is-valid': form.get('password').valid
                    }"
           >
-          <span *ngIf="form.get('user_telephone').touched && form.get('user_telephone').invalid" class="invalid-feedback">Input the correct telephone number</span>
+          <span *ngIf="form.get('password').touched && form.get('password').invalid"
+                class="invalid-feedback"
+          >
+            <span *ngIf="form.get('password')['errors']['required']">
+              Password cannot be empty
+            </span>
+            <span *ngIf="form.get('password')['errors']['minlength']">
+            Password must be longer than {{form.get('password')['errors']['minlength']['requiredLength']}} symbols.
+            Now is {{form.get('password')['errors']['minlength']['actualLength']}}
+            </span>
+          </span>
+        </div>
+
+        <div class="form-group">
+          <input type="text"
+                 class="form-control"
+                 placeholder="Telephone"
+                 formControlName="telephone_number"
+                 [ngClass]="{
+                   'is-invalid':form.get('telephone_number').touched && form.get('telephone_number').invalid,
+                   'is-valid': form.get('telephone_number').valid
+                   }"
+          >
+          <span *ngIf="form.get('telephone_number').touched && form.get('telephone_number').invalid"
+                class="invalid-feedback"
+          >
+            Telephone number must be here
+          </span>
         </div>
 
         <div class="container statusRadio" style="text-align: center">
@@ -64,20 +101,28 @@
             <input type="radio"
                    class="custom-control-input"
                    [value]="true"
-                   formControlName="user_is_activated"
+                   formControlName="is_activated"
                    id="new_activated"
             >
-            <label class="custom-control-label" for="new_activated">Activated</label>
+            <label class="custom-control-label"
+                   for="new_activated"
+            >
+              Activated
+            </label>
           </div>
 
           <div class="custom-control custom-radio">
             <input type="radio"
                    class="custom-control-input"
                    [value]="false"
-                   formControlName="user_is_activated"
+                   formControlName="is_activated"
                    id="new_deactivated"
             >
-            <label class="custom-control-label" for="new_deactivated">Deactivated</label>
+            <label class="custom-control-label"
+                   for="new_deactivated"
+            >
+              Deactivated
+            </label>
           </div>
         </div>
 
@@ -98,7 +143,8 @@
       <app-approver-table [approvers]="approvers"
                           [filterCriteria]="currentFilter"
                           [filterContent]="filterContent"
-                          (emittedApprovers)="onEmittedApprovers($event)"
+                          (onUpdateDataNotifier)="getApproverForUpdate($event)"
+                          (onDeleteDataNotifier)="getApproverForDelete($event)"
       >
       </app-approver-table>
     </div>
