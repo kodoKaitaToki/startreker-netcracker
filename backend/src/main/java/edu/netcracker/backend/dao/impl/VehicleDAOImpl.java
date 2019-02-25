@@ -1,6 +1,5 @@
 package edu.netcracker.backend.dao.impl;
 
-import edu.netcracker.backend.dao.CrudDAO;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.dao.VehicleDAO;
 import edu.netcracker.backend.model.Trip;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class VehicleDAOImpl extends CrudDAO<Vehicle> implements VehicleDAO {
+public class VehicleDAOImpl extends CrudDAOImpl<Vehicle> implements VehicleDAO {
 
     private TripDAO tripDAO;
     private final String findAllTrips = "SELECT trip_id FROM trip WHERE vehicle_id = ?";

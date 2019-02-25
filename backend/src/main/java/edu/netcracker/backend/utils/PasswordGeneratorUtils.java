@@ -1,4 +1,4 @@
-package edu.netcracker.backend.util;
+package edu.netcracker.backend.utils;
 
 import org.passay.CharacterData;
 import org.passay.CharacterRule;

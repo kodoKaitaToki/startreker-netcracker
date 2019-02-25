@@ -1,11 +1,14 @@
 package edu.netcracker.backend.dao.impl;
 
-import edu.netcracker.backend.dao.CrudDAO;
 import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.dao.TripDAO;
+import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.model.TicketClass;
 import edu.netcracker.backend.model.Trip;
+import edu.netcracker.backend.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -13,9 +16,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class TripDAOImpl extends CrudDAO<Trip> implements TripDAO {
+@PropertySource("classpath:sql/tripdao.properties")
+public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
+
     private TicketClassDAO ticketClassDAO;
-    private final String findAllTicketTrips = "SELECT class_id FROM ticket_class WHERE trip_id = ?";
+
+    @Value("${FIND_ALL_TICKET_TRIPS}")
+    private String FIND_ALL_TICKET_TRIPS;
 
     @Autowired
     public TripDAOImpl(TicketClassDAO ticketClassDAO) {
@@ -25,23 +32,12 @@ public class TripDAOImpl extends CrudDAO<Trip> implements TripDAO {
     @Override
     public Optional<Trip> find(Number id) {
         Optional<Trip> tripOpt = super.find(id);
-
-        if (tripOpt.isPresent()) {
-            return attachTicketClassed(tripOpt.get());
-        }
-        return Optional.empty();
-
+        return tripOpt.flatMap(this::attachTicketClassed);
     }
 
     private Optional<Trip> attachTicketClassed(Trip trip) {
-        List<Long> rows = getJdbcTemplate().queryForList(findAllTicketTrips, Long.class, trip.getTripId());
-        List<TicketClass> ticketClasses = new ArrayList<>();
-
-        for (Long ticket_class_id : rows) {
-            ticketClasses.add(ticketClassDAO.find(ticket_class_id).orElse(null));
-        }
-
-        trip.setTicketClasses(ticketClasses);
+        List<Long> rows = getJdbcTemplate().queryForList(FIND_ALL_TICKET_TRIPS, Long.class, trip.getTripId());
+        trip.setTicketClasses(ticketClassDAO.findIn(rows));
         return Optional.of(trip);
     }
 

@@ -1,5 +1,6 @@
 package edu.netcracker.backend.dao;
 
+import edu.netcracker.backend.dao.impl.CrudDAOImpl;
 import edu.netcracker.backend.dao.mapper.ApproverRowMapper;
 import edu.netcracker.backend.model.User;
 import org.slf4j.Logger;
@@ -14,7 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Component
-public class ApproverDAO extends CrudDAO<User> {
+public class ApproverDAO extends CrudDAOImpl<User> {
 
     private final String SELECT_COLUMNS_FROM_USER = "SELECT u.user_id, " +
             "user_name, " +
