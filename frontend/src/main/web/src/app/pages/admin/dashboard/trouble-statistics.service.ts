@@ -16,7 +16,7 @@ export class TroubleStatisticsService {
   private actionUrl: string;
 
   constructor(private http: HttpClient, private _configuration: Configuration) {
-    this.actionUrl = _configuration.ServerWithApiUrl + 'trouble/statistics';
+    this.actionUrl = _configuration.ServerWithApiUrl + 'v1/trouble/statistics';
   }
 
   public getStatistic(): Observable<TroubleStatisticsModel>{
