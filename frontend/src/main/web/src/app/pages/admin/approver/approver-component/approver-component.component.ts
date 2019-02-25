@@ -37,7 +37,7 @@ export class ApproverComponentComponent implements OnInit {
     this.form = new FormGroup(
       {
         email: new FormControl('', [Validators.required, Validators.email]),
-        username: new FormControl('', Validators.required),
+        username: new FormControl('', [Validators.required, Validators.minLength(3), Validators.max(24)]),
         password: new FormControl('', [Validators.required, Validators.minLength(this.passwordMinLength)]),
         telephone_number: new FormControl('', [Validators.required, Validators.pattern('[\\s\\d+(d+)\\s]+')]),
         is_activated: new FormControl(true, Validators.required)
@@ -60,6 +60,8 @@ export class ApproverComponentComponent implements OnInit {
     this.approverSrvc.postApprover(approver)
         .subscribe(() => {
           this.getAllApprovers();
+        }, () => {
+          alert('Such an email exists');
         });
 
     this.form.reset({is_activated: true});
@@ -70,6 +72,8 @@ export class ApproverComponentComponent implements OnInit {
     this.approverSrvc.putApprover(approver)
         .subscribe(() => {
           this.getAllApprovers();
+        }, () => {
+          alert('Such an email exists');
         });
   }
 

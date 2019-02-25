@@ -2,7 +2,7 @@
   <ul>
     <li class="list-group-item"
         *ngFor="let approver of approvers
-        | filter: filterCriteria: filterContent
+        | approverFilter: filterCriteria: filterContent
         | paginate: {id: 'listing_pagination', itemsPerPage: entriesAmountOnPage, currentPage: page ,totalItems: totalRec}"
     >
       <div class="row">

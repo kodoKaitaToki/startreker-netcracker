@@ -48,7 +48,7 @@ export class ApproverTableComponent implements OnInit {
     this.form = new FormGroup(
       {
         email: new FormControl('', [Validators.required, Validators.email]),
-        username: new FormControl('', Validators.required),
+        username: new FormControl('', [Validators.required, Validators.minLength(3), Validators.max(24)]),
         telephone_number: new FormControl('', Validators.required),
         is_activated: new FormControl(false, Validators.required),
       }
