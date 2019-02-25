@@ -20,7 +20,7 @@ public class ServiceController {
     }
 
     @PostMapping("api/service/distribution")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<ServiceDistributionElement> getRouteStatistics(){
         return statisticsDAO.getServicesDistribution();
     }
