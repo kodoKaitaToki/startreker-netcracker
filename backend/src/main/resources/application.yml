@@ -5,7 +5,7 @@ spring:
     active: prod
 
 server:
-  port: 80
+  port: ${PORT:8080}
 
 postgres:
   servername: ec2-54-217-207-242.eu-west-1.compute.amazonaws.com
