@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -18,7 +19,7 @@ public class Bundle {
 
     @PrimaryKey("bundle_id")
     @EqualsAndHashCode.Include
-    private Integer bundleId;
+    private Long bundleId;
 
     @Attribute("start_date")
     private LocalDate startDate;
@@ -29,14 +30,14 @@ public class Bundle {
     @Attribute("bundle_price")
     private Integer bundlePrice;
 
-    @Attribute("start_description")
+    @Attribute("bundle_description")
     private String bundleDescription;
 
     @Attribute("bundle_photo")
     private String bundlePhotoUri;
 
-    private List<TicketClass> bundleTickets;
+    private Trip bundleTrip;
 
-    private List<Service> bundleServices;
+    private List<Service> bundleServices = new ArrayList<>();
 
 }

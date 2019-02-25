@@ -17,7 +17,7 @@ public interface BundleDAO {
 
     void update(Bundle bundle);
 
-    void delete(Bundle bundle);
+    void delete(Number id);
 
     Long count();
 }

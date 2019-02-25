@@ -4,7 +4,7 @@ import edu.netcracker.backend.model.Trip;
 
 import java.util.Optional;
 
-public interface TripDAO {
+public interface TicketClass {
     void save(Trip trip);
 
     Optional<Trip> find(Number id);

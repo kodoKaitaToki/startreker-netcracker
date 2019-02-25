@@ -34,6 +34,9 @@ public class Trip {
     @Attribute("departure_date")
     private LocalDateTime departureDate;
 
+    @Attribute("arrival_date")
+    private LocalDateTime arrivalDate;
+
     private List<TicketClass> ticketClasses = new ArrayList<>();
 
 }

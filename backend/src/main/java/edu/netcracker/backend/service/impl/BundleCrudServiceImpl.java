@@ -44,8 +44,8 @@ public class BundleCrudServiceImpl implements BundleCrudService {
     }
 
     @Override
-    public void delete(Bundle bundle) {
-        bundleDAO.delete(bundle);
+    public void delete(Number id) {
+        bundleDAO.delete(id);
     }
 
     @Override

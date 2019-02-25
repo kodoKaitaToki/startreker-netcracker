@@ -16,7 +16,7 @@ public interface BundleCrudService {
 
     void update(Bundle bundle);
 
-    void delete(Bundle bundle);
+    void delete(Number id);
 
     Long count();
 }

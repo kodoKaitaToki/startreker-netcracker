@@ -29,7 +29,7 @@ public class BundleCrudController {
     public List<BundleDTO> getAllBundles() {
         List<Bundle> bundles = bcs.getAll();
         return bundles.stream()
-                .map(bundle -> convertToDTO(bundle))
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -38,7 +38,7 @@ public class BundleCrudController {
     public List<BundleDTO> getAllBundles(@RequestParam("limit") Number limit, @RequestParam("offset") Number offset) {
         List<Bundle> bundles = bcs.getAll(limit, offset);
         return bundles.stream()
-                .map(bundle -> convertToDTO(bundle))
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
@@ -62,11 +62,11 @@ public class BundleCrudController {
 
     @DeleteMapping("api/v1/admin/bundles")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteBundle(@RequestBody BundleDTO bundleDTO) {
-        bcs.delete(convertFromDTO(bundleDTO));
+    public void deleteBundle(@RequestParam Number id) {
+        bcs.delete(id);
     }
 
-    @GetMapping("api/v1/admin/bundles")
+    @GetMapping("api/v1/admin/bundles/count")
     public Long countBundles() {
         return bcs.count();
     }

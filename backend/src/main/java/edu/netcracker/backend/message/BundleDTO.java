@@ -2,7 +2,7 @@ package edu.netcracker.backend.message;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.netcracker.backend.model.Service;
-import edu.netcracker.backend.model.TicketClass;
+import edu.netcracker.backend.model.Trip;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -14,7 +14,7 @@ public class BundleDTO {
     private static final String datePattern = "yyyy-MM-dd";
 
     @JsonProperty("id")
-    private Integer id;
+    private Long id;
 
     @JsonProperty("start_date")
     private String startDate;
@@ -31,8 +31,8 @@ public class BundleDTO {
     @JsonProperty("photo_uri")
     private String photoUri;
 
-    @JsonProperty("bundle_tickets")
-    private List<TicketClass> bundleTickets;
+    @JsonProperty("bundle_trip")
+    private Trip bundleTrip;
 
     @JsonProperty("bundle_services")
     private List<Service> bundleServices;

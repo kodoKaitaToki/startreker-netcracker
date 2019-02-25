@@ -15,7 +15,7 @@ public class Service {
 
     @PrimaryKey("service_id")
     @EqualsAndHashCode.Include
-    private Integer serviceId;
+    private Long serviceId;
 
     @Attribute("service_name")
     private String serviceName;
@@ -23,5 +23,5 @@ public class Service {
     @Attribute("service_description")
     private String serviceDescription;
 
-
+    private Integer servicePrice;
 }
