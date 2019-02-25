@@ -38,6 +38,8 @@ public class StatisticsServiceTest {
         tripsSalesTestWithTimeLimitsExpected = new CarrierStatisticsResponse();
         tripsSalesTestWithTimeLimitsExpected.setSold(5L);
         tripsSalesTestWithTimeLimitsExpected.setRevenue(140749L);
+        tripsSalesTestWithTimeLimitsExpected.setFrom("2015-01-01");
+        tripsSalesTestWithTimeLimitsExpected.setTo("2020-01-01");
 
         servicesSalesTestExpected = new CarrierStatisticsResponse();
         servicesSalesTestExpected.setSold(7L);
@@ -46,6 +48,8 @@ public class StatisticsServiceTest {
         servicesSalesTestWithTimeLimitsExpected = new CarrierStatisticsResponse();
         servicesSalesTestWithTimeLimitsExpected.setSold(3L);
         servicesSalesTestWithTimeLimitsExpected.setRevenue(1546L);
+        servicesSalesTestWithTimeLimitsExpected.setFrom("2015-01-01");
+        servicesSalesTestWithTimeLimitsExpected.setTo("2020-01-01");
     }
 
     @Test

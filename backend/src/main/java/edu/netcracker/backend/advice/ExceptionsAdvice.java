@@ -22,7 +22,7 @@ import java.util.List;
 public class ExceptionsAdvice {
 
     @ExceptionHandler(RequestException.class)
-    public ResponseEntity<RequestExceptionMessage> handleException(RequestException ex, WebRequest request){
+    public ResponseEntity<RequestExceptionMessage> handleException(RequestException ex){
         return  ResponseEntity.
                 status(ex.getHttpStatus()).
                 body(RequestExceptionMessage.createRequestExceptionMessage(ex));

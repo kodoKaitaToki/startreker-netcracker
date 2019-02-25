@@ -43,19 +43,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        // debug superuser features
-        if(Arrays.asList(env.getActiveProfiles()).contains("debug_su")){
-            String debugLogin = httpServletRequest.getHeader("Authorization");
-            if(debugLogin != null && debugLogin.startsWith("debug_log ")){
-                long userId = Long.parseLong(debugLogin.substring(10));
-                UserDetails userDetails = userService.find(userId);
-                createAuthentication(userDetails, httpServletRequest);
-                logger.info("DEBUG_LOG: " + userId);
-                filterChain.doFilter(httpServletRequest, httpServletResponse);
-                return;
-            }
-        }
-
         String accessToken = JwtUtils.getAccessToken(httpServletRequest);
 
         // debug superuser features

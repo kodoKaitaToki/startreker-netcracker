@@ -16,18 +16,17 @@ import java.util.List;
 @PropertySource("classpath:sql/ticketdao.properties")
 public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
 
-    @Value("${findAllByClass.sql}")
-    private String findAllByClass;
+    @Value("${FIND_ALL_BY_CLASS}")
+    private String FIND_ALL_BY_CLASS;
 
     public List<Ticket> findAllByClass(Number id) {
         ArrayList<Ticket> tickets = new ArrayList<>();
 
         try {
             tickets.addAll(getJdbcTemplate().query(
-                    findAllByClass,
+                    FIND_ALL_BY_CLASS,
                     new Object[]{id},
                     getGenericMapper()));
-
 
         } catch (EmptyResultDataAccessException e) {
             log.error(e.getMessage());

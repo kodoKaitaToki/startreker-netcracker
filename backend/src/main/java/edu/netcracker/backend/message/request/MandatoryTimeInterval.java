@@ -4,18 +4,18 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
 @Setter
-public class TimeInterval {
+public class MandatoryTimeInterval {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull
     private LocalDate from;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate to;
 
-    public boolean isProvided(){
-        return from != null && to != null;
-    }
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull
+    private LocalDate to;
 }

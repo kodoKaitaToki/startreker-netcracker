@@ -11,6 +11,4 @@ public interface TripDAO {
     Optional<Trip> find(Number id);
 
     void delete(Trip trip);
-
-    User findOwner(Trip trip);
 }
