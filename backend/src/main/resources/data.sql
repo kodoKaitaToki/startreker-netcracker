@@ -51,9 +51,9 @@ insert into USER_A (USER_NAME, USER_PASSWORD, USER_EMAIL, USER_TELEPHONE, USER_T
 insert into USER_A (USER_NAME, USER_PASSWORD, USER_EMAIL, USER_TELEPHONE, USER_TOKEN, USER_ACTIVATED, USER_CREATED) values ('docahsedy1d', '055228cb4b2aafd8f4127ede8d8a7cef9a36ea0a', 'mjenicek1d@princeton.edu', '5244218170', null, true, '2018-08-22');
 
 insert into ROLE_A (ROLE_NAME) values ('ROLE_ADMIN');
-insert into ROLE_A (ROLE_NAME) values ('ROLE_APPROVER');
-insert into ROLE_A (ROLE_NAME) values ('ROLE_CARRIER');
 insert into ROLE_A (ROLE_NAME) values ('ROLE_USER');
+insert into ROLE_A (ROLE_NAME) values ('ROLE_CARRIER');
+insert into ROLE_A (ROLE_NAME) values ('ROLE_APPROVER');
 
 insert into ASSIGNED_ROLE (USER_ID, ROLE_ID) values (1,1);
 insert into ASSIGNED_ROLE (USER_ID, ROLE_ID) values (1, 2);
