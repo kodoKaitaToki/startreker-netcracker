@@ -4,13 +4,14 @@ import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.security.SecurityContext;
+import edu.netcracker.backend.service.TripService;
 import edu.netcracker.backend.utils.TripStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 @Service
-public class TripServiceImpl {
+public class TripServiceImpl implements TripService {
 
     private final TripDAO tripDAO;
     private final SecurityContext securityContext;
@@ -77,7 +78,6 @@ public class TripServiceImpl {
         Trip trip = tripDAO.find(id).orElseThrow(
                 () -> new RequestException("Trip " + id + " not found", HttpStatus.NOT_FOUND));
         isAssignedApprover(trip);
-        isInAllowedState(trip, TripStatus.UNDER_CLARIFICATION, TripStatus.DRAFT, TripStatus.ARCHIVED);
         trip.setTripStatus(TripStatus.REMOVED.getValue());
         tripDAO.save(trip);
     }

@@ -8,7 +8,9 @@ import edu.netcracker.backend.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -34,7 +36,11 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     public CarrierStatisticsResponse getTripsSalesStatistics(long id, LocalDate from, LocalDate to){
-        return statisticsDAO.getTripsSalesStatistics(id, from, to);
+        CarrierStatisticsResponse resp = statisticsDAO.getTripsSalesStatistics(id, from, to);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        resp.setFrom(from.format(formatter));
+        resp.setTo(to.format(formatter));
+        return resp;
     }
 
     public CarrierStatisticsResponse getServicesSalesStatistics(long id){
@@ -42,7 +48,11 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     public CarrierStatisticsResponse getServicesSalesStatistics(long id, LocalDate from, LocalDate to){
-        return statisticsDAO.getServiceSalesStatistics(id, from, to);
+        CarrierStatisticsResponse resp = statisticsDAO.getServiceSalesStatistics(id, from, to);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        resp.setFrom(from.format(formatter));
+        resp.setTo(to.format(formatter));
+        return resp;
     }
 
     public List<CarrierStatisticsResponse> getTripSalesStatisticsByWeek(long id, LocalDate from, LocalDate to){
