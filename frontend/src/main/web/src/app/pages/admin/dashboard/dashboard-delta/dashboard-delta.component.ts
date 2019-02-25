@@ -23,7 +23,7 @@ export class DashboardDeltaComponent implements OnInit {
   locationsChart: CanvasJS.Chart;
 
   form = new FormGroup({
-    fromDate: new FormControl(new Date()),
+    fromDate: new FormControl(new Date().setFullYear(new Date().getFullYear() - 1)),
     toDate: new FormControl(new Date()),
   });
 
@@ -63,21 +63,27 @@ export class DashboardDeltaComponent implements OnInit {
 
   reloadCharts()
   {
+    let i:number = 0;
+
     this.userChart.options.data[0].dataPoints = [];
     for (let [key, value] of this.userMap) {
-      this.userChart.options.data[0].dataPoints.push({x: key, y: value});
+      i += value;
+      this.userChart.options.data[0].dataPoints.push({x: key, y: i});
     }
     this.userChart.render();
 
+    i = 0;
     this.carrierChart.options.data[0].dataPoints = [];
     for (let [key, value] of this.carrierMap) {
-      this.carrierChart.options.data[0].dataPoints.push({x: key, y: value});
+      i += value;
+      this.carrierChart.options.data[0].dataPoints.push({x: key, y: i});
     }
     this.carrierChart.render();
 
     this.locationsChart.options.data[0].dataPoints = [];
     for (let [key, value] of this.locationsMap) {
-      this.locationsChart.options.data[0].dataPoints.push({x: key, y: value});
+      i += value;
+      this.locationsChart.options.data[0].dataPoints.push({x: key, y: i});
     }
     this.locationsChart.render();
   }
