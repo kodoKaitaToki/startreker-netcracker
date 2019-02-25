@@ -6,7 +6,7 @@ import {Carrier} from './carrier';
 })
 export class CarrierShowStatusPipe implements PipeTransform {
 
-  transform(text: string): string {
-    return text === 'on' ? 'On' : 'Off';
+  transform(text: boolean): string {
+    return text === true ? 'On' : 'Off';
   }
 }

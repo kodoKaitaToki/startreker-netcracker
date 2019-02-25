@@ -1,4 +1,4 @@
-package edu.netcracker.backend.util;
+package edu.netcracker.backend.utils;
 
 import lombok.Getter;
 

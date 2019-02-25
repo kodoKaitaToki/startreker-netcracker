@@ -28,6 +28,9 @@ public class Trip {
     @Attribute("trip_status")
     private Integer tripStatus;
 
+    @Attribute("approver_id")
+    private Integer approverId;
+
     @Attribute("creation_date")
     private LocalDate creationDate;
 

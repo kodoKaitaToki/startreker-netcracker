@@ -6,20 +6,21 @@
           <div id="chartContainer" style="height: 370px; width: 100%;"></div>
           <div class="row">
               <div class="col-md-4 chart-btn">
-                <button class="btn btn-primary" (click)='getWeakStat()' id='perWeak' [disabled]="butWeak">Per weak</button>
+                <button class="btn btn-primary" (click)='getWeakStat()' id='perWeak' [disabled]="buttons.butWeek">Per weak</button>
               </div>
               <div class="col-md-4 chart-btn">
-                <button class="btn btn-primary" (click)='getMonthStat()' id='perMonth' [disabled]="butMonth">Per month</button>
+                <button class="btn btn-primary" (click)='getMonthStat()' id='perMonth' [disabled]="buttons.butMonth">Per month</button>
               </div>
               <div class="col-md-4 chart-btn">
 
                   <form method="POST" action="">
                     <div>
-                      <input class="fromInput" type="date" [value]="dateFrom | date:'yyyy-MM-dd'" (input)="dateFrom=parseDate($event.target.value,fromFlag)" />
-                      <input type="date" [value]="dateTo | date:'yyyy-MM-dd'" (input)="dateTo=parseDate($event.target.value,toFlag)" />
+                      <p style="color: red" *ngIf='dateInvalid'>The second date must be less than the first one</p>
+                      <input class="fromInput" type="date" [value]="dateFrom | date:'yyyy-MM-dd'" (input)="dateFrom=parseDate($event.target.value, true)" />
+                      <input type="date" [value]="dateTo | date:'yyyy-MM-dd'" (input)="dateTo=parseDate($event.target.value, false)" />
                     </div>
                     <div>
-                      <button type="submit" class="btn btn-primary btnSet" (click)='getInterStat()' [disabled]='checkBut'>Check</button>
+                      <button type="submit" class="btn btn-primary btnSet" (click)='getInterStat()' [disabled]='buttons.checkBut'>Check</button>
                     </div>
                   </form>
 

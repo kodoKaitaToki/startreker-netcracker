@@ -22,7 +22,7 @@ public class ReportStatisticsBuilderImpl implements ReportStatisticsBuilder {
     private Long userId;
 
     @Autowired
-    public ReportStatisticsBuilderImpl(StatisticsDAOImpl statisticsDAO) {
+    public ReportStatisticsBuilderImpl(StatisticsDAO statisticsDAO) {
         this.statisticsDAO = statisticsDAO;
         this.resp = new ReportStatisticsResponse();
         this.resp.setAmount(new HashMap<>());

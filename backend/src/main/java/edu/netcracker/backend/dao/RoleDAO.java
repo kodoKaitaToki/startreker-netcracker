@@ -4,11 +4,6 @@ import edu.netcracker.backend.model.Role;
 
 import java.util.Optional;
 
-public interface RoleDAO {
+public interface RoleDAO extends CrudDAO<Role> {
 
-    void save(Role role);
-
-    Optional<Role> find(Number id);
-
-    void delete(Role role);
 }
