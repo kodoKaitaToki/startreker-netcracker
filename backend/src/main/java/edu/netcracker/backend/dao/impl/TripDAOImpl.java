@@ -20,48 +20,24 @@ import java.util.Optional;
 public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
 
     private TicketClassDAO ticketClassDAO;
-    private final String findAllTicketTrips = "SELECT class_id FROM ticket_class WHERE trip_id = ?";
 
-    private final UserDAO userDAO;
-
-    @Value("${findOwner.sql}")
-    private String findOwnerSql;
+    @Value("${FIND_ALL_TICKET_TRIPS}")
+    private String FIND_ALL_TICKET_TRIPS;
 
     @Autowired
-    public TripDAOImpl(TicketClassDAO ticketClassDAO, UserDAO userDAO) {
+    public TripDAOImpl(TicketClassDAO ticketClassDAO) {
         this.ticketClassDAO = ticketClassDAO;
-        this.userDAO = userDAO;
     }
 
     @Override
     public Optional<Trip> find(Number id) {
         Optional<Trip> tripOpt = super.find(id);
-
-        if (tripOpt.isPresent()) {
-            return attachTicketClassed(tripOpt.get());
-        }
-        return Optional.empty();
-
-    }
-
-    @Override
-    public User findOwner(Trip trip) {
-        return getJdbcTemplate().queryForObject(
-                findOwnerSql,
-                new Object[]{trip.getTripId()},
-                userDAO.getGenericMapper()
-        );
+        return tripOpt.flatMap(this::attachTicketClassed);
     }
 
     private Optional<Trip> attachTicketClassed(Trip trip) {
-        List<Long> rows = getJdbcTemplate().queryForList(findAllTicketTrips, Long.class, trip.getTripId());
-        List<TicketClass> ticketClasses = new ArrayList<>();
-
-        for (Long ticket_class_id : rows) {
-            ticketClasses.add(ticketClassDAO.find(ticket_class_id).orElse(null));
-        }
-
-        trip.setTicketClasses(ticketClasses);
+        List<Long> rows = getJdbcTemplate().queryForList(FIND_ALL_TICKET_TRIPS, Long.class, trip.getTripId());
+        trip.setTicketClasses(ticketClassDAO.findIn(rows));
         return Optional.of(trip);
     }
 
