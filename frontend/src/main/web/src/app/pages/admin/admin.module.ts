@@ -11,7 +11,7 @@ import {BundlesCrudComponent} from './bundles-crud/bundles-crud.component';
 import {ApproverComponentComponent} from './approver/approver-component/approver-component.component';
 import {ApproverTableComponent} from './approver/approver-table/approver-table.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { FilterPipePipe } from './approver/shared/pipes/filter-pipe.pipe';
+import { FilterPipePipe } from './carrier/filter-pipe.pipe';
 import { AprroverShowStatusPipe } from './approver/shared/pipes/aprrover-show-status.pipe';
 
 import { TripsServicesComponent } from './dashboards/trips-services/trips-services.component';
@@ -29,8 +29,10 @@ import { CarCostDashComponent } from './dashboards/costs/car-cost-dash/car-cost-
 
 import { CarrierComponentComponent } from './carrier/carrier-component/carrier-component.component';
 import { CarrierTableComponent } from './carrier/carrier-table/carrier-table.component';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 import { TroubleStatisticsService } from './dashboards/trouble-statistics.service';
+
 
 @NgModule({
   declarations: [
@@ -61,7 +63,8 @@ import { TroubleStatisticsService } from './dashboards/trouble-statistics.servic
     CommonModule,
     AdminRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxPaginationModule
   ],
   providers: [
     FilterPipePipe,

@@ -24,7 +24,7 @@ public class RoleDAOTest {
 
     @Test
     public void daoTest(){
-        // Basically a CrudDAO test
+        // Basically a CrudDAOImpl test
         Role role = new Role();
         role.setRoleName("testrole");
         roleDAO.save(role);

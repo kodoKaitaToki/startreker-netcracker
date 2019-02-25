@@ -1,47 +1,41 @@
-import { HttpClient, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Configuration } from '../../../../app.constants';
+import { Api } from '../../../../modules/api/index';
+import { HttpOptionsAuthorized } from '../../../../modules/api/index';
 
-@Injectable()
+@Injectable(
+    {providedIn: 'root'}
+)
 export class DashCostService {
 
-    private actionUrl: string;
-
-    constructor(private http: HttpClient, private _configuration: Configuration) {
-        this.actionUrl = _configuration.ServerWithApiUrl + 'costs';
+    constructor(private http: HttpClient) {
     }
 
-    public getCarrier<T>(id: number): Observable<T>{
-        return this.http.get<T>(this.actionUrl + '?' + 'carrier_id=' + id);
+    public getCosts<T>(from: string, to: string): Observable<T>{
+        let url = Api.costDash.getCosts() + '?' + 'from=' + from + '&to=' + to;
+        return this.http.get<any>(url);
     }
 
-    public getCarrierPerWeak<T>(id: number): Observable<T>{
-        return this.http.get<T>(this.actionUrl + '/per-week/?' + 'carrier_id=' + id);
+    public getCarCosts<T>(id: number, from: string, to: string): Observable<T>{
+        let url = Api.costDash.getCosts() + '/' + id + '?' + 'from=' + from + '&to=' + to;
+        console.log(url);
+        return this.http.get<T>(url);
     }
 
-    public getCarrierPerMonth<T>(id: number): Observable<T>{
-        return this.http.get<T>(this.actionUrl + '/per-month/?' + 'carrier_id=' + id);
-    }
+    public parseResponse(response){
+        let answer = [];
 
-    public getCarrierPerInterval<T>(id: number, from: String, to: String): Observable<T>{
-        return this.http.get<T>(this.actionUrl + '/per-period/?' + 'carrier_id=' + id + "&from=" + from + "&to=" + to);
-    }
+        for(let key in response){
 
-}
+			answer.push({
+				y: parseInt(key)*response[key],
+				label: key + '$ tickets'
+			});
 
-
-@Injectable()
-export class CustomInterceptor implements HttpInterceptor {
-
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if (!req.headers.has('Content-Type')) {
-            req = req.clone({ headers: req.headers.set('Content-Type', 'application/json') });
         }
 
-        req = req.clone({ headers: req.headers.set('Accept', 'application/json') });
-        console.log(JSON.stringify(req.headers));
-        return next.handle(req);
+        return answer;
     }
 }

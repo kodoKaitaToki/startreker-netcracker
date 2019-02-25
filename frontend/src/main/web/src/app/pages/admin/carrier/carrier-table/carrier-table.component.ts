@@ -1,4 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component,  
+        Input, 
+        Output,
+        OnInit, 
+        EventEmitter} from '@angular/core';
 import {Carrier} from '../carrier';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
@@ -10,22 +14,34 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 export class CarrierTableComponent implements OnInit {
 
   @Input() carriers: Carrier;
+  @Input() allCarriers: Carrier[] = [];
+  @Input() numpages: Number;
+  @Input() butGroup = {};
+  @Input() updateError;
 
   @Input() filterCriteria: string;
   @Input() filterContent: string;
 
+  @Output() 
+  notifyAboutDelete: EventEmitter<number> = new EventEmitter<number>();
+
+  @Output() 
+  notifyAboutUpdate = new EventEmitter();
+
+  @Output() 
+  notifyAboutChangePage: EventEmitter<number> = new EventEmitter<number>();
+
   currentCarrierForUpdate = new Carrier();
   isForUpdateMessage = false;
+  page: number = 1;
 
   form: FormGroup;
   isEditButtonBlockedAfterSubmit = true;
+  editBut = false;
 
-  constructor() {
-
-  }
+  constructor() {}
 
   ngOnInit() {
-
     this.setFormInDefault();
   }
 
@@ -35,8 +51,8 @@ export class CarrierTableComponent implements OnInit {
       {
         email: new FormControl('', [Validators.required, Validators.email]),
         name: new FormControl('', Validators.required),
-        tel: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
-        status: new FormControl('on')
+        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        is_activated: new FormControl('on')
       }
     );
   }
@@ -45,33 +61,57 @@ export class CarrierTableComponent implements OnInit {
 
     this.currentCarrierForUpdate = event;
     this.isEditButtonBlockedAfterSubmit = true;
+    this.editBut = true;
+
+    let status: string;
+     if(this.currentCarrierForUpdate.is_activated == true){
+       status = 'on';
+     }else{
+       status = 'off';
+     }
 
     this.form = new FormGroup(
       {
         email: new FormControl(this.currentCarrierForUpdate.email, [Validators.required, Validators.email]),
-        name: new FormControl(this.currentCarrierForUpdate.name, Validators.required),
-        tel: new FormControl(this.currentCarrierForUpdate.telephone, [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
-        status: new FormControl(this.currentCarrierForUpdate.status)
+        username: new FormControl(this.currentCarrierForUpdate.username, Validators.required),
+        telephone_number: new FormControl(this.currentCarrierForUpdate.telephone_number, [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        is_activated: new FormControl(status)
       }
     );
+
   }
 
-  onDelete() {
-
+  onDelete(id: number) {
+    this.notifyAboutDelete.emit(id);
   }
 
   onSubmit() {
-    console.log(this.form);
+    this.form.value.id = this.currentCarrierForUpdate.id;
+    let status: boolean;
+    if(this.form.value['is_activated'] == 'on'){
+      status = true;
+    }else{
+      status = false;
+    }
 
-    this.isForUpdateMessage = true;
-    this.isEditButtonBlockedAfterSubmit = false;
+    let event = {id: this.currentCarrierForUpdate.id,
+                username: this.form.value['username'],
+                email: this.form.value['email'],
+                telephone_number: this.form.value['telephone_number'],
+                is_activated: status,
+                user_created_date: this.form.value['user_created_date']
+    }
 
-    setTimeout(() => {
+    console.log(event);
 
-      this.isForUpdateMessage = false;
-      this.currentCarrierForUpdate = new Carrier();
+    this.notifyAboutUpdate.emit(event);
+            
+    this.editBut = false;
+  }
 
-    }, 5000);
+  onChange(event: number){
+    this.page = event;
+    this.notifyAboutChangePage.emit(event);
   }
 
 }

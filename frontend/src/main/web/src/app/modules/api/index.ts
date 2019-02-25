@@ -38,18 +38,40 @@ const auth = {
 
 const dashboard = {
   tripDistribution() {
-    return `${baseUrl}api/trip/distribution`;
+    return `${baseUrl}api/v1/trip/distribution`;
   },
   serviceDistribution() {
-    return `${baseUrl}api/service/distribution`;
+    return `${baseUrl}api/v1/service/distribution`;
+  }
+}
+
+const carrier = {
+  carriers(){
+    return `${baseUrl}api/v1/admin/carrier`;
+  },
+  getCarriersPagin(){
+    return `${baseUrl}api/v1/admin/pagination`;
+  },
+  getCarrierByUsername(){
+    return `${baseUrl}api/v1/admin/carrier-by-username?username=`;
+  }
+}
+
+const costDash = {
+  getCosts(){
+    return `${baseUrl}api/v1/admin/costs`;
   }
 }
 
 export const Api = {
   auth,
-  dashboard
+  dashboard, 
+  carrier, 
+  costDash
 }
 
 export const options = {
   root: baseUrl
 }
+
+

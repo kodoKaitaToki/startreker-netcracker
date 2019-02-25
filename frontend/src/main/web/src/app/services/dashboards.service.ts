@@ -33,10 +33,10 @@ export class ApiDashboardService {
     }
 
     setTripDistribution(): Observable<any> {
-        return this.http.post<any>(Api.dashboard.tripDistribution(), {}, HttpOptionsAuthorized);
+        return this.http.get<any>(Api.dashboard.tripDistribution(), HttpOptionsAuthorized);
     }
 
     setServiceDistribution(): Observable<any> {
-        return this.http.post<any>(Api.dashboard.serviceDistribution(), {}, HttpOptionsAuthorized);
+        return this.http.get<any>(Api.dashboard.serviceDistribution(), HttpOptionsAuthorized);
     }
 }
