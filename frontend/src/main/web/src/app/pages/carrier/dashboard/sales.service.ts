@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { SalesModel } from './sales/sales.model';
 
-import { Configuration } from '../../../app.constants';
+import { Api } from '../../../modules/api/index';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,8 @@ import { Configuration } from '../../../app.constants';
 export class SalesService {
   private actionUrl: string;
 
-  constructor(private http: HttpClient, private _configuration: Configuration) {
-    this.actionUrl = _configuration.ServerWithApiUrl + 'v1';
+  constructor(private http: HttpClient) {
+    this.actionUrl = Api.baseUrl + 'api/v1';
   }
 
   public getServicesSalesStatisticsByWeek(from: string, to: string): Observable<SalesModel[]>{
