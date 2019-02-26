@@ -1,8 +1,8 @@
 package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.CrudDAO;
-import edu.netcracker.backend.dao.TicketClass;
 import edu.netcracker.backend.dao.TicketClassDAO;
+import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.model.Trip;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class TripDAOImpl extends CrudDAO<Trip> implements TicketClass {
+public class TripDAOImpl extends CrudDAO<Trip> implements TripDAO {
     private TicketClassDAO ticketClassDAO;
     private final String findAllTicketTrips = "SELECT class_id FROM ticket_class WHERE trip_id = ?";
 

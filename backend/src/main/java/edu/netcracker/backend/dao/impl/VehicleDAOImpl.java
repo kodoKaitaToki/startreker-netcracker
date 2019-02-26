@@ -1,7 +1,7 @@
 package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.CrudDAO;
-import edu.netcracker.backend.dao.TicketClass;
+import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.dao.VehicleDAO;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.Vehicle;
@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 public class VehicleDAOImpl extends CrudDAO<Vehicle> implements VehicleDAO {
 
-    private TicketClass ticketClass;
+    private TripDAO tripDAO;
     private final String findAllTrips = "SELECT trip_id FROM trip WHERE vehicle_id = ?";
     private final String findAll = "SELECT * FROM vehicle";
     private final String findByOwnerId = "SELECT * FROM vehicle WHERE owner_id = ?";
@@ -58,8 +58,8 @@ public class VehicleDAOImpl extends CrudDAO<Vehicle> implements VehicleDAO {
     }
 
     @Autowired
-    public VehicleDAOImpl(TicketClass ticketClass) {
-        this.ticketClass = ticketClass;
+    public VehicleDAOImpl(TripDAO tripDAO) {
+        this.tripDAO = tripDAO;
     }
 
     private Optional<Vehicle> attachTrips(Vehicle vehicle) {
@@ -67,7 +67,7 @@ public class VehicleDAOImpl extends CrudDAO<Vehicle> implements VehicleDAO {
         List<Trip> trips = new ArrayList<>();
 
         for (Long trip_id : rows) {
-            trips.add(ticketClass.find(trip_id).orElse(null));
+            trips.add(tripDAO.find(trip_id).orElse(null));
         }
 
         vehicle.setVehicleTrips(trips);

@@ -50,13 +50,13 @@ public class BundleCrudController {
 
     @PostMapping("api/v1/admin/bundles")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBundle(@RequestBody BundleDTO bundleDTO) {
+    public void addBundle(@RequestBody final BundleDTO bundleDTO) {
         bcs.add(convertFromDTO(bundleDTO));
     }
 
     @PutMapping("api/v1/admin/bundles")
     @ResponseStatus(HttpStatus.OK)
-    public void updateBundle(@RequestBody BundleDTO bundleDTO) {
+    public void updateBundle(@RequestBody final BundleDTO bundleDTO) {
         bcs.update(convertFromDTO(bundleDTO));
     }
 
