@@ -1,8 +1,19 @@
 export class Approver {
-  id: string;
-  name: string;
+  id: number;
+
+  username: string;
+
   email: string;
-  telephone: string;
-  status: string;
-  creation_date: Date;
+
+  password?: string;
+
+  telephone_number: string;
+
+  is_activated: boolean;
+
+  user_created_date: Date;
+
+  constructor() {
+
+  }
 }
