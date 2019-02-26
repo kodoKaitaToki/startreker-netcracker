@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { TroubleStatisticsModel } from './trouble-statistics/trouble-statistics.model';
 
-import { Configuration } from '../../../app.constants';
+import { Api } from '../../../modules/api/index';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,8 @@ export class TroubleStatisticsService {
 
   private actionUrl: string;
 
-  constructor(private http: HttpClient, private _configuration: Configuration) {
-    this.actionUrl = _configuration.ServerWithApiUrl + 'v1/trouble/statistics';
+  constructor(private http: HttpClient) {
+    this.actionUrl = Api.baseUrl + 'api/v1/trouble/statistics';
   }
 
   public getStatistic(): Observable<TroubleStatisticsModel>{

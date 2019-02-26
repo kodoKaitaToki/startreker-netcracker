@@ -3,10 +3,12 @@ import {HttpClient} from "@angular/common/http";
 import {Approver} from "../model/approver";
 import {Injectable} from "@angular/core";
 
+import { Api } from '../../../../../modules/api/index';
+
 @Injectable()
 export class ApproverService {
 
-  private defaultUrl: string = 'http://localhost:80/';
+  private defaultUrl: string = Api.baseUrl;
 
   private apiVersion: string = 'v1/api/';
 
