@@ -22,9 +22,7 @@ export class FilterPipePipe implements PipeTransform {
       searchStr = 'false';
     }
 
-    let stringObj = object[fieldName].toString();
-
-    return object.filter(obj => stringObj.toString()
+    return object.filter(obj => obj[fieldName].toString()
                                               .toLowerCase()
                                               .indexOf(searchStr.toString()
                                                                 .toLowerCase()) !== -1);
