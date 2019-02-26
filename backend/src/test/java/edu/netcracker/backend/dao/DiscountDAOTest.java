@@ -21,13 +21,15 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-//@AutoConfigureTestDatabase
-//@ActiveProfiles(profiles = "test")
+@AutoConfigureTestDatabase
+@ActiveProfiles(profiles = "test")
 public class DiscountDAOTest {
 
     private static final String IF_EXIST_CONNECTION_TO_DISCOUNT_SERVICE =
@@ -45,11 +47,11 @@ public class DiscountDAOTest {
     @Autowired
     private DataSource dataSource;
 
-//    @Before
-//    public void beforeTest() throws SQLException, IOException {
-//        executeScript("schema.sql");
-//        executeScript("data.sql");
-//    }
+    @Before
+    public void beforeTest() throws SQLException, IOException {
+        executeScript("schema.sql");
+        executeScript("data.sql");
+    }
 
     @Test
     public void createDiscountForPossibleServiceTestWithExistingDiscount(){
@@ -237,7 +239,76 @@ public class DiscountDAOTest {
         discount.setDiscountRate(19);
         discount.setDiscountType(true);
 
+        List<Integer> ids = Arrays.asList(7, 17, 28, 36, 38);
+
         discountDAO.createDiscountForAllPossibleServicesForTicketClass(11, discount);
+
+        for (int id: ids) {
+            Assert.assertTrue(isExist(IF_EXIST_CONNECTION_TO_DISCOUNT_SERVICE, discount.getDiscountId(), id));
+        }
+    }
+
+    @Test
+    public void createDiscountForAllTicketClassesForTripTest() {
+        Discount discount = new Discount();
+        discount.setStartDate(LocalDate.of(2015, 6, 17));
+        discount.setFinishDate(LocalDate.of(2020, 3, 6));
+        discount.setDiscountRate(19);
+        discount.setDiscountType(true);
+
+        List<Integer> ids = Arrays.asList(11, 12);
+
+        discountDAO.createDiscountForAllTicketClassesForTrip(6, discount);
+
+        for (int id: ids) {
+            Assert.assertTrue(isExist(IF_EXIST_CONNECTION_TO_DISCOUNT_CLASS, discount.getDiscountId(), id));
+        }
+    }
+
+    @Test
+    public void deleteDiscountsForAllPossibleServiceForClassTicketTest() {
+        Discount discount = new Discount();
+        discount.setStartDate(LocalDate.of(2000, 4, 12));
+        discount.setFinishDate(LocalDate.of(2020, 2, 24));
+        discount.setDiscountRate(100);
+        discount.setDiscountType(true);
+
+        List<Integer> ids = Arrays.asList(7, 17, 28, 36, 38);
+
+        discountDAO.createDiscountForAllPossibleServicesForTicketClass(11, discount);
+
+        discountDAO.deleteDiscountsForAllPossibleServiceForClassTicket(11);
+
+        Optional<Discount> opDiscount = discountDAO.find(discount.getDiscountId());
+
+        Assert.assertNull(opDiscount.orElse(null));
+
+        for (int id: ids) {
+            Assert.assertFalse(isExist(IF_EXIST_CONNECTION_TO_DISCOUNT_SERVICE, discount.getDiscountId(), id));
+        }
+    }
+
+    @Test
+    public void deleteDiscountsForAllTicketClassesForTripTest() {
+        Discount discount = new Discount();
+        discount.setStartDate(LocalDate.of(2000, 4, 12));
+        discount.setFinishDate(LocalDate.of(2020, 2, 24));
+        discount.setDiscountRate(100);
+        discount.setDiscountType(true);
+
+        List<Integer> ids = Arrays.asList(11, 12);
+
+        discountDAO.createDiscountForAllTicketClassesForTrip(6, discount);
+
+        discountDAO.deleteDiscountsForAllTicketClassesForTrip(6);
+
+        Optional<Discount> opDiscount = discountDAO.find(discount.getDiscountId());
+
+        Assert.assertNull(opDiscount.orElse(null));
+
+        for (int id: ids) {
+            Assert.assertFalse(isExist(IF_EXIST_CONNECTION_TO_DISCOUNT_CLASS, discount.getDiscountId(), id));
+        }
     }
 
     @Test
