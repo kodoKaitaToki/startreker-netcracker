@@ -33,6 +33,10 @@ import {NgxPaginationModule} from 'ngx-pagination';
 
 import { TroubleStatisticsService } from './dashboards/trouble-statistics.service';
 
+import {ApproverService} from "./approver/shared/service/approver.service";
+import {ApproverFilterPipe} from "./approver/shared/pipes/approverFilter.pipe";
+
+
 
 @NgModule({
   declarations: [
@@ -44,7 +48,6 @@ import { TroubleStatisticsService } from './dashboards/trouble-statistics.servic
     DashboardsComponent,
     ApproverComponentComponent,
     ApproverTableComponent,
-    ApproverCrudComponent,
     FilterPipePipe,
     AprroverShowStatusPipe,
     TripsServicesComponent,
@@ -57,19 +60,22 @@ import { TroubleStatisticsService } from './dashboards/trouble-statistics.servic
     CarrierShowStatusPipe,
     CommonChartComponent,
     CarCostDashComponent, 
-    CostsComponent
+    CostsComponent,
+    ApproverFilterPipe
   ],
   imports: [
     CommonModule,
     AdminRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxPaginationModule
+    NgxPaginationModule,  
   ],
   providers: [
     FilterPipePipe,
     TroubleStatisticsService,
+    ApproverService
   ]
 })
+
 export class AdminModule {
 }
