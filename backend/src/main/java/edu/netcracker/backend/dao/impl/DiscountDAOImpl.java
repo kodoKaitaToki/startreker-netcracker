@@ -1,6 +1,5 @@
 package edu.netcracker.backend.dao.impl;
 
-import edu.netcracker.backend.dao.CrudDAO;
 import edu.netcracker.backend.dao.DiscountDAO;
 import edu.netcracker.backend.model.Discount;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-public class DiscountDAOImpl extends CrudDAO<Discount> implements DiscountDAO {
+public class DiscountDAOImpl extends CrudDAOImpl<Discount> implements DiscountDAO {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(DiscountDAOImpl.class);
 
