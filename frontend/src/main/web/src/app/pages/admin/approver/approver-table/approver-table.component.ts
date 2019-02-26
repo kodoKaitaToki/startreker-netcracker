@@ -1,37 +1,24 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {Approver} from '../shared/model/approver';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
-             selector: 'app-approver-table',
-             templateUrl: './approver-table.component.html',
-             styleUrls: ['./approver-table.component.scss']
-           })
+  selector: 'app-approver-table',
+  templateUrl: './approver-table.component.html',
+  styleUrls: ['./approver-table.component.scss']
+})
 export class ApproverTableComponent implements OnInit {
 
-  @Input() approvers: Approver[];
+  @Input() approvers: Approver;
 
   @Input() filterCriteria: string;
-
   @Input() filterContent: string;
 
-  currentApproverForUpdate: Approver;
-
-  isForUpdateAlertMessage = false;
-
-  isEditButtonBlockedAfterSubmit = true;
+  currentApproverForUpdate = new Approver();
+  isForUpdateMessage = false;
 
   form: FormGroup;
-
-  totalRec: number;
-
-  page: number = 1;
-
-  entriesAmountOnPage = 10;
-
-  @Output() onUpdateDataNotifier = new EventEmitter();
-
-  @Output() onDeleteDataNotifier = new EventEmitter();
+  isEditButtonBlockedAfterSubmit = true;
 
   constructor() {
 
@@ -40,7 +27,6 @@ export class ApproverTableComponent implements OnInit {
   ngOnInit() {
 
     this.setFormInDefault();
-    this.totalRec = this.approvers.length;
   }
 
   setFormInDefault() {
@@ -48,58 +34,42 @@ export class ApproverTableComponent implements OnInit {
     this.form = new FormGroup(
       {
         email: new FormControl('', [Validators.required, Validators.email]),
-        username: new FormControl('', [Validators.required, Validators.minLength(3), Validators.max(24)]),
-        telephone_number: new FormControl('', Validators.required),
-        is_activated: new FormControl(false, Validators.required),
+        name: new FormControl('', Validators.required),
+        tel: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        status: new FormControl('on')
       }
     );
   }
 
-  onApproverUpdate(onClickedApproverForUpdate) {
+  onUpdate(event) {
 
+    this.currentApproverForUpdate = event;
     this.isEditButtonBlockedAfterSubmit = true;
 
-    this.currentApproverForUpdate = onClickedApproverForUpdate;
-
-    this.form.patchValue({
-                           email: this.currentApproverForUpdate.email,
-                           username: this.currentApproverForUpdate.username,
-                           telephone_number: this.currentApproverForUpdate.telephone_number,
-                           is_activated: this.currentApproverForUpdate.is_activated
-                         });
+    this.form = new FormGroup(
+      {
+        email: new FormControl(this.currentApproverForUpdate.email, [Validators.required, Validators.email]),
+        name: new FormControl(this.currentApproverForUpdate.name, Validators.required),
+        tel: new FormControl(this.currentApproverForUpdate.telephone, [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        status: new FormControl(this.currentApproverForUpdate.status)
+      }
+    );
   }
 
-  onApproverDelete(onClickedApproverForDelete) {
+  onDelete() {
 
-    this.onDeleteDataNotifier.emit((ApproverTableComponent.deleteUnnecessaryFieldAfterClick(onClickedApproverForDelete)));
   }
 
-  onSubmitUpdate() {
+  onSubmit() {
 
+    this.isForUpdateMessage = true;
     this.isEditButtonBlockedAfterSubmit = false;
-    this.isForUpdateAlertMessage = true;
 
-    this.form.value.id = this.currentApproverForUpdate.id;
+    setTimeout(() => {
 
-    this.onUpdateDataNotifier.emit(this.form.value);
-    this.closeUpdateForm();
-  }
+      this.isForUpdateMessage = false;
+      this.currentApproverForUpdate = new Approver();
 
-  onChangePage($event) {
-
-    this.page = $event;
-    window.scrollTo(0, 0);
-  }
-
-  static deleteUnnecessaryFieldAfterClick(approver): Approver {
-    delete approver['roles'];
-    delete approver['user_created_date'];
-
-    return approver;
-  }
-
-  closeUpdateForm() {
-    this.currentApproverForUpdate = null;
-    this.isForUpdateAlertMessage = false;
+    }, 5000);
   }
 }

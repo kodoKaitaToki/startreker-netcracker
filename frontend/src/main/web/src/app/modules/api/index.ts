@@ -3,21 +3,21 @@ import { HttpHeaders } from '@angular/common/http';
 let baseUrl;
 const apiPort = ':80/'
 
-baseUrl = `http://127.0.0.1${apiPort}`
+baseUrl = `http://localhost${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
-    'Access-Control-Allow-Origin': '*'
+    // 'Access-Control-Allow-Origin': '*'
   })
 }
 
 export const HttpOptionsAuthorized = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Authorization': `Bearer ${localStorage.getItem('at')}`,
-    'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
+    // 'Access-Control-Allow-Origin': '*',
+    // 'Authorization': `Bearer ${localStorage.getItem('at')}`,
+    // 'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
   })
 }
 
@@ -33,6 +33,15 @@ const auth = {
   },
   recoverPassword() {
     return `${baseUrl}api/auth/password-recovery`;
+  }
+}
+
+const dashboard = {
+  tripDistribution() {
+    return `${baseUrl}api/v1/trip/distribution`;
+  },
+  serviceDistribution() {
+    return `${baseUrl}api/v1/service/distribution`;
   }
 }
 
@@ -55,9 +64,14 @@ const costDash = {
 }
 
 export const Api = {
-  auth, carrier, costDash
+  auth,
+  dashboard, 
+  carrier, 
+  costDash
 }
 
 export const options = {
   root: baseUrl
 }
+
+

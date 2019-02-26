@@ -1,17 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Approver} from '../shared/model/approver';
-import {ApproverService} from "../shared/service/approver.service";
 
 @Component({
-             selector: 'app-approver-component',
-             templateUrl: './approver-component.component.html',
-             styleUrls: ['./approver-component.component.scss']
-           },
-)
+  selector: 'app-approver-component',
+  templateUrl: './approver-component.component.html',
+  styleUrls: ['./approver-component.component.scss']
+})
 export class ApproverComponentComponent implements OnInit {
 
-  approvers: Approver[] = [];
+  defaultApprovers: Approver[] = [];
+  currentApproverForUpdate: Approver;
 
   filterCriteria = [
     {name: 'id'},
@@ -22,72 +21,139 @@ export class ApproverComponentComponent implements OnInit {
   filterContent = '';
 
   currentFilter = this.filterCriteria[0].name;
-
   currentFilterPlaceholder = `Search by ${this.currentFilter}`;
 
   form: FormGroup;
 
-  passwordMinLength = 6;
-
-  constructor(private approverSrvc: ApproverService) {
+  constructor() {
   }
 
   ngOnInit(): void {
 
+    this.defaultApprovers = this.getDefaultApprovers();
+
     this.form = new FormGroup(
       {
         email: new FormControl('', [Validators.required, Validators.email]),
-        username: new FormControl('', [Validators.required, Validators.minLength(3), Validators.max(24)]),
-        password: new FormControl('', [Validators.required, Validators.minLength(this.passwordMinLength)]),
-        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[\\s\\d+(d+)\\s]+')]),
-        is_activated: new FormControl(true, Validators.required)
+        name: new FormControl('', Validators.required),
+        tel: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        status: new FormControl('activated')
       }
     );
+  }
 
-    this.getAllApprovers();
+  getDefaultApprovers() {
+    return [
+      {
+        id: '1',
+        name: 'testName',
+        email: 'test@mail.com',
+        telephone: '111-22-33',
+        status: 'on',
+        creation_date: new Date()
+      },
+      {
+        id: '2',
+        name: 'testName',
+        email: 'test@mail.com',
+        telephone: '111-22-33',
+        status: 'on',
+        creation_date: new Date()
+      },
+      {
+        id: '3',
+        name: 'testName',
+        email: 'test@mail.com',
+        telephone: '111-22-33',
+        status: 'on',
+        creation_date: new Date()
+      },
+      {
+        id: '4',
+        name: 'testName',
+        email: 'test@mail.com',
+        telephone: '111-22-33',
+        status: 'on',
+        creation_date: new Date()
+      },
+      {
+        id: '5',
+        name: 'testName',
+        email: 'test@mail.com',
+        telephone: '111-22-33',
+        status: 'on',
+        creation_date: new Date()
+      },
+      {
+        id: '6',
+        name: 'testName',
+        email: 'test@mail.com',
+        telephone: '111-22-33',
+        status: 'on',
+        creation_date: new Date()
+      },
+      {
+        id: '7',
+        name: 'testName',
+        email: 'test@mail.com',
+        telephone: '111-22-33',
+        status: 'on',
+        creation_date: new Date()
+      },
+      {
+        id: '8',
+        name: 'anotherName1',
+        email: 'test@mail.com',
+        telephone: '111-22-33',
+        status: 'on',
+        creation_date: new Date()
+      },
+      {
+        id: '9',
+        name: 'anotherName2',
+        email: 'test@mail.com',
+        telephone: '111-22-33',
+        status: 'off',
+        creation_date: new Date()
+      },
+      {
+        id: '10',
+        name: 'testName',
+        email: 'test@mail.com',
+        telephone: '111-22-33',
+        status: 'on',
+        creation_date: new Date()
+      },
+      {
+        id: '11',
+        name: 'testName',
+        email: 'test@mail.com',
+        telephone: '111-22-33',
+        status: 'off',
+        creation_date: new Date()
+      }
+    ];
   }
 
   chooseNewFilter(chosenFilterName) {
 
     this.currentFilter = chosenFilterName.value;
+
     this.currentFilterPlaceholder = `Search by ${this.currentFilter}`;
   }
 
-  onPost() {
+  processUpdateEvent(event) {
 
-    const approver: Approver = this.form.value;
-
-    this.approverSrvc.postApprover(approver)
-        .subscribe(() => {
-          this.getAllApprovers();
-        }, () => {
-          alert('Such an email exists');
-        });
-
-    this.form.reset({is_activated: true});
+    this.currentApproverForUpdate = event;
   }
 
-  getApproverForUpdate(approver) {
-
-    this.approverSrvc.putApprover(approver)
-        .subscribe(() => {
-          this.getAllApprovers();
-        }, () => {
-          alert('Such an email exists');
-        });
+  processDeleteNotification() {
   }
 
-  getApproverForDelete(approver) {
+  onSubmit() {
 
-    this.approverSrvc.deleteApprover(approver)
-        .subscribe(() => {
-          this.getAllApprovers();
-        });
+    console.log(this.form);
+    this.form.reset();
   }
 
-  getAllApprovers() {
-
-    this.approverSrvc.getAll()
-        .subscribe(data => this.approvers = data);
-  }
 }
