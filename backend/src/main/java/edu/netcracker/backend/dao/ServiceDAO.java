@@ -14,5 +14,13 @@ public interface ServiceDAO {
 
     List<Service> findAll();
 
-    List<Service> findAllByTicketClass(Number id);
+    List<Service> findAllWithTicketClassId(Number id);
+
+    List<Service> findSuggestionsWithTicketClassId(Number id);
+
+    void saveSuggestion(Number tripId, Number serviceId, Number discount_rate);
+
+    void deleteSuggestion(Number tripId, Number serviceId);
+
+    Optional<Service> findSuggestion(Number tripId, Number serviceId);
 }
