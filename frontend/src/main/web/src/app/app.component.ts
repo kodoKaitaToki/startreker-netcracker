@@ -8,24 +8,11 @@ import {HttpClient} from "@angular/common/http";
 })
 export class AppComponent implements OnInit {
 
-  title = 'web';
-
-  user: any = {};
-
-  constructor(private http: HttpClient) {
+  constructor() {
 
   }
 
   ngOnInit()  {
 
-    this.getRequest()
-      .subscribe(data => {
-        this.user = data;
-      })
-  }
-
-  getRequest() {
-
-    return this.http.get('http://localhost:8090/api');
   }
 }

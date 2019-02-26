@@ -1,7 +1,6 @@
 package edu.netcracker.backend.dao.impl;
 
 
-import edu.netcracker.backend.dao.CrudDAO;
 import edu.netcracker.backend.dao.RoleDAO;
 import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.model.Role;
@@ -10,13 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
-public class UserDAOImpl extends CrudDAO<User> implements UserDAO {
+public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
 
     private final RoleDAO roleDAO;
 
@@ -51,6 +51,14 @@ public class UserDAOImpl extends CrudDAO<User> implements UserDAO {
             "  INNER JOIN assigned_role ON assigned_role.user_id = USER_A.user_id\n" +
             "  INNER JOIN ROLE_A ON assigned_role.role_id = ROLE_A.role_id WHERE role_name = ?" +
             "ORDER BY USER_A.user_id ASC LIMIT ? OFFSET ?";
+
+    private final String findPerPeriod = "SELECT * FROM user_a " +
+            "WHERE user_created BETWEEN ? AND ?";
+
+    private final String findPerPeriodByRole = "SELECT * FROM user_a " +
+            "INNER JOIN assigned_role ON assigned_role.user_id = user_a.user_id " +
+            "INNER JOIN role_a ON assigned_role.role_id = role_a.role_id " +
+            "WHERE role_a.role_id = ? AND user_created BETWEEN ? AND ?";
 
     @Autowired
     public UserDAOImpl(RoleDAO roleDAO) {
@@ -149,6 +157,38 @@ public class UserDAOImpl extends CrudDAO<User> implements UserDAO {
     }
 
     @Override
+    public List<User> findPerPeriod(LocalDate from, LocalDate to) {
+        List<User> users = new ArrayList<>();
+        users.addAll(getJdbcTemplate().query(
+                findPerPeriod,
+                new Object[]{from, to},
+                getGenericMapper()));
+
+        for (User user : users) {
+            attachRoles(user);
+        }
+
+        return users;
+
+    }
+
+    @Override
+    public List<User> findPerPeriodByRole(Number id, LocalDate from, LocalDate to) {
+        List<User> users = new ArrayList<>();
+
+        users.addAll(getJdbcTemplate().query(
+                findPerPeriodByRole,
+                new Object[]{id, from, to},
+                getGenericMapper()));
+
+        for (User user : users) {
+            attachRoles(user);
+        }
+
+        return users;
+    }
+
+    @Override
     public void save(User user) {
         super.save(user);
         updateRoles(user);
@@ -174,11 +214,7 @@ public class UserDAOImpl extends CrudDAO<User> implements UserDAO {
 
     private Optional<User> attachRoles(User user) {
         List<Long> rows = getJdbcTemplate().queryForList(findAllRolesSql, Long.class, user.getUserId());
-        List<Role> roles = new ArrayList<>();
-        for (Long role_id : rows) {
-            roles.add(roleDAO.find(role_id).orElse(null));
-        }
-        user.setUserRoles(roles);
+        user.setUserRoles(roleDAO.findIn(rows));
         return Optional.of(user);
     }
 
