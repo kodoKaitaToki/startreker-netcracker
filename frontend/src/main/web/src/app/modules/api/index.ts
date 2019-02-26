@@ -3,7 +3,7 @@ import { HttpHeaders } from '@angular/common/http';
 let baseUrl;
 const apiPort = '/'
 
-baseUrl = `http://startreker-netcracker.herokuapp.com${apiPort}`
+baseUrl = `https://startreker-netcracker.herokuapp.com${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
