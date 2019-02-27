@@ -166,19 +166,22 @@ export class CarCostDashComponent implements OnInit {
 	}
 
 	getCarCosts(){
-		this.dashCostService.getCarCosts(this.curId, this.curDateFrom, this.curDateTo)
-                        .subscribe(
-                          (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-													}*/
-							let response = clone(resp);
-							let tickets = this.dashCostService.parseResponse(response);
-							this.getStatistics(tickets);
-                          },
-                          error => console.log(error)
-                        );
+		if(this.curCarrier !== undefined){
+			
+			this.dashCostService.getCarCosts(this.curId, this.curDateFrom, this.curDateTo)
+													.subscribe(
+														(resp: Response) => {
+															/*if (resp.headers.get('New-Access-Token')) {
+															localStorage.removeItem('at');
+															localStorage.setItem('at', resp.headers.get('New-Access-Token'));
+															}*/
+															let response = clone(resp);
+															let tickets = this.dashCostService.parseResponse(response);
+															this.getStatistics(tickets);
+														},
+														error => console.log(error)
+													);
+		}
 	}
 
 	getCarrierByName(event){
