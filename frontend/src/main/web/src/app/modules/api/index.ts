@@ -1,9 +1,9 @@
 import { HttpHeaders } from '@angular/common/http';
 
 let baseUrl;
-const apiPort = ':80/'
+const apiPort = '/'
 
-baseUrl = `http://localhost${apiPort}`
+baseUrl = `https://startreker-netcracker.herokuapp.com${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
@@ -67,7 +67,8 @@ export const Api = {
   auth,
   dashboard, 
   carrier, 
-  costDash
+  costDash,
+  baseUrl
 }
 
 export const options = {
