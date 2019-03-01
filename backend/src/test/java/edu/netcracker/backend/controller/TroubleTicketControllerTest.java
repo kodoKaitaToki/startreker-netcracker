@@ -1,5 +1,6 @@
 package edu.netcracker.backend.controller;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -29,7 +30,7 @@ public class TroubleTicketControllerTest {
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void shouldBeCorrectTestStatistics() throws Exception {
-        mockMvc.perform(post("/api/trouble/statistics"))
+        mockMvc.perform(get("/api/v1/trouble/statistics"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(
                         "{\"amount\":{\"total\":6.0,\"total_reopened\":1.0,\"total_opened\":1.0,\"total_rated\":1.0,\"total_answered\":1.0,\"avg_rate\":1.0,\"total_in_progress\":1.0,\"total_resolved\":2.0}}")));
@@ -38,7 +39,7 @@ public class TroubleTicketControllerTest {
     @Test
     @WithMockUser(username = "admin", roles = {"ADMIN"})
     public void shouldBeCorrectTestStatisticsByApprover() throws Exception {
-        mockMvc.perform(post("/api/trouble/statistics/1"))
+        mockMvc.perform(get("/api/v1/trouble/statistics/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(
                         "{\"amount\":{\"total\":0.0,\"total_reopened\":0.0,\"total_opened\":0.0,\"total_rated\":0.0,\"total_answered\":0.0,\"avg_rate\":0.0,\"total_in_progress\":0.0,\"total_resolved\":0.0}}")));
