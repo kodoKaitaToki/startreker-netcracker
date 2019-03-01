@@ -11,4 +11,8 @@ public interface SuggestionDAO {
     Optional<Suggestion> find(Number id);
 
     void delete(Suggestion ticketClass);
+
+    void addPossibleService(Number suggestionId, Number pServiceId);
+
+    void deletePossibleService(Number suggestionId, Number pServiceId);
 }

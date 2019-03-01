@@ -1,8 +1,9 @@
 package edu.netcracker.backend.dao;
 
 import edu.netcracker.backend.model.PossibleService;
-import edu.netcracker.backend.model.Report;
+import edu.netcracker.backend.model.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PossibleServiceDAO {
@@ -11,4 +12,8 @@ public interface PossibleServiceDAO {
     Optional<PossibleService> find(Number id);
 
     void delete(PossibleService possibleService);
+
+    List<PossibleService> findAllWithClassId(Number id);
+
+    Optional<Service> findService(PossibleService possibleService);
 }
