@@ -39,7 +39,8 @@ export class ApproverComponentComponent implements OnInit {
         email: new FormControl('', [Validators.required, Validators.email]),
         username: new FormControl('', [Validators.required, Validators.minLength(3), Validators.max(24)]),
         password: new FormControl('', [Validators.required, Validators.minLength(this.passwordMinLength)]),
-        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[\\s\\d+(d+)\\s]+')]),
+        repeat_password: new FormControl('', Validators.required),
+        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[\\s\\d+(d+)-\\s]+')]),
         is_activated: new FormControl(true, Validators.required)
       }
     );
@@ -61,7 +62,7 @@ export class ApproverComponentComponent implements OnInit {
         .subscribe(() => {
           this.getAllApprovers();
         }, () => {
-          alert('Such an email exists');
+          alert('Something went wrong');
         });
 
     this.form.reset({is_activated: true});
@@ -73,7 +74,7 @@ export class ApproverComponentComponent implements OnInit {
         .subscribe(() => {
           this.getAllApprovers();
         }, () => {
-          alert('Such an email exists');
+          alert('Something went wrong');
         });
   }
 
@@ -89,5 +90,10 @@ export class ApproverComponentComponent implements OnInit {
 
     this.approverSrvc.getAll()
         .subscribe(data => this.approvers = data);
+  }
+
+  checkRepeatedPasswordTheSame() {
+
+    return this.form.get('password').value === this.form.get('repeat_password').value;
   }
 }
