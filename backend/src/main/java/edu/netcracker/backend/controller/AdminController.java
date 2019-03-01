@@ -42,19 +42,6 @@ public class AdminController {
     public String getCostsPerPeriodPerCarrier(@RequestParam("from") @DateTimeFormat(pattern="yyyy-MM-dd") Date from,
                                               @RequestParam("to") @DateTimeFormat(pattern="yyyy-MM-dd") Date to) {
 
-        serviceDAO.deleteSuggestion(1, 1);
-        serviceDAO.deleteSuggestion(1, 2);
-
-        serviceDAO.saveSuggestion(1, 1, 25);
-        serviceDAO.saveSuggestion(1, 1, 25);
-        serviceDAO.saveSuggestion(1, 1, 25);
-
-        serviceDAO.saveSuggestion(1, 2, 25);
-        serviceDAO.saveSuggestion(1, 2, 25);
-
-        serviceDAO.findSuggestionsWithTicketClassId(1)
-                .forEach(service -> System.out.println(service.getServiceName()));
-
         return new Gson().toJson(adminService.getCostsPerPeriod(convertToLocalDateViaInstant(from),
                 convertToLocalDateViaInstant(to)));
     }

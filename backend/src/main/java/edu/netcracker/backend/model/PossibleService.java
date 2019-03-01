@@ -10,16 +10,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table("service")
-public class Service {
-    @PrimaryKey("service_id")
+@Table("possible_service")
+public class PossibleService {
+    @PrimaryKey("p_service_id")
     @EqualsAndHashCode.Include
+    private Integer pServiceId;
+
+    @Attribute("service_id")
     private Integer serviceId;
 
-    @Attribute("service_name")
-    private String serviceName;
-
-    @Attribute("service_description")
-    private String serviceDescription;
-
+    @Attribute("class_id")
+    private Integer classId;
 }
