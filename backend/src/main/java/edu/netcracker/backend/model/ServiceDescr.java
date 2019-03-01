@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table("service")
-public class Service {
+public class ServiceDescr {
     @PrimaryKey("service_id")
     @EqualsAndHashCode.Include
     private Long serviceId;
@@ -21,4 +21,10 @@ public class Service {
 
     @Attribute("service_description")
     private String serviceDescription;
+
+    @Attribute("")
+    private Integer serviceStatus;
+
+    @Attribute("")
+    private Integer carrierId;
 }
