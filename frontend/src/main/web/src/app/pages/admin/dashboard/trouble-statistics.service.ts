@@ -1,11 +1,11 @@
-import { HttpClient, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { TroubleStatisticsModel } from './trouble-statistics/trouble-statistics.model';
 
-import { Configuration } from '../../../app.constants';
+import { Api } from '../../../modules/api/index';
 
 @Injectable({
   providedIn: 'root'
@@ -15,23 +15,31 @@ export class TroubleStatisticsService {
 
   private actionUrl: string;
 
-  constructor(private http: HttpClient, private _configuration: Configuration) {
-    this.actionUrl = _configuration.ServerWithApiUrl + 'trouble/statistics';
+  constructor(private http: HttpClient) {
+    this.actionUrl = Api.baseUrl + 'api/v1/trouble/statistics';
   }
 
   public getStatistic(): Observable<TroubleStatisticsModel>{
-      return this.http.post<any>(this.actionUrl, {})
+      let headers = new HttpHeaders();
+      headers.append('Content-Type', 'application/json');
+      //TODO: remove debug backdoor
+      headers.append('Authorization', 'debug_login 21');
+
+      return this.http.get<any>(this.actionUrl, {headers})
         .pipe(map(res => {
           return res.amount;
         }))
-      //TODO: replace with get
   }
 
   public getStatisticForApprover(id: number): Observable<TroubleStatisticsModel>{
-      return this.http.post<any>(this.actionUrl + "/" + id, {})
+      let headers = new HttpHeaders();
+      headers = headers.append('Content-Type', 'application/json');
+      //TODO: remove debug backdoor
+      headers = headers.append('Authorization', 'debug_login 21');
+
+      return this.http.get<any>(this.actionUrl + "/" + id, {headers})
         .pipe(map(res => {
           return res.amount;
         }))
-      //TODO: replace with get
   }
 }

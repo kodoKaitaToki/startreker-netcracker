@@ -1,9 +1,13 @@
 package edu.netcracker.backend.controller;
 
-import edu.netcracker.backend.dao.StatisticsDAO;
+import edu.netcracker.backend.message.request.MandatoryTimeInterval;
+import edu.netcracker.backend.message.request.OptionalTimeInterval;
+import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
 import edu.netcracker.backend.message.response.ServiceDTO;
 import edu.netcracker.backend.message.response.ServiceDistributionElement;
+import edu.netcracker.backend.security.SecurityContext;
+import edu.netcracker.backend.service.StatisticsService;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,21 +20,57 @@ import java.util.List;
 @RestController
 public class ServiceController {
 
+    private final StatisticsService statisticsService;
+    private final SecurityContext securityContext;
+
     private final StatisticsDAO statisticsDAO;
     private final ServiceService serviceService;
 
     @Autowired
-    public ServiceController(StatisticsDAO statisticsDAO,
+    public ServiceController(StatisticsService statisticsService,
+                             SecurityContext securityContext,
                              ServiceService serviceService) {
-
-        this.statisticsDAO = statisticsDAO;
+        this.statisticsService = statisticsService;
+        this.securityContext = securityContext;
         this.serviceService = serviceService;
     }
 
-    @PostMapping("api/service/distribution")
+    @GetMapping("api/v1/service/distribution")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public List<ServiceDistributionElement> getRouteStatistics(){
-        return statisticsDAO.getServicesDistribution();
+    public List<ServiceDistributionElement> getServiceStatistics() {
+        return statisticsService.getServiceStatistics();
+    }
+
+    @GetMapping(value = "api/v1/service/sales")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public CarrierStatisticsResponse getServicesSalesStatistics(OptionalTimeInterval timeInterval) {
+        return timeInterval != null && timeInterval.isProvided()
+                ? statisticsService.getServicesSalesStatistics(
+                securityContext.getUser().getUserId(),
+                timeInterval.getFrom(),
+                timeInterval.getTo())
+
+                : statisticsService.getServicesSalesStatistics(securityContext.getUser().getUserId());
+    }
+
+    @GetMapping(value = "api/v1/service/sales/per_week")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<CarrierStatisticsResponse> getServicesSalesStatisticsByWeek(
+            @Valid MandatoryTimeInterval timeInterval) {
+        return statisticsService.getServicesSalesStatisticsByWeek(
+                securityContext.getUser().getUserId(),
+                timeInterval.getFrom(),
+                timeInterval.getTo());
+    }
+
+    @GetMapping(value = "api/v1/service/sales/per_month")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<CarrierStatisticsResponse> getServicesSalesStatisticsByMonth(
+            @Valid MandatoryTimeInterval timeInterval) {
+        return statisticsService.getServicesSalesStatisticsByMonth(
+                securityContext.getUser().getUserId(),
+                timeInterval.getFrom(),
+                timeInterval.getTo());
     }
 
     @GetMapping("api/v1/carrier/service")
@@ -62,5 +102,4 @@ public class ServiceController {
     public ServiceDTO addService(@Valid @RequestBody ServiceCreateForm serviceCreateForm){
         return serviceService.addService(serviceCreateForm);
     }
-
 }

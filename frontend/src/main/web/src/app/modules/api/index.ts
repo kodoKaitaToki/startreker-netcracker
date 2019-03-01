@@ -1,9 +1,9 @@
 import { HttpHeaders } from '@angular/common/http';
 
 let baseUrl;
-const apiPort = ':3000/'
+const apiPort = '/'
 
-baseUrl = `http://127.0.0.1${apiPort}`
+baseUrl = `https://startreker-netcracker.herokuapp.com${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
@@ -36,8 +36,26 @@ const auth = {
   }
 }
 
+const carrier = {
+  carriers(){
+    return `${baseUrl}api/v1/admin/carrier`;
+  },
+  getCarriersPagin(){
+    return `${baseUrl}api/v1/admin/pagination`;
+  },
+  getCarrierByUsername(){
+    return `${baseUrl}api/v1/admin/carrier-by-username?username=`;
+  }
+}
+
+const costDash = {
+  getCosts(){
+    return `${baseUrl}api/v1/admin/costs`;
+  }
+}
+
 export const Api = {
-  auth
+  auth, carrier, costDash, baseUrl
 }
 
 export const options = {

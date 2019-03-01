@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Configuration } from '../../../app.constants';
+import { Api } from '../../../modules/api/index';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +11,8 @@ import { Configuration } from '../../../app.constants';
 export class DashboardDeltaService {
   private actionUrl: string;
 
-  constructor(private http: HttpClient, private _configuration: Configuration) {
-    this.actionUrl = _configuration.ServerWithApiUrl + 'v1/admin/increasing';
+  constructor(private http: HttpClient) {
+    this.actionUrl = Api.baseUrl + 'api/v1/admin/increasing';
   }
 
   public getUsersIncreasingPerPeriod(from: string, to: string): Observable<Map<Date, number>>{
@@ -29,7 +29,9 @@ export class DashboardDeltaService {
 
   public getIncreasingPerPeriod(from: string, to: string, type: string): Observable<Map<Date, number>>{
       let headers = new HttpHeaders();
-      headers.append('Content-Type', 'application/json');
+      headers = headers.append('Content-Type', 'application/json');
+      //TODO: remove debug backdoor
+      headers = headers.append('Authorization', 'debug_login 21');
 
       let params = new HttpParams().set("from", from).set("to", to);
 
