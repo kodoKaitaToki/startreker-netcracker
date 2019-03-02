@@ -1,0 +1,62 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12 my-auto">
+      <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
+        <div class="card-body">
+          <h3 class='title'>Trouble ticket statistics</h3>
+          <div class="row">
+            <div class="col-md-8 my-3">
+              <div id="ticketChartContainer" style="height: 370px; width: 100%;"></div>
+            </div>
+            <div class="col-md-4 my-3">
+              <h6>Average rating: {{troubleStatisticsModel?.avg_rate}}</h6>
+
+              <hr>
+
+              <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="custom-control custom-radio">
+                  <input type="radio"
+                         id="total"
+                         name="isTotal"
+                         class="custom-control-input"
+                         value="true"
+                         formControlName="isTotal"
+                         checked
+                  >
+                  <label class="custom-control-label" for="total">Total tickets</label>
+                </div>
+
+                <div class="form-row">
+                  <div class="col">
+                    <div class="custom-control custom-radio">
+                      <input type="radio"
+                             id="approver"
+                             name="isTotal"
+                             class="custom-control-input"
+                             value="false"
+                             formControlName="isTotal"
+                      >
+                      <label class="custom-control-label" for="approver">Tickets for approver id</label>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <input type="text" class="form-control"
+                           formControlName="id"
+                           placeholder="Approver id"
+                    >
+                  </div>
+                </div>
+
+                <hr>
+
+                <button type="submit" class="btn-success btn col-md-12">Update statistics</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

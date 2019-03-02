@@ -1,23 +1,23 @@
 import { HttpHeaders } from '@angular/common/http';
 
 let baseUrl;
-const apiPort = ':3000/'
+const apiPort = '/'
 
-baseUrl = `http://127.0.0.1${apiPort}`
+baseUrl = `https://startreker-netcracker.herokuapp.com${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
-    'Access-Control-Allow-Origin': '*'
+    // 'Access-Control-Allow-Origin': '*'
   })
 }
 
 export const HttpOptionsAuthorized = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Authorization': `Bearer ${localStorage.getItem('at')}`,
-    'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
+    // 'Access-Control-Allow-Origin': '*',
+    // 'Authorization': `Bearer ${localStorage.getItem('at')}`,
+    // 'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
   })
 }
 
@@ -36,10 +36,43 @@ const auth = {
   }
 }
 
+const dashboard = {
+  tripDistribution() {
+    return `${baseUrl}api/v1/trip/distribution`;
+  },
+  serviceDistribution() {
+    return `${baseUrl}api/v1/service/distribution`;
+  }
+}
+
+const carrier = {
+  carriers(){
+    return `${baseUrl}api/v1/admin/carrier`;
+  },
+  getCarriersPagin(){
+    return `${baseUrl}api/v1/admin/pagination`;
+  },
+  getCarrierByUsername(){
+    return `${baseUrl}api/v1/admin/carrier-by-username?username=`;
+  }
+}
+
+const costDash = {
+  getCosts(){
+    return `${baseUrl}api/v1/admin/costs`;
+  }
+}
+
 export const Api = {
-  auth
+  auth,
+  dashboard, 
+  carrier, 
+  costDash,
+  baseUrl
 }
 
 export const options = {
   root: baseUrl
 }
+
+

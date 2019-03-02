@@ -1,3 +1,4 @@
+
 insert into USER_A (USER_NAME, USER_PASSWORD, USER_EMAIL, USER_TELEPHONE, USER_TOKEN, USER_ACTIVATED, USER_CREATED) values ('smillions0', '055228cb4b2aafd8f4127ede8d8a7cef9a36ea0a', 'daslott0@globo.com', '5066512688', null, true, '2018-08-09');
 insert into USER_A (USER_NAME, USER_PASSWORD, USER_EMAIL, USER_TELEPHONE, USER_TOKEN, USER_ACTIVATED, USER_CREATED) values ('kstollmeier1', '055228cb4b2aafd8f4127ede8d8a7cef9a36ea0a', 'glunn1@newyorker.com', '7267344912', null, false, '2018-12-20');
 insert into USER_A (USER_NAME, USER_PASSWORD, USER_EMAIL, USER_TELEPHONE, USER_TOKEN, USER_ACTIVATED, USER_CREATED) values ('bbarg2', '055228cb4b2aafd8f4127ede8d8a7cef9a36ea0a', 'cturner2@usatoday.com', '8288653181', null, true, '2018-10-02');
@@ -349,8 +350,8 @@ insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) val
 insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) values ('2018-07-20', '2019-04-19', 79, false);
 insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) values ('2018-06-17', '2019-03-06', 19, true);
 
-insert into DISCOUNT_CLASS (DISCOUNT_ID, CLASS_ID) values (1, 7);
-insert into DISCOUNT_CLASS (DISCOUNT_ID, CLASS_ID) values (4, 7);
+insert into DISCOUNT_CLASS (DISCOUNT_ID, CLASS_ID) values (3, 7);
+insert into DISCOUNT_CLASS (DISCOUNT_ID, CLASS_ID) values (4, 2);
 insert into DISCOUNT_CLASS (DISCOUNT_ID, CLASS_ID) values (1, 8);
 
 insert into DISCOUNT_SERVICE (DISCOUNT_ID, P_SERVICE_ID) values (2, 1);

@@ -1,6 +1,7 @@
 package edu.netcracker.backend.dao;
 
 import edu.netcracker.backend.model.Trip;
+import edu.netcracker.backend.model.User;
 
 import java.util.Optional;
 

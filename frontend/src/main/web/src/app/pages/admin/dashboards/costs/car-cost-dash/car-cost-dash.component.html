@@ -1,0 +1,43 @@
+<h2>Choose a carrier:</h2>
+    <div class="row">
+              
+      <select class="custom-select" (change)='getCarrierByName($event.target)'>
+        <option selected>Choose a carrier</option>
+        <option *ngFor="let carrier of carriers">{{carrier.username}}</option>
+      </select>
+              
+    </div>
+
+  <h2 *ngIf = 'emptyResp && !(curName=="")'>This carrier didn't have any trips during this period.</h2>
+  <div class="row">
+      <div class="col-md-12 my-auto">
+        <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
+          <div class="card-body">
+            <h1 class='title'>Costs of {{curName}}</h1>
+            <div id="chartContainerCar" style="height: 370px; width: 100%;"></div>
+            <div class="row">
+                <div class="col-md-4 chart-btn">
+                  <button class="btn btn-primary" (click)='getWeakStat();getCarCosts();' id='perWeak' [disabled]="buttons.butWeek">Per weak</button>
+                </div>
+                <div class="col-md-4 chart-btn">
+                  <button class="btn btn-primary" (click)='getMonthStat();getCarCosts();' id='perMonth' [disabled]="buttons.butMonth">Per month</button>
+                </div>
+                <div class="col-md-4 chart-btn">
+  
+                    <form method="POST" action="">
+                      <div>
+                        <p style="color: red"  *ngIf='dateInvalid'>The second date must be less than the first one</p>
+                        <input class="fromInput" type="date" [value]="dateFrom | date:'yyyy-MM-dd'" (input)="dateFrom=parseDate($event.target.value,true)" />
+                        <input type="date" [value]="dateTo | date:'yyyy-MM-dd'" (input)="dateTo=parseDate($event.target.value,false)" />
+                      </div>
+                      <div>
+                        <button type="submit" class="btn btn-primary btnSet" (click)='getInterStat(); getCarCosts();' [disabled]='buttons.checkBut'>Check</button>
+                      </div>
+                    </form>
+  
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
