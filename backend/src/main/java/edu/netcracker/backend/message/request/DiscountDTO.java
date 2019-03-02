@@ -1,6 +1,7 @@
 package edu.netcracker.backend.message.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.netcracker.backend.model.Discount;
 import edu.netcracker.backend.validation.annotation.DateValidation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,11 +11,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class DiscountDTO {
 
     @JsonProperty("discount_id")
@@ -37,4 +37,19 @@ public class DiscountDTO {
     @NotNull
     @JsonProperty("discount_type")
     private Boolean discountType;
+
+    public static DiscountDTO toDiscountDTO(Discount discount) {
+        if (discount == null) {
+            return null;
+        }
+
+        DiscountDTO discountDTO = new DiscountDTO();
+        discountDTO.setDiscountId(discount.getDiscountId());
+        discountDTO.setDiscountRate(discount.getDiscountRate());
+        discountDTO.setDiscountType(discount.getDiscountType());
+        discountDTO.setStartDate(discount.getStartDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        discountDTO.setFinishDate(discount.getFinishDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+
+        return discountDTO;
+    }
 }

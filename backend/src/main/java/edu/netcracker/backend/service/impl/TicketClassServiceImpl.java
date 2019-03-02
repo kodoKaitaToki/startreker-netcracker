@@ -68,7 +68,7 @@ public class TicketClassServiceImpl implements TicketClassService {
         ticketClass.setDiscountId(discount.getDiscountId());
         ticketClassDAO.save(ticketClass);
 
-        return toTicketClassDTO(ticketClass, discount);
+        return TicketClassDTO.toTicketClassDTO(ticketClass, discount);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class TicketClassServiceImpl implements TicketClassService {
 
         discountDAO.delete(discountId);
 
-        return toTicketClassDTO(ticketClass, null);
+        return TicketClassDTO.toTicketClassDTO(ticketClass, null);
     }
 
     private List<TicketClassDTO> createTicketClassDTOs(List<TicketClass> ticketClasses, List<Discount> discounts) {
@@ -100,36 +100,11 @@ public class TicketClassServiceImpl implements TicketClassService {
     private TicketClassDTO createTicketClassDTO(TicketClass ticketClass, List<Discount> discounts) {
         for (Discount discount : discounts) {
             if (discount.getDiscountId().equals(ticketClass.getDiscountId())) {
-                return toTicketClassDTO(ticketClass, discount);
+                return TicketClassDTO.toTicketClassDTO(ticketClass, discount);
             }
         }
 
-        return toTicketClassDTO(ticketClass, null);
-    }
-
-    private TicketClassDTO toTicketClassDTO(TicketClass ticketClass, Discount discount) {
-        TicketClassDTO ticketClassDTO = new TicketClassDTO();
-        ticketClassDTO.setClassId(ticketClass.getClassId());
-        ticketClassDTO.setTripId(ticketClass.getTripId());
-        ticketClassDTO.setTicketPrice(ticketClass.getTicketPrice());
-        ticketClassDTO.setDiscount(toDiscountDTO(discount));
-
-        return ticketClassDTO;
-    }
-
-    private DiscountDTO toDiscountDTO(Discount discount) {
-        if (discount == null) {
-            return null;
-        }
-
-        DiscountDTO discountDTO = new DiscountDTO();
-        discountDTO.setDiscountId(discount.getDiscountId());
-        discountDTO.setDiscountRate(discount.getDiscountRate());
-        discountDTO.setDiscountType(discount.getDiscountType());
-        discountDTO.setStartDate(discount.getStartDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        discountDTO.setFinishDate(discount.getFinishDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-
-        return discountDTO;
+        return TicketClassDTO.toTicketClassDTO(ticketClass, null);
     }
 
     private Discount toDiscount(DiscountDTO discountDTO) {
@@ -144,5 +119,4 @@ public class TicketClassServiceImpl implements TicketClassService {
 
         return discount;
     }
-
 }
