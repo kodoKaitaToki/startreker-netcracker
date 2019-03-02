@@ -56,7 +56,9 @@ export class ApproverComponentComponent implements OnInit {
 
   onPost() {
 
-    const approver: Approver = this.form.value;
+    let approver: Approver = this.form.value;
+
+    delete approver['repeat_password'];
 
     this.approverSrvc.postApprover(approver)
         .subscribe(() => {
