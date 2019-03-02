@@ -1,0 +1,25 @@
+import { Service } from './service';
+
+export const MOCK_DATA: Service[] = [
+  { id: 1,
+    name: 'ultrices',
+    description: 'sapien urna pretium nisl ut volutpat sapien arcu sed augue aliquam',
+    carrier: 'smillions0',
+    created_date: new Date(),
+    state: 1,
+  },
+  { id: 2,
+    name: 'metus',
+    description: 'vel ipsum praesent blandit lacinia erat vestibulum sed magna at nunc commodo placerat praesent blandit nam nulla integer pede',
+    carrier: 'kstollmeier1',
+    created_date: new Date(),
+    state: 1,
+  },
+  { id: 3,
+    name: 'sed',
+    description: 'massa id lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris lacinia sapien',
+    carrier: 'bbarg2',
+    created_date: new Date(),
+    state: 1,
+  },
+];

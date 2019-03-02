@@ -5,6 +5,8 @@ import { ServiceComponent } from './service/service.component';
 import { TripComponent } from './trip/trip.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { OpenComponent } from './service/open/open.component';
+import { AssignedComponent } from './service/assigned/assigned.component';
 
 const routes: Routes = [
     {
@@ -26,7 +28,22 @@ const routes: Routes = [
           },
           {
               path: 'service',
-              component: ServiceComponent
+              component: ServiceComponent,
+              children: [
+                {
+                    path: '',
+                    redirectTo: 'open',
+                    pathMatch: 'full',
+                },
+                {
+                    path: 'open',
+                    component: OpenComponent
+                },
+                {
+                    path: 'assigned',
+                    component: AssignedComponent
+                },
+              ]
           },
           {
               path: 'notifications',
