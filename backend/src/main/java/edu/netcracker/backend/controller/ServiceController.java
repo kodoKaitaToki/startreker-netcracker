@@ -1,5 +1,6 @@
 package edu.netcracker.backend.controller;
 
+import edu.netcracker.backend.dao.StatisticsDAO;
 import edu.netcracker.backend.message.request.MandatoryTimeInterval;
 import edu.netcracker.backend.message.request.OptionalTimeInterval;
 import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
@@ -23,7 +24,6 @@ public class ServiceController {
     private final StatisticsService statisticsService;
     private final SecurityContext securityContext;
 
-    private final StatisticsDAO statisticsDAO;
     private final ServiceService serviceService;
 
     @Autowired
@@ -75,14 +75,20 @@ public class ServiceController {
 
     @GetMapping("api/v1/carrier/service")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceDescr> getAllServices(){
+    public List<ServiceDTO> getAllServices(){
         return serviceService.getServicesOfCarrier();
     }
 
     @GetMapping("api/v1/carrier/service/pagin")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceDescr> getPaginServices(@RequestParam("from") Integer from, @RequestParam("number") Integer number){
+    public List<ServiceDTO> getPaginServices(@RequestParam("from") Integer from, @RequestParam("number") Integer number){
         return serviceService.getPaginServicesOfCarrier(from, number);
+    }
+
+    @GetMapping("api/v1/carrier/service/by-status")
+    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<ServiceDTO> getByStatus(@RequestParam("status") Integer status){
+        return serviceService.findByStatus(status);
     }
 
     @DeleteMapping("api/v1/carrier/service/{servId}")
@@ -93,8 +99,8 @@ public class ServiceController {
 
     @PutMapping("api/v1/carrier/service")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public ServiceDescr updateService(@Valid @RequestBody ServiceDescr serviceDescr){
-        return serviceService.updateService(serviceDescr);
+    public ServiceDTO updateService(@Valid @RequestBody ServiceDTO serviceDTO){
+        return serviceService.updateService(serviceDTO);
     }
 
     @PostMapping("api/v1/carrier/service")

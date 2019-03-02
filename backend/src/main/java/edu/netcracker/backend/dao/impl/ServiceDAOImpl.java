@@ -1,10 +1,10 @@
 package edu.netcracker.backend.dao.impl;
 
-import edu.netcracker.backend.dao.CrudDAO;
 import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.model.ServiceDescr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -12,20 +12,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ServiceDAOImpl extends CrudDAO<ServiceDescr> implements ServiceDAO {
+public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements ServiceDAO {
 
     //private final String FIND_SERVICE = "SELECT * FROM service WHERE service_id = ?;";
     private final String FIND_SERVICE_BY_NAME = "";
     private final String FIND_ALL_SERVICES = "";
     private final String FIND_PAGIN_SERVICES = "";
     private final String DELETE_SERVICE = "";
-    /*private final String UPDATE_SERVICE = "UPDATE service " +
-            "SET service_name = ?, " +
-            "service_description = ? " +
-            "WHERE service_id = ?;";
-    /*private final String INSERT_SERVICE = "INSERT INTO service " +
-            "(service_name, service_description) " +
-            "VALUES (?, ?);";*/
+    private final String FIND_BY_STATUS = "";
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceDAOImpl.class);
 
@@ -61,14 +55,17 @@ public class ServiceDAOImpl extends CrudDAO<ServiceDescr> implements ServiceDAO 
     }
 
     @Override
-    public Optional<Long> findIdByName(String name, Number id){
+    public Optional<ServiceDescr> findByName(String name, Number id){
         logger.debug("Getting a service with name = " + name);
 
-        Long serviceId = getJdbcTemplate().queryForObject(FIND_SERVICE_BY_NAME, new Object[]{id, name}, Long.class);
+        try {
+            ServiceDescr serviceOpt =
+                    getJdbcTemplate().queryForObject(FIND_SERVICE_BY_NAME, new Object[]{id, name}, getGenericMapper());
+            return serviceOpt != null ? Optional.of(serviceOpt) : Optional.empty();
+        }catch(EmptyResultDataAccessException e){
+            return Optional.empty();
+        }
 
-        Optional<Long> serviceIdOpt = Optional.of(serviceId);
-
-        return serviceIdOpt;
     }
 
     @Override
@@ -86,6 +83,16 @@ public class ServiceDAOImpl extends CrudDAO<ServiceDescr> implements ServiceDAO 
 
         List<ServiceDescr> result = new ArrayList<>();
         result.addAll(getJdbcTemplate().query(FIND_PAGIN_SERVICES, new Object[]{id}, getGenericMapper()));
+        return result;
+    }
+
+    @Override
+    public List<ServiceDescr> findByStatus(Number id, Integer status){
+        logger.debug("Getting services where status = " + status);
+
+        List<ServiceDescr> result = new ArrayList<>();
+
+        result.addAll(getJdbcTemplate().query(FIND_BY_STATUS, new Object[]{status, id}, getGenericMapper()));
         return result;
     }
 

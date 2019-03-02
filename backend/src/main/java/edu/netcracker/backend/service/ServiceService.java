@@ -8,13 +8,15 @@ import java.util.List;
 
 public interface ServiceService {
 
-    List<ServiceDescr> getServicesOfCarrier();
+    List<ServiceDTO> getServicesOfCarrier();
 
-    List<ServiceDescr> getPaginServicesOfCarrier(Integer from, Integer amount);
+    List<ServiceDTO> getPaginServicesOfCarrier(Integer from, Integer amount);
+
+    List<ServiceDTO> findByStatus(Integer status);
 
     ServiceDTO addService(ServiceCreateForm serviceCreateForm);
 
-    ServiceDescr updateService(ServiceDescr serviceDescr);
+    ServiceDTO updateService(ServiceDTO serviceDTO);
 
     ServiceDescr deleteService(Long serviceId);
 }

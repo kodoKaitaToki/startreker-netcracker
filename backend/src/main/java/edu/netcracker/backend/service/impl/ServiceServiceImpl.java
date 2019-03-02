@@ -9,13 +9,14 @@ import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.ServiceService;
 import edu.netcracker.backend.service.UserService;
-import edu.netcracker.backend.util.AuthorityUtils;
+import edu.netcracker.backend.utils.AuthorityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -34,11 +35,21 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceDescr> getServicesOfCarrier(){ return serviceDAO.findAllByCarrierId(carrierId);}
+    public List<ServiceDTO> getServicesOfCarrier(){
+        List<ServiceDescr> serviceDescr = serviceDAO.findAllByCarrierId(carrierId);
+        return returnDTO(serviceDescr);
+    }
 
     @Override
-    public List<ServiceDescr> getPaginServicesOfCarrier(Integer from, Integer amount){
-        return serviceDAO.findPaginByCarrierId(carrierId, from, amount);
+    public List<ServiceDTO> getPaginServicesOfCarrier(Integer from, Integer amount){
+        List<ServiceDescr> serviceDescr = serviceDAO.findPaginByCarrierId(carrierId, from, amount);
+        return returnDTO(serviceDescr);
+    }
+
+    @Override
+    public List<ServiceDTO> findByStatus(Integer status){
+        List<ServiceDescr> serviceDescr = serviceDAO.findByStatus(carrierId, status);
+        return returnDTO(serviceDescr);
     }
 
     @Override
@@ -49,19 +60,36 @@ public class ServiceServiceImpl implements ServiceService {
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
-        return ServiceDTO.form(serviceCreateForm, carrierId);
+        ServiceDescr serviceDescr = new ServiceDescr();
+        serviceDescr.setServiceName(serviceCreateForm.getServiceName());
+        serviceDescr.setServiceDescription(serviceCreateForm.getServiceDescription());
+        serviceDescr.setServiceStatus(serviceCreateForm.getServiceStatus());
+        serviceDescr.setCarrierId(carrierId);
+
+        serviceDAO.save(serviceDescr);
+
+        ServiceDescr result = serviceDAO.findByName(serviceDescr.getServiceName(), carrierId).get();
+
+        return ServiceDTO.form(result);
     }
 
     @Override
-    public ServiceDescr updateService(ServiceDescr serviceDescr){
+    public ServiceDTO updateService(ServiceDTO serviceDTO){
 
-        if(ifServiceExists(serviceDescr.getServiceName(), carrierId)){
+        if(ifServiceExists(serviceDTO.getServiceName(), carrierId)){
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
+        ServiceDescr serviceDescr = new ServiceDescr();
+        serviceDescr.setServiceId(serviceDTO.getId());
+        serviceDescr.setServiceName(serviceDTO.getServiceName());
+        serviceDescr.setServiceDescription(serviceDTO.getServiceDescription());
+        serviceDescr.setServiceStatus(serviceDTO.getServiceStatus());
+        serviceDescr.setCarrierId(carrierId);
+
         serviceDAO.update(serviceDescr);
 
-        return serviceDescr;
+        return serviceDTO;
     }
 
     @Override
@@ -73,8 +101,16 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceDescr;
     }
 
+    private List<ServiceDTO> returnDTO(List<ServiceDescr> serviceDescr){
+        List<ServiceDTO> serviceDTO = new ArrayList<>();
+        serviceDescr.stream().forEach(service -> {
+            serviceDTO.add(ServiceDTO.form(service));
+        });
+        return serviceDTO;
+    }
+
     private boolean ifServiceExists(String name, Number id){
-        return serviceDAO.findIdByName(name, id).isPresent();
+        return serviceDAO.findByName(name, id).isPresent();
     }
 
     private void setCurCarrier(){

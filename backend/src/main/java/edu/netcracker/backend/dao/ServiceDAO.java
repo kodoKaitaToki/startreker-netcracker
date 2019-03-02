@@ -16,10 +16,12 @@ public interface ServiceDAO {
 
     Optional<ServiceDescr> find(Number id);
 
-    Optional<Long> findIdByName(String name, Number id);
+    Optional<ServiceDescr> findByName(String name, Number id);
 
     List<ServiceDescr> findAllByCarrierId(Number id);
 
     List<ServiceDescr> findPaginByCarrierId(Number id, Integer from, Integer amount);
+
+    List<ServiceDescr> findByStatus(Number id, Integer status);
 
 }
