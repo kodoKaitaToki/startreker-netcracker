@@ -7,13 +7,13 @@
     >
       <div class="row">
         <div class="col-1"
-             title="Id"
+             title="id"
         >
           <span class="badge badge-primary badge-pill idBadge">{{approver.id}}</span>
 
           <h5
             [style.color] = "(approver.is_activated === true) ? 'green' : 'red'"
-            title="User status"
+            title="Status"
           >
             {{approver.is_activated | aprroverShowStatus}}
           </h5>
