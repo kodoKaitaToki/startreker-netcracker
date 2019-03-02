@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,13 +19,13 @@ public class Discount {
 
     @PrimaryKey("discount_id")
     @EqualsAndHashCode.Include
-    private Integer discountId;
+    private Long discountId;
 
     @Attribute("start_date")
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @Attribute("finish_date")
-    private LocalDate finishDate;
+    private LocalDateTime finishDate;
 
     @Attribute("discount_rate")
     private Integer discountRate;

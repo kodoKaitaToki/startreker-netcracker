@@ -23,4 +23,6 @@ public class TicketClass {
     @Attribute("ticket_price")
     private Integer ticketPrice;
 
+    @Attribute("discount_id")
+    private Long discountId;
 }
