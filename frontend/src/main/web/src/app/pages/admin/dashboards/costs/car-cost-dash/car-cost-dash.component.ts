@@ -1,8 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import * as CanvasJS from '../../canvasjs.min';
+import * as CanvasJS from '../../../../../../assets/js/canvasjs.min';
 import { Data } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import {CarrierCrudService} from '../../carrier/carrier-crud.service';
+import {CarrierCrudService} from '../../../carrier/carrier-crud.service';
 import { clone } from 'ramda'
 import { DashCostService } from '../dashCostService';
 
