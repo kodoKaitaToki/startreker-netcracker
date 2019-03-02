@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import * as CanvasJS from '../../canvasjs.min';
+import * as CanvasJS from '../../../../../../assets/js/canvasjs.min';
 import { Data } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { DashCostService } from '../dashCostService';
