@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,10 +114,10 @@ public class TicketClassServiceImpl implements TicketClassService {
         discount.setDiscountId(discountDTO.getDiscountId());
         discount.setDiscountRate(discountDTO.getDiscountRate());
         discount.setDiscountType(discountDTO.getDiscountType());
-        discount.setStartDate(LocalDateTime
-                .parse(discountDTO.getStartDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        discount.setFinishDate(LocalDateTime
-                .parse(discountDTO.getFinishDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        discount.setStartDate(LocalDate
+                .parse(discountDTO.getStartDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy")).atStartOfDay());
+        discount.setFinishDate(LocalDate
+                .parse(discountDTO.getFinishDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy")).atTime(LocalTime.MAX));
 
         return discount;
     }

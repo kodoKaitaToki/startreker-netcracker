@@ -4,7 +4,7 @@ import edu.netcracker.backend.validation.annotation.DateValidation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class LocalDateTimeStringValidator implements ConstraintValidator<DateValidation, String> {
@@ -12,7 +12,8 @@ public class LocalDateTimeStringValidator implements ConstraintValidator<DateVal
     @Override
     public boolean isValid(String date, ConstraintValidatorContext context) {
         try {
-            LocalDateTime.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            LocalDate.parse(date, DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+            System.out.println();
         } catch (Exception e) {
             return false;
         }
