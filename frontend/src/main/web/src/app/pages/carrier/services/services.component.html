@@ -1,3 +1,36 @@
-<app-navbar></app-navbar>
-
-<app-service-crud></app-service-crud>
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
+          <h3 class="card-title text-center">Your services:</h3>
+          <div class="card-body">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                <a class="nav-link" routerLink="/carrier/services/new-service">
+                  New service
+                </a>
+              </li>
+              <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                <a class="nav-link" routerLink="/carrier/services/yourServices">
+                  All services
+                </a>
+              </li>
+              <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                <a class="nav-link" routerLink="/carrier/services/clarification">
+                  Replies from approver
+                </a>
+              </li>
+              <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                <a class="nav-link" routerLink="/carrier/services/archive">
+                  Archive
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>

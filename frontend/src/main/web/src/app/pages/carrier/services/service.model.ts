@@ -1,6 +1,9 @@
 export class Service{
 id: Number;
-name: String;
-description: String;
+approver_name: String;
+service_name: String;
+service_descr: String;
 status: Number;
+date: Date;
+reply: String;
 }

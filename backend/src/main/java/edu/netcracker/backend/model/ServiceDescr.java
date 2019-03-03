@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -16,15 +18,24 @@ public class ServiceDescr {
     @EqualsAndHashCode.Include
     private Long serviceId;
 
+    @Attribute("carrier_id")
+    private Integer carrierId;
+
+    @Attribute("approver_id")
+    private Integer approverId;
+
     @Attribute("service_name")
     private String serviceName;
 
     @Attribute("service_description")
     private String serviceDescription;
 
-    @Attribute("")
+    @Attribute("service_status")
     private Integer serviceStatus;
 
-    @Attribute("")
-    private Integer carrierId;
+    @Attribute("creation_date")
+    private LocalDate creationDate;
+
+    @Attribute("service_views")
+    private Integer tripViews;
 }

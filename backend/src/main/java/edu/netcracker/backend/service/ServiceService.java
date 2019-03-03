@@ -12,11 +12,11 @@ public interface ServiceService {
 
     List<ServiceDTO> getPaginServicesOfCarrier(Integer from, Integer amount);
 
-    List<ServiceDTO> findByStatus(Integer status);
+    List<ServiceDTO> findByStatus(Integer status, Integer from, Integer number);
 
     ServiceDTO addService(ServiceCreateForm serviceCreateForm);
 
     ServiceDTO updateService(ServiceDTO serviceDTO);
 
-    ServiceDescr deleteService(Long serviceId);
+    ServiceDTO deleteService(Long serviceId);
 }

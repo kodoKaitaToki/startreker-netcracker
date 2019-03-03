@@ -87,13 +87,15 @@ public class ServiceController {
 
     @GetMapping("api/v1/carrier/service/by-status")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceDTO> getByStatus(@RequestParam("status") Integer status){
-        return serviceService.findByStatus(status);
+    public List<ServiceDTO> getByStatus(@RequestParam("status") Integer status,
+                                        @RequestParam("from") Integer from,
+                                        @RequestParam("number") Integer number){
+        return serviceService.findByStatus(status, from, number);
     }
 
     @DeleteMapping("api/v1/carrier/service/{servId}")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public ServiceDescr deleteService(@PathVariable Long servId){
+    public ServiceDTO deleteService(@PathVariable Long servId){
         return serviceService.deleteService(servId);
     }
 

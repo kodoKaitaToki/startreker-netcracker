@@ -1,12 +1,15 @@
 package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.ServiceDAO;
+import edu.netcracker.backend.dao.mapper.ServiceMapper;
+import edu.netcracker.backend.message.response.ServiceDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,12 +19,27 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
 
     //private final String FIND_SERVICE = "SELECT * FROM service WHERE service_id = ?;";
     private final String FIND_SERVICE_BY_NAME = "";
-    private final String FIND_ALL_SERVICES = "";
+    private final String FIND_ALL_SERVICES = "SELECT service.service_id,\n" +
+            "        user_a.user_name as approver_name,\n" +
+            "        service.service_name,\n" +
+            "        service.service_description,\n" +
+            "        service.service_status,\n" +
+            "        service.creation_date,\n" +
+            "        service_reply.reply_text\n" +
+            "FROM service\n" +
+            "INNER JOIN service_reply\n" +
+            "ON service.service_id = service_reply.service_id\n" +
+            "INNER JOIN user_a\n" +
+            "ON service.approver_id = user_a.user_id\n" +
+            "WHERE carrier_id = ?\n" +
+            "ORDER BY service_id";
     private final String FIND_PAGIN_SERVICES = "";
     private final String DELETE_SERVICE = "";
     private final String FIND_BY_STATUS = "";
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceDAOImpl.class);
+
+    private ServiceMapper mapper = new ServiceMapper();
 
     public ServiceDAOImpl() {}
 
@@ -69,30 +87,29 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     }
 
     @Override
-    public List<ServiceDescr> findAllByCarrierId(Number id){
+    public List<ServiceDTO> findAllByCarrierId(Number id){
         logger.debug("Getting services where carrierId = " + id);
-        List<ServiceDescr> result = new ArrayList<>();
+        List<ServiceDTO> result = new ArrayList<>();
 
-        result.addAll(getJdbcTemplate().query(FIND_ALL_SERVICES, new Object[]{id}, getGenericMapper()));
+        result.addAll(getJdbcTemplate().query(FIND_ALL_SERVICES, new Object[]{id}, mapper));
         return result;
     }
 
     @Override
-    public List<ServiceDescr> findPaginByCarrierId(Number id, Integer from, Integer amount){
+    public List<ServiceDTO> findPaginByCarrierId(Number id, Integer from, Integer amount){
         logger.debug("Getting" + amount + "pagine services where carrierId = " + id);
 
-        List<ServiceDescr> result = new ArrayList<>();
-        result.addAll(getJdbcTemplate().query(FIND_PAGIN_SERVICES, new Object[]{id}, getGenericMapper()));
+        List<ServiceDTO> result = new ArrayList<>();
+        result.addAll(getJdbcTemplate().query(FIND_PAGIN_SERVICES, new Object[]{id}, mapper));
         return result;
     }
 
     @Override
-    public List<ServiceDescr> findByStatus(Number id, Integer status){
+    public List<ServiceDTO> findByStatus(Number id, Integer status, Integer from, Integer number){
         logger.debug("Getting services where status = " + status);
 
-        List<ServiceDescr> result = new ArrayList<>();
-
-        result.addAll(getJdbcTemplate().query(FIND_BY_STATUS, new Object[]{status, id}, getGenericMapper()));
+        List<ServiceDTO> result = new ArrayList<>();
+        result.addAll(getJdbcTemplate().query(FIND_BY_STATUS, new Object[]{status, id, number, from}, mapper));
         return result;
     }
 

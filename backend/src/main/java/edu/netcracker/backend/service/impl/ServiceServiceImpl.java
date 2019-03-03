@@ -16,7 +16,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -35,21 +38,16 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceDTO> getServicesOfCarrier(){
-        List<ServiceDescr> serviceDescr = serviceDAO.findAllByCarrierId(carrierId);
-        return returnDTO(serviceDescr);
-    }
+    public List<ServiceDTO> getServicesOfCarrier(){ return serviceDAO.findAllByCarrierId(carrierId);}
 
     @Override
     public List<ServiceDTO> getPaginServicesOfCarrier(Integer from, Integer amount){
-        List<ServiceDescr> serviceDescr = serviceDAO.findPaginByCarrierId(carrierId, from, amount);
-        return returnDTO(serviceDescr);
+        return serviceDAO.findPaginByCarrierId(carrierId, from, amount);
     }
 
     @Override
-    public List<ServiceDTO> findByStatus(Integer status){
-        List<ServiceDescr> serviceDescr = serviceDAO.findByStatus(carrierId, status);
-        return returnDTO(serviceDescr);
+    public List<ServiceDTO> findByStatus(Integer status, Integer from, Integer number){
+        return serviceDAO.findByStatus(carrierId, status, from, number);
     }
 
     @Override
@@ -61,16 +59,22 @@ public class ServiceServiceImpl implements ServiceService {
         }
 
         ServiceDescr serviceDescr = new ServiceDescr();
+        serviceDescr.setCarrierId(carrierId);
+
+        Integer approver_id = userService.findByUsernameWithRole(
+                serviceCreateForm.getApproverName(),
+                AuthorityUtils.ROLE_APPROVER).getUserId();
+        serviceDescr.setApproverId(approver_id);
         serviceDescr.setServiceName(serviceCreateForm.getServiceName());
         serviceDescr.setServiceDescription(serviceCreateForm.getServiceDescription());
         serviceDescr.setServiceStatus(serviceCreateForm.getServiceStatus());
-        serviceDescr.setCarrierId(carrierId);
+        serviceDescr.setCreationDate(serviceCreateForm.getCreationDate());
 
         serviceDAO.save(serviceDescr);
 
         ServiceDescr result = serviceDAO.findByName(serviceDescr.getServiceName(), carrierId).get();
 
-        return ServiceDTO.form(result);
+        return ServiceDTO.form(result, serviceCreateForm.getApproverName());
     }
 
     @Override
@@ -82,10 +86,16 @@ public class ServiceServiceImpl implements ServiceService {
 
         ServiceDescr serviceDescr = new ServiceDescr();
         serviceDescr.setServiceId(serviceDTO.getId());
+        serviceDescr.setCarrierId(carrierId);
+
+        Integer approver_id = userService.findByUsernameWithRole(
+                serviceDTO.getApproverName(),
+                AuthorityUtils.ROLE_APPROVER).getUserId();
+        serviceDescr.setApproverId(approver_id);
         serviceDescr.setServiceName(serviceDTO.getServiceName());
         serviceDescr.setServiceDescription(serviceDTO.getServiceDescription());
         serviceDescr.setServiceStatus(serviceDTO.getServiceStatus());
-        serviceDescr.setCarrierId(carrierId);
+        serviceDescr.setCreationDate(serviceDTO.getCreationDate());
 
         serviceDAO.update(serviceDescr);
 
@@ -93,19 +103,13 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public ServiceDescr deleteService(Long serviceId){
+    public ServiceDTO deleteService(Long serviceId){
         ServiceDescr serviceDescr = serviceDAO.find(serviceId).orElse(null);
+        User approver = userService.findByIdWithRole(serviceDescr.getApproverId(), AuthorityUtils.ROLE_APPROVER);
+        ServiceDTO serviceDTO = ServiceDTO.form(serviceDescr, approver.getUsername());
 
         serviceDAO.delete(serviceId);
 
-        return serviceDescr;
-    }
-
-    private List<ServiceDTO> returnDTO(List<ServiceDescr> serviceDescr){
-        List<ServiceDTO> serviceDTO = new ArrayList<>();
-        serviceDescr.stream().forEach(service -> {
-            serviceDTO.add(ServiceDTO.form(service));
-        });
         return serviceDTO;
     }
 

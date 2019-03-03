@@ -26,6 +26,8 @@ export class ServiceCrudComponent implements OnInit {
 
   form: FormGroup;
 
+  status: Number;
+
   /*constructor(private approverSrvc: ApproverService) {
   }*/
 
@@ -33,10 +35,12 @@ export class ServiceCrudComponent implements OnInit {
 
     this.form = new FormGroup(
       {
-        name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.max(50)]),
-        description: new FormControl('', [Validators.required, Validators.minLength(3)])
+        service_name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.max(50)]),
+        service_descr: new FormControl('', [Validators.required, Validators.minLength(3)])
       }
     );
+
+    console.log(this.status);
 
     //this.getAllApprovers();
   }
@@ -47,10 +51,10 @@ export class ServiceCrudComponent implements OnInit {
     this.currentFilterPlaceholder = `Search by ${this.currentFilter}`;
   }
 
-  onPost() {
+  onPost(status: Number) {
 
     const service: Service = this.form.value;
-    service['status'] = 0;
+    service['status'] = status;
 
     /*this.approverSrvc.postApprover(approver)
         .subscribe(() => {
