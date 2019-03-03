@@ -6,6 +6,6 @@ import {Pipe, PipeTransform} from '@angular/core';
 export class AprroverShowStatusPipe implements PipeTransform {
 
   transform(text: boolean): string {
-    return text === true ? 'On' : 'Off';
+    return text === true ? 'Active' : 'Inactive';
   }
 }

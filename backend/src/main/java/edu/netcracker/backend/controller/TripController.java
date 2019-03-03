@@ -27,7 +27,7 @@ public class TripController {
     }
 
     @GetMapping("api/v1/trip/distribution")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<TripDistributionElement> getTripsStatistics() {
         return statisticsService.getTripsStatistics();
     }

@@ -36,7 +36,7 @@ public class ServiceController {
     }
 
     @GetMapping("api/v1/service/distribution")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<ServiceDistributionElement> getServiceStatistics() {
         return statisticsService.getServiceStatistics();
     }
