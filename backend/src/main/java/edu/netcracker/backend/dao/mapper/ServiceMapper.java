@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
+import java.time.format.DateTimeFormatter;
 
 public class ServiceMapper implements RowMapper {
     @Override
@@ -18,7 +18,10 @@ public class ServiceMapper implements RowMapper {
         service.setServiceName(rs.getString("service_name"));
         service.setServiceDescription(rs.getString("service_description"));
         service.setServiceStatus(rs.getInt("service_status"));
-        service.setCreationDate(rs.getDate("creation_date").toLocalDate());
+
+        Date date = rs.getDate("creation_date");
+        String strDate = date.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        service.setCreationDate(strDate);
         service.setReplyText(rs.getString("reply_text"));
         return service;
     }

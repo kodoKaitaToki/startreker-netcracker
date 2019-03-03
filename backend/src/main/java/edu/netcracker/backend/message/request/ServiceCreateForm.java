@@ -4,29 +4,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
 
-@Data
-public class ServiceCreateForm extends UserForm {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class ServiceCreateForm {
 
-    @JsonProperty("approver_name")
-    private String approverName;
-
-    @NotBlank
+    @NotNull
     @JsonProperty("service_name")
     @Size(min = 3)
     private String serviceName;
 
-    @NotBlank
     @JsonProperty("service_descr")
     @Size(min = 3)
     private String serviceDescription;
 
-    @NotBlank
+    @NotNull
     @JsonProperty("service_status")
     private Integer serviceStatus;
-
-    @JsonProperty("creation_date")
-    private LocalDate creationDate;
 }

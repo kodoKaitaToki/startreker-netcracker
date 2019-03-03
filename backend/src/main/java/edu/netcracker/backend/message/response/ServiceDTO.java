@@ -1,19 +1,11 @@
 package edu.netcracker.backend.message.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.netcracker.backend.dao.annotations.Attribute;
-import edu.netcracker.backend.message.request.ServiceCreateForm;
 import edu.netcracker.backend.model.ServiceDescr;
-import edu.netcracker.backend.model.User;
 import lombok.Data;
-import org.springframework.security.core.GrantedAuthority;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 public class ServiceDTO {
@@ -33,7 +25,7 @@ public class ServiceDTO {
     private Integer serviceStatus;
 
     @JsonProperty("creation_date")
-    private LocalDate creationDate;
+    private String creationDate;
 
     @JsonProperty("reply_text")
     private String replyText;
@@ -45,13 +37,13 @@ public class ServiceDTO {
                        String serviceName,
                        String serviceDescription,
                        Integer serviceStatus,
-                       LocalDate creationDate) {
+                       LocalDateTime creationDate) {
         this.id = id;
         this.approverName = approverName;
         this.serviceName = serviceName;
         this.serviceDescription = serviceDescription;
         this.serviceStatus = serviceStatus;
-        this.creationDate = creationDate;
+        this.creationDate = creationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
     public static ServiceDTO form(ServiceDescr serviceDescr, String approver_name) {

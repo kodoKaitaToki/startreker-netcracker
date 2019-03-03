@@ -3,9 +3,7 @@ package edu.netcracker.backend.dao.mapper;
 import edu.netcracker.backend.model.User;
 import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Map;
 
 public class ApproverRowMapper implements RowMapper {
@@ -18,8 +16,8 @@ public class ApproverRowMapper implements RowMapper {
         usr.setUserTelephone(rs.getString("user_telephone"));
         usr.setUserIsActivated(rs.getBoolean("user_activated"));
 
-        Date date = rs.getDate("user_created");
-        usr.setRegistrationDate(date.toLocalDate());
+        Timestamp timestamp = rs.getTimestamp("user_created");
+        usr.setRegistrationDate(timestamp.toLocalDateTime());
         return usr;
     }
 
@@ -32,8 +30,8 @@ public class ApproverRowMapper implements RowMapper {
         usr.setUserTelephone((String) row.get("user_telephone"));
         usr.setUserIsActivated((Boolean) row.get("user_activated"));
 
-        Date date = (Date) row.get("user_created");
-        usr.setRegistrationDate(date.toLocalDate());
+        Timestamp date = (Timestamp) row.get("user_created");
+        usr.setRegistrationDate(date.toLocalDateTime());
         return usr;
     }
 }

@@ -17,25 +17,63 @@ import java.util.Optional;
 @Repository
 public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements ServiceDAO {
 
-    //private final String FIND_SERVICE = "SELECT * FROM service WHERE service_id = ?;";
-    private final String FIND_SERVICE_BY_NAME = "";
+    private final String FIND_SERVICE_BY_NAME = "SELECT * \n" +
+            "FROM service\n" +
+            "WHERE carrier_id = ?\n" +
+            "AND service_name = ?";
+
     private final String FIND_ALL_SERVICES = "SELECT service.service_id,\n" +
-            "        user_a.user_name as approver_name,\n" +
+            "        service.carrier_id,\n" +
+            "        user_a.user_name,\n" +
             "        service.service_name,\n" +
             "        service.service_description,\n" +
             "        service.service_status,\n" +
             "        service.creation_date,\n" +
             "        service_reply.reply_text\n" +
             "FROM service\n" +
-            "INNER JOIN service_reply\n" +
-            "ON service.service_id = service_reply.service_id\n" +
-            "INNER JOIN user_a\n" +
+            "LEFT JOIN user_a\n" +
             "ON service.approver_id = user_a.user_id\n" +
+            "LEFT JOIN service_reply\n" +
+            "ON service.service_id = service_reply.service_id\n" +
             "WHERE carrier_id = ?\n" +
             "ORDER BY service_id";
-    private final String FIND_PAGIN_SERVICES = "";
-    private final String DELETE_SERVICE = "";
-    private final String FIND_BY_STATUS = "";
+
+    private final String FIND_PAGIN_SERVICES = "SELECT service.service_id,\n" +
+            "        service.carrier_id,\n" +
+            "        user_a.user_name,\n" +
+            "        service.service_name,\n" +
+            "        service.service_description,\n" +
+            "        service.service_status,\n" +
+            "        service.creation_date,\n" +
+            "        service_reply.reply_text\n" +
+            "FROM service\n" +
+            "LEFT JOIN user_a\n" +
+            "ON service.approver_id = user_a.user_id\n" +
+            "LEFT JOIN service_reply\n" +
+            "ON service.service_id = service_reply.service_id\n" +
+            "WHERE carrier_id = ?\n" +
+            "ORDER BY service_id\n" +
+            "LIMIT ? OFFSET ?";
+
+    private final String DELETE_SERVICE = "DELETE FROM service\n" +
+            "WHERE service_id = ?";
+
+    private final String FIND_BY_STATUS = "SELECT service.service_id,\n" +
+            "        service.carrier_id,\n" +
+            "        user_a.user_name,\n" +
+            "        service.service_name,\n" +
+            "        service.service_description,\n" +
+            "        service.service_status,\n" +
+            "        service.creation_date,\n" +
+            "        service_reply.reply_text\n" +
+            "FROM service\n" +
+            "LEFT JOIN user_a\n" +
+            "ON service.approver_id = user_a.user_id\n" +
+            "LEFT JOIN service_reply\n" +
+            "ON service.service_id = service_reply.service_id\n" +
+            "WHERE carrier_id = ?\n" +
+            "AND service_status = ?\n" +
+            "ORDER BY service_id";
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceDAOImpl.class);
 
@@ -100,16 +138,16 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
         logger.debug("Getting" + amount + "pagine services where carrierId = " + id);
 
         List<ServiceDTO> result = new ArrayList<>();
-        result.addAll(getJdbcTemplate().query(FIND_PAGIN_SERVICES, new Object[]{id}, mapper));
+        result.addAll(getJdbcTemplate().query(FIND_PAGIN_SERVICES, new Object[]{id, amount, from}, mapper));
         return result;
     }
 
     @Override
-    public List<ServiceDTO> findByStatus(Number id, Integer status, Integer from, Integer number){
+    public List<ServiceDTO> findByStatus(Number id, Integer status){
         logger.debug("Getting services where status = " + status);
 
         List<ServiceDTO> result = new ArrayList<>();
-        result.addAll(getJdbcTemplate().query(FIND_BY_STATUS, new Object[]{status, id, number, from}, mapper));
+        result.addAll(getJdbcTemplate().query(FIND_BY_STATUS, new Object[]{id, status}, mapper));
         return result;
     }
 

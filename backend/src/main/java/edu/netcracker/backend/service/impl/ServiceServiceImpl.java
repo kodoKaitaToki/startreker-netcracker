@@ -2,7 +2,6 @@ package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.ServiceDAO;
-import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
 import edu.netcracker.backend.message.response.ServiceDTO;
 import edu.netcracker.backend.model.ServiceDescr;
@@ -16,9 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -46,8 +42,8 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceDTO> findByStatus(Integer status, Integer from, Integer number){
-        return serviceDAO.findByStatus(carrierId, status, from, number);
+    public List<ServiceDTO> findByStatus(Integer status){
+        return serviceDAO.findByStatus(carrierId, status);
     }
 
     @Override
@@ -60,42 +56,33 @@ public class ServiceServiceImpl implements ServiceService {
 
         ServiceDescr serviceDescr = new ServiceDescr();
         serviceDescr.setCarrierId(carrierId);
-
-        Integer approver_id = userService.findByUsernameWithRole(
-                serviceCreateForm.getApproverName(),
-                AuthorityUtils.ROLE_APPROVER).getUserId();
-        serviceDescr.setApproverId(approver_id);
         serviceDescr.setServiceName(serviceCreateForm.getServiceName());
         serviceDescr.setServiceDescription(serviceCreateForm.getServiceDescription());
         serviceDescr.setServiceStatus(serviceCreateForm.getServiceStatus());
-        serviceDescr.setCreationDate(serviceCreateForm.getCreationDate());
+        serviceDescr.setCreationDate(LocalDateTime.now());
 
         serviceDAO.save(serviceDescr);
 
-        ServiceDescr result = serviceDAO.findByName(serviceDescr.getServiceName(), carrierId).get();
+        ServiceDescr result = serviceDAO.findByName(serviceDescr.getServiceName(), carrierId).orElse(null);
 
-        return ServiceDTO.form(result, serviceCreateForm.getApproverName());
+        return ServiceDTO.form(result, "");
     }
 
     @Override
     public ServiceDTO updateService(ServiceDTO serviceDTO){
+        ServiceDescr serviceDescr = serviceDAO.find(serviceDTO.getId()).orElse(null);
+
+        if(serviceDescr == null){
+            throw new RequestException("Service " + serviceDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
+        }
 
         if(ifServiceExists(serviceDTO.getServiceName(), carrierId)){
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
-        ServiceDescr serviceDescr = new ServiceDescr();
-        serviceDescr.setServiceId(serviceDTO.getId());
-        serviceDescr.setCarrierId(carrierId);
-
-        Integer approver_id = userService.findByUsernameWithRole(
-                serviceDTO.getApproverName(),
-                AuthorityUtils.ROLE_APPROVER).getUserId();
-        serviceDescr.setApproverId(approver_id);
         serviceDescr.setServiceName(serviceDTO.getServiceName());
         serviceDescr.setServiceDescription(serviceDTO.getServiceDescription());
         serviceDescr.setServiceStatus(serviceDTO.getServiceStatus());
-        serviceDescr.setCreationDate(serviceDTO.getCreationDate());
 
         serviceDAO.update(serviceDescr);
 

@@ -1,6 +1,5 @@
 package edu.netcracker.backend.controller;
 
-import edu.netcracker.backend.dao.StatisticsDAO;
 import edu.netcracker.backend.message.request.MandatoryTimeInterval;
 import edu.netcracker.backend.message.request.OptionalTimeInterval;
 import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
@@ -9,7 +8,6 @@ import edu.netcracker.backend.message.response.ServiceDTO;
 import edu.netcracker.backend.message.response.ServiceDistributionElement;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.StatisticsService;
-import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -81,16 +79,15 @@ public class ServiceController {
 
     @GetMapping("api/v1/carrier/service/pagin")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceDTO> getPaginServices(@RequestParam("from") Integer from, @RequestParam("number") Integer number){
+    public List<ServiceDTO> getPaginServices(@RequestParam("from") Integer from,
+                                             @RequestParam("number") Integer number){
         return serviceService.getPaginServicesOfCarrier(from, number);
     }
 
     @GetMapping("api/v1/carrier/service/by-status")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceDTO> getByStatus(@RequestParam("status") Integer status,
-                                        @RequestParam("from") Integer from,
-                                        @RequestParam("number") Integer number){
-        return serviceService.findByStatus(status, from, number);
+    public List<ServiceDTO> getByStatus(@RequestParam("status") Integer status){
+        return serviceService.findByStatus(status);
     }
 
     @DeleteMapping("api/v1/carrier/service/{servId}")

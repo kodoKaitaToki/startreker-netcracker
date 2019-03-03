@@ -12,7 +12,7 @@ public interface ServiceService {
 
     List<ServiceDTO> getPaginServicesOfCarrier(Integer from, Integer amount);
 
-    List<ServiceDTO> findByStatus(Integer status, Integer from, Integer number);
+    List<ServiceDTO> findByStatus(Integer status);
 
     ServiceDTO addService(ServiceCreateForm serviceCreateForm);
 

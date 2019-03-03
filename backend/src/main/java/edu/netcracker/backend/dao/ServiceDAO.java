@@ -23,6 +23,6 @@ public interface ServiceDAO {
 
     List<ServiceDTO> findPaginByCarrierId(Number id, Integer from, Integer amount);
 
-    List<ServiceDTO> findByStatus(Number id, Integer status, Integer from, Integer number);
+    List<ServiceDTO> findByStatus(Number id, Integer status);
 
 }

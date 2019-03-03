@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -34,7 +35,7 @@ public class ServiceDescr {
     private Integer serviceStatus;
 
     @Attribute("creation_date")
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 
     @Attribute("service_views")
     private Integer tripViews;
