@@ -75,6 +75,9 @@ public class GenericMapper<T> implements RowMapper<T> {
         } else if (attr instanceof Timestamp && fieldType.equals(LocalDateTime.class)) {
             Timestamp timestamp = (Timestamp) attr;
             attr = timestamp.toLocalDateTime();
+        } else if (attr instanceof Timestamp && fieldType.equals(LocalDate.class)) {
+            Timestamp timestamp = (Timestamp) attr;
+            attr = timestamp.toLocalDateTime().toLocalDate();
         }
         return attr;
     }
