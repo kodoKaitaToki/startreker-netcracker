@@ -18,10 +18,6 @@ public class BundleCrudServiceImpl implements BundleCrudService {
         this.bundleDAO = bundleDAO;
     }
 
-    @Override
-    public List<Bundle> getAll() {
-        return bundleDAO.findAll();
-    }
 
     @Override
     public List<Bundle> getAll(Number limit, Number offset) {

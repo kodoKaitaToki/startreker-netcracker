@@ -1,6 +1,7 @@
 package edu.netcracker.backend.controller;
 
-import edu.netcracker.backend.message.BundleDTO;
+import edu.netcracker.backend.message.request.BundleForm;
+import edu.netcracker.backend.message.response.BundleDTO;
 import edu.netcracker.backend.model.Bundle;
 import edu.netcracker.backend.service.BundleCrudService;
 import org.modelmapper.ModelMapper;
@@ -15,76 +16,64 @@ import java.util.stream.Collectors;
 public class BundleCrudController {
 
     private BundleCrudService bcs;
-
-    private ModelMapper modelMapper;
+    private ModelMapper bundleMapper;
 
     @Autowired
     BundleCrudController(BundleCrudService bcs, ModelMapper objectMapper) {
         this.bcs = bcs;
-        this.modelMapper = objectMapper;
+        this.bundleMapper = objectMapper;
     }
 
-    @GetMapping("api/v1/admin/bundles/all")
+    @GetMapping("api/v1/bundles")
     @ResponseBody
-    public List<BundleDTO> getAllBundles() {
-        List<Bundle> bundles = bcs.getAll();
-        return bundles.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    @GetMapping("api/v1/admin/bundles/paging")
-    @ResponseBody
-    public List<BundleDTO> getAllBundles(@RequestParam("limit") Number limit, @RequestParam("offset") Number offset) {
+    public List<BundleDTO> getAllBundles(@RequestParam("limit") Number limit,
+                                         @RequestParam("offset") Number offset) {
         List<Bundle> bundles = bcs.getAll(limit, offset);
         return bundles.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("api/v1/admin/bundles")
+    @GetMapping("api/v1/bundles/{id}")
     @ResponseBody
-    public BundleDTO getBundleById(@RequestParam("id") Number id) {
+    public BundleDTO getBundleById(@PathVariable("id") Number id) {
         return convertToDTO(bcs.getById(id));
     }
 
-    @PostMapping("api/v1/admin/bundles")
+    @PostMapping("api/v1/bundles")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addBundle(@RequestBody final BundleDTO bundleDTO) {
-        bcs.add(convertFromDTO(bundleDTO));
+    public void addBundle(@RequestBody final BundleForm bundleForm) {
+        bcs.add(convertFromDTO(bundleForm));
     }
 
-    @PutMapping("api/v1/admin/bundles")
+    @PutMapping("api/v1/bundles/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void updateBundle(@RequestBody final BundleDTO bundleDTO) {
-        bcs.update(convertFromDTO(bundleDTO));
+    public void updateBundle(@RequestBody final BundleForm bundleForm) {
+        bcs.update(convertFromDTO(bundleForm));
     }
 
-    @DeleteMapping("api/v1/admin/bundles")
+    @DeleteMapping("api/v1/bundles/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteBundle(@RequestParam Number id) {
+    public void deleteBundle(@PathVariable Number id) {
         bcs.delete(id);
     }
 
-    @GetMapping("api/v1/admin/bundles/count")
+    @GetMapping("api/v1/bundles/count")
     public Long countBundles() {
         return bcs.count();
     }
 
     private BundleDTO convertToDTO(Bundle bundle) {
-        BundleDTO bundleDTO = modelMapper.map(bundle, BundleDTO.class);
-        bundleDTO.setStartDate(BundleDTO.convertToString(bundle.getStartDate()));
-        bundleDTO.setFinishDate(BundleDTO.convertToString(bundle.getFinishDate()));
-        return bundleDTO;
+        return bundleMapper.map(bundle, BundleDTO.class);
     }
 
-    private Bundle convertFromDTO(BundleDTO bundleDTO) {
-        Bundle bundle = modelMapper.map(bundleDTO, Bundle.class);
-        bundle.setStartDate(BundleDTO.convertToLocalDate(bundleDTO.getStartDate()));
-        bundle.setFinishDate(BundleDTO.convertToLocalDate(bundleDTO.getFinishDate()));
+    private Bundle convertFromDTO(BundleForm bundleForm) {
+        Bundle bundle = bundleMapper.map(bundleForm, Bundle.class);
+        bundle.setStartDate(BundleDTO.convertToLocalDate(bundleForm.getStartDate()));
+        bundle.setFinishDate(BundleDTO.convertToLocalDate(bundleForm.getFinishDate()));
 
-        if (bundleDTO.getId() != null) {
-            Bundle oldBundle = bcs.getById(bundleDTO.getId());
+        if (bundleForm.getId() != null) {
+            Bundle oldBundle = bcs.getById(bundleForm.getId());
             bundle.setBundleId(oldBundle.getBundleId());
         }
         return bundle;

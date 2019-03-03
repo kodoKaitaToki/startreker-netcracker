@@ -6,8 +6,6 @@ import java.util.List;
 
 public interface BundleCrudService {
 
-    List<Bundle> getAll();
-
     List<Bundle> getAll(Number limit, Number offset);
 
     Bundle getById(Number id);

@@ -36,7 +36,7 @@ public class Bundle {
     @Attribute("bundle_photo")
     private String bundlePhotoUri;
 
-    private Trip bundleTrip;
+    private List<Trip> bundleTrips = new ArrayList<>();
 
     private List<Service> bundleServices = new ArrayList<>();
 

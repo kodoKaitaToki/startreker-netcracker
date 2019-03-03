@@ -1,8 +1,6 @@
-package edu.netcracker.backend.message;
+package edu.netcracker.backend.message.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.netcracker.backend.model.Service;
-import edu.netcracker.backend.model.Trip;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -31,11 +29,11 @@ public class BundleDTO {
     @JsonProperty("photo_uri")
     private String photoUri;
 
-    @JsonProperty("bundle_trip")
-    private Trip bundleTrip;
+    @JsonProperty("bundle_trips")
+    private List<BundleTripDTO> bundleTrips;
 
     @JsonProperty("bundle_services")
-    private List<Service> bundleServices;
+    private List<ServiceDTO> bundleServices;
 
     public static LocalDate convertToLocalDate(String date) {
         return LocalDate.parse(date, DateTimeFormatter.ofPattern(datePattern));

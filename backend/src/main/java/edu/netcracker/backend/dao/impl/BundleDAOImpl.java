@@ -1,25 +1,27 @@
 package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.BundleDAO;
-import edu.netcracker.backend.dao.CrudDAO;
 import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.dao.TripDAO;
+import edu.netcracker.backend.dao.mapper.BundleRowMapper;
+import edu.netcracker.backend.dao.mapper.TripRowMapper;
 import edu.netcracker.backend.model.Bundle;
 import edu.netcracker.backend.model.Service;
 import edu.netcracker.backend.model.Trip;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class BundleDAOImpl extends CrudDAO<Bundle> implements BundleDAO {
+public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
 
-    private static final String ORDER_BY = "ORDER BY bundle_id ";
+    private static final String ORDER_BY = " ORDER BY bundle_id ";
 
     private static final String SELECT_ALL_BUNDLES = "SELECT bundle_id, " +
             "start_date, " +
@@ -27,12 +29,11 @@ public class BundleDAOImpl extends CrudDAO<Bundle> implements BundleDAO {
             "bundle_price, " +
             "bundle_description, " +
             "bundle_photo " +
-            "FROM bundle " +
-            ORDER_BY;
+            "FROM bundle ";
 
-    private static final String PAGING_SELECT_BUNDLES = SELECT_ALL_BUNDLES + "LIMIT ? OFFSET ?;";
+    private static final String PAGING_SELECT_BUNDLES = SELECT_ALL_BUNDLES + ORDER_BY + "LIMIT ? OFFSET ?";
 
-    private static final String SELECT_BY_ID = SELECT_ALL_BUNDLES + "WHERE bundle_id = ?" + ORDER_BY;
+    private static final String SELECT_BY_ID = SELECT_ALL_BUNDLES + " WHERE bundle_id = ?";
 
     private static final String INSERT_BUNDLE = "INSERT INTO bundle ( " +
             "start_date, " +
@@ -56,10 +57,10 @@ public class BundleDAOImpl extends CrudDAO<Bundle> implements BundleDAO {
 
     private static final String SELECT_BUNDLE_TRIP = "SELECT DISTINCT " +
             "t.trip_id, " +
-            "vehicle_id, " +
             "trip_status, " +
             "departure_date, " +
             "arrival_date, " +
+            "trip_photo, " +
             "creation_date " +
             "FROM trip t " +
             "INNER JOIN ticket_class tc ON t.trip_id = tc.trip_id " +
@@ -96,6 +97,7 @@ public class BundleDAOImpl extends CrudDAO<Bundle> implements BundleDAO {
 
     private TripDAO tripDAO;
     private TicketClassDAO ticketClassDAO;
+    private final Logger logger = LoggerFactory.getLogger(BundleDAOImpl.class);
 
     @Autowired
     public BundleDAOImpl(TicketClassDAO ticketClassDAO, TripDAO tripDAO) {
@@ -104,26 +106,14 @@ public class BundleDAOImpl extends CrudDAO<Bundle> implements BundleDAO {
     }
 
     @Override
-    public List<Bundle> findAll() {
-        logger.info("Querying all bundles");
-        List<Bundle> bundles = getJdbcTemplate().query(SELECT_ALL_BUNDLES, getGenericMapper());
-        logger.info("Setting bundle trip to bundles");
-        bundles.forEach(bundle -> bundle.setBundleTrip(attachBundleTrip(bundle.getBundleId())));
-        logger.info("Attaching bundles services");
-        bundles.forEach(bundle -> bundle.setBundleServices(attachBundleServices(bundle.getBundleId())));
-        return bundles;
-    }
-
-    @Override
     public List<Bundle> findAll(Number limit, Number offset) {
         logger.info(String.format("Querying %s bundles from %s", limit, offset));
         List<Bundle> bundles = getJdbcTemplate()
                 .query(PAGING_SELECT_BUNDLES,
                         new Object[]{limit, offset},
-                        getGenericMapper()
-                );
+                        new BundleRowMapper());
         logger.info("Setting bundle trip to bundles");
-        bundles.forEach(bundle -> bundle.setBundleTrip(attachBundleTrip(bundle.getBundleId())));
+        bundles.forEach(bundle -> bundle.setBundleTrips(attachBundleTrips(bundle.getBundleId())));
         logger.info("Attaching bundles services");
         bundles.forEach(bundle -> bundle.setBundleServices(attachBundleServices(bundle.getBundleId())));
         return bundles;
@@ -132,9 +122,10 @@ public class BundleDAOImpl extends CrudDAO<Bundle> implements BundleDAO {
     @Override
     public Optional<Bundle> find(Number id) {
         logger.info(String.format("Searching for bundle with id: %s", id));
-        Optional<Bundle> optBundle = super.find(id);
+        Optional<Bundle> optBundle = Optional.ofNullable(getJdbcTemplate().queryForObject(SELECT_BY_ID, new Object[]{id}, new BundleRowMapper()));
+
         logger.info("Setting bundle trip to bundle");
-        optBundle.ifPresent(bundle -> bundle.setBundleTrip(attachBundleTrip(bundle.getBundleId())));
+        optBundle.ifPresent(bundle -> bundle.setBundleTrips(attachBundleTrips(bundle.getBundleId())));
         logger.info("Attaching bundle services");
         optBundle.ifPresent(bundle -> bundle.setBundleServices(attachBundleServices(bundle.getBundleId())));
         return optBundle;
@@ -168,20 +159,11 @@ public class BundleDAOImpl extends CrudDAO<Bundle> implements BundleDAO {
         return getJdbcTemplate().queryForObject(COUNT_BUNDLES, Long.class);
     }
 
-    private Trip attachBundleTrip(Long bundleId) {
-        Trip trip = getJdbcTemplate().queryForObject(SELECT_BUNDLE_TRIP, new Object[]{bundleId}, (resultSet, i) -> {
-            Trip trip1 = new Trip();
-            trip1.setTripId(resultSet.getLong(1));
-            trip1.setVehicleId(resultSet.getLong(2));
-            trip1.setTripStatus(resultSet.getInt(3));
-            trip1.setDepartureDate(new Timestamp(resultSet.getDate(4).getTime()).toLocalDateTime());
-            trip1.setArrivalDate(new Timestamp(resultSet.getDate(5).getTime()).toLocalDateTime());
-            trip1.setCreationDate(resultSet.getDate(6).toLocalDate());
-            return trip1;
-        });
-        if (trip != null)
-            trip.setTicketClasses(ticketClassDAO.findByTripId(trip.getTripId()));
-        return trip;
+    private List<Trip> attachBundleTrips(Long bundleId) {
+        List<Trip> trips = getJdbcTemplate().query(SELECT_BUNDLE_TRIP, new Object[]{bundleId}, new TripRowMapper());
+
+        trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findByTripId(trip.getTripId())));
+        return trips;
     }
 
     private List<Service> attachBundleServices(Long bundleId) {
@@ -200,27 +182,28 @@ public class BundleDAOImpl extends CrudDAO<Bundle> implements BundleDAO {
     }
 
     private void saveBundleTrip(Bundle bundle) {
-        bundle.getBundleTrip().getTicketClasses()
-                .forEach(
-                        ticketClass -> getJdbcTemplate()
-                                .update(INSERT_BUNDLE_CLASS, bundle.getBundleId(), ticketClass.getClassId())
-                );
+        bundle.getBundleTrips().forEach(trip -> trip.getTicketClasses()
+                .forEach(ticketClass -> getJdbcTemplate()
+                        .update(INSERT_BUNDLE_CLASS, bundle.getBundleId(), ticketClass.getClassId()))
+        );
     }
 
     private void saveBundleServices(Bundle bundle) {
-        bundle.getBundleTrip().getTicketClasses()
-                .forEach((ticketClass -> bundle.getBundleServices()
-                        .forEach(service -> getJdbcTemplate().update(INSERT_BUNDLE_SERVICE, ticketClass.getClassId(), service.getServiceId()))));
+        bundle.getBundleTrips()
+                .forEach(trip -> trip.getTicketClasses()
+                        .forEach(ticketClass -> bundle.getBundleServices()
+                                .forEach(service -> getJdbcTemplate()
+                                        .update(INSERT_BUNDLE_SERVICE, ticketClass.getClassId(), service.getServiceId()))));
     }
 
     private void updateBundleTrip(Bundle bundle) {
-        //Not the best but quick and easy solution. Better to improve
+        //Not the best but quick and easy solution.
         getJdbcTemplate().update(DELETE_BUNDLE_CLASSES_BY_ID, bundle.getBundleId());
         saveBundleServices(bundle);
     }
 
     private void updateBundleServices(Bundle bundle) {
-        //Not the best but quick and easy solution. Better to improve
+        //Not the best but quick and easy solution.
         getJdbcTemplate().update(DELETE_BUNDLE_SERVICES_BY_ID, bundle.getBundleId());
         saveBundleServices(bundle);
     }

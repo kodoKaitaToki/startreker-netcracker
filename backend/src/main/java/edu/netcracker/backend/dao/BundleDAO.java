@@ -7,8 +7,6 @@ import java.util.Optional;
 
 public interface BundleDAO {
 
-    List<Bundle> findAll();
-
     List<Bundle> findAll(Number limit, Number offset);
 
     Optional<Bundle> find(Number id);
