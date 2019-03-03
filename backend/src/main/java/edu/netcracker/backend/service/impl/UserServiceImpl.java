@@ -85,7 +85,6 @@ public class UserServiceImpl implements UserService {
         user.setUserTelephone(signUpForm.getTelephoneNumber());
         user.setRegistrationDate(LocalDate.now());
         userDAO.save(user);
-
         return user;
     }
 

@@ -1,7 +1,6 @@
 package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.SuggestionDAO;
-import edu.netcracker.backend.model.PossibleService;
 import edu.netcracker.backend.model.Suggestion;
 import org.springframework.stereotype.Repository;
 
@@ -16,6 +15,7 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
             "VALUES (?, ?)";
     private String DELETE_POSSIBLE_SERVICE = "DELETE FROM suggested_service WHERE p_service_id = ? AND suggestion_id = ?";
 
+    @Override
     public List<Suggestion> findAllWithClassId(Number id) {
         List<Suggestion> suggestions = new ArrayList<>();
 

@@ -21,7 +21,4 @@ public class Suggestion {
 
     @Attribute("class_id")
     private Integer classId;
-
-    @Attribute("suggestion_name")
-    private String suggestionName;
 }
