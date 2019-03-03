@@ -30,8 +30,6 @@ export class DashboardDeltaService {
   public getIncreasingPerPeriod(from: string, to: string, type: string): Observable<Map<Date, number>>{
       let headers = new HttpHeaders();
       headers = headers.append('Content-Type', 'application/json');
-      //TODO: remove debug backdoor
-      headers = headers.append('Authorization', 'debug_login 21');
 
       let params = new HttpParams().set("from", from).set("to", to);
 
