@@ -1,15 +1,15 @@
 package edu.netcracker.backend.service;
 
-import edu.netcracker.backend.message.request.TicketClassDTO;
+import edu.netcracker.backend.message.request.DiscountTicketClassDTO;
 
 import java.util.List;
 
 public interface TicketClassService {
 
-    List<TicketClassDTO> getTicketClassesRelatedToCarrier(Number userId);
+    List<DiscountTicketClassDTO> getTicketClassesRelatedToCarrier(Number userId);
 
-    TicketClassDTO createDiscountForTicketClass(TicketClassDTO ticketClassDTO);
+    DiscountTicketClassDTO createDiscountForTicketClass(DiscountTicketClassDTO ticketClassDTO);
 
-    TicketClassDTO deleteDiscountForTicketClass(Number discountId, Number userId);
+    DiscountTicketClassDTO deleteDiscountForTicketClass(Number discountId, Number userId);
 
 }

@@ -3,12 +3,16 @@ package edu.netcracker.backend.model;
 import edu.netcracker.backend.dao.annotations.Attribute;
 import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.dao.annotations.Table;
+import edu.netcracker.backend.message.request.DiscountDTO;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -32,5 +36,17 @@ public class Discount {
 
     @Attribute("discount_type")
     private Boolean discountType;
+
+    public static Discount toDiscount(DiscountDTO discountDTO) {
+        Discount discount = new Discount();
+        discount.setDiscountRate(discountDTO.getDiscountRate());
+        discount.setDiscountType(discountDTO.getDiscountType());
+        discount.setStartDate(LocalDate
+                .parse(discountDTO.getStartDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy")).atStartOfDay());
+        discount.setFinishDate(LocalDate
+                .parse(discountDTO.getFinishDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy")).atTime(LocalTime.MAX));
+
+        return discount;
+    }
 
 }

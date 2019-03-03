@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -41,7 +42,7 @@ public class User implements UserDetails {
     @Attribute("user_activated")
     private boolean userIsActivated;
     @Attribute("user_created")
-    private LocalDate registrationDate;
+    private LocalDateTime registrationDate;
 
     private List<Role> userRoles = new ArrayList<>();
 

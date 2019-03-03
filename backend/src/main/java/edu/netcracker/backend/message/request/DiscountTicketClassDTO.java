@@ -1,7 +1,6 @@
 package edu.netcracker.backend.message.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import edu.netcracker.backend.model.Discount;
 import edu.netcracker.backend.model.TicketClass;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class TicketClassDTO {
+public class DiscountTicketClassDTO {
 
     @NotNull
     @JsonProperty("class_id")
@@ -26,16 +25,26 @@ public class TicketClassDTO {
     private Integer ticketPrice;
 
     @NotNull
+    @JsonProperty("class_name")
+    private String className;
+
+    @NotNull
+    @JsonProperty("class_seats")
+    private Integer classSeats;
+
+    @NotNull
     @Valid
     @JsonProperty("discount")
     private DiscountDTO discount;
 
-    public static TicketClassDTO toTicketClassDTO(TicketClass ticketClass, Discount discount) {
-        TicketClassDTO ticketClassDTO = new TicketClassDTO();
+    public static DiscountTicketClassDTO toTicketClassDTO(TicketClass ticketClass) {
+        DiscountTicketClassDTO ticketClassDTO = new DiscountTicketClassDTO();
         ticketClassDTO.setClassId(ticketClass.getClassId());
         ticketClassDTO.setTripId(ticketClass.getTripId());
         ticketClassDTO.setTicketPrice(ticketClass.getTicketPrice());
-        ticketClassDTO.setDiscount(DiscountDTO.toDiscountDTO(discount));
+        ticketClassDTO.setClassName(ticketClass.getClassName());
+        ticketClassDTO.setClassSeats(ticketClass.getClassSeats());
+        ticketClassDTO.setDiscount(DiscountDTO.toDiscountDTO(ticketClass.getDiscount()));
 
         return ticketClassDTO;
     }
