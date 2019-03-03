@@ -15,5 +15,5 @@ public interface PossibleServiceDAO {
 
     List<PossibleService> findAllWithClassId(Number id);
 
-    Optional<Service> findService(PossibleService possibleService);
+    List<PossibleService> findAllPossibleServicesBySuggestionId(Number suggestionId);
 }

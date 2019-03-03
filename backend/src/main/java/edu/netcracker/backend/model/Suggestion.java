@@ -16,6 +16,9 @@ public class Suggestion {
     @EqualsAndHashCode.Include
     private Integer suggestionId;
 
+    @Attribute("discount_id")
+    private Integer discountId;
+
     @Attribute("class_id")
     private Integer classId;
 

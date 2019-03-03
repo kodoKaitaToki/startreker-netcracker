@@ -1,8 +1,6 @@
 package edu.netcracker.backend.controller;
 
 import com.google.gson.Gson;
-import edu.netcracker.backend.dao.ServiceDAO;
-import edu.netcracker.backend.model.Service;
 import edu.netcracker.backend.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,9 +18,6 @@ import java.util.Map;
 public class AdminController {
 
     private AdminService adminService;
-
-    @Autowired
-    private ServiceDAO serviceDAO;
 
     @Autowired
     public AdminController(AdminService adminService) {

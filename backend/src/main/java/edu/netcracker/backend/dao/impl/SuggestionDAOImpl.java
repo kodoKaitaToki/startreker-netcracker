@@ -1,18 +1,20 @@
 package edu.netcracker.backend.dao.impl;
 
-import edu.netcracker.backend.dao.CrudDAO;
 import edu.netcracker.backend.dao.SuggestionDAO;
+import edu.netcracker.backend.model.PossibleService;
 import edu.netcracker.backend.model.Suggestion;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements SuggestionDAO {
     private String FIND_ALL_WITH_CLASS_ID = "SELECT * FROM suggestion " +
             "WHERE class_id = ?";
     private String ADD_POSSIBLE_SERVICE = "INSERT INTO suggested_service (p_service_id, suggestion_id) " +
             "VALUES (?, ?)";
-    private String DELETE_POSSIBLE_SERVICE = "";
+    private String DELETE_POSSIBLE_SERVICE = "DELETE FROM suggested_service WHERE p_service_id = ? AND suggestion_id = ?";
 
     public List<Suggestion> findAllWithClassId(Number id) {
         List<Suggestion> suggestions = new ArrayList<>();
@@ -38,4 +40,5 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
                 DELETE_POSSIBLE_SERVICE,
                 pServiceId, suggestionId);
     }
+
 }

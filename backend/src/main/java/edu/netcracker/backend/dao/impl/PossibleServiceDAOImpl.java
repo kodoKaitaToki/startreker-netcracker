@@ -2,7 +2,6 @@ package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.PossibleServiceDAO;
 import edu.netcracker.backend.dao.ServiceDAO;
-import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.model.PossibleService;
 import edu.netcracker.backend.model.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +19,28 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
     private String FIND_ALL_WITH_CLASS_ID = "SELECT * FROM possible_service " +
             "WHERE class_id = ?";
 
+    private String FIND_ALL_P_SERVICES_BY_SUGGESTION_ID = "SELECT * FROM possible_service " +
+            "INNER JOIN suggested_service ON possible_service.p_service_id = suggested_service.p_service_id " +
+            "WHERE suggestion_id = ?";
+
     @Autowired
     public PossibleServiceDAOImpl(ServiceDAO serviceDAO) {
-        serviceDAO = serviceDAO;
+        this.serviceDAO = serviceDAO;
+    }
+
+    @Override
+    public Optional<PossibleService> find(Number id) {
+        Optional<PossibleService> optPossibleService = super.find(id);
+
+        if (!optPossibleService.isPresent())
+            return Optional.empty();
+
+        PossibleService possibleService = optPossibleService.get();
+        Optional<Service> attachedService = findService(possibleService);
+
+        attachedService.ifPresent(possibleService::setService);
+
+        return Optional.of(possibleService);
     }
 
     @Override
@@ -34,11 +52,25 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
                 new Object[]{id},
                 getGenericMapper()));
 
+        possibleServices.forEach(possibleService
+                -> findService(possibleService).ifPresent(possibleService::setService));
+
         return possibleServices;
     }
 
-    @Override
-    public Optional<Service> findService(PossibleService possibleService) {
+    private Optional<Service> findService(PossibleService possibleService) {
         return serviceDAO.find(possibleService.getServiceId());
+    }
+
+    @Override
+    public List<PossibleService> findAllPossibleServicesBySuggestionId(Number suggestionId) {
+        List<PossibleService> possibleServices = new ArrayList<>();
+
+        possibleServices.addAll(getJdbcTemplate().query(
+                FIND_ALL_P_SERVICES_BY_SUGGESTION_ID,
+                new Object[]{suggestionId},
+                getGenericMapper()));
+
+        return possibleServices;
     }
 }

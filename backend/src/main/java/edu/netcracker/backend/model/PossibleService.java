@@ -21,4 +21,9 @@ public class PossibleService {
 
     @Attribute("class_id")
     private Integer classId;
+
+    @Attribute("service_price")
+    private Integer servicePrice;
+
+    private Service service;
 }
