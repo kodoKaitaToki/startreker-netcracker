@@ -12,6 +12,7 @@ import lombok.Setter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table("possible_service")
 public class PossibleService {
+
     @PrimaryKey("p_service_id")
     @EqualsAndHashCode.Include
     private Integer pServiceId;

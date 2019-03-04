@@ -11,7 +11,7 @@ public interface SuggestionDAO {
 
     Optional<Suggestion> find(Number id);
 
-    void delete(Suggestion ticketClass);
+    void delete(Suggestion suggestion);
 
     List<Suggestion> findAllWithClassId(Number id);
 

@@ -22,8 +22,23 @@ public class SuggestionController {
         return suggestionService.getAllWithClassId(classId);
     }
 
+    @GetMapping("/api/v1/carrier/suggestions/{suggestionId}")
+    public SuggestionDTO getById(@PathVariable Integer suggestionId) {
+        return suggestionService.getById(suggestionId);
+    }
+
     @PostMapping("/api/v1/carrier/suggestions")
     public SuggestionDTO createSuggestion(@Valid @RequestBody SuggestionDTO suggestionDTO) {
         return suggestionService.createSuggestion(suggestionDTO);
+    }
+
+    @PutMapping("/api/v1/carrier/suggestions")
+    public SuggestionDTO updateSuggestion(@Valid @RequestBody SuggestionDTO suggestionDTO) {
+        return suggestionService.updateSuggestion(suggestionDTO);
+    }
+
+    @DeleteMapping("/api/v1/carrier/suggestions/{suggestionId}")
+    public void deleteSuggestion(@PathVariable Integer suggestionId) {
+        suggestionService.deleteSuggestion(suggestionId);
     }
 }
