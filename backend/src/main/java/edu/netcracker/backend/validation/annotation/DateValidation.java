@@ -18,6 +18,8 @@ public @interface DateValidation {
 
     String message() default "";
 
+    String pattern() default "yyyy-MM-dd";
+
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};

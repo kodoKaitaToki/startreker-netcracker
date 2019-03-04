@@ -25,11 +25,11 @@ public class DiscountSuggestionDTO {
     @JsonProperty("discount")
     private DiscountDTO discount;
 
-    public static DiscountSuggestionDTO toSimpleSuggestionDTO(Suggestion suggestion) {
+    public static DiscountSuggestionDTO toSimpleSuggestionDTO(Suggestion suggestion, String datePattern) {
         DiscountSuggestionDTO simpleSuggestionDTO = new DiscountSuggestionDTO();
         simpleSuggestionDTO.setClassId(suggestion.getClassId());
         simpleSuggestionDTO.setSuggestionId(suggestion.getSuggestionId());
-        simpleSuggestionDTO.setDiscount(DiscountDTO.toDiscountDTO(suggestion.getDiscount()));
+        simpleSuggestionDTO.setDiscount(DiscountDTO.toDiscountDTO(suggestion.getDiscount(), datePattern));
 
         return simpleSuggestionDTO;
     }

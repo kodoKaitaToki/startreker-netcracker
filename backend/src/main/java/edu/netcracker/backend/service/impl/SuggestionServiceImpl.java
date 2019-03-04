@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 @Service
 public class SuggestionServiceImpl implements SuggestionService {
 
+    private static final String DATE_PATTERN = "dd-MM-yyyy";
+
     private final SuggestionDAO suggestionDAO;
 
     private final DiscountDAO discountDAO;
@@ -46,6 +48,37 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public DiscountSuggestionDTO createDiscountForSuggestion(DiscountSuggestionDTO simpleSuggestionDTO) {
+        Suggestion suggestion = getSuggestion(simpleSuggestionDTO);
+
+        Discount discount = DiscountUtils.getDiscount(simpleSuggestionDTO.getDiscount());
+
+        discountDAO.save(discount);
+        suggestion.setDiscountId(discount.getDiscountId());
+        suggestion.setDiscount(discount);
+        suggestionDAO.save(suggestion);
+
+        return DiscountSuggestionDTO.toSimpleSuggestionDTO(suggestion, DATE_PATTERN);
+    }
+
+    @Override
+    public DiscountSuggestionDTO deleteDiscountForSuggestion(Number discountId, Number userId) {
+        Optional<Suggestion> optionalSuggestion = suggestionDAO.getSuggestionByDiscount(userId, discountId);
+
+        if (!optionalSuggestion.isPresent()) {
+            throw new RequestException("No such discount",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        Suggestion suggestion = optionalSuggestion.get();
+        suggestion.setDiscountId(null);
+        suggestionDAO.save(suggestion);
+
+        discountDAO.delete(discountId);
+
+        return DiscountSuggestionDTO.toSimpleSuggestionDTO(suggestion, DATE_PATTERN);
+    }
+
+    private Suggestion getSuggestion(DiscountSuggestionDTO simpleSuggestionDTO) {
         Optional<Suggestion> optionalSuggestion = suggestionDAO.find(simpleSuggestionDTO.getSuggestionId());
 
         if (!optionalSuggestion.isPresent()) {
@@ -60,36 +93,10 @@ public class SuggestionServiceImpl implements SuggestionService {
         Suggestion suggestion = optionalSuggestion.get();
 
         if (suggestion.getDiscountId() != null) {
-            throw new RequestException("Suggestion already exist",
+            throw new RequestException("Discount already exist",
                     HttpStatus.CONFLICT);
         }
-
-        Discount discount = Discount.toDiscount(simpleSuggestionDTO.getDiscount());
-
-        discountDAO.save(discount);
-        suggestion.setDiscountId(discount.getDiscountId());
-        suggestion.setDiscount(discount);
-        suggestionDAO.save(suggestion);
-
-        return DiscountSuggestionDTO.toSimpleSuggestionDTO(suggestion);
-    }
-
-    @Override
-    public DiscountSuggestionDTO deleteDiscountForSuggestion(Number discountId, Number userId) {
-        Optional<Suggestion> optionalSuggestion = suggestionDAO.getSuggestionByDiscount(userId, discountId);
-
-        if (!optionalSuggestion.isPresent()) {
-            throw new RequestException("Discount not exist, or not allowed for this user",
-                    HttpStatus.NOT_FOUND);
-        }
-
-        Suggestion suggestion = optionalSuggestion.get();
-        suggestion.setDiscountId(null);
-        suggestionDAO.save(suggestion);
-
-        discountDAO.delete(discountId);
-
-        return DiscountSuggestionDTO.toSimpleSuggestionDTO(suggestion);
+        return suggestion;
     }
 
     private void attachSuggestionsToDiscounts(List<Suggestion> suggestions, List<Discount> discounts) {
@@ -115,6 +122,7 @@ public class SuggestionServiceImpl implements SuggestionService {
     }
 
     private List<DiscountSuggestionDTO> createSimpleSuggestionDTOs(List<Suggestion> suggestions) {
-        return suggestions.stream().map(DiscountSuggestionDTO::toSimpleSuggestionDTO).collect(Collectors.toList());
+        return suggestions.stream().map(suggestion ->
+                DiscountSuggestionDTO.toSimpleSuggestionDTO(suggestion, DATE_PATTERN)).collect(Collectors.toList());
     }
 }

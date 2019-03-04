@@ -22,12 +22,12 @@ public class DiscountDTO {
 
     @NotNull
     @JsonProperty("start_date")
-    @DateValidation(message = "invalid date format")
+    @DateValidation(message = "invalid date format", pattern = "dd-MM-yyyy")
     private String startDate;
 
     @NotNull
     @JsonProperty("finish_date")
-    @DateValidation(message = "invalid date format")
+    @DateValidation(message = "invalid date format", pattern = "dd-MM-yyyy")
     private String finishDate;
 
     @NotNull
@@ -38,7 +38,7 @@ public class DiscountDTO {
     @JsonProperty("is_percent")
     private Boolean isPercent;
 
-    public static DiscountDTO toDiscountDTO(Discount discount) {
+    static DiscountDTO toDiscountDTO(Discount discount, String datePattern) {
         if (discount == null) {
             return null;
         }
@@ -47,8 +47,8 @@ public class DiscountDTO {
         discountDTO.setDiscountId(discount.getDiscountId());
         discountDTO.setDiscountRate(discount.getDiscountRate());
         discountDTO.setIsPercent(discount.getIsPercent());
-        discountDTO.setStartDate(discount.getStartDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        discountDTO.setFinishDate(discount.getFinishDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        discountDTO.setStartDate(discount.getStartDate().format(DateTimeFormatter.ofPattern(datePattern)));
+        discountDTO.setFinishDate(discount.getFinishDate().format(DateTimeFormatter.ofPattern(datePattern)));
 
         return discountDTO;
     }

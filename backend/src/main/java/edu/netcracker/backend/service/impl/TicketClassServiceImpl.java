@@ -22,6 +22,8 @@ import java.util.stream.Collectors;
 @Service
 public class TicketClassServiceImpl implements TicketClassService {
 
+    private static final String DATE_PATTERN = "dd-MM-yyyy";
+
     private final TicketClassDAO ticketClassDAO;
 
     private final DiscountDAO discountDAO;
@@ -46,6 +48,37 @@ public class TicketClassServiceImpl implements TicketClassService {
 
     @Override
     public DiscountTicketClassDTO createDiscountForTicketClass(DiscountTicketClassDTO ticketClassDTO) {
+        TicketClass ticketClass = getTicketClass(ticketClassDTO);
+
+        Discount discount = DiscountUtils.getDiscount(ticketClassDTO.getDiscount());
+
+        discountDAO.save(discount);
+        ticketClass.setDiscountId(discount.getDiscountId());
+        ticketClass.setDiscount(discount);
+        ticketClassDAO.save(ticketClass);
+
+        return DiscountTicketClassDTO.toTicketClassDTO(ticketClass, DATE_PATTERN);
+    }
+
+    @Override
+    public DiscountTicketClassDTO deleteDiscountForTicketClass(Number discountId, Number userId) {
+        Optional<TicketClass> optionalTicketClass = ticketClassDAO.getTicketClassByDiscount(userId, discountId);
+
+        if (!optionalTicketClass.isPresent()) {
+            throw new RequestException("No such discount",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        TicketClass ticketClass = optionalTicketClass.get();
+        ticketClass.setDiscountId(null);
+        ticketClassDAO.save(ticketClass);
+
+        discountDAO.delete(discountId);
+
+        return DiscountTicketClassDTO.toTicketClassDTO(ticketClass, DATE_PATTERN);
+    }
+
+    private TicketClass getTicketClass(DiscountTicketClassDTO ticketClassDTO) {
         Optional<TicketClass> optionalTicketClass = ticketClassDAO.find(ticketClassDTO.getClassId());
 
         if (!optionalTicketClass.isPresent()) {
@@ -63,33 +96,7 @@ public class TicketClassServiceImpl implements TicketClassService {
             throw new RequestException("Discount already exist",
                     HttpStatus.CONFLICT);
         }
-
-        Discount discount = Discount.toDiscount(ticketClassDTO.getDiscount());
-
-        discountDAO.save(discount);
-        ticketClass.setDiscountId(discount.getDiscountId());
-        ticketClass.setDiscount(discount);
-        ticketClassDAO.save(ticketClass);
-
-        return DiscountTicketClassDTO.toTicketClassDTO(ticketClass);
-    }
-
-    @Override
-    public DiscountTicketClassDTO deleteDiscountForTicketClass(Number discountId, Number userId) {
-        Optional<TicketClass> optionalTicketClass = ticketClassDAO.getTicketClassByDiscount(userId, discountId);
-
-        if (!optionalTicketClass.isPresent()) {
-            throw new RequestException("Discount not exist, or not allowed for this user",
-                    HttpStatus.NOT_FOUND);
-        }
-
-        TicketClass ticketClass = optionalTicketClass.get();
-        ticketClass.setDiscountId(null);
-        ticketClassDAO.save(ticketClass);
-
-        discountDAO.delete(discountId);
-
-        return DiscountTicketClassDTO.toTicketClassDTO(ticketClass);
+        return ticketClass;
     }
 
     private void attachTicketClassesToDiscounts(List<TicketClass> ticketClasses, List<Discount> discounts) {
@@ -115,6 +122,7 @@ public class TicketClassServiceImpl implements TicketClassService {
     }
 
     private List<DiscountTicketClassDTO> createTicketClassDTOs(List<TicketClass> ticketClasses) {
-        return ticketClasses.stream().map(DiscountTicketClassDTO::toTicketClassDTO).collect(Collectors.toList());
+        return ticketClasses.stream().map(ticketClass ->
+                DiscountTicketClassDTO.toTicketClassDTO(ticketClass, DATE_PATTERN)).collect(Collectors.toList());
     }
 }
