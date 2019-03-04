@@ -5,7 +5,6 @@ import edu.netcracker.backend.model.TicketClass;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +50,7 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
             tc.setItemNumber(resultSet.getInt(5));
             return tc;
         });
+    }
         
     private static final String GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER = "SELECT ticket_class.* FROM user_a " +
             "INNER JOIN trip ON trip.carrier_id = user_a.user_id " +
