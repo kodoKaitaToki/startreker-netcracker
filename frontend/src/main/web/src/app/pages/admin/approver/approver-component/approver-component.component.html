@@ -1,21 +1,23 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-3">
-      <div class="row">
-        <select class="form-control col-md-12 col-sm-12 col-lg-4"
-                (click)="chooseNewFilter($event.target)"
-        >
-          <option *ngFor="let filters of filterCriteria"
-                  [value]="filters.name"
+      <div class="container-fluid">
+        <div class="row">
+          <select class="form-control col-xl-3 col-md-12 col-lg-5"
+                  (click)="chooseNewFilter($event.target)"
           >
-            {{filters.name}}
-          </option>
-        </select>
+            <option *ngFor="let filters of filterCriteria"
+                    [value]="filters.name"
+            >
+              {{filters.name}}
+            </option>
+          </select>
 
-        <input type="text" class="form-control col-md-12 col-sm-12 col-lg-7 offset-lg-1"
-               [placeholder]="currentFilterPlaceholder"
-               [(ngModel)]="filterContent"
-        />
+          <input type="text" class="form-control col-xl-9 col-md-12 col-lg-7"
+                 [placeholder]="currentFilterPlaceholder"
+                 [(ngModel)]="filterContent"
+          />
+        </div>
       </div>
 
       <hr>
@@ -45,7 +47,10 @@
         </div>
 
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="Name" formControlName="username"
+          <input type="text"
+                 class="form-control"
+                 placeholder="Name"
+                 formControlName="username"
                  [ngClass]="{
                    'is-invalid':form.get('username').touched && form.get('username').invalid,
                    'is-valid': form.get('username').valid
@@ -59,13 +64,16 @@
         </div>
 
         <div class="form-group">
-          <input type="password" class="form-control" placeholder="Password" formControlName="password"
+          <input type="password"
+                 class="form-control"
+                 placeholder="Password"
+                 formControlName="password"
                  [ngClass]="{
-                   'is-invalid':form.get('password').touched && form.get('password').invalid,
-                   'is-valid': form.get('password').valid
+                   'is-invalid':form.get('password').invalid && form.get('password').touched,
+                   'is-valid': form.get('password').valid && form.get('password').touched
                    }"
           >
-          <span *ngIf="form.get('password').touched && form.get('password').invalid"
+          <span *ngIf="form.get('password').invalid && form.get('password').touched"
                 class="invalid-feedback"
           >
             <span *ngIf="form.get('password')['errors']['required']">
@@ -76,6 +84,17 @@
             Now is {{form.get('password')['errors']['minlength']['actualLength']}}
             </span>
           </span>
+        </div>
+
+        <div class="form-group">
+          <input type="password" class="form-control"
+                 placeholder="Repeat password"
+                 formControlName="repeat_password"
+                 [ngClass]="{
+                   'is-invalid': !checkRepeatedPasswordTheSame() && this.form.get('repeat_password').touched,
+                   'is-valid':  checkRepeatedPasswordTheSame() && this.form.get('repeat_password').touched
+                   }"
+          >
         </div>
 
         <div class="form-group">

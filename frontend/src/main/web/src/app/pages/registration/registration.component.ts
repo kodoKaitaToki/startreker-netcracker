@@ -22,7 +22,8 @@ export class RegistrationComponent implements OnInit {
     this.registerForm = this.formBuilder.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(8)]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      telephone_number: ['', [Validators.required, Validators.pattern("[0-9]{12}")]],
       match_password: ['', Validators.required]
     }, {
       validator: MustMatch('password', 'match_password')

@@ -43,39 +43,23 @@ export class TroubleStatisticsComponent implements OnInit {
 
   reloadChart() {
     this.ticketChart.options.data[0].dataPoints = [];
-    this.ticketChart.options.data[0].dataPoints.push(
-      {
-        y: this.troubleStatisticsModel.total_reopened,
-        label: "Reopened"
-      }
-    );
-    this.ticketChart.options.data[0].dataPoints.push(
-      {
-        y: this.troubleStatisticsModel.total_opened,
-        label: "Opened"
-      }
-    );
-    this.ticketChart.options.data[0].dataPoints.push(
-      {
-        y: this.troubleStatisticsModel.total_rated,
-        label: "Rated"
-      }
-    );
-    this.ticketChart.options.data[0].dataPoints.push(
-      {
-        y: this.troubleStatisticsModel.total_answered,
-        label: "Answered"
-      }
-    );
-    this.ticketChart.options.data[0].dataPoints.push(
-      {
-        y: this.troubleStatisticsModel.total_in_progress,
-        label: "In progress"
-      }
-    );
+    this.addSectionToChart(this.troubleStatisticsModel.total_reopened, "Reopened");
+    this.addSectionToChart(this.troubleStatisticsModel.total_opened, "Opened");
+    this.addSectionToChart(this.troubleStatisticsModel.total_rated, "Rated");
+    this.addSectionToChart(this.troubleStatisticsModel.total_answered, "Answered");
+    this.addSectionToChart(this.troubleStatisticsModel.total_in_progress, "In progress");
     setTimeout(() => {
       this.ticketChart.render();
     }, 100)
+  }
+
+  addSectionToChart(value: number, sectionLabel: string) {
+    this.ticketChart.options.data[0].dataPoints.push(
+      {
+        y: value,
+        label: sectionLabel
+      }
+    );
   }
 
   ngOnInit() {
