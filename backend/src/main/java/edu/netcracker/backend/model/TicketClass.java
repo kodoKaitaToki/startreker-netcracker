@@ -26,6 +26,16 @@ public class TicketClass {
     @Attribute("ticket_price")
     private Integer ticketPrice;
 
-    private Integer itemNumber;
+    @Attribute("discount_id")
+    private Long discountId;
 
+    @Attribute("class_name")
+    private String className;
+
+    @Attribute("class_seats")
+    private Integer classSeats;
+
+    private Discount discount;
+  
+    private Integer itemNumber;
 }
