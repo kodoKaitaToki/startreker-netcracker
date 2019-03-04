@@ -1,4 +1,3 @@
-
 insert into USER_A (USER_NAME, USER_PASSWORD, USER_EMAIL, USER_TELEPHONE, USER_TOKEN, USER_ACTIVATED, USER_CREATED) values ('smillions0', '055228cb4b2aafd8f4127ede8d8a7cef9a36ea0a', 'daslott0@globo.com', '5066512688', null, true, '2018-08-09');
 insert into USER_A (USER_NAME, USER_PASSWORD, USER_EMAIL, USER_TELEPHONE, USER_TOKEN, USER_ACTIVATED, USER_CREATED) values ('kstollmeier1', '055228cb4b2aafd8f4127ede8d8a7cef9a36ea0a', 'glunn1@newyorker.com', '7267344912', null, false, '2018-12-20');
 insert into USER_A (USER_NAME, USER_PASSWORD, USER_EMAIL, USER_TELEPHONE, USER_TOKEN, USER_ACTIVATED, USER_CREATED) values ('bbarg2', '055228cb4b2aafd8f4127ede8d8a7cef9a36ea0a', 'cturner2@usatoday.com', '8288653181', null, true, '2018-10-02');
@@ -98,17 +97,6 @@ insert into SUBSCRIPTION (USER_ID, CARRIER_ID) values (42, 18);
 insert into SUBSCRIPTION (USER_ID, CARRIER_ID) values (42, 19);
 insert into SUBSCRIPTION (USER_ID, CARRIER_ID) values (42, 20);
 
-insert into VEHICLE (OWNER_ID, VEHICLE_NAME, VEHICLE_SEATS) values (11, 'ut', 15);
-insert into VEHICLE (OWNER_ID, VEHICLE_NAME, VEHICLE_SEATS) values (21, 'mollis', 17);
-insert into VEHICLE (OWNER_ID, VEHICLE_NAME, VEHICLE_SEATS) values (11, 'aliquet pulvinar', 10);
-insert into VEHICLE (OWNER_ID, VEHICLE_NAME, VEHICLE_SEATS) values (18, 'eu', 20);
-insert into VEHICLE (OWNER_ID, VEHICLE_NAME, VEHICLE_SEATS) values (30, 'metus', 15);
-insert into VEHICLE (OWNER_ID, VEHICLE_NAME, VEHICLE_SEATS) values (24, 'massa volutpat', 16);
-insert into VEHICLE (OWNER_ID, VEHICLE_NAME, VEHICLE_SEATS) values (16, 'faucibus', 18);
-insert into VEHICLE (OWNER_ID, VEHICLE_NAME, VEHICLE_SEATS) values (16, 'eget', 12);
-insert into VEHICLE (OWNER_ID, VEHICLE_NAME, VEHICLE_SEATS) values (16, 'leo', 18);
-insert into VEHICLE (OWNER_ID, VEHICLE_NAME, VEHICLE_SEATS) values (8, 'proin at', 10);
-
 insert into PLANET (PLANET_NAME) values ('EARTH');
 insert into PLANET (PLANET_NAME) values ('MOON');
 insert into PLANET (PLANET_NAME) values ('VENUS');
@@ -136,28 +124,46 @@ insert into SPACEPORT (SPACEPORT_NAME, CREATION_DATE, PLANET_ID) values ('turpis
 insert into SPACEPORT (SPACEPORT_NAME, CREATION_DATE, PLANET_ID) values ('porta', '2018-05-10', 2);
 insert into SPACEPORT (SPACEPORT_NAME, CREATION_DATE, PLANET_ID) values ('sapien', '2017-09-23', 5);
 
-insert into TRIP (VEHICLE_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, CREATION_DATE) values (10, 1, '2018-02-23', '2019-11-28', 14, 1, 'PrimisIn.png', '2019-01-23');
-insert into TRIP (VEHICLE_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, CREATION_DATE) values (3, 2, '2018-07-11', '2019-10-07', 19, 9, 'At.tiff', '2017-12-17');
-insert into TRIP (VEHICLE_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, APPROVER_ID,  CREATION_DATE) values (8, 3, '2018-10-28', '2019-10-01', 4, 8, 'OrciLuctus.tiff', 3, '2019-01-08');
-insert into TRIP (VEHICLE_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, APPROVER_ID,  CREATION_DATE) values (2, 4, '2018-04-29', '2019-04-26', 19, 9, 'VivamusMetus.gif', 3, '2016-08-03');
-insert into TRIP (VEHICLE_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, APPROVER_ID,  CREATION_DATE) values (7, 5, '2018-01-15', '2019-01-06', 13, 19, 'QuamFringilla.tiff', 3, '2019-01-09');
-insert into TRIP (VEHICLE_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, APPROVER_ID,  CREATION_DATE) values (8, 6, '2018-08-12', '2019-12-21', 3, 2, 'IntegerTincidunt.jpeg', 2, '2017-10-28');
-insert into TRIP (VEHICLE_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, APPROVER_ID,  CREATION_DATE) values (4, 7, '2018-02-18', '2019-09-14', 7, 14, 'LacusMorbiSem.jpeg', 13, '2018-10-07');
+insert into TRIP (CARRIER_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, CREATION_DATE) values (8, 1, '2018-02-23', '2019-11-28', 14, 1, 'PrimisIn.png', '2019-01-23');
+insert into TRIP (CARRIER_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, CREATION_DATE) values (11, 2, '2018-07-11', '2019-10-07', 19, 9, 'At.tiff', '2017-12-17');
+insert into TRIP (CARRIER_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, APPROVER_ID,  CREATION_DATE) values (16, 3, '2018-10-28', '2019-10-01', 4, 8, 'OrciLuctus.tiff', 3, '2019-01-08');
+insert into TRIP (CARRIER_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, APPROVER_ID,  CREATION_DATE) values (21, 4, '2018-04-29', '2019-04-26', 19, 9, 'VivamusMetus.gif', 3, '2016-08-03');
+insert into TRIP (CARRIER_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, APPROVER_ID,  CREATION_DATE) values (16, 5, '2018-01-15', '2019-01-06', 13, 19, 'QuamFringilla.tiff', 3, '2019-01-09');
+insert into TRIP (CARRIER_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, APPROVER_ID,  CREATION_DATE) values (16, 6, '2018-08-12', '2019-12-21', 3, 2, 'IntegerTincidunt.jpeg', 2, '2017-10-28');
+insert into TRIP (CARRIER_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, APPROVER_ID,  CREATION_DATE) values (18, 7, '2018-02-18', '2019-09-14', 7, 14, 'LacusMorbiSem.jpeg', 13, '2018-10-07');
 
-insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE) values (1, 24453);
-insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE) values (1, 34666);
-insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE) values (2, 15787);
-insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE) values (2, 17247);
-insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE) values (3, 32192);
-insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE) values (3, 39187);
-insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE) values (4, 25191);
-insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE) values (4, 32588);
-insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE) values (5, 13582);
-insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE) values (5, 27469);
-insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE) values (6, 14015);
-insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE) values (6, 16637);
-insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE) values (7, 10664);
-insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE) values (7, 22534);
+insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) values ('2018-10-14', '2019-02-03', 14, true);
+insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) values ('2018-09-11', '2019-12-16', 12, true);
+insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) values ('2018-07-20', '2019-07-19', 1500, false);
+insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) values ('2018-06-17', '2019-06-06', 19, true);
+
+insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) values ('2019-07-20', '2020-04-19', 500, false);
+insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) values ('2015-12-12', '2022-11-06', 15, true);
+insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) values ('2017-05-21', '2020-01-01', 1000, false);
+insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) values ('2018-01-12', '2019-05-03', 19, true);
+
+insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE, DISCOUNT_ID, CLASS_NAME, CLASS_SEATS) values (1, 24453, 1, 'Econom', 200);
+insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE, DISCOUNT_ID, CLASS_NAME, CLASS_SEATS) values (1, 34666, 2, 'Business', 100);
+insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE, DISCOUNT_ID, CLASS_NAME, CLASS_SEATS) values (2, 15787, 3, 'Econom', 200);
+insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE, DISCOUNT_ID, CLASS_NAME, CLASS_SEATS) values (2, 17247, null, 'Business', 100);
+insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE, DISCOUNT_ID, CLASS_NAME, CLASS_SEATS) values (3, 32192, 4, 'Econom', 200);
+insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE, DISCOUNT_ID, CLASS_NAME, CLASS_SEATS) values (3, 39187, null, 'Business', 100);
+insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE, DISCOUNT_ID, CLASS_NAME, CLASS_SEATS) values (4, 25191, null, 'Econom', 200);
+insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE, DISCOUNT_ID, CLASS_NAME, CLASS_SEATS) values (4, 32588, null, 'Business', 100);
+insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE, DISCOUNT_ID, CLASS_NAME, CLASS_SEATS) values (5, 13582, null, 'Econom', 200);
+insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE, DISCOUNT_ID, CLASS_NAME, CLASS_SEATS) values (5, 27469, null, 'Business', 100);
+insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE, DISCOUNT_ID, CLASS_NAME, CLASS_SEATS) values (6, 14015, null, 'Econom', 200);
+insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE, DISCOUNT_ID, CLASS_NAME, CLASS_SEATS) values (6, 16637, null, 'Business', 100);
+insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE, DISCOUNT_ID, CLASS_NAME, CLASS_SEATS) values (7, 10664, null, 'Econom', 200);
+insert into TICKET_CLASS (TRIP_ID, TICKET_PRICE, DISCOUNT_ID, CLASS_NAME, CLASS_SEATS) values (7, 22534, null, 'Business', 100);
+
+insert into SUGGESTION (CLASS_ID, DISCOUNT_ID) values (1, 5);
+insert into SUGGESTION (CLASS_ID, DISCOUNT_ID) values (2, null);
+insert into SUGGESTION (CLASS_ID, DISCOUNT_ID) values (3, 6);
+insert into SUGGESTION (CLASS_ID, DISCOUNT_ID) values (4, null);
+insert into SUGGESTION (CLASS_ID, DISCOUNT_ID) values (5, 7);
+insert into SUGGESTION (CLASS_ID, DISCOUNT_ID) values (5, null);
+insert into SUGGESTION (CLASS_ID, DISCOUNT_ID) values (5, 8);
 
 insert into TICKET (PASSENGER_ID, CLASS_ID, SEAT, PURCHASE_DATE) values (null, 2, 1, null);
 insert into TICKET (PASSENGER_ID, CLASS_ID, SEAT, PURCHASE_DATE) values (null, 2, 2, null);
@@ -257,16 +263,17 @@ insert into TICKET (PASSENGER_ID, CLASS_ID, SEAT, PURCHASE_DATE) values (null, 1
 insert into TICKET (PASSENGER_ID, CLASS_ID, SEAT, PURCHASE_DATE) values (null, 13, 17, null);
 insert into TICKET (PASSENGER_ID, CLASS_ID, SEAT, PURCHASE_DATE) values (null, 13, 18, null);
 
-insert into SERVICE (SERVICE_NAME, SERVICE_DESCRIPTION) values ('ultrices', 'sapien urna pretium nisl ut volutpat sapien arcu sed augue aliquam');
-insert into SERVICE (SERVICE_NAME, SERVICE_DESCRIPTION) values ('metus', 'vel ipsum praesent blandit lacinia erat vestibulum sed magna at nunc commodo placerat praesent blandit nam nulla integer pede');
-insert into SERVICE (SERVICE_NAME, SERVICE_DESCRIPTION) values ('sed', 'massa id lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris lacinia sapien');
-insert into SERVICE (SERVICE_NAME, SERVICE_DESCRIPTION) values ('nulla', 'ut nulla sed accumsan felis ut at dolor quis odio consequat varius integer ac leo pellentesque ultrices mattis');
-insert into SERVICE (SERVICE_NAME, SERVICE_DESCRIPTION) values ('ut', 'eget congue eget semper rutrum nulla nunc purus phasellus in felis donec semper sapien');
-insert into SERVICE (SERVICE_NAME, SERVICE_DESCRIPTION) values ('eu', 'interdum venenatis turpis enim blandit mi in porttitor pede justo eu massa donec dapibus duis at velit eu');
-insert into SERVICE (SERVICE_NAME, SERVICE_DESCRIPTION) values ('ligula', 'vestibulum sed magna at nunc commodo placerat praesent blandit nam nulla integer pede justo lacinia eget tincidunt eget tempus vel');
-insert into SERVICE (SERVICE_NAME, SERVICE_DESCRIPTION) values ('nisi', 'morbi a ipsum integer a nibh in quis justo maecenas rhoncus aliquam lacus morbi quis');
-insert into SERVICE (SERVICE_NAME, SERVICE_DESCRIPTION) values ('mattis', 'tincidunt in leo maecenas pulvinar lobortis est phasellus sit amet erat nulla tempus vivamus in felis eu sapien');
-insert into SERVICE (SERVICE_NAME, SERVICE_DESCRIPTION) values ('suspendisse', 'erat quisque erat eros viverra eget congue eget semper rutrum');
+
+insert into SERVICE (CARRIER_ID, APPROVER_ID, SERVICE_NAME, SERVICE_DESCRIPTION, SERVICE_STATUS, CREATION_DATE) values (5, null, 'ultrices', 'sapien urna pretium nisl ut volutpat sapien arcu sed augue aliquam' , 1, '2019-07-01');
+insert into SERVICE (CARRIER_ID, APPROVER_ID, SERVICE_NAME, SERVICE_DESCRIPTION, SERVICE_STATUS, CREATION_DATE) values (6, null, 'metus', 'vel ipsum praesent blandit lacinia erat vestibulum sed magna at nunc commodo placerat praesent blandit nam nulla integer pede', 1, '2019-07-02');
+insert into SERVICE (CARRIER_ID, APPROVER_ID, SERVICE_NAME, SERVICE_DESCRIPTION, SERVICE_STATUS, CREATION_DATE) values (7, null, 'sed', 'massa id lobortis convallis tortor risus dapibus augue vel accumsan tellus nisi eu orci mauris lacinia sapien' , 1, '2019-07-03');
+insert into SERVICE (CARRIER_ID, APPROVER_ID, SERVICE_NAME, SERVICE_DESCRIPTION, SERVICE_STATUS, CREATION_DATE) values (8, null, 'nulla', 'ut nulla sed accumsan felis ut at dolor quis odio consequat varius integer ac leo pellentesque ultrices mattis', 1, '2019-07-04');
+insert into SERVICE (CARRIER_ID, APPROVER_ID, SERVICE_NAME, SERVICE_DESCRIPTION, SERVICE_STATUS, CREATION_DATE) values (9, null, 'ut', 'eget congue eget semper rutrum nulla nunc purus phasellus in felis donec semper sapien', 1, '2019-07-05');
+insert into SERVICE (CARRIER_ID, APPROVER_ID, SERVICE_NAME, SERVICE_DESCRIPTION, SERVICE_STATUS, CREATION_DATE) values (9, null, 'eu', 'interdum venenatis turpis enim blandit mi in porttitor pede justo eu massa donec dapibus duis at velit eu', 1, '2019-07-06');
+insert into SERVICE (CARRIER_ID, APPROVER_ID, SERVICE_NAME, SERVICE_DESCRIPTION, SERVICE_STATUS, CREATION_DATE) values (9, null, 'ligula', 'vestibulum sed magna at nunc commodo placerat praesent blandit nam nulla integer pede justo lacinia eget tincidunt eget tempus vel', 1, '2019-07-07');
+insert into SERVICE (CARRIER_ID, APPROVER_ID, SERVICE_NAME, SERVICE_DESCRIPTION, SERVICE_STATUS, CREATION_DATE) values (11, null, 'nisi', 'morbi a ipsum integer a nibh in quis justo maecenas rhoncus aliquam lacus morbi quis', 1, '2019-07-08');
+insert into SERVICE (CARRIER_ID, APPROVER_ID, SERVICE_NAME, SERVICE_DESCRIPTION, SERVICE_STATUS, CREATION_DATE) values (16, null, 'mattis', 'tincidunt in leo maecenas pulvinar lobortis est phasellus sit amet erat nulla tempus vivamus in felis eu sapien', 1, '2019-07-09');
+insert into SERVICE (CARRIER_ID, APPROVER_ID, SERVICE_NAME, SERVICE_DESCRIPTION, SERVICE_STATUS, CREATION_DATE) values (17, null, 'suspendisse', 'erat quisque erat eros viverra eget congue eget semper rutrum', 1, '2019-07-10');
 
 insert into POSSIBLE_SERVICE (SERVICE_ID, CLASS_ID, SERVICE_PRICE) values (3, 8, 716);
 insert into POSSIBLE_SERVICE (SERVICE_ID, CLASS_ID, SERVICE_PRICE) values (1, 8, 131);
@@ -344,21 +351,6 @@ insert into BUNDLE_SERVICE (BUNDLE_ID, P_SERVICE_ID, ITEM_NUMBER) values (2, 40,
 insert into BUNDLE_SERVICE (BUNDLE_ID, P_SERVICE_ID, ITEM_NUMBER) values (4, 1, 3);
 insert into BUNDLE_SERVICE (BUNDLE_ID, P_SERVICE_ID, ITEM_NUMBER) values (4, 2, 3);
 insert into BUNDLE_SERVICE (BUNDLE_ID, P_SERVICE_ID, ITEM_NUMBER) values (4, 3, 3);
-
-insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) values ('2018-10-14', '2019-02-03', 14, true);
-insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) values ('2018-09-11', '2019-04-16', 12, true);
-insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) values ('2018-07-20', '2019-04-19', 79, false);
-insert into DISCOUNT (START_DATE, FINISH_DATE, DISCOUNT_RATE, DISCOUNT_TYPE) values ('2018-06-17', '2019-03-06', 19, true);
-
-insert into DISCOUNT_CLASS (DISCOUNT_ID, CLASS_ID) values (3, 7);
-insert into DISCOUNT_CLASS (DISCOUNT_ID, CLASS_ID) values (4, 2);
-insert into DISCOUNT_CLASS (DISCOUNT_ID, CLASS_ID) values (1, 8);
-
-insert into DISCOUNT_SERVICE (DISCOUNT_ID, P_SERVICE_ID) values (2, 1);
-insert into DISCOUNT_SERVICE (DISCOUNT_ID, P_SERVICE_ID) values (2, 2);
-insert into DISCOUNT_SERVICE (DISCOUNT_ID, P_SERVICE_ID) values (2, 3);
-insert into DISCOUNT_SERVICE (DISCOUNT_ID, P_SERVICE_ID) values (3, 14);
-insert into DISCOUNT_SERVICE (DISCOUNT_ID, P_SERVICE_ID) values (3, 22);
 
 insert into SCHEDULE (START_DATE, FINISH_DATE, INTERVAL, CREATION_DATE) values ('2016-08-03', '2020-08-03', 365, '2016-08-02');
 
