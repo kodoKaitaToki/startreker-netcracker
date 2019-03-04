@@ -121,10 +121,20 @@ public class ServiceController {
         return serviceService.getServicesForApprover(from, number, status, approverId);
     }
 
-    @PostMapping("api/v1/approver/service")
+    @PutMapping("api/v1/approver/service")
     //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
     public ServiceDTO updateServiceReview(@Valid @RequestBody ServiceDTO serviceDTO){
-        return serviceService.reviewService(serviceDTO);
+        boolean reviewOnAssigned = (serviceDTO.getServiceStatus() != 5 && serviceDTO.getReplyText().length() > 0);
+        if (reviewOnAssigned)
+            throw new IllegalArgumentException("Reviews can only be on under clarification services");
+
+        int state = serviceDTO.getServiceStatus();
+        boolean illegalState = (state == 1 || state == 2 || state == 6);
+        if (illegalState)
+            throw new IllegalArgumentException("Approver may only assign, publish or review services");
+
+        int approverId = securityContext.getUser().getUserId();
+        return serviceService.reviewService(serviceDTO, approverId);
     }
 
 }

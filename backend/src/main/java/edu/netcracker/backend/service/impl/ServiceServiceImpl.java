@@ -1,10 +1,13 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
+import edu.netcracker.backend.dao.ApproverDAO;
 import edu.netcracker.backend.dao.ServiceDAO;
+import edu.netcracker.backend.dao.ServiceReplyDAO;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
 import edu.netcracker.backend.message.response.ServiceDTO;
 import edu.netcracker.backend.model.ServiceDescr;
+import edu.netcracker.backend.model.ServiceReply;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.ServiceService;
 import edu.netcracker.backend.service.UserService;
@@ -23,6 +26,9 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Autowired
     private ServiceDAO serviceDAO;
+
+    @Autowired
+    private ServiceReplyDAO serviceReplyDAO;
 
     @Autowired
     private UserService userService;
@@ -113,8 +119,29 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public ServiceDTO reviewService(ServiceDTO serviceDTO) {
-        return null;
+    public ServiceDTO reviewService(ServiceDTO serviceDTO, Integer approverId) {
+        ServiceDescr serviceDescr = serviceDAO.find(serviceDTO.getId()).orElse(null);
+
+        if(serviceDescr == null){
+            throw new RequestException("Service " + serviceDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
+        }
+
+        serviceDescr.setServiceStatus(serviceDTO.getServiceStatus());
+        serviceDescr.setApproverId(approverId);
+        serviceDAO.update(serviceDescr);
+
+        if (serviceDTO.getReplyText().length() != 0)
+        {
+            ServiceReply reply = new ServiceReply();
+            reply.setServiceId(serviceDescr.getServiceId().intValue());
+            reply.setWriterId(approverId.longValue());
+            reply.setReportText(serviceDTO.getReplyText());
+            reply.setCreationDate(LocalDateTime.now());
+
+            serviceReplyDAO.save(reply);
+        }
+
+        return serviceDTO;
     }
 
     private boolean ifServiceExists(String name, Number id){

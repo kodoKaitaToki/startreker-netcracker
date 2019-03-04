@@ -22,5 +22,5 @@ public interface ServiceService {
 
     List<ServiceDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId);
 
-    ServiceDTO reviewService(ServiceDTO serviceDTO);
+    public ServiceDTO reviewService(ServiceDTO serviceDTO, Integer approverId);
 }
