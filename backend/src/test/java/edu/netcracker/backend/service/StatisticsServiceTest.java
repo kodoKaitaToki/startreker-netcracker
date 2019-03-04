@@ -1,6 +1,6 @@
 package edu.netcracker.backend.service;
 
-import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
+import edu.netcracker.backend.message.response.CarrierRevenueResponse;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,44 +24,44 @@ public class StatisticsServiceTest {
     @Autowired
     private StatisticsService statisticsService;
 
-    private static CarrierStatisticsResponse tripsSalesTestExpected;
-    private static CarrierStatisticsResponse tripsSalesTestWithTimeLimitsExpected;
-    private static CarrierStatisticsResponse servicesSalesTestExpected;
-    private static CarrierStatisticsResponse servicesSalesTestWithTimeLimitsExpected;
+    private static CarrierRevenueResponse tripsSalesTestExpected;
+    private static CarrierRevenueResponse tripsSalesTestWithTimeLimitsExpected;
+    private static CarrierRevenueResponse servicesSalesTestExpected;
+    private static CarrierRevenueResponse servicesSalesTestWithTimeLimitsExpected;
 
     @BeforeClass
     public static void init() {
-        tripsSalesTestExpected = new CarrierStatisticsResponse();
-        tripsSalesTestExpected.setSold(17L);
-        tripsSalesTestExpected.setRevenue(480026L);
+        tripsSalesTestExpected = new CarrierRevenueResponse();
+        tripsSalesTestExpected.setSold(45L);
+        tripsSalesTestExpected.setRevenue(127128L);
 
-        tripsSalesTestWithTimeLimitsExpected = new CarrierStatisticsResponse();
-        tripsSalesTestWithTimeLimitsExpected.setSold(5L);
-        tripsSalesTestWithTimeLimitsExpected.setRevenue(140749L);
+        tripsSalesTestWithTimeLimitsExpected = new CarrierRevenueResponse();
+        tripsSalesTestWithTimeLimitsExpected.setSold(6L);
+        tripsSalesTestWithTimeLimitsExpected.setRevenue(14092L);
         tripsSalesTestWithTimeLimitsExpected.setFrom("2015-01-01");
         tripsSalesTestWithTimeLimitsExpected.setTo("2020-01-01");
 
-        servicesSalesTestExpected = new CarrierStatisticsResponse();
-        servicesSalesTestExpected.setSold(7L);
-        servicesSalesTestExpected.setRevenue(3156L);
+        servicesSalesTestExpected = new CarrierRevenueResponse();
+        servicesSalesTestExpected.setSold(9L);
+        servicesSalesTestExpected.setRevenue(3144L);
 
-        servicesSalesTestWithTimeLimitsExpected = new CarrierStatisticsResponse();
-        servicesSalesTestWithTimeLimitsExpected.setSold(3L);
-        servicesSalesTestWithTimeLimitsExpected.setRevenue(1546L);
+        servicesSalesTestWithTimeLimitsExpected = new CarrierRevenueResponse();
+        servicesSalesTestWithTimeLimitsExpected.setSold(9L);
+        servicesSalesTestWithTimeLimitsExpected.setRevenue(3144L);
         servicesSalesTestWithTimeLimitsExpected.setFrom("2015-01-01");
         servicesSalesTestWithTimeLimitsExpected.setTo("2020-01-01");
     }
 
     @Test
     public void getTripsSalesStatisticsTest(){
-        CarrierStatisticsResponse cres = statisticsService.getTripsSalesStatistics(21);
+        CarrierRevenueResponse cres = statisticsService.getTripsSalesStatistics(7);
         assertThat(cres, equalTo(tripsSalesTestExpected));
     }
 
     @Test
     public void getTripsSalesStatisticsTestWithTimeLimits(){
-        CarrierStatisticsResponse cres = statisticsService.getTripsSalesStatistics(
-                21,
+        CarrierRevenueResponse cres = statisticsService.getTripsSalesStatistics(
+                7,
                 LocalDate.of(2015, 1, 1),
                 LocalDate.of(2020, 1, 1));
         assertThat(cres, equalTo(tripsSalesTestWithTimeLimitsExpected));
@@ -69,14 +69,14 @@ public class StatisticsServiceTest {
 
     @Test
     public void getServicesSalesStatisticsTest(){
-        CarrierStatisticsResponse cres = statisticsService.getServicesSalesStatistics(21);
+        CarrierRevenueResponse cres = statisticsService.getServicesSalesStatistics(7);
         assertThat(cres, equalTo(servicesSalesTestExpected));
     }
 
     @Test
     public void getServicesSalesStatisticsTestWithTimeLimits(){
-        CarrierStatisticsResponse cres = statisticsService.getServicesSalesStatistics(
-                21,
+        CarrierRevenueResponse cres = statisticsService.getServicesSalesStatistics(
+                7,
                 LocalDate.of(2015, 1, 1),
                 LocalDate.of(2020, 1, 1));
         assertThat(cres, equalTo(servicesSalesTestWithTimeLimitsExpected));

@@ -4,25 +4,28 @@ import edu.netcracker.backend.model.User;
 
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.service.impl.UserInformationHolderServiceImpl;
-import edu.netcracker.backend.utils.AuthorityUtils;
 import edu.netcracker.backend.utils.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.stereotype.Service;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
 
-public class JwtAuthFilter extends OncePerRequestFilter {
+@Service
+@Qualifier("ProductionAuthFilter")
+@Primary
+public class JwtAuthFilter extends AuthFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
@@ -35,34 +38,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private Environment env;
-
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String accessToken = JwtUtils.getAccessToken(httpServletRequest);
-
-        // debug superuser features
-        if(accessToken == null && AuthorityUtils.DEBUG_SU){
-            String debugLogin = httpServletRequest.getHeader("Authorization");
-            if(debugLogin != null && debugLogin.startsWith("debug_login ")){
-                long userId = Long.parseLong(debugLogin.substring(12));
-                UserDetails userDetails = userService.find(userId);
-                createAuthentication(userDetails, httpServletRequest);
-                logger.info("DEBUG_LOGIN: " + userId);
-                filterChain.doFilter(httpServletRequest, httpServletResponse);
-                return;
-            }
-            else{
-                createAuthentication(AuthorityUtils.DEBUG_SUPERUSER, httpServletRequest);
-                logger.info("DEBUG_LOGIN: SU");
-                filterChain.doFilter(httpServletRequest, httpServletResponse);
-                return;
-            }
-        }
 
         if (jwtProvider.validateToken(accessToken, httpServletRequest) && jwtProvider.isAccessToken(accessToken)) {
             handleToken(accessToken, httpServletRequest);
@@ -100,7 +81,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         createAuthentication(userDetails, request);
     }
 
-    private void createAuthentication(UserDetails userDetails, HttpServletRequest request) {
+    protected void createAuthentication(UserDetails userDetails, HttpServletRequest request) {
         if (userDetails == null) {
             logger.error("User send invalid token");
             return;

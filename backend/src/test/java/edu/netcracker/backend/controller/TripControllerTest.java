@@ -1,6 +1,5 @@
 package edu.netcracker.backend.controller;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,6 @@ public class TripControllerTest {
         mockMvc.perform(get("/api/v1/trip/distribution"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(
-                        "{\"departure_id\":19,\"arrival_id\":9,\"departure_planet_id\":2,\"arrival_planet_id\":1,\"departure_spaceport_name\":\"porta\",\"arrival_spaceport_name\":\"neque\",\"departure_planet_name\":\"MOON\",\"arrival_planet_name\":\"EARTH\",\"occurrence_count\":2,\"percentage\":28.57142857142857}")));
+                        "[{\"departure_id\":17,\"arrival_id\":9,\"departure_planet_id\":4,\"arrival_planet_id\":1,\"departure_spaceport_name\":\"libero\",\"arrival_spaceport_name\":\"neque\",\"departure_planet_name\":\"MARS\",\"arrival_planet_name\":\"EARTH\",\"occurrence_count\":1,\"percentage\":14.285714285714285},")));
     }
 }

@@ -33,6 +33,6 @@ public class ServiceControllerTest {
         mockMvc.perform(get("/api/v1/service/distribution"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(
-                        "{\"service_id\":1,\"service_name\":\"ultrices\",\"occurrence_count\":7,\"percentage\":14.000000000000002},{\"service_id\":4,\"service_name\":\"nulla\",\"occurrence_count\":7,\"percentage\":14.000000000000002}")));
+                        "[{\"service_id\":4,\"service_name\":\"ligula nec sem duis\",\"occurrence_count\":3,\"percentage\":60.0},{\"service_id\":5,\"service_name\":\"ligula nec sem duis -2\",\"occurrence_count\":2,\"percentage\":40.0}]")));
     }
 }
