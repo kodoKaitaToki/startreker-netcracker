@@ -35,8 +35,8 @@ public class DiscountDTO {
     private Integer discountRate;
 
     @NotNull
-    @JsonProperty("discount_type")
-    private Boolean discountType;
+    @JsonProperty("is_percent")
+    private Boolean isPercent;
 
     public static DiscountDTO toDiscountDTO(Discount discount) {
         if (discount == null) {
@@ -46,7 +46,7 @@ public class DiscountDTO {
         DiscountDTO discountDTO = new DiscountDTO();
         discountDTO.setDiscountId(discount.getDiscountId());
         discountDTO.setDiscountRate(discount.getDiscountRate());
-        discountDTO.setDiscountType(discount.getDiscountType());
+        discountDTO.setIsPercent(discount.getIsPercent());
         discountDTO.setStartDate(discount.getStartDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         discountDTO.setFinishDate(discount.getFinishDate().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
 

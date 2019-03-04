@@ -34,13 +34,13 @@ public class Discount {
     @Attribute("discount_rate")
     private Integer discountRate;
 
-    @Attribute("discount_type")
-    private Boolean discountType;
+    @Attribute("is_percent")
+    private Boolean isPercent;
 
     public static Discount toDiscount(DiscountDTO discountDTO) {
         Discount discount = new Discount();
         discount.setDiscountRate(discountDTO.getDiscountRate());
-        discount.setDiscountType(discountDTO.getDiscountType());
+        discount.setIsPercent(discountDTO.getIsPercent());
         discount.setStartDate(LocalDate
                 .parse(discountDTO.getStartDate(), DateTimeFormatter.ofPattern("dd-MM-yyyy")).atStartOfDay());
         discount.setFinishDate(LocalDate
