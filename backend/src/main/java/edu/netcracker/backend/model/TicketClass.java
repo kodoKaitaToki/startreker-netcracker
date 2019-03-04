@@ -17,10 +17,15 @@ public class TicketClass {
     @EqualsAndHashCode.Include
     private Long classId;
 
+    @Attribute("class_name")
+    private String className;
+
     @Attribute("trip_id")
     private Long tripId;
 
     @Attribute("ticket_price")
     private Integer ticketPrice;
+
+    private Integer itemNumber;
 
 }

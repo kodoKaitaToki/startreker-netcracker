@@ -25,6 +25,7 @@ public class BundleCrudController {
     }
 
     @GetMapping("api/v1/bundles")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseBody
     public List<BundleDTO> getAllBundles(@RequestParam("limit") Number limit,
                                          @RequestParam("offset") Number offset) {
@@ -35,36 +36,44 @@ public class BundleCrudController {
     }
 
     @GetMapping("api/v1/bundles/{id}")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseBody
     public BundleDTO getBundleById(@PathVariable("id") Number id) {
         return convertToDTO(bcs.getById(id));
     }
 
     @PostMapping("api/v1/bundles")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public void addBundle(@RequestBody final BundleForm bundleForm) {
         bcs.add(convertFromDTO(bundleForm));
     }
 
     @PutMapping("api/v1/bundles/{id}")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public void updateBundle(@RequestBody final BundleForm bundleForm) {
         bcs.update(convertFromDTO(bundleForm));
     }
 
     @DeleteMapping("api/v1/bundles/{id}")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public void deleteBundle(@PathVariable Number id) {
         bcs.delete(id);
     }
 
     @GetMapping("api/v1/bundles/count")
+    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public Long countBundles() {
         return bcs.count();
     }
 
     private BundleDTO convertToDTO(Bundle bundle) {
-        return bundleMapper.map(bundle, BundleDTO.class);
+        BundleDTO bundleDTO = bundleMapper.map(bundle, BundleDTO.class);
+        bundleDTO.setStartDate(BundleDTO.convertToString(bundle.getStartDate()));
+        bundleDTO.setFinishDate(BundleDTO.convertToString(bundle.getFinishDate()));
+        return bundleDTO;
     }
 
     private Bundle convertFromDTO(BundleForm bundleForm) {

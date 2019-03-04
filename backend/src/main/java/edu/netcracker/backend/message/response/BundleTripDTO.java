@@ -12,5 +12,5 @@ public class BundleTripDTO {
     private Long tripId;
 
     @JsonProperty("ticket_classes")
-    private List<TicketClassDTO> ticketClasses;
+    private List<BundleTicketClassDTO> ticketClasses;
 }

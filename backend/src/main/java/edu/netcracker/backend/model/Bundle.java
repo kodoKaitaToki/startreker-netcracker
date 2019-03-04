@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,10 +22,10 @@ public class Bundle {
     private Long bundleId;
 
     @Attribute("start_date")
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @Attribute("finish_date")
-    private LocalDate finishDate;
+    private LocalDateTime finishDate;
 
     @Attribute("bundle_price")
     private Integer bundlePrice;

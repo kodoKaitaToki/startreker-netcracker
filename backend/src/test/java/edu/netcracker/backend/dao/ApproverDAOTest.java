@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.equalTo;
 @AutoConfigureTestDatabase
 @ActiveProfiles(profiles = "test")
 public class ApproverDAOTest {
-    private final int ROLE_APPROVER_ID = 4;
+    private final int ROLE_APPROVER_ID = 2;
 
     @Autowired
     ApproverDAO approverDAO;

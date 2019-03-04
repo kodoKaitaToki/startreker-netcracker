@@ -3,13 +3,13 @@ package edu.netcracker.backend.message.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Data
 public class BundleDTO {
-    private static final String datePattern = "yyyy-MM-dd";
+    private static final String datePattern = "yyyy-MM-dd HH:mm";
 
     @JsonProperty("id")
     private Long id;
@@ -33,14 +33,14 @@ public class BundleDTO {
     private List<BundleTripDTO> bundleTrips;
 
     @JsonProperty("bundle_services")
-    private List<ServiceDTO> bundleServices;
+    private List<BundleServiceDTO> bundleServices;
 
-    public static LocalDate convertToLocalDate(String date) {
-        return LocalDate.parse(date, DateTimeFormatter.ofPattern(datePattern));
+    public static LocalDateTime convertToLocalDate(String dateTime) {
+        return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(datePattern));
     }
 
-    public static String convertToString(LocalDate date) {
-        return date.format(DateTimeFormatter.ofPattern(datePattern));
+    public static String convertToString(LocalDateTime dateTime) {
+        return dateTime.format(DateTimeFormatter.ofPattern(datePattern));
     }
 
 }

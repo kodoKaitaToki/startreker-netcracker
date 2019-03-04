@@ -13,6 +13,6 @@ public class TripForm {
     private Long tripId;
 
     @JsonProperty("ticket_classes")
-    private List<Long> ticketClasses = new ArrayList<>();
+    private List<TicketClassForm> ticketClasses = new ArrayList<>();
 
 }

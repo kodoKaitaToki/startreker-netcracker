@@ -24,4 +24,6 @@ public class Service {
     private String serviceDescription;
 
     private Integer servicePrice;
+
+    private Integer itemNumber;
 }

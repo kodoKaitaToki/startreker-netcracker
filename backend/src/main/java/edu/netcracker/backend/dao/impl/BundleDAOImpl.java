@@ -61,7 +61,8 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
             "departure_date, " +
             "arrival_date, " +
             "trip_photo, " +
-            "creation_date " +
+            "creation_date, " +
+            "bc.item_number " +
             "FROM trip t " +
             "INNER JOIN ticket_class tc ON t.trip_id = tc.trip_id " +
             "INNER JOIN bundle_class bc on tc.class_id = bc.class_id " +
@@ -72,7 +73,8 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
             "s.service_id, " +
             "service_name, " +
             "service_description, " +
-            "service_price " +
+            "service_price, " +
+            "bs.item_number " +
             "FROM service s " +
             "INNER JOIN possible_service ps on s.service_id = ps.service_id " +
             "INNER JOIN bundle_service bs on ps.p_service_id = bs.p_service_id " +
@@ -80,16 +82,12 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
             "WHERE b.bundle_id = ? " +
             "ORDER BY s.service_id;";
 
-    private static final String INSERT_BUNDLE_CLASS = "INSERT INTO bundle_class (bundle_id, class_id) " +
-            "VALUES (?, ?);";
+    private static final String INSERT_BUNDLE_CLASS = "INSERT INTO bundle_class (bundle_id, class_id, item_number) " +
+            "VALUES (?, ?, ?);";
 
-    private static final String INSERT_BUNDLE_SERVICE = "INSERT INTO bundle_service (bundle_id, p_service_id) " +
-            "VALUES (?, (SELECT p_service_id FROM possible_service ps WHERE class_id = ? " +
+    private static final String INSERT_BUNDLE_SERVICE = "INSERT INTO bundle_service (bundle_id, item_number, p_service_id) " +
+            "VALUES (?, ?, (SELECT p_service_id FROM possible_service ps WHERE class_id = ? " +
             "                                                           AND service_id = ?));";
-
-    private static final String SELECT_BUNDLE_CLASSES_BY_ID = "";
-
-    private static final String SELECT_BUNDLE_SERVICES_BY_ID = "";
 
     private static final String DELETE_BUNDLE_CLASSES_BY_ID = "DELETE FROM bundle_class WHERE bundle_id = ?;";
 
@@ -134,7 +132,7 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
     @Override
     public void save(Bundle bundle) {
         super.save(bundle);
-        saveBundleTrip(bundle);
+        saveBundleTrips(bundle);
         saveBundleServices(bundle);
     }
 
@@ -162,7 +160,7 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
     private List<Trip> attachBundleTrips(Long bundleId) {
         List<Trip> trips = getJdbcTemplate().query(SELECT_BUNDLE_TRIP, new Object[]{bundleId}, new TripRowMapper());
 
-        trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findByTripId(trip.getTripId())));
+        trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findTicketClassWithItemNumber(bundleId, trip.getTripId())));
         return trips;
     }
 
@@ -176,15 +174,21 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
             service.setServiceName((String) row.get("service_name"));
             service.setServiceDescription((String) row.get("service_description"));
             service.setServicePrice((Integer) row.get("service_price"));
+            service.setItemNumber((Integer) row.get("item_number"));
             services.add(service);
         }
         return services;
     }
 
-    private void saveBundleTrip(Bundle bundle) {
+    private void saveBundleTrips(Bundle bundle) {
         bundle.getBundleTrips().forEach(trip -> trip.getTicketClasses()
                 .forEach(ticketClass -> getJdbcTemplate()
-                        .update(INSERT_BUNDLE_CLASS, bundle.getBundleId(), ticketClass.getClassId()))
+                        .update(INSERT_BUNDLE_CLASS,
+                                bundle.getBundleId(),
+                                ticketClass.getClassId(),
+                                ticketClass.getItemNumber()
+                        )
+                )
         );
     }
 
@@ -193,7 +197,14 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
                 .forEach(trip -> trip.getTicketClasses()
                         .forEach(ticketClass -> bundle.getBundleServices()
                                 .forEach(service -> getJdbcTemplate()
-                                        .update(INSERT_BUNDLE_SERVICE, ticketClass.getClassId(), service.getServiceId()))));
+                                        .update(INSERT_BUNDLE_SERVICE,
+                                                bundle.getBundleId(),
+                                                ticketClass.getItemNumber(),
+                                                ticketClass.getClassId(),
+                                                service.getServiceId())
+                                )
+                        )
+                );
     }
 
     private void updateBundleTrip(Bundle bundle) {
@@ -207,4 +218,6 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
         getJdbcTemplate().update(DELETE_BUNDLE_SERVICES_BY_ID, bundle.getBundleId());
         saveBundleServices(bundle);
     }
+
+
 }

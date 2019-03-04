@@ -32,5 +32,5 @@ public class BundleForm {
     private List<TripForm> bundleTrips = new ArrayList<>();
 
     @JsonProperty("bundle_services")
-    private List<Long> bundleServices = new ArrayList<>();
+    private List<ServiceForm> bundleServices = new ArrayList<>();
 }
