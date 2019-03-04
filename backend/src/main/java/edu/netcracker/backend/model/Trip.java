@@ -22,8 +22,8 @@ public class Trip {
     @EqualsAndHashCode.Include
     private Long tripId;
 
-    //@Attribute("vehicle_id")
-    //private Long vehicleId;
+    @Attribute("vehicle_id")
+    private Long vehicleId;
 
     @Attribute("trip_status")
     private Integer tripStatus;

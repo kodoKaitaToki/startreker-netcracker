@@ -29,9 +29,6 @@ public class TicketClass {
     @Attribute("discount_id")
     private Long discountId;
 
-    @Attribute("class_name")
-    private String className;
-
     @Attribute("class_seats")
     private Integer classSeats;
 
