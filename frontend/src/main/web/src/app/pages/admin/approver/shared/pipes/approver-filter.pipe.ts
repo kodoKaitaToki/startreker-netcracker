@@ -16,11 +16,11 @@ export class ApproverFilterPipe implements PipeTransform {
       filterCriteria = 'is_activated';
     }
 
-    if (filterContent.toLowerCase() === 'on') {
+    if (filterContent.toLowerCase() === 'active') {
       filterContent = 'true';
     }
 
-    if (filterContent.toLowerCase() === 'off') {
+    if (filterContent.toLowerCase() === 'inactive') {
       filterContent = 'false';
     }
 

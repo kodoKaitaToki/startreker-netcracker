@@ -22,8 +22,6 @@ export class TroubleStatisticsService {
   public getStatistic(): Observable<TroubleStatisticsModel>{
       let headers = new HttpHeaders();
       headers.append('Content-Type', 'application/json');
-      //TODO: remove debug backdoor
-      headers.append('Authorization', 'debug_login 21');
 
       return this.http.get<any>(this.actionUrl, {headers})
         .pipe(map(res => {
@@ -34,8 +32,6 @@ export class TroubleStatisticsService {
   public getStatisticForApprover(id: number): Observable<TroubleStatisticsModel>{
       let headers = new HttpHeaders();
       headers = headers.append('Content-Type', 'application/json');
-      //TODO: remove debug backdoor
-      headers = headers.append('Authorization', 'debug_login 21');
 
       return this.http.get<any>(this.actionUrl + "/" + id, {headers})
         .pipe(map(res => {

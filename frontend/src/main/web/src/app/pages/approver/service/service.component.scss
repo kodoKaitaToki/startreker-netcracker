@@ -1,0 +1,13 @@
+@font-face {
+font-family: "bahnschrift";
+src: url(src/assets/fonts/bahnschrift.ttf) format("truetype");
+}
+.nav-tabs > li > a{
+  color: #6D7174;
+  font-family: "bahnschrift", fantasy;
+}
+
+.nav-tabs > li > a:hover{
+  color: #fff;
+  background-color: DarkBlue !important;
+}

@@ -68,7 +68,7 @@ public class AdminServiceImpl implements AdminService {
     public Map<LocalDate, Integer> getUsersIncreasingPerPeriod(LocalDate from, LocalDate to) {
         HashMap<LocalDate, Integer> inc = new HashMap<>();
 
-        userDAO.findPerPeriod(from, to).forEach(user -> inc.merge(user.getRegistrationDate(), 1, (a, b) -> a + b));
+        userDAO.findPerPeriod(from, to).forEach(user -> inc.merge(user.getRegistrationDate().toLocalDate(), 1, (a, b) -> a + b));
 
         return inc;
     }
@@ -77,7 +77,7 @@ public class AdminServiceImpl implements AdminService {
     public Map<LocalDate, Integer> getCarriersIncreasingPerPeriod(LocalDate from, LocalDate to) {
         HashMap<LocalDate, Integer> inc = new HashMap<>();
 
-        userDAO.findPerPeriodByRole(1, from, to).forEach(user -> inc.merge(user.getRegistrationDate(), 1, (a, b) -> a + b));
+        userDAO.findPerPeriodByRole(1, from, to).forEach(user -> inc.merge(user.getRegistrationDate().toLocalDate(), 1, (a, b) -> a + b));
 
         return inc;
     }

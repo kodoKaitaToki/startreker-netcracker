@@ -10,6 +10,13 @@
              title="id"
         >
           <span class="badge badge-primary badge-pill idBadge">{{approver.id}}</span>
+
+          <h5
+            [style.color] = "(approver.is_activated === true) ? 'green' : 'red'"
+            title="Status"
+          >
+            {{approver.is_activated | aprroverShowStatus}}
+          </h5>
         </div>
 
         <div class="row col-5 offset-6"
@@ -111,19 +118,6 @@
 
             <hr>
 
-            <div class="row">
-              <h5 class="col-2">Status</h5>
-              <div class="col-4 offset-3 alert text-center"
-                   *ngIf="currentApproverForUpdate !== approver"
-                   [ngClass]="{
-               'alert-success': (approver.is_activated === true),
-               'alert-danger': (approver.is_activated === false)
-               }"
-              >
-                {{approver.is_activated | aprroverShowStatus}}
-              </div>
-            </div>
-
             <div class="custom-control custom-radio custom-control-inline"
                  *ngIf="currentApproverForUpdate === approver && !isForUpdateAlertMessage"
             >
@@ -156,16 +150,12 @@
               </label>
             </div>
 
-            <hr>
-
             <div class="row">
               <h5 class="col-2">Date of creation</h5>
               <p class="col-2 offset-3">
                 {{approver.user_created_date | date}}
               </p>
             </div>
-
-            <hr>
 
             <div class="row"
                  *ngIf="currentApproverForUpdate === approver && isEditButtonBlockedAfterSubmit && !isForUpdateAlertMessage"
@@ -174,7 +164,7 @@
                       type="submit"
                       [disabled]="form.invalid"
               >
-                Edit
+                Confirm
               </button>
 
               <button class="btn btn-info col-4 offset-4"

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Service
@@ -48,7 +49,7 @@ public class AuthorityUtils {
             DEBUG_SUPERUSER = new User("su", "su", "su@su.com");
             DEBUG_SUPERUSER.setUserId(0);
             DEBUG_SUPERUSER.setUserIsActivated(true);
-            DEBUG_SUPERUSER.setRegistrationDate(LocalDate.now());
+            DEBUG_SUPERUSER.setRegistrationDate(LocalDateTime.now());
             DEBUG_SUPERUSER.setUserRoles(Arrays.asList(ROLE_ADMIN, ROLE_USER, ROLE_CARRIER, ROLE_APPROVER));
         }
     }

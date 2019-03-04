@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService {
         user.setUserIsActivated(isActivated);
         user.setUserRoles(roles);
         user.setUserTelephone(signUpForm.getTelephoneNumber());
-        user.setRegistrationDate(LocalDate.now());
+        user.setRegistrationDate(LocalDateTime.now());
         userDAO.save(user);
         return user;
     }
@@ -96,7 +97,7 @@ public class UserServiceImpl implements UserService {
         user.setUserIsActivated(userCreateForm.getIsActivated());
         user.setUserRoles(roles);
         user.setUserTelephone(userCreateForm.getTelephoneNumber());
-        user.setRegistrationDate(LocalDate.now());
+        user.setRegistrationDate(LocalDateTime.now());
         userDAO.save(user);
 
         return user;
