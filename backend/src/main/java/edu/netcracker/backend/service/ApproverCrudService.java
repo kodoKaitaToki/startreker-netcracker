@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class ApproverCrudService {
 
     public void add(User approver) {
         approver.getUserRoles().add(AuthorityUtils.ROLE_APPROVER);
-        approver.setRegistrationDate(LocalDate.now(ZoneId.systemDefault()));
+        approver.setRegistrationDate(LocalDateTime.now(ZoneId.systemDefault()));
         userDAO.save(approver);
     }
 
