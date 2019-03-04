@@ -142,8 +142,6 @@ public class SuggestionServiceImpl implements SuggestionService {
             }
         }
 
-        System.out.println("   ");
-
         for (Long id : oldServices) {
             if (!newServices.contains(id)) {
                 suggestionDAO.deletePossibleService(suggestionId, id);
