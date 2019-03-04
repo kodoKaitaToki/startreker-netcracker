@@ -28,7 +28,7 @@ public class ApproverDAO extends CrudDAOImpl<User> {
     private final String SELECT_ALL_APPROVERS = SELECT_COLUMNS_FROM_USER +
             "INNER JOIN assigned_role ar ON u.user_id = ar.user_id " +
             "INNER JOIN role_a r ON ar.role_id = r.role_id " +
-            "WHERE r.role_name = 'role_approver' " +
+            "WHERE r.role_name = 'ROLE_APPROVER' " +
             "ORDER BY u.user_id ";
 
     private final String SELECT_APPROVER_BY_ID = SELECT_COLUMNS_FROM_USER +
@@ -57,7 +57,7 @@ public class ApproverDAO extends CrudDAOImpl<User> {
     private final String COUNT_STATEMENT = "SELECT count(*) FROM user_a u " +
             "INNER JOIN assigned_role ar ON u.user_id = ar.user_id " +
             "INNER JOIN role_a r ON ar.role_id = r.role_id " +
-            "WHERE r.role_name = 'role_approver';";
+            "WHERE r.role_name = 'ROLE_APPROVER';";
 
     private ApproverRowMapper rowMapper;
     private final Logger logger = LoggerFactory.getLogger(ApproverDAO.class);

@@ -10,7 +10,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -22,7 +21,7 @@ import static org.hamcrest.Matchers.equalTo;
 @AutoConfigureTestDatabase
 @ActiveProfiles(profiles = "test")
 public class ApproverDAOTest {
-    private final int ROLE_APPROVER_ID = 2;
+    private final int ROLE_APPROVER_ID = 4;
 
     @Autowired
     ApproverDAO approverDAO;
@@ -71,7 +70,5 @@ public class ApproverDAOTest {
         assertThat(check.getUsername(), equalTo(user1.getUsername()));
 
         assertThat(approverDAO.count(), equalTo(BigInteger.valueOf(5L)));
-
-
     }
 }
