@@ -63,16 +63,27 @@ const costDash = {
   }
 }
 
+const service = {
+  services(){
+    return `${baseUrl}api/v1/carrier/service`;
+  },
+  paginServices(){
+    return `${baseUrl}api/v1/carrier/service/pagin`;
+  },
+  servicesByStatus(){
+    return `${baseUrl}api/v1/carrier/service/by-status`;
+  }
+}
+
 export const Api = {
   auth,
-  dashboard, 
-  carrier, 
+  dashboard,
+  carrier,
   costDash,
-  baseUrl
+  baseUrl,
+  service
 }
 
 export const options = {
   root: baseUrl
 }
-
-
