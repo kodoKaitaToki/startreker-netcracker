@@ -14,11 +14,13 @@ import lombok.Setter;
 public class Suggestion {
     @PrimaryKey("suggestion_id")
     @EqualsAndHashCode.Include
-    private Integer suggestionId;
+    private Long suggestionId;
 
     @Attribute("discount_id")
-    private Integer discountId;
+    private Long discountId;
 
     @Attribute("class_id")
-    private Integer classId;
+    private Long classId;
+
+    private Discount discount;
 }

@@ -8,11 +8,11 @@ server:
   port: 80
 
 postgres:
-  servername: localhost
+  servername: ec2-54-217-207-242.eu-west-1.compute.amazonaws.com
   port: 5432
-  database: postgres
-  username: postgres
-  password: root
+  database: d90athf0egg5ft
+  username: wfaibbmuwjrswj
+  password: 8e61155502b759ed38cc2c5afc1cc0f494b137ee32d54ff81b986ef19df75487
 
 mail:
   host: smtp.gmail.com

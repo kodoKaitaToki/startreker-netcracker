@@ -18,4 +18,10 @@ public interface SuggestionDAO {
     void addPossibleService(Number suggestionId, Number pServiceId);
 
     void deletePossibleService(Number suggestionId, Number pServiceId);
+
+    List<Suggestion> getAllSuggestionsRelatedToCarrier(Number carrierId);
+
+    Optional<Suggestion> getSuggestionByDiscount(Number userId, Number discountId);
+
+    void deleteDiscountsForSuggestion(List<Long> SuggestionIds);
 }

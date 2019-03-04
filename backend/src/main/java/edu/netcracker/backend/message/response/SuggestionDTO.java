@@ -1,6 +1,5 @@
 package edu.netcracker.backend.message.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.netcracker.backend.model.Suggestion;
 import lombok.Getter;
@@ -13,20 +12,20 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class SuggestionDTO {
-    private Integer id;
+    private Long id;
 
     @JsonProperty("class_id")
-    private Integer classId;
+    private Long classId;
 
     @JsonProperty("discount_id")
-    private Integer discountId;
+    private Long discountId;
 
-    private List<Integer> pServiceIds;
+    private List<Long> pServiceIds;
 
-    private SuggestionDTO(Integer id,
-                          Integer classId,
-                          Integer discountId,
-                          List<Integer> pServiceIds) {
+    private SuggestionDTO(Long id,
+                          Long classId,
+                          Long discountId,
+                          List<Long> pServiceIds) {
 
         this.id = id;
         this.classId = classId;
@@ -34,7 +33,7 @@ public class SuggestionDTO {
         this.pServiceIds = pServiceIds;
     }
 
-    public static SuggestionDTO from(Suggestion suggestion, List<Integer> pServiceIds) {
+    public static SuggestionDTO from(Suggestion suggestion, List<Long> pServiceIds) {
         return new SuggestionDTO(
                 suggestion.getSuggestionId(),
                 suggestion.getClassId(),

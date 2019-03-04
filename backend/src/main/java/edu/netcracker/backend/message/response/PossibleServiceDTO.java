@@ -12,10 +12,10 @@ import org.springframework.http.HttpStatus;
 @Setter
 @NoArgsConstructor
 public class PossibleServiceDTO {
-    private Integer id;
+    private Long id;
 
     @JsonProperty("service_id")
-    private Integer serviceId;
+    private Long serviceId;
 
     @JsonProperty("service_name")
     private String serviceName;
@@ -24,17 +24,17 @@ public class PossibleServiceDTO {
     private String serviceDescription;
 
     @JsonProperty("class_id")
-    private Integer classId;
+    private Long classId;
 
     @JsonProperty("service_price")
-    private Integer servicePrice;
+    private Long servicePrice;
 
-    private PossibleServiceDTO(Integer id,
-                               Integer serviceId,
+    private PossibleServiceDTO(Long id,
+                               Long serviceId,
                                String serviceName,
                                String serviceDescription,
-                               Integer classId,
-                               Integer servicePrice) {
+                               Long classId,
+                               Long servicePrice) {
 
         this.id = id;
         this.serviceId = serviceId;

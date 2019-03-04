@@ -15,16 +15,16 @@ public class PossibleService {
 
     @PrimaryKey("p_service_id")
     @EqualsAndHashCode.Include
-    private Integer pServiceId;
+    private Long pServiceId;
 
     @Attribute("service_id")
-    private Integer serviceId;
+    private Long serviceId;
 
     @Attribute("class_id")
-    private Integer classId;
+    private Long classId;
 
     @Attribute("service_price")
-    private Integer servicePrice;
+    private Long servicePrice;
 
     private Service service;
 }
