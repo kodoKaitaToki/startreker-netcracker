@@ -18,6 +18,7 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
             "FROM ticket_class tc " +
             "INNER JOIN bundle_class bc on tc.class_id = bc.class_id " +
             "WHERE bc.bundle_id = ? AND trip_id = ?;";
+
     private final String SELECT_BY_TRIP_ID = "SELECT class_id, class_name, trip_id, ticket_price " +
             "FROM ticket_class " +
             "WHERE trip_id = ?";
