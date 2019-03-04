@@ -100,6 +100,23 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceDTO;
     }
 
+    @Override
+    public List<ServiceDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId) {
+        switch (status) {
+            case 2:
+                return serviceDAO.getServicesForApprover(from, number, status);
+            case 3:
+                return serviceDAO.getServicesForApprover(from, number, status, approverId);
+            default:
+                throw new IllegalArgumentException("Illegal service status");
+        }
+    }
+
+    @Override
+    public ServiceDTO reviewService(ServiceDTO serviceDTO) {
+        return null;
+    }
+
     private boolean ifServiceExists(String name, Number id){
         return serviceDAO.findByName(name, id).isPresent();
     }
@@ -110,4 +127,6 @@ public class ServiceServiceImpl implements ServiceService {
         User user = userService.findByUsernameWithRole(carrierName, AuthorityUtils.ROLE_CARRIER);
         this.carrierId = user.getUserId();
     }
+
+
 }

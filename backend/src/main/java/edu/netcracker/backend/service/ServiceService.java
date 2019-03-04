@@ -19,4 +19,8 @@ public interface ServiceService {
     ServiceDTO updateService(ServiceDTO serviceDTO);
 
     ServiceDTO deleteService(Long serviceId);
+
+    List<ServiceDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId);
+
+    ServiceDTO reviewService(ServiceDTO serviceDTO);
 }

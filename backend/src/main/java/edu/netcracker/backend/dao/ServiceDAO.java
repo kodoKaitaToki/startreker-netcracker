@@ -25,4 +25,7 @@ public interface ServiceDAO {
 
     List<ServiceDTO> findByStatus(Number id, Integer status);
 
+    List<ServiceDTO> getServicesForApprover(Integer from, Integer number, Integer status);
+
+    List<ServiceDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId);
 }

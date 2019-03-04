@@ -107,4 +107,24 @@ public class ServiceController {
     public ServiceDTO addService(@Valid @RequestBody ServiceCreateForm serviceCreateForm){
         return serviceService.addService(serviceCreateForm);
     }
+
+    @GetMapping("api/v1/approver/service")
+    //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
+    public List<ServiceDTO> getServicesForApprover(@RequestParam("from") int from,
+                                             @RequestParam("number") int number,
+                                             @RequestParam("status") int status){
+
+        if (status != 2 && status != 3)
+            throw new IllegalArgumentException("Approver may only read open or assigned services");
+
+        int approverId = securityContext.getUser().getUserId();
+        return serviceService.getServicesForApprover(from, number, status, approverId);
+    }
+
+    @PostMapping("api/v1/approver/service")
+    //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
+    public ServiceDTO updateServiceReview(@Valid @RequestBody ServiceDTO serviceDTO){
+        return serviceService.reviewService(serviceDTO);
+    }
+
 }
