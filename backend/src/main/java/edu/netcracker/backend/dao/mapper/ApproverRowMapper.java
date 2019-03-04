@@ -15,9 +15,7 @@ public class ApproverRowMapper implements RowMapper {
         usr.setUserEmail(rs.getString("user_email"));
         usr.setUserTelephone(rs.getString("user_telephone"));
         usr.setUserIsActivated(rs.getBoolean("user_activated"));
-
-        Timestamp timestamp = rs.getTimestamp("user_created");
-        usr.setRegistrationDate(timestamp.toLocalDateTime());
+        usr.setRegistrationDate(rs.getTimestamp("user_created").toLocalDateTime().toLocalDate());
         return usr;
     }
 
@@ -29,9 +27,8 @@ public class ApproverRowMapper implements RowMapper {
         usr.setUserEmail((String) row.get("user_email"));
         usr.setUserTelephone((String) row.get("user_telephone"));
         usr.setUserIsActivated((Boolean) row.get("user_activated"));
-
-        Timestamp date = (Timestamp) row.get("user_created");
-        usr.setRegistrationDate(date.toLocalDateTime());
+        Timestamp timestamp = (Timestamp) row.get("user_created");
+        usr.setRegistrationDate(timestamp.toLocalDateTime().toLocalDate());
         return usr;
     }
 }

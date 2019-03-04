@@ -31,6 +31,14 @@ const routes: Routes = [
     // canActivate: [AuthGuard],
     // data: {roles: [Role.Carrier]}
   },
+  { path: 'approver',
+    loadChildren: './pages/approver/approver.module#ApproverModule',
+
+    //IMPORTANT! Lines below should be uncommented later to activate Auth guard
+
+    // canActivate: [AuthGuard],
+    // data: {roles: [Role.Carrier]}
+  },
   { path: '**', redirectTo: '/notFound'}
 ];
 @NgModule({
