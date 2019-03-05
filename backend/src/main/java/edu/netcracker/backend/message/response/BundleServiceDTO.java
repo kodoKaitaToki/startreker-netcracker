@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class ServiceDTO {
-
+public class BundleServiceDTO {
     @JsonProperty("service_id")
     private Long id;
 
@@ -14,4 +13,7 @@ public class ServiceDTO {
 
     @JsonProperty("service_price")
     private Number price;
+
+    @JsonProperty("item_number")
+    private Integer itemNumber;
 }

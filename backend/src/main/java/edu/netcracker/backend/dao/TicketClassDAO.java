@@ -10,6 +10,10 @@ public interface TicketClassDAO extends CrudDAO<TicketClass> {
 
     Optional<TicketClass> find(Number id);
 
+    List<TicketClass> findByTripId(Number id);
+
+    List<TicketClass> findTicketClassWithItemNumber(Number BundleId, Number TripId);
+
     void delete(TicketClass ticketClass);
 
     List<TicketClass> getAllTicketClassesRelatedToCarrier(Number carrierId);
