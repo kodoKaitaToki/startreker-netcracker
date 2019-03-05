@@ -81,43 +81,43 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public ServiceCRUDDTO updateService(ServiceCRUDDTO serviceDTO){
-        ServiceDescr serviceDescr = serviceDAO.find(serviceDTO.getId()).orElse(null);
+    public ServiceCRUDDTO updateService(ServiceCRUDDTO serviceCRUDDTO){
+        ServiceDescr serviceDescr = serviceDAO.find(serviceCRUDDTO.getId()).orElse(null);
 
         if(serviceDescr == null){
-            throw new RequestException("Service " + serviceDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
+            throw new RequestException("Service " + serviceCRUDDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
         }
 
-        if((ifServiceExists(serviceDTO.getServiceName(), carrierId))&&
-                (!Objects.equals(serviceDTO.getServiceName(),serviceDescr.getServiceName()))){
+        if((ifServiceExists(serviceCRUDDTO.getServiceName(), carrierId))&&
+                (!Objects.equals(serviceCRUDDTO.getServiceName(),serviceDescr.getServiceName()))){
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
-        Integer status = serviceDTO.getServiceStatus();
+        Integer status = serviceCRUDDTO.getServiceStatus();
         if(((status == 3) | (status == 4) | (status == 6)) &&
-                (!Objects.equals(serviceDTO.getServiceStatus(),serviceDescr.getServiceStatus()))){
-            throw new RequestException("Cannot set service_status = " + serviceDTO.getServiceStatus(),
+                (!Objects.equals(serviceCRUDDTO.getServiceStatus(),serviceDescr.getServiceStatus()))){
+            throw new RequestException("Cannot set service_status = " + serviceCRUDDTO.getServiceStatus(),
                     HttpStatus.BAD_REQUEST);
         }
 
-        serviceDescr.setServiceName(serviceDTO.getServiceName());
-        serviceDescr.setServiceDescription(serviceDTO.getServiceDescription());
-        serviceDescr.setServiceStatus(serviceDTO.getServiceStatus());
+        serviceDescr.setServiceName(serviceCRUDDTO.getServiceName());
+        serviceDescr.setServiceDescription(serviceCRUDDTO.getServiceDescription());
+        serviceDescr.setServiceStatus(serviceCRUDDTO.getServiceStatus());
 
         serviceDAO.update(serviceDescr);
 
-        return serviceDTO;
+        return serviceCRUDDTO;
     }
 
     @Override
     public ServiceCRUDDTO deleteService(Long serviceId){
         ServiceDescr serviceDescr = serviceDAO.find(serviceId).orElse(null);
         User approver = userService.findByIdWithRole(serviceDescr.getApproverId(), AuthorityUtils.ROLE_APPROVER);
-        ServiceCRUDDTO serviceDTO = ServiceCRUDDTO.form(serviceDescr, approver.getUsername());
+        ServiceCRUDDTO serviceCRUDDTO = ServiceCRUDDTO.form(serviceDescr, approver.getUsername());
 
         serviceDAO.delete(serviceId);
 
-        return serviceDTO;
+        return serviceCRUDDTO;
     }
 
     @Override

@@ -100,8 +100,8 @@ public class ServiceController {
 
     @PutMapping("api/v1/carrier/service")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public ServiceCRUDDTO updateService(@Valid @RequestBody ServiceCRUDDTO serviceDTO){
-        return serviceService.updateService(serviceDTO);
+    public ServiceCRUDDTO updateService(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO){
+        return serviceService.updateService(serviceCRUDDTO);
     }
 
     @PostMapping("api/v1/carrier/service")

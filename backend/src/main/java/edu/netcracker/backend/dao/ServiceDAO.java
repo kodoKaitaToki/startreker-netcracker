@@ -3,7 +3,6 @@ package edu.netcracker.backend.dao;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 
-import javax.xml.ws.Service;
 import java.util.List;
 import java.util.Optional;
 
