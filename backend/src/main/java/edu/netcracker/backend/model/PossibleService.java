@@ -4,6 +4,7 @@ import edu.netcracker.backend.dao.annotations.Attribute;
 import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.dao.annotations.Table;
 import lombok.EqualsAndHashCode;
+=======
 import lombok.Getter;
 import lombok.Setter;
 

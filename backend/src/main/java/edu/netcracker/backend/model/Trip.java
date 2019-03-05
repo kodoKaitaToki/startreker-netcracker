@@ -37,6 +37,12 @@ public class Trip {
     @Attribute("departure_date")
     private LocalDateTime departureDate;
 
+    @Attribute("arrival_date")
+    private LocalDateTime arrivalDate;
+
+    @Attribute("trip_photo")
+    private String tripPhoto;
+
     private List<TicketClass> ticketClasses = new ArrayList<>();
 
 }

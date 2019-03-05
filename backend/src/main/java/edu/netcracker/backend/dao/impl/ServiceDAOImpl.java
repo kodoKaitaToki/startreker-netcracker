@@ -22,5 +22,4 @@ public class ServiceDAOImpl extends CrudDAOImpl<Service> implements ServiceDAO {
 
         return services;
     }
-
 }
