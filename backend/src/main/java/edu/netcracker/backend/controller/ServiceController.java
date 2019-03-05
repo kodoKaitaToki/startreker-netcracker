@@ -1,5 +1,6 @@
 package edu.netcracker.backend.controller;
 
+import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.message.request.MandatoryTimeInterval;
 import edu.netcracker.backend.message.request.OptionalTimeInterval;
 import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
@@ -10,6 +11,7 @@ import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.StatisticsService;
 import edu.netcracker.backend.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -80,7 +82,7 @@ public class ServiceController {
     @GetMapping("api/v1/carrier/service/pagin")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<ServiceCRUDDTO> getPaginServices(@RequestParam("from") Integer from,
-                                                 @RequestParam("number") Integer number){
+                                             @RequestParam("number") Integer number){
         return serviceService.getPaginServicesOfCarrier(from, number);
     }
 
@@ -107,4 +109,37 @@ public class ServiceController {
     public ServiceCRUDDTO addService(@Valid @RequestBody ServiceCreateForm serviceCreateForm){
         return serviceService.addService(serviceCreateForm);
     }
+
+    @GetMapping("api/v1/approver/service")
+    //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
+    public List<ServiceCRUDDTO> getServicesForApprover(@RequestParam("from") int from,
+                                             @RequestParam("number") int number,
+                                             @RequestParam("status") int status){
+
+        if (status != 2 && status != 3)
+            throw new RequestException("Approver may only read open or assigned services", HttpStatus.BAD_REQUEST);
+
+        int approverId = securityContext.getUser().getUserId();
+        return serviceService.getServicesForApprover(from, number, status, approverId);
+    }
+
+    @PutMapping("api/v1/approver/service")
+    //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
+    public ServiceCRUDDTO updateServiceReview(@Valid @RequestBody ServiceCRUDDTO serviceDTO){
+        boolean reviewOnAssigned = (
+                serviceDTO.getServiceStatus() != 5
+                        && serviceDTO.getReplyText() != null
+                        && serviceDTO.getReplyText().length() > 0);
+        if (reviewOnAssigned)
+            throw new RequestException("Reviews can only be on under clarification services", HttpStatus.BAD_REQUEST);
+
+        int state = serviceDTO.getServiceStatus();
+        boolean illegalState = (state == 1 || state == 2 || state == 6);
+        if (illegalState)
+            throw new RequestException("Approver may only assign, publish or review services", HttpStatus.BAD_REQUEST);
+
+        int approverId = securityContext.getUser().getUserId();
+        return serviceService.reviewService(serviceDTO, approverId);
+    }
+
 }

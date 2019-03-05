@@ -15,7 +15,11 @@ public interface ServiceService {
 
     ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm);
 
-    ServiceCRUDDTO updateService(ServiceCRUDDTO serviceCRUDDTO);
+    ServiceCRUDDTO updateService(ServiceCRUDDTO serviceDTO);
 
     ServiceCRUDDTO deleteService(Long serviceId);
+
+    List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId);
+
+    public ServiceCRUDDTO reviewService(ServiceCRUDDTO serviceDTO, Integer approverId);
 }

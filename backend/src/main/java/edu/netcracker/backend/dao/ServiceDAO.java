@@ -24,4 +24,7 @@ public interface ServiceDAO {
 
     List<ServiceCRUDDTO> findByStatus(Number id, Integer status);
 
+    List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status);
+
+    List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId);
 }

@@ -64,6 +64,41 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
             "AND service_status = ?\n" +
             "ORDER BY service_id";
 
+    private final String APPROVER_FIND_BY_STATUS = "SELECT service.service_id,\n" +
+            "        service.carrier_id,\n" +
+            "        user_a.user_name,\n" +
+            "        service.service_name,\n" +
+            "        service.service_description,\n" +
+            "        service.service_status,\n" +
+            "        service.creation_date,\n" +
+            "        service_reply.reply_text\n" +
+            "FROM service\n" +
+            "LEFT JOIN user_a\n" +
+            "ON service.approver_id = user_a.user_id\n" +
+            "LEFT JOIN service_reply\n" +
+            "ON service.service_id = service_reply.service_id\n" +
+            "WHERE service_status = ?\n" +
+            "ORDER BY service_id\n" +
+            "LIMIT ? OFFSET ?";
+
+    private final String APPROVER_FIND_BY_STATUS_AND_ID = "SELECT service.service_id,\n" +
+            "        service.carrier_id,\n" +
+            "        user_a.user_name,\n" +
+            "        service.service_name,\n" +
+            "        service.service_description,\n" +
+            "        service.service_status,\n" +
+            "        service.creation_date,\n" +
+            "        service_reply.reply_text\n" +
+            "FROM service\n" +
+            "LEFT JOIN user_a\n" +
+            "ON service.approver_id = user_a.user_id\n" +
+            "LEFT JOIN service_reply\n" +
+            "ON service.service_id = service_reply.service_id\n" +
+            "WHERE approver_id = ?\n" +
+            "AND service_status = ?\n" +
+            "ORDER BY service_id\n" +
+            "LIMIT ? OFFSET ?";
+
     private final String  FIND_ALL_REPLY_TEXTS = "SELECT reply_text\n" +
             "FROM service_reply\n" +
             "WHERE service_id = ?\n" +
@@ -148,6 +183,29 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
         result.addAll(getJdbcTemplate().query(FIND_BY_STATUS, new Object[]{id, status}, mapper));
         result.forEach(this::attachReply);
 
+        return result;
+    }
+
+    @Override
+    public List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status) {
+        logger.debug("Pagin services where status = " + status);
+
+        List<ServiceCRUDDTO> result = new ArrayList<>();
+        result.addAll(
+                getJdbcTemplate()
+                        .query(
+                                APPROVER_FIND_BY_STATUS,
+                                new Object[]{status, number, from},
+                                mapper));
+        return result;
+    }
+
+    @Override
+    public List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId) {
+        logger.debug("Pagin services where status = " + status + " and approver = " + approverId);
+
+        List<ServiceCRUDDTO> result = new ArrayList<>();
+        result.addAll(getJdbcTemplate().query(APPROVER_FIND_BY_STATUS_AND_ID, new Object[]{approverId, status, number, from}, mapper));
         return result;
     }
 

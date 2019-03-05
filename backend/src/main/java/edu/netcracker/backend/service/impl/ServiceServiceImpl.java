@@ -1,10 +1,13 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
+import edu.netcracker.backend.dao.ApproverDAO;
 import edu.netcracker.backend.dao.ServiceDAO;
+import edu.netcracker.backend.dao.ServiceReplyDAO;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
+import edu.netcracker.backend.model.ServiceReply;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.ServiceService;
 import edu.netcracker.backend.service.UserService;
@@ -24,6 +27,9 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Autowired
     private ServiceDAO serviceDAO;
+
+    @Autowired
+    private ServiceReplyDAO serviceReplyDAO;
 
     @Autowired
     private UserService userService;
@@ -114,6 +120,45 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceCRUDDTO;
     }
 
+    @Override
+    public List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId) {
+        switch (status) {
+            case 2:
+                return serviceDAO.getServicesForApprover(from, number, status);
+            case 3:
+                return serviceDAO.getServicesForApprover(from, number, status, approverId);
+            default:
+                throw new IllegalArgumentException("Illegal service status");
+        }
+    }
+
+    @Override
+    public ServiceCRUDDTO reviewService(ServiceCRUDDTO serviceDTO, Integer approverId) {
+        ServiceDescr serviceDescr = serviceDAO.find(serviceDTO.getId()).orElse(null);
+
+        if(serviceDescr == null){
+            throw new RequestException("Service " + serviceDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
+        }
+
+        serviceDescr.setServiceStatus(serviceDTO.getServiceStatus());
+        serviceDescr.setApproverId(approverId);
+        serviceDAO.update(serviceDescr);
+
+        if (serviceDTO.getReplyText() != null && serviceDTO.getReplyText().length() != 0)
+        {
+            ServiceReply reply = new ServiceReply();
+            reply.setServiceId(serviceDescr.getServiceId().intValue());
+            reply.setWriterId(approverId.longValue());
+            reply.setReportText(serviceDTO.getReplyText());
+            reply.setCreationDate(LocalDateTime.now());
+
+            serviceReplyDAO.delete(reply);
+            serviceReplyDAO.save(reply);
+        }
+
+        return serviceDTO;
+    }
+
     private boolean ifServiceExists(String name, Number id){
         return serviceDAO.findByName(name, id).isPresent();
     }
@@ -124,4 +169,6 @@ public class ServiceServiceImpl implements ServiceService {
         User user = userService.findByUsernameWithRole(carrierName, AuthorityUtils.ROLE_CARRIER);
         this.carrierId = user.getUserId();
     }
+
+
 }

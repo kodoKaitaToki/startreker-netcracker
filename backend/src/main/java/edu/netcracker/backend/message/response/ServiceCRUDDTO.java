@@ -33,11 +33,11 @@ public class ServiceCRUDDTO {
     public ServiceCRUDDTO(){}
 
     private ServiceCRUDDTO(Long id,
-                           String approverName,
-                           String serviceName,
-                           String serviceDescription,
-                           Integer serviceStatus,
-                           LocalDateTime creationDate) {
+                       String approverName,
+                       String serviceName,
+                       String serviceDescription,
+                       Integer serviceStatus,
+                       LocalDateTime creationDate) {
         this.id = id;
         this.approverName = approverName;
         this.serviceName = serviceName;
