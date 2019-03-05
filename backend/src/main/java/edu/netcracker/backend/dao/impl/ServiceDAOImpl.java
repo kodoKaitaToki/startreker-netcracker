@@ -2,7 +2,7 @@ package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.dao.mapper.ServiceMapper;
-import edu.netcracker.backend.message.response.ServiceDTO;
+import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,19 +120,19 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     }
 
     @Override
-    public List<ServiceDTO> findAllByCarrierId(Number id){
+    public List<ServiceCRUDDTO> findAllByCarrierId(Number id){
         logger.debug("Getting services where carrierId = " + id);
-        List<ServiceDTO> result = new ArrayList<>();
+        List<ServiceCRUDDTO> result = new ArrayList<>();
 
         result.addAll(getJdbcTemplate().query(FIND_ALL_SERVICES, new Object[]{id}, mapper));
         return result;
     }
 
     @Override
-    public List<ServiceDTO> findPaginByCarrierId(Number id, Integer from, Integer amount){
+    public List<ServiceCRUDDTO> findPaginByCarrierId(Number id, Integer from, Integer amount){
         logger.debug("Getting" + amount + "pagine services where carrierId = " + id);
 
-        List<ServiceDTO> result = new ArrayList<>();
+        List<ServiceCRUDDTO> result = new ArrayList<>();
         result.addAll(getJdbcTemplate().query(FIND_PAGIN_SERVICES, new Object[]{id, amount, from}, mapper));
         result.forEach(this::attachReply);
 
@@ -140,24 +140,24 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     }
 
     @Override
-    public List<ServiceDTO> findByStatus(Number id, Integer status){
+    public List<ServiceCRUDDTO> findByStatus(Number id, Integer status){
         logger.debug("Getting services where status = " + status);
 
-        List<ServiceDTO> result = new ArrayList<>();
+        List<ServiceCRUDDTO> result = new ArrayList<>();
         result.addAll(getJdbcTemplate().query(FIND_BY_STATUS, new Object[]{id, status}, mapper));
         result.forEach(this::attachReply);
 
         return result;
     }
 
-    private ServiceDTO attachReply(ServiceDTO serviceDTO){
-        Long id = serviceDTO.getId();
+    private ServiceCRUDDTO attachReply(ServiceCRUDDTO serviceCRUDDTO){
+        Long id = serviceCRUDDTO.getId();
         try{
             String replyText = getJdbcTemplate().queryForObject(FIND_ALL_REPLY_TEXTS,
                     new Object[]{id, id},
                     String.class);
-            serviceDTO.setReplyText(replyText);
-            return serviceDTO;
+            serviceCRUDDTO.setReplyText(replyText);
+            return serviceCRUDDTO;
         }catch (EmptyResultDataAccessException e){
             return null;
         }
