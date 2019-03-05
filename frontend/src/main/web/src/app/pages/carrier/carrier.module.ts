@@ -14,9 +14,13 @@ import { DashboardsComponent } from './dashboard/dashboards/dashboards.component
 import { CarrierComponent } from './carrier.component';
 import { SalesComponent } from './dashboard/sales/sales.component';
 import { ViewsComponent } from './dashboard/views/views.component';
+import { ServiceTableComponent } from './services/service-table/service-table.component';
+import { ServiceCrudComponent } from './services/service-crud/service-crud.component';
+import { ClarificationComponent } from './services/clarification/clarification.component';
+import { ArchiveComponent } from './services/archive/archive.component';
 
 @NgModule({
-  declarations: [NavbarComponent, IndexComponent, TripsComponent, ServicesComponent, SuggestionsComponent, DiscountsComponent, DashboardsComponent, CarrierComponent, SalesComponent, ViewsComponent],
+  declarations: [NavbarComponent, IndexComponent, TripsComponent, ServicesComponent, SuggestionsComponent, DiscountsComponent, DashboardsComponent, CarrierComponent, SalesComponent, ViewsComponent, ServiceTableComponent, ServiceCrudComponent, ClarificationComponent, ArchiveComponent],
   imports: [
     CommonModule,
     FormsModule,

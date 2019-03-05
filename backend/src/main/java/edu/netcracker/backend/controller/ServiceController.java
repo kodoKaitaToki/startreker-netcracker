@@ -3,9 +3,12 @@ package edu.netcracker.backend.controller;
 import edu.netcracker.backend.message.request.MandatoryTimeInterval;
 import edu.netcracker.backend.message.request.OptionalTimeInterval;
 import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
+import edu.netcracker.backend.message.request.ServiceCreateForm;
+import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.message.response.ServiceDistributionElement;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.StatisticsService;
+import edu.netcracker.backend.service.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +22,15 @@ public class ServiceController {
     private final StatisticsService statisticsService;
     private final SecurityContext securityContext;
 
+    private final ServiceService serviceService;
+
     @Autowired
-    public ServiceController(StatisticsService statisticsService, SecurityContext securityContext) {
+    public ServiceController(StatisticsService statisticsService,
+                             SecurityContext securityContext,
+                             ServiceService serviceService) {
         this.statisticsService = statisticsService;
         this.securityContext = securityContext;
+        this.serviceService = serviceService;
     }
 
     @GetMapping("api/v1/service/distribution")
@@ -61,5 +69,42 @@ public class ServiceController {
                 securityContext.getUser().getUserId(),
                 timeInterval.getFrom(),
                 timeInterval.getTo());
+    }
+
+    @GetMapping("api/v1/carrier/service")
+    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<ServiceCRUDDTO> getAllServices(){
+        return serviceService.getServicesOfCarrier();
+    }
+
+    @GetMapping("api/v1/carrier/service/pagin")
+    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<ServiceCRUDDTO> getPaginServices(@RequestParam("from") Integer from,
+                                                 @RequestParam("number") Integer number){
+        return serviceService.getPaginServicesOfCarrier(from, number);
+    }
+
+    @GetMapping("api/v1/carrier/service/by-status")
+    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<ServiceCRUDDTO> getByStatus(@RequestParam("status") Integer status){
+        return serviceService.findByStatus(status);
+    }
+
+    @DeleteMapping("api/v1/carrier/service/{servId}")
+    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public ServiceCRUDDTO deleteService(@PathVariable Long servId){
+        return serviceService.deleteService(servId);
+    }
+
+    @PutMapping("api/v1/carrier/service")
+    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public ServiceCRUDDTO updateService(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO){
+        return serviceService.updateService(serviceCRUDDTO);
+    }
+
+    @PostMapping("api/v1/carrier/service")
+    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public ServiceCRUDDTO addService(@Valid @RequestBody ServiceCreateForm serviceCreateForm){
+        return serviceService.addService(serviceCreateForm);
     }
 }
