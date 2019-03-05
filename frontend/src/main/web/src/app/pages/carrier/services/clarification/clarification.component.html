@@ -9,16 +9,16 @@
         *ngFor="let service of services"
         style="margin-top:1.5%;"
     >
-      <span class="badge badge-primary badge-pill idBadge" style="color:white;
-                                                                  font-size: 30px;">
-        {{service.reply_text}}
-      </span>
+      <h5>{{service.approver_name}} :</h5>
       <div class="row">
-        <div class="col-1"
-             title="id"
-        >
-
+        <div class="badge badge-primary badge-pill idBadge col-12" style="color:white;
+                                                                          font-size: 1.5vw;
+                                                                          margin-bottom: 1.5%;">
+          {{service.reply_text}}
         </div>
+      </div>
+      <div class="row">
+        <div class="col-1"></div>
         <div class="row col-5 offset-6"
              *ngIf="!isForUpdateAlertMessage"
         >

@@ -67,8 +67,8 @@ export class ServiceCrudComponent implements OnInit {
   onPost(status: Number) {
 
     const service: Service = this.form.value;
-    service['status'] = status;
-
+    service['service_status'] = status;
+    console.log(service);
     this.serviceService.addService(service)
                       .subscribe(
                         (resp: Response) => {

@@ -24,7 +24,7 @@
       <hr>-->
 
               <form [formGroup]="form"
-                    (ngSubmit)="onPost()">
+                    (ngSubmit)="onPost(status)">
 
                 <div class="form-group">
                   <input type="text" class="form-control"
@@ -78,8 +78,7 @@
                       <button class="btn-success btn btn-block"
                               type="submit"
                               [disabled]="form.invalid"
-                              ng-click = "status = 2;
-                                          console.log(status);"
+                              (click) = "onPost(2)"
                       >
                         Add
                       </button>
@@ -88,8 +87,7 @@
                       <button class="btn-primary btn btn-block"
                               type="submit"
                               [disabled]="form.invalid"
-                              ng-click = "status = 1;
-                                          console.log(status);"
+                              (click) = "onPost(1)"
                       >
                 Continue editing later
               </button>
