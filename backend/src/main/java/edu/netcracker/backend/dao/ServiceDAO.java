@@ -1,6 +1,5 @@
 package edu.netcracker.backend.dao;
 
-import edu.netcracker.backend.model.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,17 +7,8 @@ import java.util.Optional;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 
-import java.util.List;
-import java.util.Optional;
 
 public interface ServiceDAO {
-    void save(Service service);
-
-    Optional<Service> find(Number id);
-
-    void delete(Service service);
-
-    List<Service> findAll();
     void save(ServiceDescr service);
 
     void delete(Long id);

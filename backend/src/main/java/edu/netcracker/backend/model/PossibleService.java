@@ -27,5 +27,5 @@ public class PossibleService {
     @Attribute("service_price")
     private Long servicePrice;
 
-    private Service service;
+    private ServiceDescr service;
 }

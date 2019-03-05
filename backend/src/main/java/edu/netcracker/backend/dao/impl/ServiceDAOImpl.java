@@ -138,18 +138,6 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
         getJdbcTemplate().update(DELETE_SERVICE, id);
     }
 
-    private final String FIND_ALL = "SELECT * FROM service";
-
-    @Override
-    public List<Service> findAll() {
-        List<Service> services = new ArrayList<>();
-
-        services.addAll(getJdbcTemplate().query(
-                FIND_ALL,
-                getGenericMapper()));
-
-        return services;
-    }
     @Override
     public void update(ServiceDescr service) {
         logger.debug("Updating service with id = " + service.getServiceId());

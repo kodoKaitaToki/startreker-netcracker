@@ -5,6 +5,7 @@ import edu.netcracker.backend.dao.PossibleServiceDAO;
 import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.message.response.PossibleServiceDTO;
 import edu.netcracker.backend.model.PossibleService;
+import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.service.PossibleServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -83,7 +84,7 @@ public class PossibleServiceServiceImpl implements PossibleServiceService {
         possibleService.setServicePrice(possibleServiceDTO.getServicePrice());
         possibleService.setPServiceId(possibleServiceDTO.getId());
 
-        Optional<edu.netcracker.backend.model.Service> optService = serviceDAO.find(possibleServiceDTO.getServiceId());
+        Optional<ServiceDescr> optService = serviceDAO.find(possibleServiceDTO.getServiceId());
 
         if (!optService.isPresent())
             throw new RequestException("Service with id " + possibleServiceDTO.getServiceId() + " not found ", HttpStatus.NOT_FOUND);

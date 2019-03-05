@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.model.PossibleService;
 import edu.netcracker.backend.model.Service;
+import edu.netcracker.backend.model.ServiceDescr;
 import lombok.*;
 import org.springframework.http.HttpStatus;
 
@@ -45,7 +46,7 @@ public class PossibleServiceDTO {
     }
 
     public static PossibleServiceDTO from(PossibleService possibleService) {
-        Service service = possibleService.getService();
+        ServiceDescr service = possibleService.getService();
 
         if (service != null)
             return new PossibleServiceDTO(

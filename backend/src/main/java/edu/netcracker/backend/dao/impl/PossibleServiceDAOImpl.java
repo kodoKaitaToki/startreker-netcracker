@@ -4,6 +4,7 @@ import edu.netcracker.backend.dao.PossibleServiceDAO;
 import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.model.PossibleService;
 import edu.netcracker.backend.model.Service;
+import edu.netcracker.backend.model.ServiceDescr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -36,7 +37,7 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
             return Optional.empty();
 
         PossibleService possibleService = optPossibleService.get();
-        Optional<Service> attachedService = findService(possibleService);
+        Optional<ServiceDescr> attachedService = findService(possibleService);
 
         attachedService.ifPresent(possibleService::setService);
 
@@ -58,7 +59,7 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
         return possibleServices;
     }
 
-    private Optional<Service> findService(PossibleService possibleService) {
+    private Optional<ServiceDescr> findService(PossibleService possibleService) {
         return serviceDAO.find(possibleService.getServiceId());
     }
 
