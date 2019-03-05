@@ -3,7 +3,7 @@ package edu.netcracker.backend.service.impl;
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
-import edu.netcracker.backend.message.response.ServiceDTO;
+import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.ServiceService;
@@ -35,20 +35,20 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceDTO> getServicesOfCarrier(){ return serviceDAO.findAllByCarrierId(carrierId);}
+    public List<ServiceCRUDDTO> getServicesOfCarrier(){ return serviceDAO.findAllByCarrierId(carrierId);}
 
     @Override
-    public List<ServiceDTO> getPaginServicesOfCarrier(Integer from, Integer amount){
+    public List<ServiceCRUDDTO> getPaginServicesOfCarrier(Integer from, Integer amount){
         return serviceDAO.findPaginByCarrierId(carrierId, from, amount);
     }
 
     @Override
-    public List<ServiceDTO> findByStatus(Integer status){
+    public List<ServiceCRUDDTO> findByStatus(Integer status){
         return serviceDAO.findByStatus(carrierId, status);
     }
 
     @Override
-    public ServiceDTO addService(ServiceCreateForm serviceCreateForm){
+    public ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm){
         String serviceName = serviceCreateForm.getServiceName();
 
         if(ifServiceExists(serviceName, carrierId)){
@@ -71,47 +71,47 @@ public class ServiceServiceImpl implements ServiceService {
 
         ServiceDescr result = serviceDAO.findByName(serviceDescr.getServiceName(), carrierId).orElse(null);
 
-        return ServiceDTO.form(result, "");
+        return ServiceCRUDDTO.form(result, "");
     }
 
     @Override
-    public ServiceDTO updateService(ServiceDTO serviceDTO){
-        ServiceDescr serviceDescr = serviceDAO.find(serviceDTO.getId()).orElse(null);
+    public ServiceCRUDDTO updateService(ServiceCRUDDTO serviceCRUDDTO){
+        ServiceDescr serviceDescr = serviceDAO.find(serviceCRUDDTO.getId()).orElse(null);
 
         if(serviceDescr == null){
-            throw new RequestException("Service " + serviceDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
+            throw new RequestException("Service " + serviceCRUDDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
         }
 
-        if((ifServiceExists(serviceDTO.getServiceName(), carrierId))&&
-                (!Objects.equals(serviceDTO.getServiceName(),serviceDescr.getServiceName()))){
+        if((ifServiceExists(serviceCRUDDTO.getServiceName(), carrierId))&&
+                (!Objects.equals(serviceCRUDDTO.getServiceName(),serviceDescr.getServiceName()))){
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
-        Integer status = serviceDTO.getServiceStatus();
+        Integer status = serviceCRUDDTO.getServiceStatus();
         if(((status == 3) | (status == 4) | (status == 6)) &&
-                (!Objects.equals(serviceDTO.getServiceStatus(),serviceDescr.getServiceStatus()))){
-            throw new RequestException("Cannot set service_status = " + serviceDTO.getServiceStatus(),
+                (!Objects.equals(serviceCRUDDTO.getServiceStatus(),serviceDescr.getServiceStatus()))){
+            throw new RequestException("Cannot set service_status = " + serviceCRUDDTO.getServiceStatus(),
                     HttpStatus.BAD_REQUEST);
         }
 
-        serviceDescr.setServiceName(serviceDTO.getServiceName());
-        serviceDescr.setServiceDescription(serviceDTO.getServiceDescription());
-        serviceDescr.setServiceStatus(serviceDTO.getServiceStatus());
+        serviceDescr.setServiceName(serviceCRUDDTO.getServiceName());
+        serviceDescr.setServiceDescription(serviceCRUDDTO.getServiceDescription());
+        serviceDescr.setServiceStatus(serviceCRUDDTO.getServiceStatus());
 
         serviceDAO.update(serviceDescr);
 
-        return serviceDTO;
+        return serviceCRUDDTO;
     }
 
     @Override
-    public ServiceDTO deleteService(Long serviceId){
+    public ServiceCRUDDTO deleteService(Long serviceId){
         ServiceDescr serviceDescr = serviceDAO.find(serviceId).orElse(null);
         User approver = userService.findByIdWithRole(serviceDescr.getApproverId(), AuthorityUtils.ROLE_APPROVER);
-        ServiceDTO serviceDTO = ServiceDTO.form(serviceDescr, approver.getUsername());
+        ServiceCRUDDTO serviceCRUDDTO = ServiceCRUDDTO.form(serviceDescr, approver.getUsername());
 
         serviceDAO.delete(serviceId);
 
-        return serviceDTO;
+        return serviceCRUDDTO;
     }
 
     private boolean ifServiceExists(String name, Number id){

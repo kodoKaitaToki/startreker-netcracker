@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Data
-public class ServiceDTO {
+public class ServiceCRUDDTO {
 
     private Long id;
 
@@ -30,14 +30,14 @@ public class ServiceDTO {
     @JsonProperty("reply_text")
     private String replyText;
 
-    public ServiceDTO(){}
+    public ServiceCRUDDTO(){}
 
-    private ServiceDTO(Long id,
-                       String approverName,
-                       String serviceName,
-                       String serviceDescription,
-                       Integer serviceStatus,
-                       LocalDateTime creationDate) {
+    private ServiceCRUDDTO(Long id,
+                           String approverName,
+                           String serviceName,
+                           String serviceDescription,
+                           Integer serviceStatus,
+                           LocalDateTime creationDate) {
         this.id = id;
         this.approverName = approverName;
         this.serviceName = serviceName;
@@ -46,8 +46,8 @@ public class ServiceDTO {
         this.creationDate = creationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
-    public static ServiceDTO form(ServiceDescr serviceDescr, String approver_name) {
-        return new ServiceDTO(
+    public static ServiceCRUDDTO form(ServiceDescr serviceDescr, String approver_name) {
+        return new ServiceCRUDDTO(
                 serviceDescr.getServiceId(),
                 approver_name,
                 serviceDescr.getServiceName(),
