@@ -1,5 +1,6 @@
 package edu.netcracker.backend.controller;
 
+import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.message.response.ServiceDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.User;
@@ -69,7 +70,7 @@ public class ServiceControllerUnitTest {
         Assert.assertEquals(controller.getServicesForApprover(1, 10, 2), ret);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = RequestException.class)
     public void shouldRejectIllegalStatus() throws Exception {
         int illegalStatus = 1;
 

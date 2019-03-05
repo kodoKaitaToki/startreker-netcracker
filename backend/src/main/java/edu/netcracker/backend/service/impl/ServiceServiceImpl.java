@@ -142,7 +142,7 @@ public class ServiceServiceImpl implements ServiceService {
         serviceDescr.setApproverId(approverId);
         serviceDAO.update(serviceDescr);
 
-        if (serviceDTO.getReplyText().length() != 0)
+        if (serviceDTO.getReplyText() != null && serviceDTO.getReplyText().length() != 0)
         {
             ServiceReply reply = new ServiceReply();
             reply.setServiceId(serviceDescr.getServiceId().intValue());
