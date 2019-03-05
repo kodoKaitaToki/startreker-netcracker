@@ -22,8 +22,8 @@ export class ServiceService{
         return this.http.get<any>(url);
     }
 
-    public getServiceByStatus<Service>(status: Number, from: Number, amount: Number): Observable<Service>{
-        let url = Api.service.services() + '?' + status;
+    public getServiceByStatus<Service>(status: Number): Observable<Service>{
+        let url = Api.service.servicesByStatus() + '?status=' + status;
         return this.http.get<any>(url);
     }
 
@@ -31,12 +31,12 @@ export class ServiceService{
         return this.http.post<T>(Api.service.services(), service);
     }
 
-    public deleteCarrier<T>(id: Number): Observable<T>{
+    public deleteService<T>(id: Number): Observable<T>{
         let url = Api.carrier.carriers() + '/' + id;
         return this.http.delete<T>(url);
     }
 
-    public updateCarrier<T>(service: Service): Observable<T>{
+    public updateService<T>(service: Service): Observable<T>{
         return this.http.put<T>(Api.service.services(), service);
     }
 }

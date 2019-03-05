@@ -9,10 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements ServiceDAO {
@@ -28,13 +25,10 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
             "        service.service_name,\n" +
             "        service.service_description,\n" +
             "        service.service_status,\n" +
-            "        service.creation_date,\n" +
-            "        service_reply.reply_text\n" +
+            "        service.creation_date\n" +
             "FROM service\n" +
             "LEFT JOIN user_a\n" +
             "ON service.approver_id = user_a.user_id\n" +
-            "LEFT JOIN service_reply\n" +
-            "ON service.service_id = service_reply.service_id\n" +
             "WHERE carrier_id = ?\n" +
             "ORDER BY service_id";
 
@@ -44,13 +38,10 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
             "        service.service_name,\n" +
             "        service.service_description,\n" +
             "        service.service_status,\n" +
-            "        service.creation_date,\n" +
-            "        service_reply.reply_text\n" +
+            "        service.creation_date\n" +
             "FROM service\n" +
             "LEFT JOIN user_a\n" +
             "ON service.approver_id = user_a.user_id\n" +
-            "LEFT JOIN service_reply\n" +
-            "ON service.service_id = service_reply.service_id\n" +
             "WHERE carrier_id = ?\n" +
             "ORDER BY service_id\n" +
             "LIMIT ? OFFSET ?";
@@ -64,16 +55,20 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
             "        service.service_name,\n" +
             "        service.service_description,\n" +
             "        service.service_status,\n" +
-            "        service.creation_date,\n" +
-            "        service_reply.reply_text\n" +
+            "        service.creation_date\n" +
             "FROM service\n" +
             "LEFT JOIN user_a\n" +
             "ON service.approver_id = user_a.user_id\n" +
-            "LEFT JOIN service_reply\n" +
-            "ON service.service_id = service_reply.service_id\n" +
             "WHERE carrier_id = ?\n" +
             "AND service_status = ?\n" +
             "ORDER BY service_id";
+
+    private final String  FIND_ALL_REPLY_TEXTS = "SELECT reply_text\n" +
+            "FROM service_reply\n" +
+            "WHERE service_id = ?\n" +
+            "AND creation_date = (SELECT MAX(creation_date)\n" +
+            "                    FROM service_reply\n" +
+            "                    WHERE service_id = ?)";
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceDAOImpl.class);
 
@@ -139,6 +134,8 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
 
         List<ServiceDTO> result = new ArrayList<>();
         result.addAll(getJdbcTemplate().query(FIND_PAGIN_SERVICES, new Object[]{id, amount, from}, mapper));
+        result.forEach(this::attachReply);
+
         return result;
     }
 
@@ -148,7 +145,22 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
 
         List<ServiceDTO> result = new ArrayList<>();
         result.addAll(getJdbcTemplate().query(FIND_BY_STATUS, new Object[]{id, status}, mapper));
+        result.forEach(this::attachReply);
+
         return result;
+    }
+
+    private ServiceDTO attachReply(ServiceDTO serviceDTO){
+        Long id = serviceDTO.getId();
+        try{
+            String replyText = getJdbcTemplate().queryForObject(FIND_ALL_REPLY_TEXTS,
+                    new Object[]{id, id},
+                    String.class);
+            serviceDTO.setReplyText(replyText);
+            return serviceDTO;
+        }catch (EmptyResultDataAccessException e){
+            return null;
+        }
     }
 
 }
