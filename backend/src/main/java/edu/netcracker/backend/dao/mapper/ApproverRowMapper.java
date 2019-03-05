@@ -3,10 +3,7 @@ package edu.netcracker.backend.dao.mapper;
 import edu.netcracker.backend.model.User;
 import org.springframework.jdbc.core.RowMapper;
 
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Map;
 
 public class ApproverRowMapper implements RowMapper {

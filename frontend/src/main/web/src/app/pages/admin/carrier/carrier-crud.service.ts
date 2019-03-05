@@ -28,16 +28,6 @@ export class CarrierCrudService {
         return this.http.get<Carrier>(url);
     }
 
-    /*public getCarrierByEmail<Carrier>(email: String): Observable<Carrier>{
-        let url = this.actionUrl + '/carrier-by-email?email=' + email;
-        return this.http.get<Carrier>(url, HttpOptionsAuthorized);
-    }
-
-    public getCarrierById<Carrier>(id: number): Observable<Carrier>{
-        let url = this.actionUrl + '/carrier/' + id;
-        return this.http.get<Carrier>(url, HttpOptionsAuthorized);
-    } */
-
     public addCarrier<T>(carrier: Carrier): Observable<T>{
         return this.http.post<T>(Api.carrier.carriers(), carrier);
     }
