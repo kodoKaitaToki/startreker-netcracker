@@ -3,7 +3,7 @@ package edu.netcracker.backend.service;
 import edu.netcracker.backend.dao.ApproverDAO;
 import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.model.User;
-import edu.netcracker.backend.util.AuthorityUtils;
+import edu.netcracker.backend.utils.AuthorityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ApproverCrudService {

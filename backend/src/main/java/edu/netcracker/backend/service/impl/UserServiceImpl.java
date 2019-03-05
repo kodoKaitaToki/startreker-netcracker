@@ -7,7 +7,7 @@ import edu.netcracker.backend.model.Role;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.security.UserInformationHolder;
 import edu.netcracker.backend.service.UserService;
-import edu.netcracker.backend.util.PasswordGeneratorUtils;
+import edu.netcracker.backend.utils.PasswordGeneratorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
