@@ -7,10 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -38,7 +35,4 @@ public class ServiceDescr {
 
     @Attribute("creation_date")
     private LocalDateTime creationDate;
-
-    @Attribute("service_views")
-    private Integer tripViews;
 }

@@ -55,7 +55,8 @@ public class ServiceServiceImpl implements ServiceService {
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
-        if(serviceCreateForm.getServiceStatus() != (1|2)){
+        Integer status = serviceCreateForm.getServiceStatus();
+        if((status != 1)&(status != 2)){
             throw new RequestException("Status of new service must be draft or open", HttpStatus.BAD_REQUEST);
         }
 
@@ -86,7 +87,8 @@ public class ServiceServiceImpl implements ServiceService {
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
-        if((serviceDTO.getServiceStatus() == (3|4|6)) &&
+        Integer status = serviceDTO.getServiceStatus();
+        if(((status == 3) | (status == 4) | (status == 6)) &&
                 (!Objects.equals(serviceDTO.getServiceStatus(),serviceDescr.getServiceStatus()))){
             throw new RequestException("Cannot set service_status = " + serviceDTO.getServiceStatus(),
                     HttpStatus.BAD_REQUEST);

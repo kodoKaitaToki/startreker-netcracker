@@ -19,20 +19,20 @@
              *ngIf="!isForUpdateAlertMessage"
         >
 
-          <div class="col-1 offset-6 offset-lg-6">
+          <div class="col-1 offset-4 offset-lg-8">
             <p data-placement="top"
               data-toggle="tooltip"
               title="Archive"
               (click)="service.service_status = 6;
                         updateService(service);"
             >
-              <button class="btn btn-success btn-md">
-                <i class="fa fa-edit"></i>
+              <button class="btn btn-warning btn-md">
+                <i class="fa fa-archive" style="color: white;"></i>
               </button>
             </p>
           </div>
 
-          <div class="col-1 offset-1 offset-lg-1">
+          <div class="col-1 offset-1">
             <p data-placement="top"
                data-toggle="tooltip"
                title="Edit"
@@ -41,22 +41,6 @@
             >
               <button class="btn btn-primary btn-md">
                 <i class="fa fa-edit"></i>
-              </button>
-            </p>
-          </div>
-
-          <div class="col-1 offset-1">
-            <p data-placement="top"
-               data-toggle="tooltip"
-               title="Delete"
-               (click)="deleteService(service.id);"
-               class="deletePrgph"
-            >
-              <button class="btn btn-danger btn-md"
-                      data-title="Delete"
-                      data-toggle="modal"
-                      data-target="#delete">
-                <i class="fa fa-trash"></i>
               </button>
             </p>
           </div>
