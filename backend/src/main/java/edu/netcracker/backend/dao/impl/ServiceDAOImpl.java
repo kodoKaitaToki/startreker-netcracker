@@ -186,10 +186,10 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     }
 
     @Override
-    public List<ServiceDTO> getServicesForApprover(Integer from, Integer number, Integer status) {
+    public List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status) {
         logger.debug("Pagin services where status = " + status);
 
-        List<ServiceDTO> result = new ArrayList<>();
+        List<ServiceCRUDDTO> result = new ArrayList<>();
         result.addAll(
                 getJdbcTemplate()
                         .query(
@@ -200,10 +200,10 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     }
 
     @Override
-    public List<ServiceDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId) {
+    public List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId) {
         logger.debug("Pagin services where status = " + status + " and approver = " + approverId);
 
-        List<ServiceDTO> result = new ArrayList<>();
+        List<ServiceCRUDDTO> result = new ArrayList<>();
         result.addAll(getJdbcTemplate().query(APPROVER_FIND_BY_STATUS_AND_ID, new Object[]{approverId, status, number, from}, mapper));
         return result;
     }

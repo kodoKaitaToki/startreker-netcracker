@@ -2,7 +2,7 @@ package edu.netcracker.backend.dao;
 
 import edu.netcracker.backend.dao.impl.ServiceDAOImpl;
 import edu.netcracker.backend.dao.mapper.ServiceMapper;
-import edu.netcracker.backend.message.response.ServiceDTO;
+import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 import org.junit.Assert;
 import org.junit.Before;
@@ -33,7 +33,7 @@ public class ServiceDAOTest {
     @InjectMocks
     ServiceDAOImpl serviceDAOImpl;
 
-    List<ServiceDTO> ret;
+    List<ServiceCRUDDTO> ret;
 
     @Before
     public void setUp() throws Exception {
@@ -47,7 +47,7 @@ public class ServiceDAOTest {
                         "2015-11-16",
                         DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 ).atStartOfDay());
-        ServiceDTO testService = ServiceDTO.form(serviceDescr, null);
+        ServiceCRUDDTO testService = ServiceCRUDDTO.form(serviceDescr, null);
         ret = new ArrayList<>();
         ret.add(testService);
     }

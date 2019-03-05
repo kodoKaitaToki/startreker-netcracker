@@ -5,7 +5,7 @@ import edu.netcracker.backend.dao.ApproverDAO;
 import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.dao.ServiceReplyDAO;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
-import edu.netcracker.backend.message.response.ServiceDTO;
+import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.ServiceReply;
 import edu.netcracker.backend.model.User;
@@ -41,20 +41,20 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceDTO> getServicesOfCarrier(){ return serviceDAO.findAllByCarrierId(carrierId);}
+    public List<ServiceCRUDDTO> getServicesOfCarrier(){ return serviceDAO.findAllByCarrierId(carrierId);}
 
     @Override
-    public List<ServiceDTO> getPaginServicesOfCarrier(Integer from, Integer amount){
+    public List<ServiceCRUDDTO> getPaginServicesOfCarrier(Integer from, Integer amount){
         return serviceDAO.findPaginByCarrierId(carrierId, from, amount);
     }
 
     @Override
-    public List<ServiceDTO> findByStatus(Integer status){
+    public List<ServiceCRUDDTO> findByStatus(Integer status){
         return serviceDAO.findByStatus(carrierId, status);
     }
 
     @Override
-    public ServiceDTO addService(ServiceCreateForm serviceCreateForm){
+    public ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm){
         String serviceName = serviceCreateForm.getServiceName();
 
         if(ifServiceExists(serviceName, carrierId)){
@@ -77,11 +77,11 @@ public class ServiceServiceImpl implements ServiceService {
 
         ServiceDescr result = serviceDAO.findByName(serviceDescr.getServiceName(), carrierId).orElse(null);
 
-        return ServiceDTO.form(result, "");
+        return ServiceCRUDDTO.form(result, "");
     }
 
     @Override
-    public ServiceDTO updateService(ServiceDTO serviceDTO){
+    public ServiceCRUDDTO updateService(ServiceCRUDDTO serviceDTO){
         ServiceDescr serviceDescr = serviceDAO.find(serviceDTO.getId()).orElse(null);
 
         if(serviceDescr == null){
@@ -110,10 +110,10 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public ServiceDTO deleteService(Long serviceId){
+    public ServiceCRUDDTO deleteService(Long serviceId){
         ServiceDescr serviceDescr = serviceDAO.find(serviceId).orElse(null);
         User approver = userService.findByIdWithRole(serviceDescr.getApproverId(), AuthorityUtils.ROLE_APPROVER);
-        ServiceDTO serviceDTO = ServiceDTO.form(serviceDescr, approver.getUsername());
+        ServiceCRUDDTO serviceDTO = ServiceCRUDDTO.form(serviceDescr, approver.getUsername());
 
         serviceDAO.delete(serviceId);
 
@@ -121,7 +121,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId) {
+    public List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId) {
         switch (status) {
             case 2:
                 return serviceDAO.getServicesForApprover(from, number, status);
@@ -133,7 +133,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public ServiceDTO reviewService(ServiceDTO serviceDTO, Integer approverId) {
+    public ServiceCRUDDTO reviewService(ServiceCRUDDTO serviceDTO, Integer approverId) {
         ServiceDescr serviceDescr = serviceDAO.find(serviceDTO.getId()).orElse(null);
 
         if(serviceDescr == null){

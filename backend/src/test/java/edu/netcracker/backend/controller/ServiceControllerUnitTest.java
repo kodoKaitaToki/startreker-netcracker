@@ -1,7 +1,7 @@
 package edu.netcracker.backend.controller;
 
 import edu.netcracker.backend.controller.exception.RequestException;
-import edu.netcracker.backend.message.response.ServiceDTO;
+import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.security.SecurityContext;
@@ -34,7 +34,7 @@ public class ServiceControllerUnitTest {
     @Mock
     ServiceService serviceService;
 
-    List<ServiceDTO> ret;
+    List<ServiceCRUDDTO> ret;
 
 
     @Before
@@ -50,8 +50,8 @@ public class ServiceControllerUnitTest {
                         "2015-11-16",
                         DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 ).atStartOfDay());
-        ServiceDTO testService = ServiceDTO.form(serviceDescr, null);
-        List<ServiceDTO> ret = new ArrayList<>();
+        ServiceCRUDDTO testService = ServiceCRUDDTO.form(serviceDescr, null);
+        List<ServiceCRUDDTO> ret = new ArrayList<>();
         ret.add(testService);
     }
 

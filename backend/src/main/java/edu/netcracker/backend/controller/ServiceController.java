@@ -5,7 +5,7 @@ import edu.netcracker.backend.message.request.MandatoryTimeInterval;
 import edu.netcracker.backend.message.request.OptionalTimeInterval;
 import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
-import edu.netcracker.backend.message.response.ServiceDTO;
+import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.message.response.ServiceDistributionElement;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.StatisticsService;
@@ -75,44 +75,44 @@ public class ServiceController {
 
     @GetMapping("api/v1/carrier/service")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceDTO> getAllServices(){
+    public List<ServiceCRUDDTO> getAllServices(){
         return serviceService.getServicesOfCarrier();
     }
 
     @GetMapping("api/v1/carrier/service/pagin")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceDTO> getPaginServices(@RequestParam("from") Integer from,
+    public List<ServiceCRUDDTO> getPaginServices(@RequestParam("from") Integer from,
                                              @RequestParam("number") Integer number){
         return serviceService.getPaginServicesOfCarrier(from, number);
     }
 
     @GetMapping("api/v1/carrier/service/by-status")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceDTO> getByStatus(@RequestParam("status") Integer status){
+    public List<ServiceCRUDDTO> getByStatus(@RequestParam("status") Integer status){
         return serviceService.findByStatus(status);
     }
 
     @DeleteMapping("api/v1/carrier/service/{servId}")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public ServiceDTO deleteService(@PathVariable Long servId){
+    public ServiceCRUDDTO deleteService(@PathVariable Long servId){
         return serviceService.deleteService(servId);
     }
 
     @PutMapping("api/v1/carrier/service")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public ServiceDTO updateService(@Valid @RequestBody ServiceDTO serviceDTO){
+    public ServiceCRUDDTO updateService(@Valid @RequestBody ServiceCRUDDTO serviceDTO){
         return serviceService.updateService(serviceDTO);
     }
 
     @PostMapping("api/v1/carrier/service")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public ServiceDTO addService(@Valid @RequestBody ServiceCreateForm serviceCreateForm){
+    public ServiceCRUDDTO addService(@Valid @RequestBody ServiceCreateForm serviceCreateForm){
         return serviceService.addService(serviceCreateForm);
     }
 
     @GetMapping("api/v1/approver/service")
     //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
-    public List<ServiceDTO> getServicesForApprover(@RequestParam("from") int from,
+    public List<ServiceCRUDDTO> getServicesForApprover(@RequestParam("from") int from,
                                              @RequestParam("number") int number,
                                              @RequestParam("status") int status){
 
@@ -125,7 +125,7 @@ public class ServiceController {
 
     @PutMapping("api/v1/approver/service")
     //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
-    public ServiceDTO updateServiceReview(@Valid @RequestBody ServiceDTO serviceDTO){
+    public ServiceCRUDDTO updateServiceReview(@Valid @RequestBody ServiceCRUDDTO serviceDTO){
         boolean reviewOnAssigned = (
                 serviceDTO.getServiceStatus() != 5
                         && serviceDTO.getReplyText() != null

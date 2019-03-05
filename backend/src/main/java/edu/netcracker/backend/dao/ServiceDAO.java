@@ -1,6 +1,6 @@
 package edu.netcracker.backend.dao;
 
-import edu.netcracker.backend.message.response.ServiceDTO;
+import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 
 import javax.xml.ws.Service;
@@ -19,13 +19,13 @@ public interface ServiceDAO {
 
     Optional<ServiceDescr> findByName(String name, Number id);
 
-    List<ServiceDTO> findAllByCarrierId(Number id);
+    List<ServiceCRUDDTO> findAllByCarrierId(Number id);
 
-    List<ServiceDTO> findPaginByCarrierId(Number id, Integer from, Integer amount);
+    List<ServiceCRUDDTO> findPaginByCarrierId(Number id, Integer from, Integer amount);
 
-    List<ServiceDTO> findByStatus(Number id, Integer status);
+    List<ServiceCRUDDTO> findByStatus(Number id, Integer status);
 
-    List<ServiceDTO> getServicesForApprover(Integer from, Integer number, Integer status);
+    List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status);
 
-    List<ServiceDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId);
+    List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId);
 }

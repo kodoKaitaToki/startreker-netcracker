@@ -1,26 +1,25 @@
 package edu.netcracker.backend.service;
 
 import edu.netcracker.backend.message.request.ServiceCreateForm;
-import edu.netcracker.backend.message.response.ServiceDTO;
-import edu.netcracker.backend.model.ServiceDescr;
+import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 
 import java.util.List;
 
 public interface ServiceService {
 
-    List<ServiceDTO> getServicesOfCarrier();
+    List<ServiceCRUDDTO> getServicesOfCarrier();
 
-    List<ServiceDTO> getPaginServicesOfCarrier(Integer from, Integer amount);
+    List<ServiceCRUDDTO> getPaginServicesOfCarrier(Integer from, Integer amount);
 
-    List<ServiceDTO> findByStatus(Integer status);
+    List<ServiceCRUDDTO> findByStatus(Integer status);
 
-    ServiceDTO addService(ServiceCreateForm serviceCreateForm);
+    ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm);
 
-    ServiceDTO updateService(ServiceDTO serviceDTO);
+    ServiceCRUDDTO updateService(ServiceCRUDDTO serviceDTO);
 
-    ServiceDTO deleteService(Long serviceId);
+    ServiceCRUDDTO deleteService(Long serviceId);
 
-    List<ServiceDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId);
+    List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId);
 
-    public ServiceDTO reviewService(ServiceDTO serviceDTO, Integer approverId);
+    public ServiceCRUDDTO reviewService(ServiceCRUDDTO serviceDTO, Integer approverId);
 }
