@@ -138,6 +138,7 @@ public class ServiceServiceImpl implements ServiceService {
             reply.setReportText(serviceDTO.getReplyText());
             reply.setCreationDate(LocalDateTime.now());
 
+            serviceReplyDAO.delete(reply);
             serviceReplyDAO.save(reply);
         }
 

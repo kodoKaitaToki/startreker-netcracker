@@ -9,10 +9,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-<<<<<<< HEAD
-import java.time.LocalDate;
-=======
->>>>>>> master
 import java.time.LocalDateTime;
 import java.util.Arrays;
 

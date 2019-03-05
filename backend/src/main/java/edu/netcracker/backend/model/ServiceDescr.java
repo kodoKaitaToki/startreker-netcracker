@@ -36,7 +36,4 @@ public class ServiceDescr {
 
     @Attribute("creation_date")
     private LocalDateTime creationDate;
-
-    @Attribute("service_views")
-    private Integer tripViews;
 }

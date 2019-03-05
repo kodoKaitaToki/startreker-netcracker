@@ -8,7 +8,5 @@ import java.util.Optional;
 public interface ServiceReplyDAO {
     void save(ServiceReply reply);
 
-    Optional<ServiceReply> find(Number id);
-
     void delete(ServiceReply reply);
 }
