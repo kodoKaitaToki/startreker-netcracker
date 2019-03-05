@@ -35,14 +35,18 @@ public class TripServiceImpl implements TripService {
     @Override
     public TripDTO resolveTrip(User requestUser, TripDTO tripDTO) {
         Optional<Trip> optionalTrip = tripDAO.find(tripDTO.getTripId());
+
         if(!optionalTrip.isPresent()){
             return createTrip(requestUser, tripDTO);
         }
+
         Trip trip = optionalTrip.get();
         TripState dtoState = TripStateUtils.getState(tripDTO.getStatus());
+
         if(!dtoState.equals(trip.getTripState())){
             doChangeStatus(requestUser, trip, dtoState);
         }
+
         tripDAO.save(trip);
         return TripDTO.from(trip);
     }

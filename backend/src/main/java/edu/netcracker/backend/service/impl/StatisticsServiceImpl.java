@@ -1,12 +1,14 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
+import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.dao.StatisticsDAO;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.message.response.CarrierRevenueResponse;
 import edu.netcracker.backend.message.response.CarrierViewsResponse;
 import edu.netcracker.backend.message.response.ServiceDistributionElement;
 import edu.netcracker.backend.message.response.TripDistributionElement;
+import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.StatisticsService;
@@ -23,11 +25,13 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     private final StatisticsDAO statisticsDAO;
     private final TripDAO tripDAO;
+    private final ServiceDAO serviceDAO;
 
     @Autowired
-    public StatisticsServiceImpl(StatisticsDAO statisticsDAO, TripDAO tripDAO) {
+    public StatisticsServiceImpl(StatisticsDAO statisticsDAO, TripDAO tripDAO, ServiceDAO serviceDAO) {
         this.statisticsDAO = statisticsDAO;
         this.tripDAO = tripDAO;
+        this.serviceDAO = serviceDAO;
     }
 
     public List<ServiceDistributionElement> getServiceStatistics() {
@@ -123,6 +127,10 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     private void ensureCallerIsServiceOwner(User caller, long serviceId){
-        // todo
+        ServiceDescr service = serviceDAO.find(serviceId).orElseThrow(
+                () -> new RequestException("Service " + serviceId + " not found ", HttpStatus.NOT_FOUND));
+        if(!service.getCarrierId().equals(caller.getUserId())){
+            throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
+        }
     }
 }

@@ -38,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 sessionManagement().
                 sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
+        System.out.println(authFilter.getClass());
         http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
     }
 

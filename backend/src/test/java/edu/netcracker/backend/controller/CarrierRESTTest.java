@@ -45,6 +45,7 @@ import java.util.stream.Collectors;
 @SpringBootTest(classes = BackendApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase
 @ActiveProfiles(profiles = "test")
+@Ignore("have been made for an old database")
 public class CarrierRESTTest {
 
     private static final String CREATE_TEST_DB_SCRIPT = "schema.sql";

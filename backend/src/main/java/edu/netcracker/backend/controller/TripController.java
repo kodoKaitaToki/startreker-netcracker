@@ -35,7 +35,7 @@ public class TripController {
 
     @PostMapping(value = "api/v1/trip", consumes = MediaType.APPLICATION_JSON)
     @PreAuthorize("hasAuthority('ROLE_CARRIER') or hasAuthority('ROLE_APPROVER')")
-    public TripDTO createUpdate(@Valid @RequestBody TripDTO tripDTO) {
+    public TripDTO update(@Valid @RequestBody TripDTO tripDTO) {
         return tripService.resolveTrip(securityContext.getUser(), tripDTO);
     }
 
