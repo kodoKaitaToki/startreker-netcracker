@@ -10,8 +10,7 @@ public enum ServiceStatus {
     ASSIGNED(3),
     PUBLISHED(4),
     ARCHIVED(5),
-    UNDER_CLARIFICATION(6),
-    REMOVED(7);
+    UNDER_CLARIFICATION(6);
 
     private final int value;
 

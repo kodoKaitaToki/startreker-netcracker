@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ServiceServiceImpl implements ServiceService {
@@ -33,7 +34,7 @@ public class ServiceServiceImpl implements ServiceService {
     @Autowired
     private UserService userService;
 
-    private Integer carrierId = 8;
+    private Integer carrierId = 7;
 
     public ServiceServiceImpl(){
         //setCurCarrier();
@@ -60,6 +61,10 @@ public class ServiceServiceImpl implements ServiceService {
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
+        if(serviceCreateForm.getServiceStatus() != (1|2)){
+            throw new RequestException("Status of new service must be draft or open", HttpStatus.BAD_REQUEST);
+        }
+
         ServiceDescr serviceDescr = new ServiceDescr();
         serviceDescr.setCarrierId(carrierId);
         serviceDescr.setServiceName(serviceCreateForm.getServiceName());
@@ -82,8 +87,15 @@ public class ServiceServiceImpl implements ServiceService {
             throw new RequestException("Service " + serviceDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
         }
 
-        if(ifServiceExists(serviceDTO.getServiceName(), carrierId)){
+        if((ifServiceExists(serviceDTO.getServiceName(), carrierId))&&
+                (!Objects.equals(serviceDTO.getServiceName(),serviceDescr.getServiceName()))){
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
+        }
+
+        if((serviceDTO.getServiceStatus() == (3|4|6)) &&
+                (!Objects.equals(serviceDTO.getServiceStatus(),serviceDescr.getServiceStatus()))){
+            throw new RequestException("Cannot set service_status = " + serviceDTO.getServiceStatus(),
+                    HttpStatus.BAD_REQUEST);
         }
 
         serviceDescr.setServiceName(serviceDTO.getServiceName());
