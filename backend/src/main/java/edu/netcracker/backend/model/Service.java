@@ -12,7 +12,6 @@ import lombok.Setter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Table("service")
 public class Service {
-
     @PrimaryKey("service_id")
     @EqualsAndHashCode.Include
     private Integer serviceId;
@@ -22,7 +21,7 @@ public class Service {
 
     @Attribute("service_description")
     private String serviceDescription;
-
+  
     private Integer servicePrice;
 
     private Integer itemNumber;

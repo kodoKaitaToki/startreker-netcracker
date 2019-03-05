@@ -36,6 +36,7 @@ public class AdminController {
     @GetMapping("/api/v1/admin/costs")
     public String getCostsPerPeriodPerCarrier(@RequestParam("from") @DateTimeFormat(pattern="yyyy-MM-dd") Date from,
                                               @RequestParam("to") @DateTimeFormat(pattern="yyyy-MM-dd") Date to) {
+
         return new Gson().toJson(adminService.getCostsPerPeriod(convertToLocalDateViaInstant(from),
                 convertToLocalDateViaInstant(to)));
     }
