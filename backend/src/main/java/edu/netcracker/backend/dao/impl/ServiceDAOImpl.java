@@ -1,6 +1,7 @@
 package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.ServiceDAO;
+import edu.netcracker.backend.model.Service;
 import edu.netcracker.backend.dao.mapper.ServiceMapper;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
@@ -162,5 +163,4 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
             return null;
         }
     }
-
 }
