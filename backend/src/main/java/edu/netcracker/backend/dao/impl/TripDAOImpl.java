@@ -66,7 +66,12 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     }
 
     private Optional<Trip> attachTicketClassed(Trip trip) {
-        List<Long> rows = getJdbcTemplate().queryForList(FIND_ALL_TICKET_TRIPS, Long.class, trip.getTripId());
+        if (trip == null)
+            return Optional.empty();
+
+        List<Long> rows = getJdbcTemplate()
+                .queryForList(FIND_ALL_TICKET_TRIPS, Long.class,
+                        trip.getTripId());
         trip.setTicketClasses(ticketClassDAO.findIn(rows));
         return Optional.of(trip);
     }

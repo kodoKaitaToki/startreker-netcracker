@@ -15,13 +15,13 @@ public class TicketClass {
 
     @PrimaryKey("class_id")
     @EqualsAndHashCode.Include
-    private Integer classId;
+    private Long classId;
 
     @Attribute("class_name")
     private String className;
 
     @Attribute("trip_id")
-    private Integer tripId;
+    private Long tripId;
 
     @Attribute("ticket_price")
     private Integer ticketPrice;

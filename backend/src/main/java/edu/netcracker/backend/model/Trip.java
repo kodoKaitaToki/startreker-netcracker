@@ -22,17 +22,11 @@ public class Trip {
     @EqualsAndHashCode.Include
     private Long tripId;
 
-    @Attribute("vehicle_id")
-    private Long vehicleId;
+    @Attribute("carrier_id")
+    private Integer carrierId;
 
     @Attribute("trip_status")
     private Integer tripStatus;
-
-    @Attribute("approver_id")
-    private Integer approverId;
-
-    @Attribute("creation_date")
-    private LocalDate creationDate;
 
     @Attribute("departure_date")
     private LocalDateTime departureDate;
@@ -40,8 +34,17 @@ public class Trip {
     @Attribute("arrival_date")
     private LocalDateTime arrivalDate;
 
+    @Attribute("arrival_id")
+    private Integer arrivalId;
+
     @Attribute("trip_photo")
     private String tripPhoto;
+
+    @Attribute("approver_id")
+    private Integer approverId;
+
+    @Attribute("creation_date")
+    private LocalDateTime creationDate;
 
     private List<TicketClass> ticketClasses = new ArrayList<>();
 
