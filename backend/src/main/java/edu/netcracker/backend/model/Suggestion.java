@@ -10,27 +10,17 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table("ticket_class")
-public class TicketClass {
-
-    @PrimaryKey("class_id")
+@Table("suggestion")
+public class Suggestion {
+    @PrimaryKey("suggestion_id")
     @EqualsAndHashCode.Include
-    private Long classId;
-
-    @Attribute("trip_id")
-    private Long tripId;
-
-    @Attribute("ticket_price")
-    private Integer ticketPrice;
+    private Long suggestionId;
 
     @Attribute("discount_id")
     private Long discountId;
 
-    @Attribute("class_name")
-    private String className;
-
-    @Attribute("class_seats")
-    private Integer classSeats;
+    @Attribute("class_id")
+    private Long classId;
 
     private Discount discount;
 }
