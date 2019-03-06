@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { clone } from 'ramda';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {MatDialog, MatDialogConfig} from "@angular/material";
 
 import { Service } from '../service.model';
 import { ServiceService } from '../service.service';
@@ -101,5 +102,4 @@ export class ServiceTableComponent implements OnInit {
     this.currentServiceForUpdate = null;
     this.isForUpdateAlertMessage = false;
   }
-
 }

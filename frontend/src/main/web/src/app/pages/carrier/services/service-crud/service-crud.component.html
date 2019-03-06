@@ -132,7 +132,8 @@
                     <p data-placement="top"
                        data-toggle="tooltip"
                        title="Delete"
-                       (click)="deleteService(service.id);"
+                       (click)="service.service_status = 7;
+                                updateService(service)"
                        class="deletePrgph"
                     >
                       <button class="btn btn-danger btn-md"

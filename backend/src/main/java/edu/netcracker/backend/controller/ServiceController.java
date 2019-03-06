@@ -10,6 +10,7 @@ import edu.netcracker.backend.message.response.ServiceDistributionElement;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.StatisticsService;
 import edu.netcracker.backend.service.ServiceService;
+import edu.netcracker.backend.utils.ServiceStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -88,7 +89,7 @@ public class ServiceController {
 
     @GetMapping("api/v1/carrier/service/by-status")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceCRUDDTO> getByStatus(@RequestParam("status") Integer status){
+    public List<ServiceCRUDDTO> getByStatus(@RequestParam("status") String status){
         return serviceService.findByStatus(status);
     }
 
@@ -114,10 +115,11 @@ public class ServiceController {
     //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
     public List<ServiceCRUDDTO> getServicesForApprover(@RequestParam("from") int from,
                                              @RequestParam("number") int number,
-                                             @RequestParam("status") int status){
-
-        if (status != 2 && status != 3)
+                                             @RequestParam("status") String status){
+        if((!status.equals(ServiceStatus.OPEN.toString())) &&
+                (!status.equals(ServiceStatus.ASSIGNED.toString()))){
             throw new RequestException("Approver may only read open or assigned services", HttpStatus.BAD_REQUEST);
+        }
 
         int approverId = securityContext.getUser().getUserId();
         return serviceService.getServicesForApprover(from, number, status, approverId);
@@ -127,14 +129,18 @@ public class ServiceController {
     //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
     public ServiceCRUDDTO updateServiceReview(@Valid @RequestBody ServiceCRUDDTO serviceDTO){
         boolean reviewOnAssigned = (
-                serviceDTO.getServiceStatus() != 5
+                serviceDTO.getServiceStatus() != ServiceStatus.ARCHIVED.toString()
                         && serviceDTO.getReplyText() != null
                         && serviceDTO.getReplyText().length() > 0);
         if (reviewOnAssigned)
             throw new RequestException("Reviews can only be on under clarification services", HttpStatus.BAD_REQUEST);
 
-        int state = serviceDTO.getServiceStatus();
-        boolean illegalState = (state == 1 || state == 2 || state == 6);
+        String state = serviceDTO.getServiceStatus();
+
+        boolean illegalState = (state.equals(ServiceStatus.DRAFT.toString()) ||
+                                state.equals(ServiceStatus.OPEN.toString()) ||
+                                state.equals(ServiceStatus.UNDER_CLARIFICATION.toString()));
+
         if (illegalState)
             throw new RequestException("Approver may only assign, publish or review services", HttpStatus.BAD_REQUEST);
 

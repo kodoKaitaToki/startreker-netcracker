@@ -50,20 +50,6 @@ export class ArchiveComponent implements OnInit {
                       );
   }
 
-  deleteService(id){
-    this.serviceService.deleteService(id)
-                      .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
-                          this.getArchievedServices();
-                        },
-                        error => console.log(error)
-                      );
-  }
-
   updateService(service: Service){
     this.isForUpdateAlertMessage = true;
     console.log(service);
