@@ -1,30 +1,35 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-3">
-      <div class="row">
-        <select class="form-control col-md-12 col-sm-12 col-lg-4" (click)="chooseNewFilter($event.target)">
-          <option *ngFor="let filters of filterCriteria" [value]="filters.name">
-            {{filters.name}}
-          </option>
-        </select>
+      <div class="container-fluid">
+        <div class="row">
+          <select class="form-control col-xl-3 col-md-12 col-lg-5"
+                  (click)="chooseNewFilter($event.target)"
+          >
+            <option *ngFor="let filters of filterCriteria"
+                    [value]="filters.name"
+            >
+              {{filters.name}}
+            </option>
+          </select>
 
-        <input type="text" class="form-control col-md-12 col-sm-12 col-lg-7 offset-lg-1"
-               [placeholder]="currentFilterPlaceholder"
-               [(ngModel)]="filterContent"
-        />
+          <input type="text" class="form-control col-xl-9 col-md-12 col-lg-7"
+                 [placeholder]="currentFilterPlaceholder"
+                 [(ngModel)]="filterContent"
+          />
+        </div>
       </div>
 
       <hr>
 
-      <h2
-        class="text-center"
-      >
+      <h2 class="text-center">
         New Approver
       </h2>
 
       <hr>
 
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <form [formGroup]="form"
+            (ngSubmit)="onPost()">
         <div class="form-group">
           <input type="text" class="form-control"
                  [ngClass]="{
@@ -34,52 +39,109 @@
                  formControlName="email"
                  placeholder="Email"
           >
-          <span *ngIf="form.get('email').touched && form.get('email').invalid" class="invalid-feedback">Input the correct email</span>
+          <span *ngIf="form.get('email').touched && form.get('email').invalid"
+                class="invalid-feedback"
+          >
+            Input the correct email
+          </span>
         </div>
 
         <div class="form-group">
-          <input type="text" class="form-control" placeholder="Name" formControlName="name"
+          <input type="text"
+                 class="form-control"
+                 placeholder="Name"
+                 formControlName="username"
                  [ngClass]="{
-                   'is-invalid':form.get('name').touched && form.get('name').invalid,
-                   'is-valid': form.get('name').valid
+                   'is-invalid':form.get('username').touched && form.get('username').invalid,
+                   'is-valid': form.get('username').valid
                    }"
           >
-          <span *ngIf="form.get('name').touched && form.get('name').invalid"
-                class="invalid-feedback">Input the name</span>
+          <span *ngIf="form.get('username').touched && form.get('username').invalid"
+                class="invalid-feedback"
+          >
+            Input the name
+          </span>
         </div>
 
         <div class="form-group">
-          <input type="tel" class="form-control" placeholder="Telephone" formControlName="tel"
+          <input type="password"
+                 class="form-control"
+                 placeholder="Password"
+                 formControlName="password"
                  [ngClass]="{
-                   'is-invalid':form.get('tel').touched && form.get('tel').invalid,
-                   'is-valid': form.get('tel').valid
+                   'is-invalid':form.get('password').invalid && form.get('password').touched,
+                   'is-valid': form.get('password').valid && form.get('password').touched
                    }"
           >
-          <span *ngIf="form.get('tel').touched && form.get('tel').invalid" class="invalid-feedback">Input the correct telephone number</span>
+          <span *ngIf="form.get('password').invalid && form.get('password').touched"
+                class="invalid-feedback"
+          >
+            <span *ngIf="form.get('password')['errors']['required']">
+              Password cannot be empty
+            </span>
+            <span *ngIf="form.get('password')['errors']['minlength']">
+            Password must be longer than {{form.get('password')['errors']['minlength']['requiredLength']}} symbols.
+            Now is {{form.get('password')['errors']['minlength']['actualLength']}}
+            </span>
+          </span>
+        </div>
+
+        <div class="form-group">
+          <input type="password" class="form-control"
+                 placeholder="Repeat password"
+                 formControlName="repeat_password"
+                 [ngClass]="{
+                   'is-invalid': !checkRepeatedPasswordTheSame() && this.form.get('repeat_password').touched,
+                   'is-valid':  checkRepeatedPasswordTheSame() && this.form.get('repeat_password').touched
+                   }"
+          >
+        </div>
+
+        <div class="form-group">
+          <input type="text"
+                 class="form-control"
+                 placeholder="Telephone"
+                 formControlName="telephone_number"
+                 [ngClass]="{
+                   'is-invalid':form.get('telephone_number').touched && form.get('telephone_number').invalid,
+                   'is-valid': form.get('telephone_number').valid
+                   }"
+          >
+          <span *ngIf="form.get('telephone_number').touched && form.get('telephone_number').invalid"
+                class="invalid-feedback"
+          >
+            Telephone number must be here
+          </span>
         </div>
 
         <div class="container statusRadio" style="text-align: center">
           <h4>Status</h4>
           <div class="custom-control custom-radio">
             <input type="radio"
-                   id="activated"
-                   name="status"
                    class="custom-control-input"
-                   value="activated"
-                   formControlName="status"
+                   [value]="true"
+                   formControlName="is_activated"
+                   id="new_activated"
             >
-            <label class="custom-control-label" for="activated">Activated</label>
+            <label class="custom-control-label"
+                   for="new_activated"
+            >
+              Activated
+            </label>
           </div>
 
           <div class="custom-control custom-radio">
             <input type="radio"
-                   id="deactivated"
-                   name="status"
                    class="custom-control-input"
-                   value="deactivated"
-                   formControlName="status"
+                   [value]="false"
+                   formControlName="is_activated"
+                   id="new_deactivated"
             >
-            <label class="custom-control-label" for="deactivated">Deactivated</label>
+            <label class="custom-control-label"
+                   for="new_deactivated"
+            >
+              Deactivated
+            </label>
           </div>
         </div>
 
@@ -97,11 +159,11 @@
     </div>
 
     <div class="col-md-9">
-      <app-approver-table [approvers]="defaultApprovers"
-                          (notifyAboutUpdate)="processUpdateEvent($event)"
-                          (notifyAboutDelete)="processDeleteNotification()"
+      <app-approver-table [approvers]="approvers"
                           [filterCriteria]="currentFilter"
                           [filterContent]="filterContent"
+                          (onUpdateDataNotifier)="getApproverForUpdate($event)"
+                          (onDeleteDataNotifier)="getApproverForDelete($event)"
       >
       </app-approver-table>
     </div>

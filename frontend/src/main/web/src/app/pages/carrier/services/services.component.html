@@ -1,9 +1,38 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-12 my-auto">
-      <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
-        <h1 class="card-title text-center">services works!</h1>
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
+          <h3 class="card-title text-center">Your services:</h3>
+          <div class="card-body">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                <a class="nav-link" routerLink="/carrier/services/new-service">
+                  New service
+                </a>
+              </li>
+              <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                <a class="nav-link" routerLink="/carrier/services/yourServices">
+                  Aproved services
+                </a>
+              </li>
+              <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                <div class="row">
+                  <a class="nav-link" routerLink="/carrier/services/clarification">
+                    Replies from approver
+                  </a>
+                </div>
+              </li>
+              <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+                <a class="nav-link" routerLink="/carrier/services/archive">
+                  Archive
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <router-outlet></router-outlet>
       </div>
     </div>
   </div>
-</div>

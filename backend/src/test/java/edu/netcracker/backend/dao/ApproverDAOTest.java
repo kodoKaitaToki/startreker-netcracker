@@ -10,7 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -41,7 +41,7 @@ public class ApproverDAOTest {
             user.setUserPassword("testpassword" + i);
             user.setUserEmail("testemail" + i);
             user.setUserTelephone("testphone" + i);
-            user.setRegistrationDate(LocalDate.now());
+            user.setRegistrationDate(LocalDateTime.now());
 
             if (i % 2 == 0) {
                 user.getUserRoles().add(roleDAO.find(ROLE_APPROVER_ID).get());
@@ -70,7 +70,5 @@ public class ApproverDAOTest {
         assertThat(check.getUsername(), equalTo(user1.getUsername()));
 
         assertThat(approverDAO.count(), equalTo(BigInteger.valueOf(5L)));
-
-
     }
 }
