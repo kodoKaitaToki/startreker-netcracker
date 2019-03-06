@@ -6,7 +6,7 @@ import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.model.state.trip.TripState;
-import edu.netcracker.backend.model.state.trip.TripStateUtils;
+import edu.netcracker.backend.model.state.trip.TripStateRegistry;
 import edu.netcracker.backend.service.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,18 +18,12 @@ import java.util.Optional;
 public class TripServiceImpl implements TripService {
 
     private final TripDAO tripDAO;
+    private final TripStateRegistry tripStateRegistry;
 
     @Autowired
-    public TripServiceImpl(TripDAO tripDAO) {
+    public TripServiceImpl(TripDAO tripDAO, TripStateRegistry tripStateRegistry) {
         this.tripDAO = tripDAO;
-    }
-
-    @Override
-    public Trip changeStatus(User requestUser, long tripId, int stateId) {
-        Trip trip = tripDAO.find(tripId).orElseThrow(
-                () -> new RequestException("Trip " + tripId + " not found ", HttpStatus.NOT_FOUND));
-        tripDAO.save(doChangeStatus(requestUser, trip, TripStateUtils.getState(stateId)));
-        return trip;
+        this.tripStateRegistry = tripStateRegistry;
     }
 
     @Override
@@ -39,28 +33,30 @@ public class TripServiceImpl implements TripService {
         if(!optionalTrip.isPresent()){
             return createTrip(requestUser, tripDTO);
         }
+        else{
+            return updateTrip(requestUser, optionalTrip.get(), tripDTO);
+        }
+    }
 
-        Trip trip = optionalTrip.get();
-        TripState dtoState = TripStateUtils.getState(tripDTO.getStatus());
+    private TripDTO updateTrip(User requestUser, Trip trip, TripDTO tripDTO) {
+        TripState dtoState = tripStateRegistry.getState(tripDTO.getStatus());
 
         if(!dtoState.equals(trip.getTripState())){
-            doChangeStatus(requestUser, trip, dtoState);
+            changeStatus(requestUser, trip, dtoState, tripDTO);
         }
 
         tripDAO.save(trip);
         return TripDTO.from(trip);
     }
 
+    private void changeStatus(User requestUser, Trip trip, TripState tripState, TripDTO tripDTO) {
+        if(!trip.changeStatus(requestUser, tripState, tripDTO)){
+            throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
+        }
+    }
+
     private TripDTO createTrip(User requestUser, TripDTO tripDTO) {
         // todo
         return null;
-    }
-
-    private Trip doChangeStatus(User requestUser, Trip trip, TripState tripState) {
-        if(trip.changeStatus(requestUser, tripState)){
-            return trip;
-        } else {
-            throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
-        }
     }
 }

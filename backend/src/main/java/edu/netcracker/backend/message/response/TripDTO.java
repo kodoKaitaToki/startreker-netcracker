@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.netcracker.backend.model.Trip;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotNull;
 
@@ -18,6 +19,10 @@ public class TripDTO {
     @JsonProperty("trip_status")
     @NotNull
     private Integer status;
+
+    @JsonProperty("trip_reply")
+    @Length(min = 2, max = 5000)
+    private String reply;
 
     public static TripDTO from(Trip trip){
         TripDTO dto = new TripDTO();

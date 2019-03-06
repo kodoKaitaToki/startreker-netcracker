@@ -4,10 +4,7 @@ import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.dao.mapper.TripMapper;
-import edu.netcracker.backend.model.TicketClass;
 import edu.netcracker.backend.model.Trip;
-import edu.netcracker.backend.model.User;
-import edu.netcracker.backend.model.state.trip.TripStateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -26,6 +23,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     private final String findAllTicketTrips = "SELECT class_id FROM ticket_class WHERE trip_id = ?";
 
     private final UserDAO userDAO;
+    private final TripMapper tripMapper;
 
     @Value("${SELECT_FULL}")
     private String SELECT_FULL;
@@ -40,9 +38,10 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     private String ROW_EXISTS;
 
     @Autowired
-    public TripDAOImpl(TicketClassDAO ticketClassDAO, UserDAO userDAO) {
+    public TripDAOImpl(TicketClassDAO ticketClassDAO, UserDAO userDAO, TripMapper tripMapper) {
         this.ticketClassDAO = ticketClassDAO;
         this.userDAO = userDAO;
+        this.tripMapper = tripMapper;
     }
 
     @Override
@@ -51,7 +50,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
             Trip trip = getJdbcTemplate().queryForObject(
                     SELECT_FULL,
                     new Object[]{id},
-                    new TripMapper()
+                    tripMapper
             );
 
             if (trip != null) {

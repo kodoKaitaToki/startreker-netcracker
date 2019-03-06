@@ -2,6 +2,7 @@ package edu.netcracker.backend.service;
 
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.TripDAO;
+import edu.netcracker.backend.dao.TripReplyDAO;
 import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.model.Role;
 import edu.netcracker.backend.model.Trip;
@@ -12,6 +13,7 @@ import edu.netcracker.backend.utils.AuthorityUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -32,6 +34,12 @@ public class TripServiceImplTest {
 
     @Mock
     private TripDAO tripDAOMock;
+
+    @Autowired
+    private TripStateRegistry tripStateRegistry;
+
+    @Autowired
+    private TripReplyDAO tripReplyDAO;
 
     private TripService tripService;
 
@@ -109,7 +117,7 @@ public class TripServiceImplTest {
         underClarificationTrip.setTripId(1L);
         underClarificationTrip.setApprover(approver);
         underClarificationTrip.setOwner(carrier);
-        underClarificationTrip.setTripState(new UnderClarification());
+        underClarificationTrip.setTripState(new UnderClarification(tripReplyDAO));
 
         removedTrip = new Trip();
         removedTrip.setTripId(1L);
@@ -123,9 +131,10 @@ public class TripServiceImplTest {
         publishedTripDTO = TripDTO.from(publishedTrip);
         archivedTripDTO = TripDTO.from(archivedTrip);
         underClarificationTripDTO = TripDTO.from(underClarificationTrip);
+        underClarificationTripDTO.setReply("test reply");
         removedTripDTO = TripDTO.from(removedTrip);
 
-        tripService = new TripServiceImpl(tripDAOMock);
+        tripService = new TripServiceImpl(tripDAOMock, tripStateRegistry);
     }
 
     // Draft tests

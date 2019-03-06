@@ -25,7 +25,6 @@ import java.io.IOException;
 
 @Service
 @Qualifier("ProductionAuthFilter")
-@Primary
 public class JwtAuthFilter extends AuthFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
