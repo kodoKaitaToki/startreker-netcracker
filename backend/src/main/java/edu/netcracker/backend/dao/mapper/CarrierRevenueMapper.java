@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 @Setter
 @Component
-public class CarrierRevenueMapper extends CarrierMapperHelper implements RowMapper<CarrierRevenueResponse>{
+public class CarrierRevenueMapper extends CarrierMapperHelper implements RowMapper<CarrierRevenueResponse> {
 
     @Override
     public CarrierRevenueResponse mapRow(ResultSet rs, int rowNum) throws SQLException {

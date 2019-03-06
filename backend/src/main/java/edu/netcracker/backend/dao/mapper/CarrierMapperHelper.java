@@ -12,13 +12,13 @@ import java.text.SimpleDateFormat;
 @Log4j2
 public class CarrierMapperHelper {
 
-    protected void mapTimeIntervals(ResultSet rs, CarrierStatisticsResponse cResponse){
+    protected void mapTimeIntervals(ResultSet rs, CarrierStatisticsResponse cResponse) {
 
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         try {
             cResponse.setFrom(df.format(rs.getDate("mon")));
             cResponse.setTo(df.format(rs.getDate("sun")));
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             log.warn(e);
         }
     }
