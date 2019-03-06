@@ -4,6 +4,7 @@ import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.service.impl.ServiceServiceImpl;
+import edu.netcracker.backend.utils.ServiceStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class ServiceServiceTest {
     public void getServicesForApprover() throws Exception {
         when(serviceDAO.getServicesForApprover(0, 10, 2)).thenReturn(ret);
 
-        Assert.assertEquals(serviceService.getServicesForApprover(0, 10, 2, 3), ret);
+        Assert.assertEquals(serviceService.getServicesForApprover(0, 10, ServiceStatus.OPEN.toString(), 3), ret);
     }
 
     @Test
