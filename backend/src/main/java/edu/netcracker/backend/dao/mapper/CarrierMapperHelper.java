@@ -1,22 +1,25 @@
 package edu.netcracker.backend.dao.mapper;
 
 import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
+import lombok.extern.log4j.Log4j2;
 
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+@Log4j2
 public class CarrierMapperHelper {
 
     protected void mapTimeIntervals(ResultSet rs, CarrierStatisticsResponse cResponse){
+
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        Date mon = null, sun = null;
         try {
-            mon = rs.getDate("mon");
-            sun = rs.getDate("sun");
-        }catch (Exception ignored) {}
-        if(mon != null) cResponse.setFrom(df.format(mon));
-        if(sun != null) cResponse.setTo(df.format(sun));
+            cResponse.setFrom(df.format(rs.getDate("mon")));
+            cResponse.setTo(df.format(rs.getDate("sun")));
+        }catch (SQLException e) {
+            log.warn(e);
+        }
     }
 }

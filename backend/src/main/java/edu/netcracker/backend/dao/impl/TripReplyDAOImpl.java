@@ -2,21 +2,19 @@ package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.TripReplyDAO;
 import edu.netcracker.backend.model.TripReply;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@PropertySource("classpath:sql/tripreplydao.properties")
 public class TripReplyDAOImpl extends CrudDAOImpl<TripReply> implements TripReplyDAO {
 
-    private static final String DELETE_REPLY = "DELETE FROM trip_reply " +
-            "WHERE service_id = ? " +
-            "AND writer_id = ?;";
+    @Value("${DELETE_REPLY}")
+    private String DELETE_REPLY;
 
-    private static final String INSERT_REPLY = "INSERT INTO trip_reply ( " +
-            "trip_id, " +
-            "writer_id, " +
-            "reply_text, " +
-            "creation_date " +
-            ") VALUES ( ?, ?, ?, ?);";
+    @Value("${INSERT_REPLY}")
+    private String INSERT_REPLY;
 
     @Override
     public void save(TripReply reply) {
