@@ -13,11 +13,9 @@ import javax.validation.constraints.NotNull;
 public class TripDTO {
 
     @JsonProperty("trip_id")
-    @NotNull
     private Long tripId;
 
     @JsonProperty("trip_status")
-    @NotNull
     private Integer status;
 
     @JsonProperty("trip_reply")

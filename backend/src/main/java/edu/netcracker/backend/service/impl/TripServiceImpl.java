@@ -27,18 +27,18 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public TripDTO resolveTrip(User requestUser, TripDTO tripDTO) {
+    public Trip updateTrip(User requestUser, TripDTO tripDTO) {
         Optional<Trip> optionalTrip = tripDAO.find(tripDTO.getTripId());
 
         if(!optionalTrip.isPresent()){
-            return createTrip(requestUser, tripDTO);
+            throw new RequestException("Illegal operation", HttpStatus.NOT_FOUND);
         }
         else{
             return updateTrip(requestUser, optionalTrip.get(), tripDTO);
         }
     }
 
-    private TripDTO updateTrip(User requestUser, Trip trip, TripDTO tripDTO) {
+    private Trip updateTrip(User requestUser, Trip trip, TripDTO tripDTO) {
         TripState dtoState = tripStateRegistry.getState(tripDTO.getStatus());
 
         if(!dtoState.equals(trip.getTripState())){
@@ -46,17 +46,12 @@ public class TripServiceImpl implements TripService {
         }
 
         tripDAO.save(trip);
-        return TripDTO.from(trip);
+        return trip;
     }
 
     private void changeStatus(User requestUser, Trip trip, TripState tripState, TripDTO tripDTO) {
         if(!trip.changeStatus(requestUser, tripState, tripDTO)){
             throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
         }
-    }
-
-    private TripDTO createTrip(User requestUser, TripDTO tripDTO) {
-        // todo
-        return null;
     }
 }

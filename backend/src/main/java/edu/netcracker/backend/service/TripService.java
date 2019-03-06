@@ -6,5 +6,5 @@ import edu.netcracker.backend.model.User;
 
 public interface TripService {
 
-    TripDTO resolveTrip(User requestUser, TripDTO tripDTO);
+    Trip updateTrip(User requestUser, TripDTO tripDTO);
 }

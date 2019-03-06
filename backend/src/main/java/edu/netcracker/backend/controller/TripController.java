@@ -33,10 +33,11 @@ public class TripController {
         this.tripService = tripService;
     }
 
-    @PostMapping(value = "api/v1/trip", consumes = MediaType.APPLICATION_JSON)
+    @PatchMapping(value = "api/v1/trip/{id}", consumes = MediaType.APPLICATION_JSON)
     @PreAuthorize("hasAuthority('ROLE_CARRIER') or hasAuthority('ROLE_APPROVER')")
-    public TripDTO update(@Valid @RequestBody TripDTO tripDTO) {
-        return tripService.resolveTrip(securityContext.getUser(), tripDTO);
+    public TripDTO update(@Valid @RequestBody TripDTO tripDTO, @PathVariable("id") Long id) {
+        tripDTO.setTripId(id);
+        return TripDTO.from(tripService.updateTrip(securityContext.getUser(), tripDTO));
     }
 
     @GetMapping("api/v1/trip/distribution")
