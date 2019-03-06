@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface RoleDAO extends CrudDAO<Role> {
 
-    Optional<Role> findByRoleName(String roleName);
+    Optional<Role> find(String roleName);
 }

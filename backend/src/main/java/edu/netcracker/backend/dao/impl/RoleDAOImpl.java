@@ -2,29 +2,26 @@ package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.RoleDAO;
 import edu.netcracker.backend.model.Role;
-import edu.netcracker.backend.model.User;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
+import edu.netcracker.backend.model.TicketClass;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 @Repository
-@PropertySource("classpath:sql/roledao.properties")
 public class RoleDAOImpl extends CrudDAOImpl<Role> implements RoleDAO {
 
-    @Value("${SELECT_ROLE_BY_NAME}")
-    private String SELECT_ROLE_BY_NAME;
+    private static final String FIND_ROLE_BY_ROLE_NAME = "SELECT * FROM role_a WHERE role_name = ?";
 
     @Override
-    public Optional<Role> findByRoleName(String roleName) {
+    public Optional<Role> find(String roleName) {
         try {
             Role role = getJdbcTemplate().queryForObject(
-                    SELECT_ROLE_BY_NAME,
+                    FIND_ROLE_BY_ROLE_NAME,
                     new Object[]{roleName},
                     getGenericMapper());
-            return Optional.ofNullable(role);
+
+            return Optional.of(role);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

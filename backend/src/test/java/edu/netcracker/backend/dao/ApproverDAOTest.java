@@ -11,7 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -73,7 +72,5 @@ public class ApproverDAOTest {
         assertThat(check.getUsername(), equalTo(user1.getUsername()));
 
         assertThat(approverDAO.count(), equalTo(BigInteger.valueOf(5L)));
-
-
     }
 }

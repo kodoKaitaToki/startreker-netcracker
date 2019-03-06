@@ -9,6 +9,10 @@ import { DiscountsComponent } from './discounts/discounts.component';
 import { DashboardsComponent } from './dashboard/dashboards/dashboards.component';
 import { SalesComponent } from './dashboard/sales/sales.component';
 import { ViewsComponent } from './dashboard/views/views.component';
+import { ServiceCrudComponent } from './services/service-crud/service-crud.component';
+import { ServiceTableComponent } from './services/service-table/service-table.component';
+import { ClarificationComponent } from './services/clarification/clarification.component';
+import { ArchiveComponent } from './services/archive/archive.component';
 
 const routes: Routes = [
     {
@@ -25,7 +29,25 @@ const routes: Routes = [
           },
           {
               path: 'services',
-              component: ServicesComponent
+              component: ServicesComponent,
+              children: [
+                  {
+                      path: 'new-service',
+                      component: ServiceCrudComponent
+                  },
+                  {
+                      path: 'yourServices',
+                      component: ServiceTableComponent
+                  },
+                  {
+                      path: 'clarification',
+                      component: ClarificationComponent
+                  },
+                  {
+                      path: 'archive',
+                      component: ArchiveComponent
+                  }
+              ]
           },
           {
               path: 'suggestions',
