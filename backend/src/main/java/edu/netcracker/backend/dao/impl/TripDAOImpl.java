@@ -47,17 +47,17 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     @Override
     public Optional<Trip> find(Number id) {
         try {
-            Trip trip = getJdbcTemplate().queryForObject(
-                    SELECT_FULL,
-                    new Object[]{id},
-                    tripMapper
-            );
+            Trip trip = getJdbcTemplate().queryForObject(SELECT_FULL, new Object[]{id}, tripMapper);
 
             if (trip != null) {
                 attachTicketClassed(trip);
                 // this doesn't look right...
-                if (trip.getApprover() != null) userDAO.attachRoles(trip.getApprover());
-                if (trip.getOwner() != null) userDAO.attachRoles(trip.getOwner());
+                if (trip.getApprover() != null) {
+                    userDAO.attachRoles(trip.getApprover());
+                }
+                if (trip.getOwner() != null) {
+                    userDAO.attachRoles(trip.getOwner());
+                }
                 return Optional.of(trip);
             }
         } catch (EmptyResultDataAccessException e) {
@@ -76,46 +76,47 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     }
 
     protected boolean exists(Trip trip) {
-        if(trip.getTripId() == null) return false;
-        SqlRowSet rowSet = getJdbcTemplate().queryForRowSet(
-                ROW_EXISTS,
-                trip.getTripId()
-        );
+        if (trip.getTripId() == null) {
+            return false;
+        }
+        SqlRowSet rowSet = getJdbcTemplate().queryForRowSet(ROW_EXISTS, trip.getTripId());
         return rowSet.next();
     }
 
 
     protected void update(Trip trip) {
-        getJdbcTemplate().update(
-                UPDATE_FULL,
-                trip.getCreationDate(),
-                trip.getDepartureDate(),
-                trip.getArrivalDate(),
-                trip.getTripState().getValue(),
-                trip.getOwner().getUserId(),
-                (trip.getApprover() == null ? null : trip.getApprover().getUserId()),
-                trip.getTripPhoto(),
-                trip.getTripId()
-        );
+        getJdbcTemplate().update(UPDATE_FULL,
+                                 trip.getCreationDate(),
+                                 trip.getDepartureDate(),
+                                 trip.getArrivalDate(),
+                                 trip.getTripState()
+                                     .getValue(),
+                                 trip.getOwner()
+                                     .getUserId(),
+                                 (trip.getApprover() == null
+                                         ? null
+                                         : trip.getApprover()
+                                               .getUserId()),
+                                 trip.getTripPhoto(),
+                                 trip.getTripId()
+                                );
     }
 
     private void create(Trip trip) {
-        getJdbcTemplate().update(
-                CREATE_FULL,
-                getTripArguments(trip)
-        );
+        getJdbcTemplate().update(CREATE_FULL, getTripArguments(trip));
     }
 
     private Object[] getTripArguments(Trip trip) {
-        return new Object[]{
-                trip.getCreationDate(),
-                trip.getDepartureDate(),
-                trip.getArrivalDate(),
-                trip.getTripState().getValue(),
-                trip.getOwner().getUserId(),
-                (trip.getApprover() == null ? null : trip.getApprover().getUserId()),
-                trip.getTripPhoto()
-        };
+        return new Object[]{trip.getCreationDate(),
+                            trip.getDepartureDate(),
+                            trip.getArrivalDate(),
+                            trip.getTripState().getValue(),
+                            trip.getOwner().getUserId(),
+                            (trip.getApprover() == null
+                                    ? null
+                                    : trip.getApprover()
+                                          .getUserId()),
+                            trip.getTripPhoto()};
     }
 
     private Trip attachTicketClassed(Trip trip) {

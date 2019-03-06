@@ -31,7 +31,8 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     private final CarrierViewsMapper carrierViewsMapper;
 
     @Autowired
-    public StatisticsDAOImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedJdbcTemplate, CarrierRevenueMapper carrierRevenueMapper, CarrierViewsMapper carrierViewsMapper) {
+    public StatisticsDAOImpl(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedJdbcTemplate,
+                             CarrierRevenueMapper carrierRevenueMapper, CarrierViewsMapper carrierViewsMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.namedJdbcTemplate = namedJdbcTemplate;
         this.carrierRevenueMapper = carrierRevenueMapper;
@@ -99,7 +100,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     private String SELECT_SERVICE_VIEWS_TOTAL_BY_SERVICE_BY_MONTH;
 
 
-    public List<TripDistributionElement> getTripsStatistics(){
+    public List<TripDistributionElement> getTripsStatistics() {
         return jdbcTemplate.query(SELECT_ROUTES_DISTRIBUTION, (rs, rowNum) -> {
             TripDistributionElement rstat = new TripDistributionElement();
             rstat.setArrivalId(rs.getLong("arrival_id"));
@@ -116,119 +117,122 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         });
     }
 
-    public List<CarrierViewsResponse> getTripsViewsStatisticsByWeek(long carrierId, LocalDate from, LocalDate to){
-        return jdbcTemplate.query(
-                SELECT_TRIP_VIEWS_TOTAL_BY_CARRIER_BY_WEEK,
-                new Object[]{carrierId, from, to},
-                carrierViewsMapper);
+    public List<CarrierViewsResponse> getTripsViewsStatisticsByWeek(long carrierId, LocalDate from, LocalDate to) {
+        return jdbcTemplate.query(SELECT_TRIP_VIEWS_TOTAL_BY_CARRIER_BY_WEEK,
+                                  new Object[]{carrierId, from, to},
+                                  carrierViewsMapper
+                                 );
     }
 
-    public List<CarrierViewsResponse> getTripsViewsStatisticsByMonth(long carrierId, LocalDate from, LocalDate to){
-        return jdbcTemplate.query(
-                SELECT_TRIP_VIEWS_TOTAL_BY_CARRIER_BY_MONTH,
-                new Object[]{carrierId, from, to},
-                carrierViewsMapper);
+    public List<CarrierViewsResponse> getTripsViewsStatisticsByMonth(long carrierId, LocalDate from, LocalDate to) {
+        return jdbcTemplate.query(SELECT_TRIP_VIEWS_TOTAL_BY_CARRIER_BY_MONTH,
+                                  new Object[]{carrierId, from, to},
+                                  carrierViewsMapper
+                                 );
     }
 
-    public List<CarrierViewsResponse> getTripsViewsStatisticsByTripByWeek(long tripId, LocalDate from, LocalDate to){
-        return jdbcTemplate.query(
-                SELECT_TRIP_VIEWS_TOTAL_BY_TRIP_BY_WEEK,
-                new Object[]{tripId, from, to},
-                carrierViewsMapper);
+    public List<CarrierViewsResponse> getTripsViewsStatisticsByTripByWeek(long tripId, LocalDate from, LocalDate to) {
+        return jdbcTemplate.query(SELECT_TRIP_VIEWS_TOTAL_BY_TRIP_BY_WEEK,
+                                  new Object[]{tripId, from, to},
+                                  carrierViewsMapper
+                                 );
     }
 
-    public List<CarrierViewsResponse> getTripsViewsStatisticsByTripByMonth(long tripId, LocalDate from, LocalDate to){
-        return jdbcTemplate.query(
-                SELECT_TRIP_VIEWS_TOTAL_BY_TRIP_BY_MONTH,
-                new Object[]{tripId, from, to},
-                carrierViewsMapper);
+    public List<CarrierViewsResponse> getTripsViewsStatisticsByTripByMonth(long tripId, LocalDate from, LocalDate to) {
+        return jdbcTemplate.query(SELECT_TRIP_VIEWS_TOTAL_BY_TRIP_BY_MONTH,
+                                  new Object[]{tripId, from, to},
+                                  carrierViewsMapper
+                                 );
     }
 
-    public List<CarrierViewsResponse> getServiceViewsStatisticsByWeek(long carrierId, LocalDate from, LocalDate to){
-        return jdbcTemplate.query(
-                SELECT_SERVICE_VIEWS_TOTAL_BY_CARRIER_BY_WEEK,
-                new Object[]{carrierId, from, to},
-                carrierViewsMapper);
+    public List<CarrierViewsResponse> getServiceViewsStatisticsByWeek(long carrierId, LocalDate from, LocalDate to) {
+        return jdbcTemplate.query(SELECT_SERVICE_VIEWS_TOTAL_BY_CARRIER_BY_WEEK,
+                                  new Object[]{carrierId, from, to},
+                                  carrierViewsMapper
+                                 );
     }
 
-    public List<CarrierViewsResponse> getServiceViewsStatisticsByMonth(long carrierId, LocalDate from, LocalDate to){
-        return jdbcTemplate.query(
-                SELECT_SERVICE_VIEWS_TOTAL_BY_CARRIER_BY_MONTH,
-                new Object[]{carrierId, from, to},
-                carrierViewsMapper);
+    public List<CarrierViewsResponse> getServiceViewsStatisticsByMonth(long carrierId, LocalDate from, LocalDate to) {
+        return jdbcTemplate.query(SELECT_SERVICE_VIEWS_TOTAL_BY_CARRIER_BY_MONTH,
+                                  new Object[]{carrierId, from, to},
+                                  carrierViewsMapper
+                                 );
     }
 
-    public List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByWeek(long serviceId, LocalDate from, LocalDate to){
-        return jdbcTemplate.query(
-                SELECT_SERVICE_VIEWS_TOTAL_BY_SERVICE_BY_WEEK,
-                new Object[]{serviceId, from, to},
-                carrierViewsMapper);
+    public List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByWeek(long serviceId, LocalDate from,
+                                                                               LocalDate to) {
+        return jdbcTemplate.query(SELECT_SERVICE_VIEWS_TOTAL_BY_SERVICE_BY_WEEK,
+                                  new Object[]{serviceId, from, to},
+                                  carrierViewsMapper
+                                 );
     }
 
-    public List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByMonth(long serviceId, LocalDate from, LocalDate to){
-        return jdbcTemplate.query(
-                SELECT_SERVICE_VIEWS_TOTAL_BY_SERVICE_BY_MONTH,
-                new Object[]{serviceId, from, to},
-                carrierViewsMapper);
+    public List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByMonth(long serviceId, LocalDate from,
+                                                                                LocalDate to) {
+        return jdbcTemplate.query(SELECT_SERVICE_VIEWS_TOTAL_BY_SERVICE_BY_MONTH,
+                                  new Object[]{serviceId, from, to},
+                                  carrierViewsMapper
+                                 );
     }
 
-    public CarrierRevenueResponse getTripsSalesStatistics(long carrierId, LocalDate from, LocalDate to){
-        return jdbcTemplate.queryForObject(
-                SELECT_TICKETS_TOTAL_SOLD_REVENUE_TIME_BOUNDED,
-                new Object[]{carrierId, from, to},
-                carrierRevenueMapper);
+    public CarrierRevenueResponse getTripsSalesStatistics(long carrierId, LocalDate from, LocalDate to) {
+        return jdbcTemplate.queryForObject(SELECT_TICKETS_TOTAL_SOLD_REVENUE_TIME_BOUNDED,
+                                           new Object[]{carrierId, from, to},
+                                           carrierRevenueMapper
+                                          );
     }
 
-    public CarrierRevenueResponse getTripsSalesStatistics(long carrierId){
-        return jdbcTemplate.queryForObject(
-                SELECT_TICKETS_TOTAL_SOLD_REVENUE,
-                new Object[]{carrierId},
-                carrierRevenueMapper);
+    public CarrierRevenueResponse getTripsSalesStatistics(long carrierId) {
+        return jdbcTemplate.queryForObject(SELECT_TICKETS_TOTAL_SOLD_REVENUE,
+                                           new Object[]{carrierId},
+                                           carrierRevenueMapper
+                                          );
     }
 
-    public List<CarrierRevenueResponse> getTripsSalesStatisticsByWeek(long carrierId, LocalDate from, LocalDate to){
-        return jdbcTemplate.query(
-                SELECT_TICKETS_TOTAL_SOLD_REVENUE_BY_WEEK,
-                new Object[]{carrierId, from, to},
-                carrierRevenueMapper);
+    public List<CarrierRevenueResponse> getTripsSalesStatisticsByWeek(long carrierId, LocalDate from, LocalDate to) {
+        return jdbcTemplate.query(SELECT_TICKETS_TOTAL_SOLD_REVENUE_BY_WEEK,
+                                  new Object[]{carrierId, from, to},
+                                  carrierRevenueMapper
+                                 );
     }
 
-    public List<CarrierRevenueResponse> getServicesSalesStatisticsByWeek(long carrierId, LocalDate from, LocalDate to){
-        return jdbcTemplate.query(
-                SELECT_SERVICES_TOTAL_SOLD_REVENUE_BY_WEEK,
-                new Object[]{carrierId, from, to},
-                carrierRevenueMapper);
+    public List<CarrierRevenueResponse> getServicesSalesStatisticsByWeek(long carrierId, LocalDate from, LocalDate to) {
+        return jdbcTemplate.query(SELECT_SERVICES_TOTAL_SOLD_REVENUE_BY_WEEK,
+                                  new Object[]{carrierId, from, to},
+                                  carrierRevenueMapper
+                                 );
     }
 
-    public List<CarrierRevenueResponse> getServicesSalesStatisticsByMonth(long carrierId, LocalDate from, LocalDate to){
-        return jdbcTemplate.query(
-                SELECT_SERVICES_TOTAL_SOLD_REVENUE_BY_MONTH,
-                new Object[]{carrierId, from, to},
-                carrierRevenueMapper);
+    public List<CarrierRevenueResponse> getServicesSalesStatisticsByMonth(long carrierId, LocalDate from,
+                                                                          LocalDate to) {
+        return jdbcTemplate.query(SELECT_SERVICES_TOTAL_SOLD_REVENUE_BY_MONTH,
+                                  new Object[]{carrierId, from, to},
+                                  carrierRevenueMapper
+                                 );
     }
 
-    public List<CarrierRevenueResponse> getTripsSalesStatisticsByMonth(long carrierId, LocalDate from, LocalDate to){
-        return jdbcTemplate.query(
-                SELECT_TICKETS_TOTAL_SOLD_REVENUE_BY_MONTH,
-                new Object[]{carrierId, from, to},
-                carrierRevenueMapper);
+    public List<CarrierRevenueResponse> getTripsSalesStatisticsByMonth(long carrierId, LocalDate from, LocalDate to) {
+        return jdbcTemplate.query(SELECT_TICKETS_TOTAL_SOLD_REVENUE_BY_MONTH,
+                                  new Object[]{carrierId, from, to},
+                                  carrierRevenueMapper
+                                 );
     }
 
-    public CarrierRevenueResponse getServiceSalesStatistics(long carrierId, LocalDate from, LocalDate to){
-        return jdbcTemplate.queryForObject(
-                SELECT_SERVICES_TOTAL_SOLD_REVENUE_TIME_BOUNDED,
-                new Object[]{carrierId, from, to},
-                carrierRevenueMapper);
+    public CarrierRevenueResponse getServiceSalesStatistics(long carrierId, LocalDate from, LocalDate to) {
+        return jdbcTemplate.queryForObject(SELECT_SERVICES_TOTAL_SOLD_REVENUE_TIME_BOUNDED,
+                                           new Object[]{carrierId, from, to},
+                                           carrierRevenueMapper
+                                          );
     }
 
-    public CarrierRevenueResponse getServiceSalesStatistics(long carrierId){
-        return jdbcTemplate.queryForObject(
-                SELECT_SERVICES_TOTAL_SOLD_REVENUE,
-                new Object[]{carrierId},
-                carrierRevenueMapper);
+    public CarrierRevenueResponse getServiceSalesStatistics(long carrierId) {
+        return jdbcTemplate.queryForObject(SELECT_SERVICES_TOTAL_SOLD_REVENUE,
+                                           new Object[]{carrierId},
+                                           carrierRevenueMapper
+                                          );
     }
 
-    public List<ServiceDistributionElement> getServicesDistribution(){
+    public List<ServiceDistributionElement> getServicesDistribution() {
         return jdbcTemplate.query(SELECT_SERVICES_DISTRIBUTION, (rs, rowNum) -> {
             ServiceDistributionElement rstat = new ServiceDistributionElement();
             rstat.setServiceId(rs.getLong("service_id"));
@@ -239,20 +243,21 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         });
     }
 
-    public Map<String, Double> getTroubleTicketStatistics(){
+    public Map<String, Double> getTroubleTicketStatistics() {
         SqlRowSet data = namedJdbcTemplate.queryForRowSet(SELECT_TROUBLE_TICKETS_AMOUNT_IN_STATUS,
-                getStatisticsParameters());
+                                                          getStatisticsParameters()
+                                                         );
         return toMap(data);
     }
 
-    public Map<String, Double> getTroubleTicketStatisticsByApprover(Long approverId){
+    public Map<String, Double> getTroubleTicketStatisticsByApprover(Long approverId) {
         Map<String, Object> parameters = getStatisticsParameters();
         parameters.put("approver", approverId);
         SqlRowSet data = namedJdbcTemplate.queryForRowSet(SELECT_TROUBLE_TICKETS_BY_APPROVER, parameters);
         return toMap(data);
     }
 
-    private Map<String, Object> getStatisticsParameters(){
+    private Map<String, Object> getStatisticsParameters() {
         HashMap<String, Object> parameters = new HashMap<>();
         parameters.put("opened", ReportStatus.OPEN.getDatabaseValue());
         parameters.put("in_progress", ReportStatus.IN_PROGRESS.getDatabaseValue());
@@ -262,12 +267,15 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         return parameters;
     }
 
-    private Map<String, Double> toMap(SqlRowSet data){
+    private Map<String, Double> toMap(SqlRowSet data) {
         data.next();
         Map<String, Double> result = new HashMap<>();
-        int colCount = data.getMetaData().getColumnCount();
-        for (int i = 1; i <= colCount; i++){
-            result.put(data.getMetaData().getColumnLabel(i).toLowerCase(), data.getDouble(i));
+        int colCount = data.getMetaData()
+                           .getColumnCount();
+        for (int i = 1; i <= colCount; i++) {
+            result.put(data.getMetaData()
+                           .getColumnLabel(i)
+                           .toLowerCase(), data.getDouble(i));
         }
         return result;
     }

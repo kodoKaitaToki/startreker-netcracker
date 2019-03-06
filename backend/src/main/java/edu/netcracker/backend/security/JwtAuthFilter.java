@@ -39,16 +39,15 @@ public class JwtAuthFilter extends AuthFilter {
     private UserService userService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest,
-                                    HttpServletResponse httpServletResponse,
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String accessToken = JwtUtils.getAccessToken(httpServletRequest);
 
         if (jwtProvider.validateToken(accessToken, httpServletRequest) && jwtProvider.isAccessToken(accessToken)) {
             handleToken(accessToken, httpServletRequest);
-        } else if (httpServletRequest.getAttribute("isExpired") != null &&
-                (Boolean) httpServletRequest.getAttribute("isExpired")) {
+        } else if (httpServletRequest.getAttribute("isExpired") != null && (Boolean) httpServletRequest.getAttribute(
+                "isExpired")) {
             handleExpiredToken(httpServletRequest, httpServletResponse);
         }
 
@@ -58,7 +57,9 @@ public class JwtAuthFilter extends AuthFilter {
     private void handleExpiredToken(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         String newAccessToken = createNewAccessTokenIfRefreshTokenIsValid(httpServletRequest);
 
-        if (newAccessToken == null) return;
+        if (newAccessToken == null) {
+            return;
+        }
 
         httpServletResponse.setHeader("New-Access-Token", newAccessToken);
         handleToken(newAccessToken, httpServletRequest);
@@ -66,18 +67,24 @@ public class JwtAuthFilter extends AuthFilter {
 
     private String createNewAccessTokenIfRefreshTokenIsValid(HttpServletRequest request) {
         String refreshToken = JwtUtils.getRefreshToken(request);
-        if (!jwtProvider.validateToken(refreshToken) || !jwtProvider.isRefreshToken(refreshToken)) return null;
+        if (!jwtProvider.validateToken(refreshToken) || !jwtProvider.isRefreshToken(refreshToken)) {
+            return null;
+        }
 
         User user = userService.findByUsername(jwtProvider.retrieveSubject(refreshToken));
-        if (isNotMatchedWithUsersRefreshToken(refreshToken, user)) return null;
+        if (isNotMatchedWithUsersRefreshToken(refreshToken, user)) {
+            return null;
+        }
 
         return jwtProvider.generateAccessToken(user);
     }
 
     private void handleToken(String accessToken, HttpServletRequest request) {
         UserDetails userDetails = userService.
-                createUserDetails(userInformationHolderService.
-                        convertAsUserInfo(jwtProvider.retrieveSubject(accessToken)));
+                                                     createUserDetails(userInformationHolderService.
+                                                                                                           convertAsUserInfo(
+                                                                                                                   jwtProvider.retrieveSubject(
+                                                                                                                           accessToken)));
         createAuthentication(userDetails, request);
     }
 
@@ -87,12 +94,13 @@ public class JwtAuthFilter extends AuthFilter {
             return;
         }
 
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                userDetails,
-                null,
-                userDetails.getAuthorities());
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
+                                                                                                     null,
+                                                                                                     userDetails.getAuthorities()
+        );
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext()
+                             .setAuthentication(authentication);
     }
 
     private boolean isNotMatchedWithUsersRefreshToken(String refreshToken, User user) {

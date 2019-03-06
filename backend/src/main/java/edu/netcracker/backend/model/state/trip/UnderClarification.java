@@ -19,8 +19,7 @@ public class UnderClarification extends TripState {
 
     private final static int value = 6;
 
-    private static List<Integer> allowedStatesToSwitchFrom =
-            Collections.singletonList(3);
+    private static List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(3);
 
     @Autowired
     public UnderClarification(TripReplyDAO tripReplyDAO) {
@@ -38,8 +37,10 @@ public class UnderClarification extends TripState {
     }
 
     @Override
-    public boolean apply(Trip trip, User requestUser, TripState tripState, TripDTO tripDTO){
-        if(tripDTO.getReply() == null) return false;
+    public boolean apply(Trip trip, User requestUser, TripState tripState, TripDTO tripDTO) {
+        if (tripDTO.getReply() == null) {
+            return false;
+        }
 
         TripReply tripReply = new TripReply();
         tripReply.setCreationDate(LocalDateTime.now());

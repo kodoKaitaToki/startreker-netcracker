@@ -11,7 +11,8 @@ public class Removed extends TripState {
 
     @Override
     public boolean isStateChangeAllowed(Trip trip, User requestUser, TripState tripState) {
-        return requestUser.equals(trip.getApprover()) && !(tripState.getClass().equals(Removed.class));
+        return requestUser.equals(trip.getApprover()) && !(tripState.getClass()
+                                                                    .equals(Removed.class));
     }
 
     @Override

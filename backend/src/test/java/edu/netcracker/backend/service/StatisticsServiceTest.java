@@ -53,32 +53,32 @@ public class StatisticsServiceTest {
     }
 
     @Test
-    public void getTripsSalesStatisticsTest(){
+    public void getTripsSalesStatisticsTest() {
         CarrierRevenueResponse cres = statisticsService.getTripsSalesStatistics(7);
         assertThat(cres, equalTo(tripsSalesTestExpected));
     }
 
     @Test
-    public void getTripsSalesStatisticsTestWithTimeLimits(){
-        CarrierRevenueResponse cres = statisticsService.getTripsSalesStatistics(
-                7,
-                LocalDate.of(2015, 1, 1),
-                LocalDate.of(2020, 1, 1));
+    public void getTripsSalesStatisticsTestWithTimeLimits() {
+        CarrierRevenueResponse cres = statisticsService.getTripsSalesStatistics(7,
+                                                                                LocalDate.of(2015, 1, 1),
+                                                                                LocalDate.of(2020, 1, 1)
+                                                                               );
         assertThat(cres, equalTo(tripsSalesTestWithTimeLimitsExpected));
     }
 
     @Test
-    public void getServicesSalesStatisticsTest(){
+    public void getServicesSalesStatisticsTest() {
         CarrierRevenueResponse cres = statisticsService.getServicesSalesStatistics(7);
         assertThat(cres, equalTo(servicesSalesTestExpected));
     }
 
     @Test
-    public void getServicesSalesStatisticsTestWithTimeLimits(){
-        CarrierRevenueResponse cres = statisticsService.getServicesSalesStatistics(
-                7,
-                LocalDate.of(2015, 1, 1),
-                LocalDate.of(2020, 1, 1));
+    public void getServicesSalesStatisticsTestWithTimeLimits() {
+        CarrierRevenueResponse cres = statisticsService.getServicesSalesStatistics(7,
+                                                                                   LocalDate.of(2015, 1, 1),
+                                                                                   LocalDate.of(2020, 1, 1)
+                                                                                  );
         assertThat(cres, equalTo(servicesSalesTestWithTimeLimitsExpected));
     }
 }

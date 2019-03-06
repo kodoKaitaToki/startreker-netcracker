@@ -19,10 +19,11 @@ public class TripReplyDAOImpl extends CrudDAOImpl<TripReply> implements TripRepl
     @Override
     public void save(TripReply reply) {
         getJdbcTemplate().update(INSERT_REPLY,
-                reply.getTripId(),
-                reply.getWriterId(),
-                reply.getReportText(),
-                reply.getCreationDate());
+                                 reply.getTripId(),
+                                 reply.getWriterId(),
+                                 reply.getReportText(),
+                                 reply.getCreationDate()
+                                );
     }
 
     @Override

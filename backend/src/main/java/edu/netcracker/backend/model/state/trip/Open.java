@@ -12,8 +12,7 @@ public class Open extends TripState {
 
     private final static int value = 2;
 
-    private static List<Integer> allowedStatesToSwitchFrom =
-            Arrays.asList(1, 5, 6);
+    private static List<Integer> allowedStatesToSwitchFrom = Arrays.asList(1, 5, 6);
 
     @Override
     public boolean isStateChangeAllowed(Trip trip, User requestUser, TripState tripState) {

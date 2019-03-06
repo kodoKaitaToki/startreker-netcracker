@@ -140,43 +140,43 @@ public class TripServiceImplTest {
     // Draft tests
 
     @Test(expected = RequestException.class)
-    public void draftToDraftTest(){
+    public void draftToDraftTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(draftTrip));
         tripService.updateTrip(carrier, draftTripDTO);
     }
 
     @Test
-    public void draftToOpenTest(){
+    public void draftToOpenTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(draftTrip));
         tripService.updateTrip(carrier, openTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void draftToAssignedTest(){
+    public void draftToAssignedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(draftTrip));
         tripService.updateTrip(approver, assignedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void draftToPublishedTest(){
+    public void draftToPublishedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(draftTrip));
         tripService.updateTrip(approver, publishedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void draftToArchivedTest(){
+    public void draftToArchivedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(draftTrip));
         tripService.updateTrip(carrier, archivedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void draftToUnderClarificationTest(){
+    public void draftToUnderClarificationTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(draftTrip));
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
     @Test
-    public void draftToRemovedTest(){
+    public void draftToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(draftTrip));
         tripService.updateTrip(approver, removedTripDTO);
     }
@@ -186,43 +186,43 @@ public class TripServiceImplTest {
 
 
     @Test(expected = RequestException.class)
-    public void openToOpenTest(){
+    public void openToOpenTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(openTrip));
         tripService.updateTrip(carrier, openTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void openToDraftTest(){
+    public void openToDraftTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(openTrip));
         tripService.updateTrip(carrier, draftTripDTO);
     }
 
     @Test
-    public void openToAssignedTest(){
+    public void openToAssignedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(openTrip));
         tripService.updateTrip(approver, assignedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void openToPublishedTest(){
+    public void openToPublishedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(openTrip));
         tripService.updateTrip(approver, publishedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void openToArchivedTest(){
+    public void openToArchivedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(openTrip));
         tripService.updateTrip(carrier, archivedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void openToUnderClarificationTest(){
+    public void openToUnderClarificationTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(openTrip));
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
     @Test
-    public void openToRemovedTest(){
+    public void openToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(openTrip));
         tripService.updateTrip(approver, removedTripDTO);
     }
@@ -232,43 +232,43 @@ public class TripServiceImplTest {
 
 
     @Test(expected = RequestException.class)
-    public void assignedToOpenTest(){
+    public void assignedToOpenTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(assignedTrip));
         tripService.updateTrip(carrier, openTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void assignedToDraftTest(){
+    public void assignedToDraftTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(assignedTrip));
         tripService.updateTrip(carrier, draftTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void assignedToAssignedTest(){
+    public void assignedToAssignedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(assignedTrip));
         tripService.updateTrip(approver, assignedTripDTO);
     }
 
     @Test
-    public void assignedToPublishedTest(){
+    public void assignedToPublishedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(assignedTrip));
         tripService.updateTrip(approver, publishedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void assignedToArchivedTest(){
+    public void assignedToArchivedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(assignedTrip));
         tripService.updateTrip(carrier, archivedTripDTO);
     }
 
     @Test
-    public void assignedToUnderClarificationTest(){
+    public void assignedToUnderClarificationTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(assignedTrip));
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
     @Test
-    public void assignedToRemovedTest(){
+    public void assignedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(assignedTrip));
         tripService.updateTrip(approver, removedTripDTO);
     }
@@ -278,43 +278,43 @@ public class TripServiceImplTest {
 
 
     @Test(expected = RequestException.class)
-    public void publishedToOpenTest(){
+    public void publishedToOpenTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(publishedTrip));
         tripService.updateTrip(carrier, openTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void publishedToDraftTest(){
+    public void publishedToDraftTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(publishedTrip));
         tripService.updateTrip(carrier, draftTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void publishedToAssignedTest(){
+    public void publishedToAssignedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(publishedTrip));
         tripService.updateTrip(approver, assignedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void publishedToPublishedTest(){
+    public void publishedToPublishedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(publishedTrip));
         tripService.updateTrip(approver, publishedTripDTO);
     }
 
     @Test
-    public void publishedToArchivedTest(){
+    public void publishedToArchivedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(publishedTrip));
         tripService.updateTrip(carrier, archivedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void publishedToUnderClarificationTest(){
+    public void publishedToUnderClarificationTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(publishedTrip));
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
     @Test
-    public void publishedToRemovedTest(){
+    public void publishedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(publishedTrip));
         tripService.updateTrip(approver, removedTripDTO);
     }
@@ -324,43 +324,43 @@ public class TripServiceImplTest {
 
 
     @Test
-    public void archivedToOpenTest(){
+    public void archivedToOpenTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(archivedTrip));
         tripService.updateTrip(carrier, openTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void archivedToDraftTest(){
+    public void archivedToDraftTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(archivedTrip));
         tripService.updateTrip(carrier, draftTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void archivedToAssignedTest(){
+    public void archivedToAssignedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(archivedTrip));
         tripService.updateTrip(approver, assignedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void archivedToPublishedTest(){
+    public void archivedToPublishedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(archivedTrip));
         tripService.updateTrip(approver, publishedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void archivedToArchivedTest(){
+    public void archivedToArchivedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(archivedTrip));
         tripService.updateTrip(carrier, archivedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void archivedToUnderClarificationTest(){
+    public void archivedToUnderClarificationTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(archivedTrip));
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
     @Test
-    public void archivedToRemovedTest(){
+    public void archivedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(archivedTrip));
         tripService.updateTrip(approver, removedTripDTO);
     }
@@ -370,43 +370,43 @@ public class TripServiceImplTest {
 
 
     @Test
-    public void underClarificationToOpenTest(){
+    public void underClarificationToOpenTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(underClarificationTrip));
         tripService.updateTrip(carrier, openTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void underClarificationToDraftTest(){
+    public void underClarificationToDraftTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(underClarificationTrip));
         tripService.updateTrip(carrier, draftTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void underClarificationToAssignedTest(){
+    public void underClarificationToAssignedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(underClarificationTrip));
         tripService.updateTrip(approver, assignedTripDTO);
     }
 
     @Test
-    public void underClarificationToPublishedTest(){
+    public void underClarificationToPublishedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(underClarificationTrip));
         tripService.updateTrip(approver, publishedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void underClarificationToArchivedTest(){
+    public void underClarificationToArchivedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(underClarificationTrip));
         tripService.updateTrip(carrier, archivedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void underClarificationToUnderClarificationTest(){
+    public void underClarificationToUnderClarificationTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(underClarificationTrip));
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
     @Test
-    public void underClarificationToRemovedTest(){
+    public void underClarificationToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(underClarificationTrip));
         tripService.updateTrip(approver, removedTripDTO);
     }
@@ -416,43 +416,43 @@ public class TripServiceImplTest {
 
 
     @Test(expected = RequestException.class)
-    public void removedToOpenTest(){
+    public void removedToOpenTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(removedTrip));
         tripService.updateTrip(carrier, openTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void removedClarificationToDraftTest(){
+    public void removedClarificationToDraftTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(removedTrip));
         tripService.updateTrip(carrier, draftTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void removedToAssignedTest(){
+    public void removedToAssignedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(removedTrip));
         tripService.updateTrip(approver, assignedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void removedToPublishedTest(){
+    public void removedToPublishedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(removedTrip));
         tripService.updateTrip(approver, publishedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void removedToArchivedTest(){
+    public void removedToArchivedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(removedTrip));
         tripService.updateTrip(carrier, archivedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void removedToUnderClarificationTest(){
+    public void removedToUnderClarificationTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(removedTrip));
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void removedToRemovedTest(){
+    public void removedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(removedTrip));
         tripService.updateTrip(approver, removedTripDTO);
     }
@@ -462,85 +462,85 @@ public class TripServiceImplTest {
 
 
     @Test(expected = RequestException.class)
-    public void illegalDraftToOpenTest(){
+    public void illegalDraftToOpenTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(draftTrip));
         tripService.updateTrip(illegalCarrier, openTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void illegalDraftToRemovedTest(){
+    public void illegalDraftToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(draftTrip));
         tripService.updateTrip(illegalApprover, removedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void illegalOpenToAssignedTest(){
+    public void illegalOpenToAssignedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(openTrip));
         tripService.updateTrip(carrier, assignedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void illegalOpenToRemovedTest(){
+    public void illegalOpenToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(openTrip));
         tripService.updateTrip(illegalApprover, removedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void illegalUnderClarificationToRemovedTest(){
+    public void illegalUnderClarificationToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(underClarificationTrip));
         tripService.updateTrip(illegalApprover, removedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void illegalAssignedToUnderClarificationTest(){
+    public void illegalAssignedToUnderClarificationTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(assignedTrip));
         tripService.updateTrip(illegalApprover, underClarificationTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void illegalAssignedToRemovedTest(){
+    public void illegalAssignedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(assignedTrip));
         tripService.updateTrip(illegalApprover, removedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void illegalPublishedToRemovedTest(){
+    public void illegalPublishedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(publishedTrip));
         tripService.updateTrip(illegalApprover, removedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void illegalAssignedToPublishedTest(){
+    public void illegalAssignedToPublishedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(assignedTrip));
         tripService.updateTrip(illegalApprover, publishedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void illegalPublishedToArchivedTest(){
+    public void illegalPublishedToArchivedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(publishedTrip));
         tripService.updateTrip(illegalCarrier, archivedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void illegalArchivedToOpenTest(){
+    public void illegalArchivedToOpenTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(archivedTrip));
         tripService.updateTrip(illegalCarrier, openTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void illegalArchivedToRemovedTest(){
+    public void illegalArchivedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(archivedTrip));
         tripService.updateTrip(illegalApprover, removedTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void illegalUnderClarificationToOpenTest(){
+    public void illegalUnderClarificationToOpenTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(underClarificationTrip));
         tripService.updateTrip(illegalCarrier, openTripDTO);
     }
 
     @Test(expected = RequestException.class)
-    public void illegalUnderClarificationToPublishedTest(){
+    public void illegalUnderClarificationToPublishedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(underClarificationTrip));
         tripService.updateTrip(illegalApprover, publishedTripDTO);
     }

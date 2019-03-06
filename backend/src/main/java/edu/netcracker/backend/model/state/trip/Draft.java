@@ -5,7 +5,7 @@ import edu.netcracker.backend.model.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Draft extends TripState{
+public class Draft extends TripState {
 
     private final static int value = 1;
 

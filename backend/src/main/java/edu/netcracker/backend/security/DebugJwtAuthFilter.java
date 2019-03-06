@@ -32,9 +32,10 @@ public class DebugJwtAuthFilter extends AuthFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
-        if(JwtUtils.getAccessToken(request) != null){
+        if (JwtUtils.getAccessToken(request) != null) {
             authFilter.doFilter(request, response, filterChain);
             return;
         }

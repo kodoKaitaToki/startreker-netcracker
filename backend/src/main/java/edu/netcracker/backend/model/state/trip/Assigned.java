@@ -13,13 +13,13 @@ public class Assigned extends TripState {
 
     private final static int value = 3;
 
-    private static List<Integer> allowedStatesToSwitchFrom =
-            Collections.singletonList(2);
+    private static List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(2);
 
     @Override
     public boolean isStateChangeAllowed(Trip trip, User requestUser, TripState tripState) {
-        if(requestUser.getUserRoles().contains(AuthorityUtils.ROLE_APPROVER)
-                && allowedStatesToSwitchFrom.contains(tripState.getValue())){
+        if (requestUser.getUserRoles()
+                       .contains(AuthorityUtils.ROLE_APPROVER)
+            && allowedStatesToSwitchFrom.contains(tripState.getValue())) {
             trip.setApprover(requestUser);
             return true;
         }

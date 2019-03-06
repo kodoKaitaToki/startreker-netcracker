@@ -44,16 +44,17 @@ public class Trip {
 
     private List<TicketClass> ticketClasses = new ArrayList<>();
 
-    public boolean changeStatus(User requestUser, TripState newTripState, TripDTO tripDTO){
+    public boolean changeStatus(User requestUser, TripState newTripState, TripDTO tripDTO) {
 
-        if(     requestUser == null
-                || newTripState == null
-                || !newTripState.isStateChangeAllowed(this, requestUser, this.tripState)) {
+        if (requestUser == null || newTripState == null || !newTripState.isStateChangeAllowed(this,
+                                                                                              requestUser,
+                                                                                              this.tripState
+                                                                                             )) {
 
             return false;
         }
 
-        if(newTripState.apply(this, requestUser, this.tripState, tripDTO)){
+        if (newTripState.apply(this, requestUser, this.tripState, tripDTO)) {
             this.tripState = newTripState;
             return true;
         }

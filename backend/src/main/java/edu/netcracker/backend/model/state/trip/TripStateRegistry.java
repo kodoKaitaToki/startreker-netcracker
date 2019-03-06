@@ -21,10 +21,8 @@ public class TripStateRegistry {
     private HashMap<Integer, TripState> registry;
 
     @Autowired
-    public TripStateRegistry(Draft draft, Open open, Assigned assigned,
-                          Published published, Archived archived,
-                          UnderClarification underClarification,
-                          Removed removed) {
+    public TripStateRegistry(Draft draft, Open open, Assigned assigned, Published published, Archived archived,
+                             UnderClarification underClarification, Removed removed) {
         this.draft = draft;
         this.open = open;
         this.assigned = assigned;
@@ -35,7 +33,7 @@ public class TripStateRegistry {
     }
 
     @PostConstruct
-    private void init(){
+    private void init() {
         registry = new HashMap<>();
         registry.put(draft.getValue(), draft);
         registry.put(open.getValue(), open);
@@ -46,9 +44,11 @@ public class TripStateRegistry {
         registry.put(removed.getValue(), removed);
     }
 
-    public TripState getState(int value){
+    public TripState getState(int value) {
         TripState tripState = registry.get(value);
-        if(tripState == null) throw new IllegalArgumentException();
+        if (tripState == null) {
+            throw new IllegalArgumentException();
+        }
         return tripState;
     }
 }
