@@ -3,11 +3,13 @@ package edu.netcracker.backend.dao.mapper;
 import edu.netcracker.backend.message.response.CarrierRevenueResponse;
 import lombok.Setter;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Setter
+@Component
 public class CarrierRevenueMapper extends CarrierMapperHelper implements RowMapper<CarrierRevenueResponse>{
 
     @Override
