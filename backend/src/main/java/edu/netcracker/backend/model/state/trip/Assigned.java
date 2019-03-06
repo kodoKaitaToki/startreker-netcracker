@@ -19,7 +19,7 @@ public class Assigned extends TripState {
     public boolean isStateChangeAllowed(Trip trip, User requestUser, TripState tripState) {
         if (requestUser.getUserRoles()
                        .contains(AuthorityUtils.ROLE_APPROVER)
-            && allowedStatesToSwitchFrom.contains(tripState.getValue())) {
+                        && allowedStatesToSwitchFrom.contains(tripState.getValue())) {
             trip.setApprover(requestUser);
             return true;
         }

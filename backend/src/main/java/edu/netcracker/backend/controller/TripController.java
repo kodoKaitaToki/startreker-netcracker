@@ -50,13 +50,12 @@ public class TripController {
     @GetMapping(value = "api/v1/trip/sales")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public CarrierRevenueResponse getTripsSalesStatistics(OptionalTimeInterval timeInterval) {
-        return timeInterval != null && timeInterval.isProvided() ? statisticsService.getTripsSalesStatistics(
-                securityContext.getUser()
-                               .getUserId(),
-                timeInterval.getFrom(),
-                timeInterval.getTo()
-                                                                                                            )
-
+        return timeInterval != null && timeInterval.isProvided()
+                ? statisticsService.getTripsSalesStatistics(securityContext.getUser()
+                                                                           .getUserId(),
+                                                            timeInterval.getFrom(),
+                                                            timeInterval.getTo()
+                                                           )
                 : statisticsService.getTripsSalesStatistics(securityContext.getUser()
                                                                            .getUserId());
     }

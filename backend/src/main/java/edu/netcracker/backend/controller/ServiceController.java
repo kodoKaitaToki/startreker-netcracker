@@ -44,13 +44,12 @@ public class ServiceController {
     @GetMapping(value = "api/v1/service/sales")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public CarrierRevenueResponse getServicesSalesStatistics(OptionalTimeInterval timeInterval) {
-        return timeInterval != null && timeInterval.isProvided() ? statisticsService.getServicesSalesStatistics(
-                securityContext.getUser()
-                               .getUserId(),
-                timeInterval.getFrom(),
-                timeInterval.getTo()
-                                                                                                               )
-
+        return timeInterval != null && timeInterval.isProvided()
+                ? statisticsService.getServicesSalesStatistics(securityContext.getUser()
+                                                                              .getUserId(),
+                                                               timeInterval.getFrom(),
+                                                               timeInterval.getTo()
+                                                              )
                 : statisticsService.getServicesSalesStatistics(securityContext.getUser()
                                                                               .getUserId());
     }
