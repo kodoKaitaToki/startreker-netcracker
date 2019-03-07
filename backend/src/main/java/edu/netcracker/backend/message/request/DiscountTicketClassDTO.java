@@ -35,16 +35,16 @@ public class DiscountTicketClassDTO {
     @NotNull
     @Valid
     @JsonProperty("discount")
-    private DiscountDTO discount;
+    private DiscountDTO discountDTO;
 
-    public static DiscountTicketClassDTO toTicketClassDTO(TicketClass ticketClass, String datePattern) {
+    public static DiscountTicketClassDTO toTicketClassDTO(TicketClass ticketClass, DiscountDTO discountDTO) {
         DiscountTicketClassDTO ticketClassDTO = new DiscountTicketClassDTO();
         ticketClassDTO.setClassId(ticketClass.getClassId());
         ticketClassDTO.setTripId(ticketClass.getTripId());
         ticketClassDTO.setTicketPrice(ticketClass.getTicketPrice());
         ticketClassDTO.setClassName(ticketClass.getClassName());
         ticketClassDTO.setClassSeats(ticketClass.getClassSeats());
-        ticketClassDTO.setDiscount(DiscountDTO.toDiscountDTO(ticketClass.getDiscount(), datePattern));
+        ticketClassDTO.setDiscountDTO(discountDTO);
 
         return ticketClassDTO;
     }
