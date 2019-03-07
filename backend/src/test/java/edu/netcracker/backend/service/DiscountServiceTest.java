@@ -21,7 +21,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.endsWith;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -146,6 +148,30 @@ public class DiscountServiceTest {
         DiscountService discountService = new DiscountServiceImpl(discountDAO);
 
         discountService.saveDiscount(discountDTO);
+    }
+
+    @Test
+    public void saveDiscount() {
+        DiscountDTO discountDTO = new DiscountDTO();
+        discountDTO.setDiscountId(1L);
+        discountDTO.setIsPercent(true);
+        discountDTO.setDiscountRate(12);
+        discountDTO.setStartDate("12-01-2021");
+        discountDTO.setFinishDate("12-01-2032");
+
+        doAnswer(invocationOnMock -> {
+            Discount discount = invocationOnMock.getArgument(0);
+            discount.setDiscountId(12L);
+            return null;
+        }).when(discountDAO).save(any(Discount.class));
+
+        DiscountService discountService = new DiscountServiceImpl(discountDAO);
+
+        DiscountDTO actualDiscountDTO = discountService.saveDiscount(discountDTO);
+        discountDTO.setDiscountId(12L);
+        discountDTO.setIsExpired(false);
+
+        Assert.assertEquals(discountDTO, actualDiscountDTO);
     }
 
     @Test
