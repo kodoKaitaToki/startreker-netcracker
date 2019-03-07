@@ -22,7 +22,7 @@ export class ServiceService{
         return this.http.get<any>(url);
     }
 
-    public getServiceByStatus<Service>(status: Number): Observable<Service>{
+    public getServiceByStatus<Service>(status: String): Observable<Service>{
         let url = Api.service.servicesByStatus() + '?status=' + status;
         return this.http.get<any>(url);
     }

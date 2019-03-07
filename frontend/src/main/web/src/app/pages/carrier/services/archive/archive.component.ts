@@ -37,7 +37,7 @@ export class ArchiveComponent implements OnInit {
   }
 
   getArchievedServices(){
-    this.serviceService.getServiceByStatus(6)
+    this.serviceService.getServiceByStatus('UNDER_CLARIFICATION')
                       .subscribe(
                         (resp: Response) => {
                           /*if (resp.headers.get('New-Access-Token')) {

@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { GrowlModule } from 'primeng/growl';
+import {MessageService} from 'primeng/components/common/messageservice';
 
 import { CarrierRoutingModule } from './carrier-routing.module';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -25,7 +27,9 @@ import { ArchiveComponent } from './services/archive/archive.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    CarrierRoutingModule
+    CarrierRoutingModule,
+    GrowlModule,
+    MessageService
   ]
 })
 export class CarrierModule { }

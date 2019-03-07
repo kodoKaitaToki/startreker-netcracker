@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import { clone } from 'ramda';
+import {clone} from 'ramda';
+import {Message} from 'primeng/components/common/api';
+import {MessageService} from 'primeng/components/common/messageservice'; 
 
 import { Service } from '../service.model';
 import { ServiceService } from '../service.service';
@@ -8,11 +10,13 @@ import { ServiceService } from '../service.service';
 @Component({
   selector: 'app-service-crud',
   templateUrl: './service-crud.component.html',
-  styleUrls: ['./service-crud.component.scss']
+  styleUrls: ['./service-crud.component.scss'],
+  providers: [MessageService]
 })
 export class ServiceCrudComponent implements OnInit {
 
   services: Service[] = [];
+  msgs: Message[] = [];
 
   filterCriteria = [
     {name: 'id'},
@@ -32,9 +36,15 @@ export class ServiceCrudComponent implements OnInit {
   currentServiceForUpdate: Service;
   isForUpdateAlertMessage = false;
 
-  status: Number;
+  status: String;
 
-  constructor(private serviceService: ServiceService) {
+  constructor(private serviceService: ServiceService,
+              private message: Message,
+              private messageService: MessageService) {
+  }
+
+  showSuccess(){
+    this.messageService.add({severity:'success',summary: 'Service Message', detail: ''});
   }
 
   ngOnInit(): void {
@@ -64,7 +74,7 @@ export class ServiceCrudComponent implements OnInit {
     this.currentFilterPlaceholder = `Search by ${this.currentFilter}`;
   }
 
-  onPost(status: Number) {
+  onPost(status: String) {
 
     const service: Service = this.form.value;
     service['service_status'] = status;
@@ -85,7 +95,7 @@ export class ServiceCrudComponent implements OnInit {
   }
 
   getDarftServices(){
-    this.serviceService.getServiceByStatus(1)
+    this.serviceService.getServiceByStatus('DRAFT')
                       .subscribe(
                         (resp: Response) => {
                           /*if (resp.headers.get('New-Access-Token')) {
@@ -126,7 +136,7 @@ export class ServiceCrudComponent implements OnInit {
   changeService(service: Service){
     service['service_name'] = this.formTable.get('service_name').value;
     service['service_descr'] = this.formTable.get('service_descr').value;
-    service['service_status'] = 2;
+    service['service_status'] = 'OPEN';
     this.updateService(service);
   }
 

@@ -37,7 +37,7 @@ export class ClarificationComponent implements OnInit {
   }
 
   getClarificationServices(){
-    this.serviceService.getServiceByStatus(5)
+    this.serviceService.getServiceByStatus('ARCHIVED')
                       .subscribe(
                         (resp: Response) => {
                           /*if (resp.headers.get('New-Access-Token')) {
@@ -78,7 +78,7 @@ export class ClarificationComponent implements OnInit {
   changeService(service: Service){
     service['service_name'] = this.form.get('service_name').value;
     service['service_descr'] = this.form.get('service_descr').value;
-    service['service_status'] = 2;
+    service['service_status'] = 'OPEN';
     this.updateService(service);
   }
 

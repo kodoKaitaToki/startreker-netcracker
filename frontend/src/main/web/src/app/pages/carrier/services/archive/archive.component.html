@@ -24,7 +24,7 @@
             <p data-placement="top"
               data-toggle="tooltip"
               title="Restore"
-              (click)="service.service_status = 2;
+              (click)="service.service_status = 'OPEN';
                         updateService(service);"
             >
               <button class="btn btn-success btn-md">
@@ -50,7 +50,7 @@
             <p data-placement="top"
                data-toggle="tooltip"
                title="Delete"
-               (click)="service.service_status = 7;
+               (click)="service.service_status = 'REMOVED';
                         updateService(service)"
                class="deletePrgph"
             >
