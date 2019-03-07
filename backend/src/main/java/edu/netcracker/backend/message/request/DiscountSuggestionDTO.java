@@ -23,13 +23,13 @@ public class DiscountSuggestionDTO {
     @NotNull
     @Valid
     @JsonProperty("discount")
-    private DiscountDTO discount;
+    private DiscountDTO discountDTO;
 
-    public static DiscountSuggestionDTO toSimpleSuggestionDTO(Suggestion suggestion, String datePattern) {
+    public static DiscountSuggestionDTO toDiscountSuggestionDTO(Suggestion suggestion, DiscountDTO discountDTO) {
         DiscountSuggestionDTO simpleSuggestionDTO = new DiscountSuggestionDTO();
         simpleSuggestionDTO.setClassId(suggestion.getClassId());
         simpleSuggestionDTO.setSuggestionId(suggestion.getSuggestionId());
-        simpleSuggestionDTO.setDiscount(DiscountDTO.toDiscountDTO(suggestion.getDiscount(), datePattern));
+        simpleSuggestionDTO.setDiscountDTO(discountDTO);
 
         return simpleSuggestionDTO;
     }
