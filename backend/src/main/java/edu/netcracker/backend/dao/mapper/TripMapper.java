@@ -33,34 +33,29 @@ public class TripMapper implements RowMapper<Trip> {
                                .toLocalDateTime());
         trip.setTripPhoto(rs.getString("trip_photo"));
 
-        User owner = new User();
-        owner.setUserId(rs.getInt("owner_id"));
-        owner.setUserPassword(rs.getString("owner_password"));
-        owner.setUserIsActivated(rs.getBoolean("owner_activated"));
-        owner.setRegistrationDate(rs.getTimestamp("owner_date_created")
-                                    .toLocalDateTime());
-        owner.setUserRefreshToken(rs.getString("owner_token"));
-        owner.setUserEmail(rs.getString("owner_email"));
-        owner.setUserTelephone(rs.getString("owner_telephone"));
-
-        trip.setOwner(owner);
-
-        int approverId = rs.getInt("approver_id");
-
-        if (approverId != 0) {
-            User approver = new User();
-            approver.setUserId(approverId);
-            approver.setUserPassword(rs.getString("approver_password"));
-            approver.setUserIsActivated(rs.getBoolean("approver_activated"));
-            approver.setRegistrationDate(rs.getTimestamp("approver_date_created")
-                                           .toLocalDateTime());
-            approver.setUserRefreshToken(rs.getString("approver_token"));
-            approver.setUserEmail(rs.getString("approver_email"));
-            approver.setUserTelephone(rs.getString("approver_telephone"));
-
-            trip.setApprover(approver);
-        }
+        trip.setOwner(mapUser(rs, "owner"));
+        trip.setApprover(mapUser(rs, "approver"));
 
         return trip;
+    }
+
+    private User mapUser(ResultSet rs, String prefix) throws SQLException {
+        User user = new User();
+
+        user.setUserId(rs.getInt(prefix + "_id"));
+
+        if (user.getUserId() == 0) {
+            return null;
+        }
+
+        user.setUserPassword(rs.getString(prefix + "_password"));
+        user.setUserIsActivated(rs.getBoolean(prefix + "_activated"));
+        user.setRegistrationDate(rs.getTimestamp(prefix + "_date_created")
+                                   .toLocalDateTime());
+        user.setUserRefreshToken(rs.getString(prefix + "_token"));
+        user.setUserEmail(rs.getString(prefix + "_email"));
+        user.setUserTelephone(rs.getString(prefix + "_telephone"));
+
+        return user;
     }
 }

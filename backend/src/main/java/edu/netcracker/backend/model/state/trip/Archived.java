@@ -10,17 +10,17 @@ import java.util.List;
 @Component
 public class Archived extends TripState {
 
-    private final static int value = 5;
+    private final static int databaseValue = 5;
 
     private static List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(4);
 
     @Override
     public boolean isStateChangeAllowed(Trip trip, User requestUser, TripState tripState) {
-        return requestUser.equals(trip.getOwner()) && allowedStatesToSwitchFrom.contains(tripState.getValue());
+        return requestUser.equals(trip.getOwner()) && allowedStatesToSwitchFrom.contains(tripState.getDatabaseValue());
     }
 
     @Override
-    public int getValue() {
-        return value;
+    public int getDatabaseValue() {
+        return databaseValue;
     }
 }

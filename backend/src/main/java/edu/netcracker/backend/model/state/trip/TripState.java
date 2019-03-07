@@ -8,7 +8,7 @@ public abstract class TripState {
 
     public abstract boolean isStateChangeAllowed(Trip trip, User user, TripState tripState);
 
-    public abstract int getValue();
+    public abstract int getDatabaseValue();
 
     public boolean apply(Trip trip, User requestUser, TripState tripState, TripDTO tripDTO) {
         return true;

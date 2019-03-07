@@ -35,13 +35,13 @@ public class TripStateRegistry {
     @PostConstruct
     private void init() {
         registry = new HashMap<>();
-        registry.put(draft.getValue(), draft);
-        registry.put(open.getValue(), open);
-        registry.put(assigned.getValue(), assigned);
-        registry.put(published.getValue(), published);
-        registry.put(archived.getValue(), archived);
-        registry.put(underClarification.getValue(), underClarification);
-        registry.put(removed.getValue(), removed);
+        registry.put(draft.getDatabaseValue(), draft);
+        registry.put(open.getDatabaseValue(), open);
+        registry.put(assigned.getDatabaseValue(), assigned);
+        registry.put(published.getDatabaseValue(), published);
+        registry.put(archived.getDatabaseValue(), archived);
+        registry.put(underClarification.getDatabaseValue(), underClarification);
+        registry.put(removed.getDatabaseValue(), removed);
     }
 
     public TripState getState(int value) {

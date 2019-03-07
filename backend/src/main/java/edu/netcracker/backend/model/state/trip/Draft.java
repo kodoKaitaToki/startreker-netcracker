@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Draft extends TripState {
 
-    private final static int value = 1;
+    private final static int databaseValue = 1;
 
     @Override
     public boolean isStateChangeAllowed(Trip trip, User user, TripState tripState) {
@@ -15,7 +15,7 @@ public class Draft extends TripState {
     }
 
     @Override
-    public int getValue() {
-        return value;
+    public int getDatabaseValue() {
+        return databaseValue;
     }
 }

@@ -80,11 +80,8 @@ public class JwtAuthFilter extends AuthFilter {
     }
 
     private void handleToken(String accessToken, HttpServletRequest request) {
-        UserDetails userDetails = userService.
-                                                     createUserDetails(userInformationHolderService.
-                                                                                                           convertAsUserInfo(
-                                                                                                                   jwtProvider.retrieveSubject(
-                                                                                                                           accessToken)));
+        UserDetails userDetails = userService.createUserDetails(userInformationHolderService.convertAsUserInfo(
+                jwtProvider.retrieveSubject(accessToken)));
         createAuthentication(userDetails, request);
     }
 

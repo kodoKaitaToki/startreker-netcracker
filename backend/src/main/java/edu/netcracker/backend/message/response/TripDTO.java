@@ -25,7 +25,7 @@ public class TripDTO {
     public static TripDTO from(Trip trip){
         TripDTO dto = new TripDTO();
         dto.tripId = trip.getTripId();
-        dto.status = trip.getTripState().getValue();
+        dto.status = trip.getTripState().getDatabaseValue();
         return dto;
     }
 }

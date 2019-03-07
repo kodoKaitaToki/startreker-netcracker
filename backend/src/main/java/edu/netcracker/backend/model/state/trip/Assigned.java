@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public class Assigned extends TripState {
 
-    private final static int value = 3;
+    private final static int databaseValue = 3;
 
     private static List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(2);
 
@@ -19,7 +19,7 @@ public class Assigned extends TripState {
     public boolean isStateChangeAllowed(Trip trip, User requestUser, TripState tripState) {
         if (requestUser.getUserRoles()
                        .contains(AuthorityUtils.ROLE_APPROVER)
-                        && allowedStatesToSwitchFrom.contains(tripState.getValue())) {
+                        && allowedStatesToSwitchFrom.contains(tripState.getDatabaseValue())) {
             trip.setApprover(requestUser);
             return true;
         }
@@ -27,7 +27,7 @@ public class Assigned extends TripState {
     }
 
     @Override
-    public int getValue() {
-        return value;
+    public int getDatabaseValue() {
+        return databaseValue;
     }
 }

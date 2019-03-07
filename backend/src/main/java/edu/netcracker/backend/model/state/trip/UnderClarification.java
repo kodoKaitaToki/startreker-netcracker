@@ -17,7 +17,7 @@ public class UnderClarification extends TripState {
 
     private final TripReplyDAO tripReplyDAO;
 
-    private final static int value = 6;
+    private final static int databaseValue = 6;
 
     private static List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(3);
 
@@ -28,12 +28,12 @@ public class UnderClarification extends TripState {
 
     @Override
     public boolean isStateChangeAllowed(Trip trip, User requestUser, TripState tripState) {
-        return requestUser.equals(trip.getApprover()) && allowedStatesToSwitchFrom.contains(tripState.getValue());
+        return requestUser.equals(trip.getApprover()) && allowedStatesToSwitchFrom.contains(tripState.getDatabaseValue());
     }
 
     @Override
-    public int getValue() {
-        return value;
+    public int getDatabaseValue() {
+        return databaseValue;
     }
 
     @Override

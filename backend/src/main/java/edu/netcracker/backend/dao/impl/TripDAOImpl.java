@@ -90,7 +90,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
                                  trip.getDepartureDate(),
                                  trip.getArrivalDate(),
                                  trip.getTripState()
-                                     .getValue(),
+                                     .getDatabaseValue(),
                                  trip.getOwner()
                                      .getUserId(),
                                  (trip.getApprover() == null
@@ -110,7 +110,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
         return new Object[]{trip.getCreationDate(),
                             trip.getDepartureDate(),
                             trip.getArrivalDate(),
-                            trip.getTripState().getValue(),
+                            trip.getTripState().getDatabaseValue(),
                             trip.getOwner().getUserId(),
                             (trip.getApprover() == null
                                     ? null
