@@ -20,28 +20,25 @@ public class TroubleTicketController {
 
     @GetMapping("api/v1/trouble/statistics")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ReportStatisticsResponse getStatistics(){
-        return fullStatBuilder()
-                .build();
+    public ReportStatisticsResponse getStatistics() {
+        return fullStatBuilder().build();
     }
 
     @GetMapping("api/v1/trouble/statistics/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ReportStatisticsResponse getStatistics(@PathVariable Long id){
-        return fullStatBuilder()
-                .forUser(id)
-                .build();
+    public ReportStatisticsResponse getStatistics(@PathVariable Long id) {
+        return fullStatBuilder().forUser(id)
+                                .build();
     }
 
-    private ReportStatisticsBuilder fullStatBuilder(){
-        return reportStatisticsBuilder
-                .addTotalAnsweredCount()
-                .addTotalCount()
-                .addTotalFinishedCount()
-                .addTotalOpenedCount()
-                .addTotalRatedCount()
-                .addTotalReOpenedCount()
-                .addTotalInProgressCount()
-                .addAverageRate();
+    private ReportStatisticsBuilder fullStatBuilder() {
+        return reportStatisticsBuilder.addTotalAnsweredCount()
+                                      .addTotalCount()
+                                      .addTotalFinishedCount()
+                                      .addTotalOpenedCount()
+                                      .addTotalRatedCount()
+                                      .addTotalReOpenedCount()
+                                      .addTotalInProgressCount()
+                                      .addAverageRate();
     }
 }
