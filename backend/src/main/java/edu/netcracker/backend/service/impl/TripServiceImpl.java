@@ -30,10 +30,9 @@ public class TripServiceImpl implements TripService {
     public Trip updateTrip(User requestUser, TripDTO tripDTO) {
         Optional<Trip> optionalTrip = tripDAO.find(tripDTO.getTripId());
 
-        if(!optionalTrip.isPresent()){
+        if (!optionalTrip.isPresent()) {
             throw new RequestException("Illegal operation", HttpStatus.NOT_FOUND);
-        }
-        else{
+        } else {
             return updateTrip(requestUser, optionalTrip.get(), tripDTO);
         }
     }
@@ -41,7 +40,7 @@ public class TripServiceImpl implements TripService {
     private Trip updateTrip(User requestUser, Trip trip, TripDTO tripDTO) {
         TripState dtoState = tripStateRegistry.getState(tripDTO.getStatus());
 
-        if(!dtoState.equals(trip.getTripState())){
+        if (!dtoState.equals(trip.getTripState())) {
             changeStatus(requestUser, trip, dtoState, tripDTO);
         }
 
@@ -50,7 +49,7 @@ public class TripServiceImpl implements TripService {
     }
 
     private void changeStatus(User requestUser, Trip trip, TripState tripState, TripDTO tripDTO) {
-        if(!trip.changeStatus(requestUser, tripState, tripDTO)){
+        if (!trip.changeStatus(requestUser, tripState, tripDTO)) {
             throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
         }
     }

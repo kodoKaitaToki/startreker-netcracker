@@ -28,7 +28,8 @@ public class ServiceController {
     private final ServiceService serviceService;
 
     @Autowired
-    public ServiceController(StatisticsService statisticsService, SecurityContext securityContext,
+    public ServiceController(StatisticsService statisticsService,
+                             SecurityContext securityContext,
                              ServiceService serviceService) {
         this.statisticsService = statisticsService;
         this.securityContext = securityContext;
@@ -48,8 +49,7 @@ public class ServiceController {
                 ? statisticsService.getServicesSalesStatistics(securityContext.getUser()
                                                                               .getUserId(),
                                                                timeInterval.getFrom(),
-                                                               timeInterval.getTo()
-                                                              )
+                                                               timeInterval.getTo())
                 : statisticsService.getServicesSalesStatistics(securityContext.getUser()
                                                                               .getUserId());
     }
@@ -60,8 +60,7 @@ public class ServiceController {
         return statisticsService.getServicesSalesStatisticsByWeek(securityContext.getUser()
                                                                                  .getUserId(),
                                                                   timeInterval.getFrom(),
-                                                                  timeInterval.getTo()
-                                                                 );
+                                                                  timeInterval.getTo());
     }
 
     @GetMapping(value = "api/v1/service/sales/per_month")
@@ -70,8 +69,7 @@ public class ServiceController {
         return statisticsService.getServicesSalesStatisticsByMonth(securityContext.getUser()
                                                                                   .getUserId(),
                                                                    timeInterval.getFrom(),
-                                                                   timeInterval.getTo()
-                                                                  );
+                                                                   timeInterval.getTo());
     }
 
     @GetMapping(value = "api/v1/service/views/per_week")
@@ -80,8 +78,7 @@ public class ServiceController {
         return statisticsService.getServiceViewsStatisticsByWeek(securityContext.getUser()
                                                                                 .getUserId(),
                                                                  timeInterval.getFrom(),
-                                                                 timeInterval.getTo()
-                                                                );
+                                                                 timeInterval.getTo());
     }
 
     @GetMapping(value = "api/v1/service/views/per_month")
@@ -90,30 +87,27 @@ public class ServiceController {
         return statisticsService.getServiceViewsStatisticsByMonth(securityContext.getUser()
                                                                                  .getUserId(),
                                                                   timeInterval.getFrom(),
-                                                                  timeInterval.getTo()
-                                                                 );
+                                                                  timeInterval.getTo());
     }
 
     @GetMapping(value = "api/v1/service/{id}/views/per_week")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByWeek(
-            @Valid MandatoryTimeInterval timeInterval, @PathVariable("id") Long serviceId) {
+    public List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByWeek(@Valid MandatoryTimeInterval timeInterval,
+                                                                               @PathVariable("id") Long serviceId) {
         return statisticsService.getServiceViewsStatisticsByServiceByWeek(securityContext.getUser(),
                                                                           serviceId,
                                                                           timeInterval.getFrom(),
-                                                                          timeInterval.getTo()
-                                                                         );
+                                                                          timeInterval.getTo());
     }
 
     @GetMapping(value = "api/v1/service/{id}/views/per_month")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByMonth(
-            @Valid MandatoryTimeInterval timeInterval, @PathVariable("id") Long serviceId) {
+    public List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByMonth(@Valid MandatoryTimeInterval timeInterval,
+                                                                                @PathVariable("id") Long serviceId) {
         return statisticsService.getServiceViewsStatisticsByServiceByMonth(securityContext.getUser(),
                                                                            serviceId,
                                                                            timeInterval.getFrom(),
-                                                                           timeInterval.getTo()
-                                                                          );
+                                                                           timeInterval.getTo());
     }
 
     @GetMapping("api/v1/carrier/service")

@@ -48,8 +48,7 @@ public class Trip {
 
         if (requestUser == null || newTripState == null || !newTripState.isStateChangeAllowed(this,
                                                                                               requestUser,
-                                                                                              this.tripState
-                                                                                             )) {
+                                                                                              this.tripState)) {
 
             return false;
         }

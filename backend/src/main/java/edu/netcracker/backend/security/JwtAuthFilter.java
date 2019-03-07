@@ -39,7 +39,8 @@ public class JwtAuthFilter extends AuthFilter {
     private UserService userService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+    protected void doFilterInternal(HttpServletRequest httpServletRequest,
+                                    HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
 
         String accessToken = JwtUtils.getAccessToken(httpServletRequest);
@@ -80,8 +81,9 @@ public class JwtAuthFilter extends AuthFilter {
     }
 
     private void handleToken(String accessToken, HttpServletRequest request) {
-        UserDetails userDetails = userService.createUserDetails(userInformationHolderService.convertAsUserInfo(
-                jwtProvider.retrieveSubject(accessToken)));
+        UserDetails userDetails =
+                userService.createUserDetails(userInformationHolderService.convertAsUserInfo(jwtProvider.retrieveSubject(
+                        accessToken)));
         createAuthentication(userDetails, request);
     }
 
@@ -91,10 +93,8 @@ public class JwtAuthFilter extends AuthFilter {
             return;
         }
 
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,
-                                                                                                     null,
-                                                                                                     userDetails.getAuthorities()
-        );
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext()
                              .setAuthentication(authentication);

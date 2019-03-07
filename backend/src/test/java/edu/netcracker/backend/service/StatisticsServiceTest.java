@@ -60,10 +60,8 @@ public class StatisticsServiceTest {
 
     @Test
     public void getTripsSalesStatisticsTestWithTimeLimits() {
-        CarrierRevenueResponse cres = statisticsService.getTripsSalesStatistics(7,
-                                                                                LocalDate.of(2015, 1, 1),
-                                                                                LocalDate.of(2020, 1, 1)
-                                                                               );
+        CarrierRevenueResponse cres =
+                statisticsService.getTripsSalesStatistics(7, LocalDate.of(2015, 1, 1), LocalDate.of(2020, 1, 1));
         assertThat(cres, equalTo(tripsSalesTestWithTimeLimitsExpected));
     }
 
@@ -75,10 +73,8 @@ public class StatisticsServiceTest {
 
     @Test
     public void getServicesSalesStatisticsTestWithTimeLimits() {
-        CarrierRevenueResponse cres = statisticsService.getServicesSalesStatistics(7,
-                                                                                   LocalDate.of(2015, 1, 1),
-                                                                                   LocalDate.of(2020, 1, 1)
-                                                                                  );
+        CarrierRevenueResponse cres =
+                statisticsService.getServicesSalesStatistics(7, LocalDate.of(2015, 1, 1), LocalDate.of(2020, 1, 1));
         assertThat(cres, equalTo(servicesSalesTestWithTimeLimitsExpected));
     }
 }

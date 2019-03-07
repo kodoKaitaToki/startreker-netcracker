@@ -27,7 +27,8 @@ public class TripController {
     private final TripService tripService;
 
     @Autowired
-    public TripController(StatisticsService statisticsService, SecurityContext securityContext,
+    public TripController(StatisticsService statisticsService,
+                          SecurityContext securityContext,
                           TripService tripService) {
         this.statisticsService = statisticsService;
         this.securityContext = securityContext;
@@ -54,8 +55,7 @@ public class TripController {
                 ? statisticsService.getTripsSalesStatistics(securityContext.getUser()
                                                                            .getUserId(),
                                                             timeInterval.getFrom(),
-                                                            timeInterval.getTo()
-                                                           )
+                                                            timeInterval.getTo())
                 : statisticsService.getTripsSalesStatistics(securityContext.getUser()
                                                                            .getUserId());
     }
@@ -66,8 +66,7 @@ public class TripController {
         return statisticsService.getTripSalesStatisticsByWeek(securityContext.getUser()
                                                                              .getUserId(),
                                                               timeInterval.getFrom(),
-                                                              timeInterval.getTo()
-                                                             );
+                                                              timeInterval.getTo());
     }
 
     @GetMapping(value = "api/v1/trip/sales/per_month")
@@ -76,8 +75,7 @@ public class TripController {
         return statisticsService.getTripSalesStatisticsByMonth(securityContext.getUser()
                                                                               .getUserId(),
                                                                timeInterval.getFrom(),
-                                                               timeInterval.getTo()
-                                                              );
+                                                               timeInterval.getTo());
     }
 
     @GetMapping(value = "api/v1/trip/views/per_week")
@@ -86,8 +84,7 @@ public class TripController {
         return statisticsService.getTripsViewsStatisticsByWeek(securityContext.getUser()
                                                                               .getUserId(),
                                                                timeInterval.getFrom(),
-                                                               timeInterval.getTo()
-                                                              );
+                                                               timeInterval.getTo());
     }
 
     @GetMapping(value = "api/v1/trip/views/per_month")
@@ -96,8 +93,7 @@ public class TripController {
         return statisticsService.getTripsViewsStatisticsByMonth(securityContext.getUser()
                                                                                .getUserId(),
                                                                 timeInterval.getFrom(),
-                                                                timeInterval.getTo()
-                                                               );
+                                                                timeInterval.getTo());
     }
 
     @GetMapping(value = "api/v1/trip/{id}/views/per_week")
@@ -107,8 +103,7 @@ public class TripController {
         return statisticsService.getTripsViewsStatisticsByTripByWeek(securityContext.getUser(),
                                                                      tripId,
                                                                      timeInterval.getFrom(),
-                                                                     timeInterval.getTo()
-                                                                    );
+                                                                     timeInterval.getTo());
     }
 
     @GetMapping(value = "api/v1/trip/{id}/views/per_month")
@@ -118,7 +113,6 @@ public class TripController {
         return statisticsService.getTripsViewsStatisticsByTripByMonth(securityContext.getUser(),
                                                                       tripId,
                                                                       timeInterval.getFrom(),
-                                                                      timeInterval.getTo()
-                                                                     );
+                                                                      timeInterval.getTo());
     }
 }

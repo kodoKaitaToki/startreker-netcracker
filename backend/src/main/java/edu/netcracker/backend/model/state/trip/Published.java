@@ -17,7 +17,8 @@ public class Published extends TripState {
 
     @Override
     public boolean isStateChangeAllowed(Trip trip, User requestUser, TripState tripState) {
-        return requestUser.equals(trip.getApprover()) && allowedStatesToSwitchFrom.contains(tripState.getDatabaseValue());
+        return requestUser.equals(trip.getApprover())
+               && allowedStatesToSwitchFrom.contains(tripState.getDatabaseValue());
     }
 
     @Override

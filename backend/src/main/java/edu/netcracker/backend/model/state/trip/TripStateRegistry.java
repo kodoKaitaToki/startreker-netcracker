@@ -21,8 +21,13 @@ public class TripStateRegistry {
     private HashMap<Integer, TripState> registry;
 
     @Autowired
-    public TripStateRegistry(Draft draft, Open open, Assigned assigned, Published published, Archived archived,
-                             UnderClarification underClarification, Removed removed) {
+    public TripStateRegistry(Draft draft,
+                             Open open,
+                             Assigned assigned,
+                             Published published,
+                             Archived archived,
+                             UnderClarification underClarification,
+                             Removed removed) {
         this.draft = draft;
         this.open = open;
         this.assigned = assigned;

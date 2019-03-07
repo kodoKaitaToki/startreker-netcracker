@@ -22,10 +22,11 @@ public class TripDTO {
     @Length(min = 2, max = 5000)
     private String reply;
 
-    public static TripDTO from(Trip trip){
+    public static TripDTO from(Trip trip) {
         TripDTO dto = new TripDTO();
         dto.tripId = trip.getTripId();
-        dto.status = trip.getTripState().getDatabaseValue();
+        dto.status = trip.getTripState()
+                         .getDatabaseValue();
         return dto;
     }
 }
