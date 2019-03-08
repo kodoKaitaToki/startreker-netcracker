@@ -5,8 +5,8 @@ import {BundlesService} from "../shared/service/bundles.service";
 
 @Component({
              selector: 'app-bundles-component',
-             templateUrl: './approver-bundles.component.html',
-             styleUrls: ['./approver-bundles.component.scss']
+             templateUrl: './bundles-component.component.html',
+             styleUrls: ['./bundles-component.component.scss']
            },
 )
 export class BundlesComponentComponent implements OnInit {

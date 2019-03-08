@@ -82,7 +82,6 @@ const service = {
 
 export const Api = {
   auth,
-  dashboard,
   carrier,
   costDash,
   baseUrl,
