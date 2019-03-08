@@ -37,6 +37,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
 
 import {TroubleStatisticsService} from './dashboards/trouble-statistics.service';
 import {ApproverService} from "./approver/shared/service/approver.service";
+import {BundlesService} from "./bundles/shared/service/bundles.service";
 import {ApproverFilterPipe} from './approver/shared/pipes/approver-filter.pipe';
 
 
@@ -78,7 +79,8 @@ import {ApproverFilterPipe} from './approver/shared/pipes/approver-filter.pipe';
             providers: [
               FilterPipePipe,
               TroubleStatisticsService,
-              ApproverService
+              ApproverService,
+              BundlesService
             ]
           })
 export class AdminModule {
