@@ -11,7 +11,8 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~7.2.0",
+    "@angular/animations": "~7.2.8",
+    "@angular/cdk": "^7.3.3",
     "@angular/common": "~7.2.0",
     "@angular/compiler": "~7.2.0",
     "@angular/core": "^7.2.5",
@@ -29,6 +30,8 @@
     "mustache": "^3.0.1",
     "ngx-pagination": "^3.2.1",
     "popper.js": "^1.14.7",
+    "primeicons": "^1.0.0",
+    "primeng": "^7.1.0-rc.1",
     "ramda": "^0.26.1",
     "rxjs": "~6.3.3",
     "three": "^0.101.1",
