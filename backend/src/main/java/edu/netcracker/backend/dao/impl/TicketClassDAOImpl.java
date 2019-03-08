@@ -1,7 +1,9 @@
 package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.TicketClassDAO;
+import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.model.TicketClass;
+import lombok.EqualsAndHashCode;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +29,34 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
             "FROM ticket_class " +
             "WHERE trip_id = ?";
 
+    private static final String GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER = "SELECT " +
+            "ticket_class.class_id, " +
+            "ticket_class.class_name, " +
+            "ticket_class.trip_id, " +
+            "ticket_class.ticket_price, " +
+            "ticket_class.discount_id, " +
+            "ticket_class.class_seats " +
+            "FROM user_a " +
+            "INNER JOIN trip ON trip.carrier_id = user_a.user_id " +
+            "INNER JOIN ticket_class ON ticket_class.trip_id = trip.trip_id " +
+            "WHERE user_a.user_id = ?";
+
+    private static final String GET_TICLET_CLASS_WITH_DISCOUNT = "SELECT " +
+            "ticket_class.class_id, " +
+            "ticket_class.class_name, " +
+            "ticket_class.trip_id, " +
+            "ticket_class.ticket_price, " +
+            "ticket_class.discount_id, " +
+            "ticket_class.class_seats " +
+            "FROM user_a " +
+            "INNER JOIN trip ON trip.carrier_id = user_a.user_id " +
+            "INNER JOIN ticket_class ON ticket_class.trip_id = trip.trip_id " +
+            "WHERE user_a.user_id = ? AND ticket_class.discount_id = ?";
+
+    private static final String DELETE_DISCOUNT_CONNECTION = "UPDATE ticket_class " +
+            "SET discount_id = null " +
+            "WHERE class_id = ?";
+
 
     @Override
     public List<TicketClass> findByTripId(Number id) {
@@ -41,30 +71,17 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
      * @return list of ticket classes with item_number required for bundles
      */
     public List<TicketClass> findTicketClassWithItemNumber(Number BundleId, Number TripId) {
-        return getJdbcTemplate().query(SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER, new Object[]{BundleId, TripId}, (resultSet, i) -> {
-            TicketClass tc = new TicketClass();
-            tc.setClassId(resultSet.getLong(1));
-            tc.setClassName(resultSet.getString(2));
-            tc.setTripId(resultSet.getLong(3));
-            tc.setTicketPrice(resultSet.getInt(4));
-            tc.setItemNumber(resultSet.getInt(5));
-            return tc;
-        });
+        return getJdbcTemplate()
+                .query(SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER, new Object[]{BundleId, TripId}, (resultSet, i) -> {
+                    TicketClass tc = new TicketClass();
+                    tc.setClassId(resultSet.getLong(1));
+                    tc.setClassName(resultSet.getString(2));
+                    tc.setTripId(resultSet.getLong(3));
+                    tc.setTicketPrice(resultSet.getInt(4));
+                    tc.setItemNumber(resultSet.getInt(5));
+                    return tc;
+                });
     }
-        
-    private static final String GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER = "SELECT ticket_class.* FROM user_a " +
-            "INNER JOIN trip ON trip.carrier_id = user_a.user_id " +
-            "INNER JOIN ticket_class ON ticket_class.trip_id = trip.trip_id " +
-            "WHERE user_a.user_id = ?";
-
-    private static final String GET_TICLET_CLASS_WITH_DISCOUNT = "SELECT ticket_class.* FROM user_a " +
-            "INNER JOIN trip ON trip.carrier_id = user_a.user_id " +
-            "INNER JOIN ticket_class ON ticket_class.trip_id = trip.trip_id " +
-            "WHERE user_a.user_id = ? AND ticket_class.discount_id = ?";
-
-    private static final String DELETE_DISCOUNT_CONNECTION = "UPDATE ticket_class " +
-            "SET discount_id = null " +
-            "WHERE class_id = ?";
 
     @Override
     public List<TicketClass> getAllTicketClassesRelatedToCarrier(Number carrierId) {
@@ -89,7 +106,7 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
     @Override
     public void deleteDiscountsForTicketClasses(List<Long> ticketClassIds) {
         getJdbcTemplate().batchUpdate(DELETE_DISCOUNT_CONNECTION, ticketClassIds.stream()
-                .map( ticketClassId -> new Object[]{ticketClassId})
+                .map(ticketClassId -> new Object[]{ticketClassId})
                 .collect(Collectors.toList()));
     }
 }

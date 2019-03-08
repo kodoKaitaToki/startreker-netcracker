@@ -41,13 +41,11 @@ public class ServiceServiceTest {
         ServiceDescr serviceDescr = new ServiceDescr();
         serviceDescr.setServiceId(2L);
         serviceDescr.setServiceName("quis turpis eget");
-        serviceDescr.setServiceDescription("amet diam in magna bibendum imperdiet nullam orci pede venenatis non sodales sed tincidunt");
+        serviceDescr.setServiceDescription(
+                "amet diam in magna bibendum imperdiet nullam orci pede venenatis non sodales sed tincidunt");
         serviceDescr.setServiceStatus(2);
-        serviceDescr.setCreationDate(
-                LocalDate.parse(
-                        "2015-11-16",
-                        DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                ).atStartOfDay());
+        serviceDescr.setCreationDate(LocalDate.parse("2015-11-16", DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                                              .atStartOfDay());
         ServiceCRUDDTO testService = ServiceCRUDDTO.form(serviceDescr, null);
         ret = new ArrayList<>();
         ret.add(testService);

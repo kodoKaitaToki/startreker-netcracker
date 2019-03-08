@@ -3,31 +3,23 @@ package edu.netcracker.backend.service.impl;
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.PossibleServiceDAO;
 import edu.netcracker.backend.dao.SuggestionDAO;
+import edu.netcracker.backend.message.request.DiscountDTO;
+import edu.netcracker.backend.message.request.DiscountTicketClassDTO;
 import edu.netcracker.backend.message.response.SuggestionDTO;
 import edu.netcracker.backend.model.PossibleService;
 import edu.netcracker.backend.model.Suggestion;
+import edu.netcracker.backend.model.TicketClass;
+import edu.netcracker.backend.service.DiscountService;
 import edu.netcracker.backend.service.SuggestionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.parameters.P;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import edu.netcracker.backend.dao.DiscountDAO;
-import edu.netcracker.backend.dao.SuggestionDAO;
-import edu.netcracker.backend.message.request.DiscountSuggestionDTO;
-import edu.netcracker.backend.model.Discount;
-import edu.netcracker.backend.model.Suggestion;
-import edu.netcracker.backend.service.SuggestionService;
-import edu.netcracker.backend.utils.DiscountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import edu.netcracker.backend.message.request.DiscountSuggestionDTO;
+
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -37,17 +29,15 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     private PossibleServiceDAO possibleServiceDAO;
 
-    private static final String DATE_PATTERN = "dd-MM-yyyy";
-
-    private final DiscountDAO discountDAO;
+    private final DiscountService discountService;
 
     @Autowired
     public SuggestionServiceImpl(SuggestionDAO suggestionDAO,
                                  PossibleServiceDAO possibleServiceDAO,
-                                 DiscountDAO discountDAO) {
+                                 DiscountService discountService) {
         this.suggestionDAO = suggestionDAO;
         this.possibleServiceDAO = possibleServiceDAO;
-        this.discountDAO = discountDAO;
+        this.discountService = discountService;
     }
 
     @Override
@@ -167,28 +157,24 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public List<DiscountSuggestionDTO> getSuggestionsRelatedToCarrier(Number userId) {
-        List<Suggestion> ticketClasses = suggestionDAO.getAllSuggestionsRelatedToCarrier(userId);
-        List<Discount> discounts = discountDAO.findIn(ticketClasses.stream()
+        List<Suggestion> suggestions = suggestionDAO.getAllSuggestionsRelatedToCarrier(userId);
+        List<DiscountDTO> discountsDTO = discountService.getDiscountDTOs(suggestions.stream()
                 .map(Suggestion::getDiscountId)
                 .collect(Collectors.toList()));
 
-        attachSuggestionsToDiscounts(ticketClasses, discounts);
-
-        return createSimpleSuggestionDTOs(ticketClasses);
+        return createSuggestionDTOs(suggestions, discountsDTO);
     }
 
     @Override
-    public DiscountSuggestionDTO createDiscountForSuggestion(DiscountSuggestionDTO simpleSuggestionDTO) {
-        Suggestion suggestion = getSuggestion(simpleSuggestionDTO);
+    public DiscountSuggestionDTO createDiscountForSuggestion(DiscountSuggestionDTO suggestionDTO) {
+        Suggestion suggestion = getSuggestion(suggestionDTO);
 
-        Discount discount = DiscountUtils.getDiscount(simpleSuggestionDTO.getDiscount());
+        DiscountDTO discountDTO = discountService.saveDiscount(suggestionDTO.getDiscountDTO());
 
-        discountDAO.save(discount);
-        suggestion.setDiscountId(discount.getDiscountId());
-        suggestion.setDiscount(discount);
+        suggestion.setDiscountId(discountDTO.getDiscountId());
         suggestionDAO.save(suggestion);
 
-        return DiscountSuggestionDTO.toSimpleSuggestionDTO(suggestion, DATE_PATTERN);
+        return DiscountSuggestionDTO.toDiscountSuggestionDTO(suggestion, discountDTO);
     }
 
     @Override
@@ -204,9 +190,9 @@ public class SuggestionServiceImpl implements SuggestionService {
         suggestion.setDiscountId(null);
         suggestionDAO.save(suggestion);
 
-        discountDAO.delete(discountId);
+        DiscountDTO discountDTO = discountService.deleteDiscount(discountId);
 
-        return DiscountSuggestionDTO.toSimpleSuggestionDTO(suggestion, DATE_PATTERN);
+        return DiscountSuggestionDTO.toDiscountSuggestionDTO(suggestion, discountDTO);
     }
 
     private Suggestion getSuggestion(DiscountSuggestionDTO simpleSuggestionDTO) {
@@ -215,10 +201,6 @@ public class SuggestionServiceImpl implements SuggestionService {
         if (!optionalSuggestion.isPresent()) {
             throw new RequestException("Suggestion with id " + simpleSuggestionDTO.getSuggestionId() + " is null",
                     HttpStatus.NOT_FOUND);
-        }
-
-        if (simpleSuggestionDTO.getDiscount() == null) {
-            throw new RequestException("Discount is null", HttpStatus.BAD_REQUEST);
         }
 
         Suggestion suggestion = optionalSuggestion.get();
@@ -230,30 +212,15 @@ public class SuggestionServiceImpl implements SuggestionService {
         return suggestion;
     }
 
-    private void attachSuggestionsToDiscounts(List<Suggestion> suggestions, List<Discount> discounts) {
-        Map<Long, Long> suggestionIdWithOverdueDiscount = new HashMap<>();
+    private List<DiscountSuggestionDTO> createSuggestionDTOs(List<Suggestion> suggestions,
+                                                             List<DiscountDTO> discountDTOs) {
+        List<DiscountSuggestionDTO> discountSuggestionDTOs = new ArrayList<>();
         for (Suggestion suggestion: suggestions) {
-            Discount relatedDiscount = DiscountUtils.findDiscount(suggestion.getDiscountId(), discounts);
-            if (relatedDiscount!= null && DiscountUtils.isOverdueDiscount(relatedDiscount)) {
-                suggestionIdWithOverdueDiscount.put(suggestion.getSuggestionId(), relatedDiscount.getDiscountId());
-
-                suggestion.setDiscountId(null);
-                continue;
-            }
-
-            suggestion.setDiscount(relatedDiscount);
+            DiscountDTO relatedDiscount = discountService.getRelatedDiscountDTO(
+                    suggestion.getDiscountId(),
+                    discountDTOs);
+            discountSuggestionDTOs.add(DiscountSuggestionDTO.toDiscountSuggestionDTO(suggestion, relatedDiscount));
         }
-
-        deleteOverdueDiscount(suggestionIdWithOverdueDiscount);
-    }
-
-    private void deleteOverdueDiscount(Map<Long, Long> suggestionIdWithOverdueDiscount) {
-        suggestionDAO.deleteDiscountsForSuggestion(new ArrayList<>(suggestionIdWithOverdueDiscount.keySet()));
-        discountDAO.deleteDiscounts(new ArrayList<>(suggestionIdWithOverdueDiscount.values()));
-    }
-
-    private List<DiscountSuggestionDTO> createSimpleSuggestionDTOs(List<Suggestion> suggestions) {
-        return suggestions.stream().map(suggestion ->
-                DiscountSuggestionDTO.toSimpleSuggestionDTO(suggestion, DATE_PATTERN)).collect(Collectors.toList());
+        return discountSuggestionDTOs;
     }
 }
