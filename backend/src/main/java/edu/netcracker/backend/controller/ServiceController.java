@@ -166,28 +166,28 @@ public class ServiceController {
 
     @PutMapping("api/v1/approver/service")
     //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
-    public ServiceCRUDDTO updateServiceReview(@Valid @RequestBody ServiceCRUDDTO serviceDTO){
+    public ServiceCRUDDTO updateServiceReview(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO){
         boolean reviewOnAssigned = (
-                serviceDTO.getServiceStatus() != ServiceStatus.ARCHIVED.toString()
-                        && serviceDTO.getReplyText() != null
-                        && serviceDTO.getReplyText().length() > 0);
-        if (reviewOnAssigned)
+                serviceCRUDDTO.getServiceStatus() != ServiceStatus.UNDER_CLARIFICATION.toString()
+                        && serviceCRUDDTO.getReplyText() != null
+                        && serviceCRUDDTO.getReplyText().length() > 0);
+        if (reviewOnAssigned){
             throw new RequestException("Reviews can only be on under clarification services", HttpStatus.BAD_REQUEST);
         }
 
-        String state = serviceDTO.getServiceStatus();
+        String state = serviceCRUDDTO.getServiceStatus();
 
         boolean illegalState = (state.equals(ServiceStatus.DRAFT.toString()) ||
                                 state.equals(ServiceStatus.OPEN.toString()) ||
-                                state.equals(ServiceStatus.UNDER_CLARIFICATION.toString()));
+                                state.equals(ServiceStatus.ARCHIVED.toString()));
 
-        if (illegalState)
+        if (illegalState){
             throw new RequestException("Approver may only assign, publish or review services", HttpStatus.BAD_REQUEST);
         }
 
         int approverId = securityContext.getUser()
                                         .getUserId();
-        return serviceService.reviewService(serviceDTO, approverId);
+        return serviceService.reviewService(serviceCRUDDTO, approverId);
     }
 
 }

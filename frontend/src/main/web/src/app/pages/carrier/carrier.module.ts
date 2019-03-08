@@ -2,10 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {GrowlModule, ProgressBarModule} from "primeng/primeng";
+import {GrowlModule} from "primeng/primeng";
 import {MessageService} from 'primeng/components/common/messageservice';
-import {ToastModule} from "primeng/toast";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import { CarrierRoutingModule } from './carrier-routing.module';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -22,6 +20,8 @@ import { ServiceTableComponent } from './services/service-table/service-table.co
 import { ServiceCrudComponent } from './services/service-crud/service-crud.component';
 import { ClarificationComponent } from './services/clarification/clarification.component';
 import { ArchiveComponent } from './services/archive/archive.component';
+import { ServiceFilterPipe } from './services/shared/pipe/service-filter.pipe'; 
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @NgModule({
   declarations: [NavbarComponent, 
@@ -37,13 +37,15 @@ import { ArchiveComponent } from './services/archive/archive.component';
                 ServiceTableComponent, 
                 ServiceCrudComponent, 
                 ClarificationComponent, 
-                ArchiveComponent],
+                ArchiveComponent,
+                ServiceFilterPipe],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     CarrierRoutingModule,
-    GrowlModule
+    GrowlModule,
+    NgxPaginationModule
   ],
   providers:[
     MessageService

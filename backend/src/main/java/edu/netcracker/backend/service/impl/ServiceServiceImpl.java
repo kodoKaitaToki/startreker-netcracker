@@ -51,14 +51,12 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public List<ServiceCRUDDTO> findByStatus(String status){
-        System.out.println(getStatusValue(status));
         return serviceDAO.findByStatus(carrierId, getStatusValue(status));
     }
 
     @Override
     public ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm){
         String serviceName = serviceCreateForm.getServiceName();
-
         if(ifServiceExists(serviceName, carrierId)){
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
@@ -166,7 +164,6 @@ public class ServiceServiceImpl implements ServiceService {
     private Integer getStatusValue(String status){
         try {
             ServiceStatus stat = ServiceStatus.valueOf(status);
-            System.out.println();
             return stat.ordinal()+1;
         }catch (IllegalArgumentException e) {
             throw new RequestException("The status " + status + " doesn't exist", HttpStatus.NOT_FOUND);
