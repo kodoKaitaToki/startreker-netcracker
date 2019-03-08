@@ -17,6 +17,9 @@ public class TicketClass {
     @EqualsAndHashCode.Include
     private Long classId;
 
+    @Attribute("class_name")
+    private String className;
+
     @Attribute("trip_id")
     private Long tripId;
 
@@ -26,11 +29,8 @@ public class TicketClass {
     @Attribute("discount_id")
     private Long discountId;
 
-    @Attribute("class_name")
-    private String className;
-
     @Attribute("class_seats")
     private Integer classSeats;
-
-    private Discount discount;
+  
+    private Integer itemNumber;
 }

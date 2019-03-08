@@ -19,7 +19,7 @@
               Service name:
             </h3>
             <h3 class="col-6">
-              {{service.name}}
+              {{service.service_name}}
             </h3>
           </div>
 
@@ -30,16 +30,7 @@
           </div>
 
           <div class="row">
-            <p class="col-12">{{service.description}}</p>
-          </div>
-
-          <hr>
-
-          <div class="row">
-            <h5 class="col-6">Carrier:</h5>
-            <p class="col-6">
-              {{service.carrier}}
-            </p>
+            <p class="col-12">{{service.service_descr}}</p>
           </div>
 
           <hr>
@@ -47,7 +38,7 @@
           <div class="row">
             <h5 class="col-6">Date of creation:</h5>
             <p class="col-6">
-              {{service.created_date | date}}
+              {{service.creation_date | date}}
             </p>
           </div>
 
@@ -59,7 +50,7 @@
          *ngIf="currentServiceForReply !== service"
       >
         <button class="btn btn-success col-4"
-                type="submit"
+                (click)="onPublish(service)"
         >
           Publish
         </button>
@@ -72,7 +63,7 @@
       </div>
 
       <form [formGroup]="form"
-            (ngSubmit)="onSubmitUpdate()"
+            (ngSubmit)="onReview(service)"
             *ngIf="currentServiceForReply == service"
       >
         <div class="form-group">
@@ -97,7 +88,6 @@
             Write a reply
           </button>
           <button class="btn btn-danger col-4"
-                  type="submit"
                   (click)="resetReply()"
           >
             Cancel
