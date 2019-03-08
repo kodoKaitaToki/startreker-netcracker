@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { GrowlModule } from 'primeng/growl';
+import {GrowlModule, ProgressBarModule} from "primeng/primeng";
 import {MessageService} from 'primeng/components/common/messageservice';
+import {ToastModule} from "primeng/toast";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import { CarrierRoutingModule } from './carrier-routing.module';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -22,13 +24,28 @@ import { ClarificationComponent } from './services/clarification/clarification.c
 import { ArchiveComponent } from './services/archive/archive.component';
 
 @NgModule({
-  declarations: [NavbarComponent, IndexComponent, TripsComponent, ServicesComponent, SuggestionsComponent, DiscountsComponent, DashboardsComponent, CarrierComponent, SalesComponent, ViewsComponent, ServiceTableComponent, ServiceCrudComponent, ClarificationComponent, ArchiveComponent],
+  declarations: [NavbarComponent, 
+                IndexComponent, 
+                TripsComponent, 
+                ServicesComponent, 
+                SuggestionsComponent, 
+                DiscountsComponent, 
+                DashboardsComponent, 
+                CarrierComponent, 
+                SalesComponent, 
+                ViewsComponent, 
+                ServiceTableComponent, 
+                ServiceCrudComponent, 
+                ClarificationComponent, 
+                ArchiveComponent],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     CarrierRoutingModule,
-    GrowlModule,
+    GrowlModule
+  ],
+  providers:[
     MessageService
   ]
 })

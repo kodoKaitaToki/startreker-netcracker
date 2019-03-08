@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {clone} from 'ramda';
-import {Message} from 'primeng/components/common/api';
-import {MessageService} from 'primeng/components/common/messageservice'; 
+import {MessageService} from 'primeng/components/common/messageservice';
 
 import { Service } from '../service.model';
 import { ServiceService } from '../service.service';
@@ -10,13 +9,11 @@ import { ServiceService } from '../service.service';
 @Component({
   selector: 'app-service-crud',
   templateUrl: './service-crud.component.html',
-  styleUrls: ['./service-crud.component.scss'],
-  providers: [MessageService]
+  styleUrls: ['./service-crud.component.scss']
 })
 export class ServiceCrudComponent implements OnInit {
 
   services: Service[] = [];
-  msgs: Message[] = [];
 
   filterCriteria = [
     {name: 'id'},
@@ -39,12 +36,19 @@ export class ServiceCrudComponent implements OnInit {
   status: String;
 
   constructor(private serviceService: ServiceService,
-              private message: Message,
               private messageService: MessageService) {
   }
 
-  showSuccess(){
-    this.messageService.add({severity:'success',summary: 'Service Message', detail: ''});
+  showMessage(msgObj: any){
+    this.messageService.add(msgObj);
+  }
+
+  createMessage(severity: string, summary: string, detail: string): any {
+    return {
+      severity: severity,
+      summary: summary,
+      detail: detail
+    };
   }
 
   ngOnInit(): void {
@@ -117,6 +121,7 @@ export class ServiceCrudComponent implements OnInit {
                             localStorage.removeItem('at');
                             localStorage.setItem('at', resp.headers.get('New-Access-Token'));
                           }*/
+                          this.showMessage(this.createMessage('success', 'Approvers list', 'The list was updated'));
                           this.getDarftServices();
                           this.isForUpdateAlertMessage = false;
                         },
@@ -144,5 +149,4 @@ export class ServiceCrudComponent implements OnInit {
     this.currentServiceForUpdate = null;
     this.isForUpdateAlertMessage = false;
   }
-
 }
