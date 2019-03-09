@@ -1,9 +1,146 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-12 my-auto">
-      <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
-        <h1 class="card-title text-center">trips works!</h1>
+<div class="container-fluid trips">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="row">
+        <select class="form-control col-md-12 col-sm-12 col-lg-4" (click)="chooseNewFilter($event.target)">
+          <option *ngFor="let filters of filterCriteria" [value]="filters.name">
+            {{filters.name}}
+          </option>
+        </select>
+
+        <input type="text" class="form-control col-md-12 col-sm-12 col-lg-7 offset-lg-1"
+               [placeholder]="currentFilterPlaceholder"
+               [(ngModel)]="filterContent"
+        />
       </div>
+
+      <hr>
+
+      <h2
+        class="text-center"
+      >
+        New trip
+      </h2>
+
+      <hr>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <h3>From:</h3>
+        <div class="form-group">
+          <select
+            class="form-control col-md-12 col-sm-12 col-lg-12"
+            [ngClass]="{
+              'is-invalid':form.get('departure_planet').touched && form.get('departure_planet').invalid,
+              'is-valid': form.get('departure_planet').valid
+              }"
+            formControlName="departure_planet"
+            (change)="choosePlanet('departure')"
+          >
+            <option value="" disabled selected>Choose departure planet</option>
+            <option *ngFor="let planet of general.planets" [value]="planet">
+              {{planet}}
+            </option>
+          </select>
+          <span *ngIf="form.get('departure_planet').touched && form.get('departure_planet').invalid" class="invalid-feedback">
+            Please choose a departure planet
+          </span>
+        </div>
+
+        <div class="form-group">
+          <select
+            class="form-control col-md-12 col-sm-12 col-lg-12"
+            [ngClass]="{
+              'is-invalid':form.get('departure_spaceport').touched && form.get('departure_spaceport').invalid,
+              'is-valid': form.get('departure_spaceport').valid
+              }"
+            formControlName="departure_spaceport"
+          >
+            <option value="" disabled selected>Choose departure spaceport</option>
+            <option *ngFor="let planet of departureSpaceports" [value]="planet">
+              {{planet}}
+            </option>
+          </select>
+          <span *ngIf="form.get('departure_spaceport').touched && form.get('departure_spaceport').invalid" class="invalid-feedback">
+            Please choose a departure spaceport
+          </span>
+        </div>
+
+        <input
+          type="date"
+          name="flightDate"
+          class="form-control"
+          formControlName="departure_date"
+        />
+
+        <h3>To:</h3>
+
+        <div class="form-group">
+          <select
+            class="form-control col-md-12 col-sm-12 col-lg-12"
+            [ngClass]="{
+              'is-invalid':form.get('arrival_planet').touched && form.get('arrival_planet').invalid,
+              'is-valid': form.get('arrival_planet').valid
+              }"
+            formControlName="arrival_planet"
+            (change)="choosePlanet('arrival')"
+          >
+            <option value="" disabled selected>Choose arrival planet</option>
+            <option *ngFor="let planet of general.planets" [value]="planet">
+              {{planet}}
+            </option>
+          </select>
+          <span *ngIf="form.get('arrival_planet').touched && form.get('arrival_planet').invalid" class="invalid-feedback">
+            Please choose a arrival planet
+          </span>
+        </div>
+
+        <div class="form-group">
+          <select
+            class="form-control col-md-12 col-sm-12 col-lg-12"
+            [ngClass]="{
+              'is-invalid':form.get('arrival_spaceport').touched && form.get('arrival_spaceport').invalid,
+              'is-valid': form.get('arrival_spaceport').valid
+              }"
+            formControlName="arrival_spaceport"
+          >
+            <option value="" disabled selected>Choose arrival spaceport</option>
+            <option *ngFor="let planet of arrivalSpaceports" [value]="planet">
+              {{planet}}
+            </option>
+          </select>
+          <span *ngIf="form.get('arrival_spaceport').touched && form.get('arrival_spaceport').invalid" class="invalid-feedback">
+            Please choose an arrival spaceport
+          </span>
+        </div>
+
+        <input
+          type="date"
+          name="flightDate"
+          class="form-control"
+          formControlName="arrival_date"
+        />
+
+        <hr>
+
+        <div class="text-center">
+          <button class="btn-success btn col-md-12"
+                  type="submit"
+                  [disabled]="form.invalid"
+          >
+            Add
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-md-9">
+      <app-trips-table [approvers]="defaultApprovers"
+                          (notifyAboutUpdate)="processUpdateEvent($event)"
+                          (notifyAboutDelete)="processDeleteNotification()"
+                          [filterCriteria]="currentFilter"
+                          [filterContent]="filterContent"
+      >
+      </app-trips-table>
     </div>
   </div>
 </div>

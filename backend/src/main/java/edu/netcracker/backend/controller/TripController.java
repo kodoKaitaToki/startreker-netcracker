@@ -1,14 +1,21 @@
 package edu.netcracker.backend.controller;
 
+import com.sun.xml.bind.v2.TODO;
 import edu.netcracker.backend.message.request.MandatoryTimeInterval;
 import edu.netcracker.backend.message.request.OptionalTimeInterval;
+import edu.netcracker.backend.message.request.TripCreation;
 import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
 import edu.netcracker.backend.message.response.TripDistributionElement;
+import edu.netcracker.backend.model.Planet;
+import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.StatisticsService;
+import edu.netcracker.backend.service.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -19,12 +26,18 @@ public class TripController {
 
     private final StatisticsService statisticsService;
     private final SecurityContext securityContext;
+    private final TripService tripService;
 
     @Autowired
-    public TripController(StatisticsService statisticsService, SecurityContext securityContext) {
+    public TripController(StatisticsService statisticsService, SecurityContext securityContext, TripService tripService) {
         this.statisticsService = statisticsService;
         this.securityContext = securityContext;
+        this.tripService = tripService;
     }
+
+    @PostMapping("api/v1/trip")
+    //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public void saveTrip(@RequestBody TripCreation trip) {tripService.saveTrip(trip);}
 
     @GetMapping("api/v1/trip/distribution")
 //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")

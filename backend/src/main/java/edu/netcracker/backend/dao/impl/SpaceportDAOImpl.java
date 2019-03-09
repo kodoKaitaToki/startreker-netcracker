@@ -15,6 +15,7 @@ public class SpaceportDAOImpl extends CrudDAOImpl<Spaceport> implements Spacepor
     private final String FIND_BY_PLANET_SQL = "SELECT * FROM spaceport AS s " +
             "INNER JOIN planet AS p ON s.planet_id = p.planet_id " +
             "WHERE planet_name = ?";
+    private final String FIND_ID_BY_SPACEPORT_NAME = "SELECT spaceport_id FROM spaceport WHERE spaceport_name = LOWER(?)";
 
     @Override
     public List<Spaceport> findByPlanet(String planet) {
@@ -38,5 +39,10 @@ public class SpaceportDAOImpl extends CrudDAOImpl<Spaceport> implements Spacepor
                 getGenericMapper()));
 
         return spaceports;
+    }
+
+    @Override
+    public Long getIdBySpaceportName(String planet) {
+        return getJdbcTemplate().queryForObject(FIND_ID_BY_SPACEPORT_NAME, new Object[]{planet}, Long.class);
     }
 }

@@ -18,9 +18,32 @@ import { ServiceTableComponent } from './services/service-table/service-table.co
 import { ServiceCrudComponent } from './services/service-crud/service-crud.component';
 import { ClarificationComponent } from './services/clarification/clarification.component';
 import { ArchiveComponent } from './services/archive/archive.component';
+import { TripsTableComponent } from './trips/trips-table/trips-table.component';
+import { TripsCrudComponent } from './trips/trips-crud/trips-crud.component';
+import { AprroverShowStatusPipe } from './trips/shared/pipes/aprrover-show-status.pipe';
+import { FilterPipePipe } from './trips/shared/pipes/filter-pipe.pipe';
 
 @NgModule({
-  declarations: [NavbarComponent, IndexComponent, TripsComponent, ServicesComponent, SuggestionsComponent, DiscountsComponent, DashboardsComponent, CarrierComponent, SalesComponent, ViewsComponent, ServiceTableComponent, ServiceCrudComponent, ClarificationComponent, ArchiveComponent],
+  declarations: [
+    NavbarComponent, 
+    IndexComponent, 
+    TripsComponent, 
+    ServicesComponent, 
+    SuggestionsComponent, 
+    DiscountsComponent, 
+    DashboardsComponent, 
+    CarrierComponent, 
+    SalesComponent, 
+    ViewsComponent, 
+    ServiceTableComponent, 
+    ServiceCrudComponent, 
+    ClarificationComponent, 
+    ArchiveComponent,
+    TripsTableComponent,
+    TripsCrudComponent,
+    AprroverShowStatusPipe,
+    FilterPipePipe
+  ],
   imports: [
     CommonModule,
     FormsModule,
