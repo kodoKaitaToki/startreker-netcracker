@@ -3,6 +3,10 @@ spring:
     name: backend
   profiles:
     active: prod
+  http:
+      multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 
 server:
   port: 80

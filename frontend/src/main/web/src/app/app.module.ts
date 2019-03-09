@@ -21,6 +21,11 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { RecoveryComponent } from './pages/recovery/recovery.component';
 
 import { Configuration } from './app.constants';
+import { UploadFileComponent } from './pages/upload/upload-file/upload-file.component';
+import { UploadFileService } from './pages/upload/upload-file.service';
+import { ListUploadComponent } from './pages/upload/list-upload/list-upload.component';
+import { FormUploadComponent } from './pages/upload/form-upload/form-upload.component';
+import { DetailsUploadComponent } from './pages/upload/details-upload/details-upload.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +40,11 @@ import { Configuration } from './app.constants';
     HeaderComponent,
     RegistrationComponent,
     LoginComponent,
-    RecoveryComponent
+    RecoveryComponent,
+    UploadFileComponent,
+    ListUploadComponent,
+    FormUploadComponent,
+    DetailsUploadComponent
   ],
   imports: [
     BrowserModule,
@@ -45,7 +54,8 @@ import { Configuration } from './app.constants';
     ReactiveFormsModule,
     LoadingBarHttpClientModule
   ],
-  providers: [Configuration],
+  providers: [Configuration,
+    UploadFileService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

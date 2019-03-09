@@ -10,7 +10,7 @@ export class ApproverService {
 
   private defaultUrl: string = Api.baseUrl;
 
-  private apiVersion: string = 'v1/api/';
+  private apiVersion: string = 'api/v1/';
 
   private user: string = 'admin/';
 

@@ -5,6 +5,7 @@ import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.com
 import { LoginComponent } from './pages/login/login.component';
 import { RegistrationComponent } from './pages/registration/registration.component';
 import { RecoveryComponent } from './pages/recovery/recovery.component'
+import { UploadFileComponent } from './pages/upload/upload-file/upload-file.component';
 import { Role } from './guards/role';
 
 import { AuthGuard } from './guards/auth.guard';
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'sign-up', component: RegistrationComponent},
   { path: 'password-recovery', component: RecoveryComponent},
+  { path: 'files', component: UploadFileComponent},
   { path: 'admin',
     loadChildren: './pages/admin/admin.module#AdminModule',
 
