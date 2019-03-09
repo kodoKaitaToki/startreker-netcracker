@@ -91,8 +91,8 @@ export class AssignedComponent implements OnInit {
     this.getServices();
   }
 
-  onPageUpdate(page: {from: number, number: number}) {
-    this.pageFrom = page.from;
+  onPageUpdate(from: number) {
+    this.pageFrom = from;
     this.getServices();
   }
 

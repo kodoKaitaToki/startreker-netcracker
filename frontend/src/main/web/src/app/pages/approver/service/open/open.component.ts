@@ -12,7 +12,7 @@ import { ServiceService } from '../shared/service/service.service';
 })
 export class OpenComponent implements OnInit {
 
-  readonly pageNumber: number = 2;
+  readonly pageNumber: number = 10;
 
   pageFrom: number;
 
@@ -54,15 +54,8 @@ export class OpenComponent implements OnInit {
     this.getServices();
   }
 
-  onPagePrevious() {
-    this.pageFrom -= this.pageNumber;
-    if (this.pageFrom <= 0) this.pageFrom = 0;
-
-    this.getServices();
-  }
-
-  onPageNext() {
-    this.pageFrom += this.pageNumber;
+  onPageUpdate(from: number) {
+    this.pageFrom = from;
     this.getServices();
   }
 }
