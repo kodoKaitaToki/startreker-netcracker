@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -133,9 +132,9 @@ public class TripController {
     public List<TripDTO> getCarrierTripsByStatus(@RequestParam("status") Integer status, @Valid Pageable pageable) {
         ensureLimit(pageable);
         return toTripDTO(tripService.findCarrierTripsByStatus(securityContext.getUser(),
-                                                      status,
-                                                      pageable.getOffset(),
-                                                      pageable.getLimit()));
+                                                              status,
+                                                              pageable.getOffset(),
+                                                              pageable.getLimit()));
     }
 
     @GetMapping(value = "api/v1/approver/trip", params = {"status"})
@@ -143,9 +142,9 @@ public class TripController {
     public List<TripDTO> getApproverTripsByStatus(@RequestParam("status") Integer status, @Valid Pageable pageable) {
         ensureLimit(pageable);
         return toTripDTO(tripService.findApproverTrips(securityContext.getUser(),
-                                                              status,
-                                                              pageable.getOffset(),
-                                                              pageable.getLimit()));
+                                                       status,
+                                                       pageable.getOffset(),
+                                                       pageable.getLimit()));
     }
 
     @GetMapping(value = "api/v1/carrier/trip")
