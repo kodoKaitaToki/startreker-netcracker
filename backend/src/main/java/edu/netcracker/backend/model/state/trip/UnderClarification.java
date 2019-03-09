@@ -39,13 +39,13 @@ public class UnderClarification extends TripState {
 
     @Override
     public boolean apply(Trip trip, User requestUser, TripState tripState, TripDTO tripDTO) {
-        if (tripDTO.getReply() == null) {
+        if (tripDTO.getReplies().get(0) == null) {
             return false;
         }
 
         TripReply tripReply = new TripReply();
         tripReply.setCreationDate(LocalDateTime.now());
-        tripReply.setReportText(tripDTO.getReply());
+        tripReply.setReportText(tripDTO.getReplies().get(0).getReplyText());
         tripReply.setTripId(trip.getTripId());
         tripReply.setWriterId(requestUser.getUserId());
         tripReplyDAO.save(tripReply);

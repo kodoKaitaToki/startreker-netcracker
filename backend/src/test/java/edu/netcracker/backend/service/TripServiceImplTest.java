@@ -4,6 +4,7 @@ import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.dao.TripReplyDAO;
 import edu.netcracker.backend.message.response.TripDTO;
+import edu.netcracker.backend.message.response.TripReplyDTO;
 import edu.netcracker.backend.model.Role;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.User;
@@ -131,10 +132,17 @@ public class TripServiceImplTest {
         publishedTripDTO = TripDTO.from(publishedTrip);
         archivedTripDTO = TripDTO.from(archivedTrip);
         underClarificationTripDTO = TripDTO.from(underClarificationTrip);
-        underClarificationTripDTO.setReply("test reply");
+
+        TripReplyDTO reply = TripReplyDTO.builder()
+                                         .replyText("test reply")
+                                         .build();
+        List<TripReplyDTO> replies = new ArrayList<>();
+        replies.add(reply);
+
+        underClarificationTripDTO.setReplies(replies);
         removedTripDTO = TripDTO.from(removedTrip);
 
-        tripService = new TripServiceImpl(tripDAOMock, tripStateRegistry);
+        tripService = new TripServiceImpl(tripDAOMock, tripStateRegistry, new Removed(), new Open(), new Assigned());
     }
 
     // Draft tests

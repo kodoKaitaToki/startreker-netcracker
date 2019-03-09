@@ -2,29 +2,41 @@ package edu.netcracker.backend.controller;
 
 import edu.netcracker.backend.message.request.MandatoryTimeInterval;
 import edu.netcracker.backend.message.request.OptionalTimeInterval;
+import edu.netcracker.backend.message.request.Pageable;
 import edu.netcracker.backend.message.response.CarrierRevenueResponse;
 import edu.netcracker.backend.message.response.CarrierViewsResponse;
 import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.message.response.TripDistributionElement;
+import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.StatisticsService;
 import edu.netcracker.backend.service.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
+@PropertySource("classpath:controller/trip.properties")
+@Validated
 public class TripController {
 
     private final StatisticsService statisticsService;
     private final SecurityContext securityContext;
     private final TripService tripService;
+
+    @Value("${MAX_TRIPS_PER_REQUEST}")
+    private Long MAX_TRIPS_PER_REQUEST;
 
     @Autowired
     public TripController(StatisticsService statisticsService,
@@ -114,5 +126,46 @@ public class TripController {
                                                                       tripId,
                                                                       timeInterval.getFrom(),
                                                                       timeInterval.getTo());
+    }
+
+    @GetMapping(value = "api/v1/carrier/trip", params = {"status"})
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<TripDTO> getCarrierTripsByStatus(@RequestParam("status") Integer status, @Valid Pageable pageable) {
+        ensureLimit(pageable);
+        return toTripDTO(tripService.findCarrierTripsByStatus(securityContext.getUser(),
+                                                      status,
+                                                      pageable.getOffset(),
+                                                      pageable.getLimit()));
+    }
+
+    @GetMapping(value = "api/v1/approver/trip", params = {"status"})
+    @PreAuthorize("hasAuthority('ROLE_APPROVER')")
+    public List<TripDTO> getApproverTripsByStatus(@RequestParam("status") Integer status, @Valid Pageable pageable) {
+        ensureLimit(pageable);
+        return toTripDTO(tripService.findApproverTrips(securityContext.getUser(),
+                                                              status,
+                                                              pageable.getOffset(),
+                                                              pageable.getLimit()));
+    }
+
+    @GetMapping(value = "api/v1/carrier/trip")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<TripDTO> getCarrierTripsByStatus(@Valid Pageable pageable) {
+        ensureLimit(pageable);
+        return toTripDTO(tripService.findCarrierTrips(securityContext.getUser(),
+                                                      pageable.getOffset(),
+                                                      pageable.getLimit()));
+    }
+
+    private void ensureLimit(Pageable pageable) {
+        if (pageable.getLimit() == null || pageable.getLimit() > MAX_TRIPS_PER_REQUEST) {
+            pageable.setLimit(MAX_TRIPS_PER_REQUEST);
+        }
+    }
+
+    private List<TripDTO> toTripDTO(List<Trip> trips) {
+        return trips.stream()
+                    .map(TripDTO::from)
+                    .collect(Collectors.toList());
     }
 }
