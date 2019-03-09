@@ -5,9 +5,7 @@ import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.dao.annotations.Table;
 import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.model.state.trip.TripState;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

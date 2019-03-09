@@ -4,7 +4,7 @@ import edu.netcracker.backend.dao.BundleDAO;
 import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.dao.mapper.BundleRowMapper;
-import edu.netcracker.backend.dao.mapper.TripMapper;
+import edu.netcracker.backend.dao.mapper.TripRowMapper;
 import edu.netcracker.backend.model.Bundle;
 import edu.netcracker.backend.model.Service;
 import edu.netcracker.backend.model.Trip;
@@ -95,11 +95,11 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
 
     private TripDAO tripDAO;
     private TicketClassDAO ticketClassDAO;
-    private final TripMapper tripMapper;
+    private final TripRowMapper tripMapper;
     private final Logger logger = LoggerFactory.getLogger(BundleDAOImpl.class);
 
     @Autowired
-    public BundleDAOImpl(TicketClassDAO ticketClassDAO, TripDAO tripDAO, TripMapper tripMapper) {
+    public BundleDAOImpl(TicketClassDAO ticketClassDAO, TripDAO tripDAO, TripRowMapper tripMapper) {
         this.ticketClassDAO = ticketClassDAO;
         this.tripDAO = tripDAO;
         this.tripMapper = tripMapper;
