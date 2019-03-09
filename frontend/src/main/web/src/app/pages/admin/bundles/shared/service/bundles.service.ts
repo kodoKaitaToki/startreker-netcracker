@@ -1,6 +1,6 @@
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
-import {Bundles} from "../model/bundles";
+import {Bundle} from "../model/bundle";
 import {Injectable} from "@angular/core";
 
 import { Api } from '../../../../../modules/api/index';
@@ -38,16 +38,16 @@ export class BundlesService {
     return this.http.get(this.url + '/paging?limit=' + limit + '&offset=' + offset);
   }
 
-  public postBundles(bundles: Bundles): Observable<any> {
+  public postBundles(bundles: Bundle): Observable<any> {
 
     return this.http.post(this.url, bundles);
   }
 
-  public putBundles(bundles: Bundles): Observable<any> {
+  public putBundles(bundles: Bundle): Observable<any> {
     return this.http.put(this.url, bundles)
   }
 
-  public deleteBundles(bundles: Bundles): Observable<any> {
+  public deleteBundles(bundles: Bundle): Observable<any> {
 
     return this.http.request('DELETE',
                              this.url,

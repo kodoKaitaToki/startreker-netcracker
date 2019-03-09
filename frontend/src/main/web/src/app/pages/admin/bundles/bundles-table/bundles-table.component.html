@@ -191,7 +191,9 @@
 
 <div class="list-group">
   <ul>
-    <li class="list-group-item">
+    <li class="list-group-item"
+      *ngFor="let bundle of bundles"
+    >
       <div class="row">
 
         <div class="row col-5 offset-6"
@@ -235,7 +237,7 @@
           </div>
           <div class="row">
             <p class="col-12">
-              Aug 9, 2018
+              {{bundle.start_date | date}}
             </p>
           </div>
 
@@ -244,7 +246,7 @@
           </div>
           <div class="row">
             <p class="col-12">
-              Aug 20, 2018
+              {{bundle.finish_date | date}}
             </p>
           </div>
 
@@ -253,7 +255,7 @@
           </div>
           <div class="row">
             <p class="col-12">
-                399
+              {{bundle.bundle_price}}
             </p>
           </div>
 
@@ -262,38 +264,69 @@
         <div class="col-md-10">
           <div class="row">
             <h3 class="col-12"
-                *ngIf="true">
-                libero quis orci nullam molestie nibh in lectus pellentesque at nulla suspendisse potenti cras in purus eu magna vulputate luctus
+              *ngIf="true">
+              {{bundle.bundle_description}}
             </h3>
           </div>
         </div>
       </div>
+
+      <hr>
 
       <div class="row">
         <div class="col-md-6">
           <h5>Trips:</h5>
           <div class="list-group">
             <ul>
-              <li class="list-group-item">
-                <div class="row">
-                  <h3 class="col-2">3</h3>
-                  <h5 class="col-10 align-self-end">
-                    eget vulputate
-                  </h5>
-                </div>
-                <hr>
-                <div class="row">
-                  <h5 class="col-6">For:</h5>
-                  <p class="col-6">
-                    1984
-                  </p>
-                </div>
+              <li class="list-group-item"
+                *ngFor="let trip of bundle.bundle_trips"
+              >
+                <ul>
+                  <li class="list-group-item"
+                    *ngFor="let ticket_class of trip.ticket_classes"
+                  >
+                    <div class="row">
+                      <h3 class="col-2">{{ticket_class.item_number}}</h3>
+                      <h5 class="col-10 align-self-end">
+                        {{ticket_class.class_name}}
+                      </h5>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <h5 class="col-2">For:</h5>
+                      <p class="col-10 align-self-end">
+                        {{ticket_class.ticket_price}}
+                      </p>
+                    </div>
+                  </li>
+                </ul>
               </li>
             </ul>
           </div>
         </div>
         <div class="col-md-6">
           <h5>Services:</h5>
+          <div class="list-group">
+              <ul>
+                <li class="list-group-item"
+                  *ngFor="let service of bundle.bundle_services"
+                >
+                  <div class="row">
+                    <h3 class="col-2">{{service.item_number}}</h3>
+                    <h5 class="col-10 align-self-end">
+                      {{service.service_name}}
+                    </h5>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <h5 class="col-2">For:</h5>
+                    <p class="col-10 align-self-end">
+                      {{service.service_price}}
+                    </p>
+                  </div>
+                </li>
+              </ul>
+          </div>
         </div>
       </div>
       

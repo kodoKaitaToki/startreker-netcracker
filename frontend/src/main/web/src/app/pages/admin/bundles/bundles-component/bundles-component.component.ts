@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Bundles} from '../shared/model/bundles';
+import {Bundle} from '../shared/model/bundle';
 import {BundlesService} from "../shared/service/bundles.service";
+import { MOCK_DATA } from '../shared/model/mock-data';
 
 @Component({
              selector: 'app-bundles-component',
@@ -11,7 +12,7 @@ import {BundlesService} from "../shared/service/bundles.service";
 )
 export class BundlesComponentComponent implements OnInit {
 
-  bundles: Bundles[] = [];
+  bundles: Bundle[] = [];
 
 
   filterCriteria = [
@@ -43,7 +44,9 @@ export class BundlesComponentComponent implements OnInit {
       }
     );
 
-    this.getAllBundles();
+
+    this.bundles = MOCK_DATA;
+    //this.getAllBundles();
   }
 
   chooseNewFilter(chosenFilterName) {
@@ -54,11 +57,11 @@ export class BundlesComponentComponent implements OnInit {
 
   onPost() {
 
-    let bundles: Bundles = this.form.value;
+    let bundle: Bundle = this.form.value;
 
     //delete bundles['repeat_password'];
 
-    this.bundlesSrvc.postBundles(bundles)
+    this.bundlesSrvc.postBundles(bundle)
         .subscribe(() => {
           this.getAllBundles();
         }, () => {

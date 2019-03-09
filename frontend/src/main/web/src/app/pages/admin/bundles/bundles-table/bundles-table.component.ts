@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Bundles} from '../shared/model/bundles';
+import {Bundle} from '../shared/model/bundle';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
@@ -9,13 +9,13 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
            })
 export class BundlesTableComponent implements OnInit {
 
-  @Input() bundles: Bundles[];
+  @Input() bundles: Bundle[];
 
   @Input() filterCriteria: string;
 
   @Input() filterContent: string;
 
-  currentBundlesForUpdate: Bundles;
+  currentBundlesForUpdate: Bundle;
 
   isForUpdateAlertMessage = false;
 
@@ -66,10 +66,10 @@ export class BundlesTableComponent implements OnInit {
     this.form.patchValue({
                            start_date: this.currentBundlesForUpdate.start_date,
                            finish_date: this.currentBundlesForUpdate.finish_date,
-                           price: this.currentBundlesForUpdate.price,
-                           description: this.currentBundlesForUpdate.description,
-                           trips : this.currentBundlesForUpdate.trips,
-                           services : this.currentBundlesForUpdate.services
+                           price: this.currentBundlesForUpdate.bundle_price,
+                           description: this.currentBundlesForUpdate.bundle_description,
+                           trips : this.currentBundlesForUpdate.bundle_trips,
+                           services : this.currentBundlesForUpdate.bundle_services
                          });
   }
 
@@ -95,7 +95,7 @@ export class BundlesTableComponent implements OnInit {
     window.scrollTo(0, 0);
   }
 
-  static deleteUnnecessaryFieldAfterClick(bundles): Bundles {
+  static deleteUnnecessaryFieldAfterClick(bundles): Bundle {
     delete bundles['id'];
     delete bundles['start_date'];
 

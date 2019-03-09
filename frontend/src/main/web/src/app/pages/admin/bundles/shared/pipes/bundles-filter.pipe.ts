@@ -1,12 +1,12 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {Bundles} from "../model/bundles";
+import {Bundle} from "../model/bundle";
 
 @Pipe({
         name: 'bundlesFilter',
       })
 export class BundlesFilterPipe implements PipeTransform {
 
-  transform(value: Bundles[], filterCriteria: string, filterContent: string): Bundles[] {
+  transform(value: Bundle[], filterCriteria: string, filterContent: string): Bundle[] {
 
     if (filterCriteria === 'id') {
       filterCriteria = 'id';
