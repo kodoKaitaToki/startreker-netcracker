@@ -12,7 +12,11 @@ import { ServiceService } from '../shared/service/service.service';
 })
 export class AssignedComponent implements OnInit {
 
-  @Input() services: Service[];
+  readonly pageNumber: number = 10;
+
+  pageFrom: number;
+
+  services: Service[];
 
   form: FormGroup;
 
@@ -72,7 +76,7 @@ export class AssignedComponent implements OnInit {
   }
 
   getServices() {
-    this.serviceService.getServicesForApprover(0, 10, 3)
+    this.serviceService.getServicesForApprover(this.pageFrom, this.pageNumber, 3)
     .subscribe(data => {
       this.resetLoading();
       this.services = data;
@@ -82,7 +86,13 @@ export class AssignedComponent implements OnInit {
   constructor(private serviceService: ServiceService) { }
 
   ngOnInit() {
+    this.pageFrom = 0;
     this.setFormInDefault();
+    this.getServices();
+  }
+
+  onPageUpdate(page: {from: number, number: number}) {
+    this.pageFrom = page.from;
     this.getServices();
   }
 

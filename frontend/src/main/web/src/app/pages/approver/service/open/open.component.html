@@ -54,4 +54,10 @@
       </form>
     </li>
   </ul>
+  <app-paginator
+    [page]="services"
+    (pagePrevious)="onPagePrevious($event)"
+    (pageNext)="onPageNext($event)"
+  >
+  </app-paginator>
 </div>

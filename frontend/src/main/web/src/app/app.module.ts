@@ -44,8 +44,6 @@ import { Configuration } from './app.constants';
     AngularFontAwesomeModule,
     ReactiveFormsModule,
     LoadingBarHttpClientModule
-  ],exports: [
-    LoginComponent
   ],
   providers: [Configuration],
   bootstrap: [AppComponent]

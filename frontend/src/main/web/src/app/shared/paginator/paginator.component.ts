@@ -7,5 +7,12 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class PaginatorComponent {
   @Input() page: Array<any>;
-  @Output() pageChange = new EventEmitter<string>();
+  @Input() from: number;
+  @Input() number: number;
+  @Output() update = new EventEmitter<{from: number, number: number}>();
+
+  next() {
+    this.from += this.number;
+    this.update.emit({from: this.from, number: this.number})
+  }
 }
