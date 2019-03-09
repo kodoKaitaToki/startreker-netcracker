@@ -26,4 +26,6 @@ public class Spaceport {
 
     @Attribute("planet_id")
     private Long planetId;
+
+    private Planet planet;
 }

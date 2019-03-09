@@ -4,7 +4,7 @@ import edu.netcracker.backend.dao.BundleDAO;
 import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.dao.mapper.BundleRowMapper;
-import edu.netcracker.backend.dao.mapper.TripRowMapper;
+import edu.netcracker.backend.dao.mapper.BundleTripRowMapper;
 import edu.netcracker.backend.model.Bundle;
 import edu.netcracker.backend.model.Service;
 import edu.netcracker.backend.model.Trip;
@@ -23,71 +23,83 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
 
     private static final String ORDER_BY = " ORDER BY bundle_id ";
 
-    private static final String SELECT_ALL_BUNDLES = "SELECT bundle_id, " +
-            "start_date, " +
-            "finish_date, " +
-            "bundle_price, " +
-            "bundle_description, " +
-            "bundle_photo " +
-            "FROM bundle ";
+    private static final String SELECT_ALL_BUNDLES = "SELECT bundle_id, "
+                                                     + "start_date, "
+                                                     + "finish_date, "
+                                                     + "bundle_price, "
+                                                     + "bundle_description, "
+                                                     + "bundle_photo "
+                                                     + "FROM bundle ";
 
     private static final String PAGING_SELECT_BUNDLES = SELECT_ALL_BUNDLES + ORDER_BY + "LIMIT ? OFFSET ?";
 
     private static final String SELECT_BY_ID = SELECT_ALL_BUNDLES + " WHERE bundle_id = ?";
 
-    private static final String INSERT_BUNDLE = "INSERT INTO bundle ( " +
-            "start_date, " +
-            "finish_date, " +
-            "bundle_price, " +
-            "bundle_description, " +
-            "bundle_photo " +
-            " ) VALUES ( ?, ?, ?, ?, ?);";
+    private static final String INSERT_BUNDLE = "INSERT INTO bundle ( "
+                                                + "start_date, "
+                                                + "finish_date, "
+                                                + "bundle_price, "
+                                                + "bundle_description, "
+                                                + "bundle_photo "
+                                                + " ) VALUES ( ?, ?, ?, ?, ?);";
 
-    private static final String UPDATE_BUNDLE = "UPDATE bundle " +
-            "SET start_date   = ?, " +
-            "    finish_date  = ?, " +
-            "    bundle_price = ?, " +
-            "    bundle_description = ?, " +
-            "    bundle_photo = ? " +
-            "WHERE bundle_id = ?;";
+    private static final String UPDATE_BUNDLE = "UPDATE bundle "
+                                                + "SET start_date   = ?, "
+                                                + "    finish_date  = ?, "
+                                                + "    bundle_price = ?, "
+                                                + "    bundle_description = ?, "
+                                                + "    bundle_photo = ? "
+                                                + "WHERE bundle_id = ?;";
 
     private static final String DELETE_BUNDLE = "DELETE FROM bundle WHERE bundle_id = ?;";
 
     private static final String COUNT_BUNDLES = "SELECT count(*) FROM bundle";
 
-    private static final String SELECT_BUNDLE_TRIP = "SELECT DISTINCT " +
-            "t.trip_id, " +
-            "trip_status, " +
-            "departure_date, " +
-            "arrival_date, " +
-            "trip_photo, " +
-            "creation_date, " +
-            "bc.item_number " +
-            "FROM trip t " +
-            "INNER JOIN ticket_class tc ON t.trip_id = tc.trip_id " +
-            "INNER JOIN bundle_class bc on tc.class_id = bc.class_id " +
-            "INNER JOIN bundle b on bc.bundle_id = b.bundle_id " +
-            "WHERE b.bundle_id = ?;";
+    private static final String SELECT_BUNDLE_TRIP = "SELECT DISTINCT t.trip_id, "
+                                                     + "                trip_status, "
+                                                     + "                departure_date, "
+                                                     + "                arrival_date, "
+                                                     + "                trip_photo, "
+                                                     + "                t.creation_date, "
+                                                     + "                bc.item_number, "
+                                                     + "                spd.spaceport_id   departure_spaceport_id, "
+                                                     + "                spd.spaceport_name departure_spaceport_name, "
+                                                     + "                pd.planet_id       departure_planet_id, "
+                                                     + "                pd.planet_name     departure_planet_name, "
+                                                     + "                spa.spaceport_id   arrival_spaceport_id, "
+                                                     + "                spa.spaceport_name arrival_spaceport_name, "
+                                                     + "                pa.planet_id       arrival_planet_id, "
+                                                     + "                pa.planet_name     arrival_planet_name "
+                                                     + "FROM trip t "
+                                                     + "       INNER JOIN ticket_class tc ON t.trip_id = tc.trip_id "
+                                                     + "       INNER JOIN bundle_class bc on tc.class_id = bc.class_id"
+                                                     + "       INNER JOIN bundle b on bc.bundle_id = b.bundle_id "
+                                                     + "       INNER JOIN spaceport spd on t.departure_id = spd.spaceport_id "
+                                                     + "       INNER JOIN spaceport spa on t.arrival_id = spa.spaceport_id "
+                                                     + "       INNER JOIN planet pd on spd.planet_id = pd.planet_id "
+                                                     + "       INNER JOIN planet pa on spa.planet_id = pa.planet_id "
+                                                     + "WHERE b.bundle_id = ?;";
 
-    private static final String SELECT_BUNDLE_SERVICES = "SELECT " +
-            "s.service_id, " +
-            "service_name, " +
-            "service_description, " +
-            "service_price, " +
-            "bs.item_number " +
-            "FROM service s " +
-            "INNER JOIN possible_service ps on s.service_id = ps.service_id " +
-            "INNER JOIN bundle_service bs on ps.p_service_id = bs.p_service_id " +
-            "INNER JOIN bundle b on bs.bundle_id = b.bundle_id " +
-            "WHERE b.bundle_id = ? " +
-            "ORDER BY s.service_id;";
+    private static final String SELECT_BUNDLE_SERVICES = "SELECT "
+                                                         + "s.service_id, "
+                                                         + "service_name, "
+                                                         + "service_description, "
+                                                         + "service_price, "
+                                                         + "bs.item_number "
+                                                         + "FROM service s "
+                                                         + "INNER JOIN possible_service ps on s.service_id = ps.service_id "
+                                                         + "INNER JOIN bundle_service bs on ps.p_service_id = bs.p_service_id "
+                                                         + "INNER JOIN bundle b on bs.bundle_id = b.bundle_id "
+                                                         + "WHERE b.bundle_id = ? "
+                                                         + "ORDER BY s.service_id;";
 
-    private static final String INSERT_BUNDLE_CLASS = "INSERT INTO bundle_class (bundle_id, class_id, item_number) " +
-            "VALUES (?, ?, ?);";
+    private static final String INSERT_BUNDLE_CLASS = "INSERT INTO bundle_class (bundle_id, class_id, item_number) "
+                                                      + "VALUES (?, ?, ?);";
 
-    private static final String INSERT_BUNDLE_SERVICE = "INSERT INTO bundle_service (bundle_id, item_number, p_service_id) " +
-            "VALUES (?, ?, (SELECT p_service_id FROM possible_service ps WHERE class_id = ? " +
-            "                                                           AND service_id = ?));";
+    private static final String INSERT_BUNDLE_SERVICE =
+            "INSERT INTO bundle_service (bundle_id, item_number, p_service_id) "
+            + "VALUES (?, ?, (SELECT p_service_id FROM possible_service ps WHERE class_id = ? "
+            + "                                                           AND service_id = ?));";
 
     private static final String DELETE_BUNDLE_CLASSES_BY_ID = "DELETE FROM bundle_class WHERE bundle_id = ?;";
 
@@ -95,11 +107,11 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
 
     private TripDAO tripDAO;
     private TicketClassDAO ticketClassDAO;
-    private final TripRowMapper tripMapper;
+    private final BundleTripRowMapper tripMapper;
     private final Logger logger = LoggerFactory.getLogger(BundleDAOImpl.class);
 
     @Autowired
-    public BundleDAOImpl(TicketClassDAO ticketClassDAO, TripDAO tripDAO, TripRowMapper tripMapper) {
+    public BundleDAOImpl(TicketClassDAO ticketClassDAO, TripDAO tripDAO, BundleTripRowMapper tripMapper) {
         this.ticketClassDAO = ticketClassDAO;
         this.tripDAO = tripDAO;
         this.tripMapper = tripMapper;
@@ -108,10 +120,10 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
     @Override
     public List<Bundle> findAll(Number limit, Number offset) {
         logger.info(String.format("Querying %s bundles from %s", limit, offset));
-        List<Bundle> bundles = getJdbcTemplate()
-                .query(PAGING_SELECT_BUNDLES,
-                        new Object[]{limit, offset},
-                        new BundleRowMapper());
+        List<Bundle> bundles = getJdbcTemplate().query(PAGING_SELECT_BUNDLES,
+                                                       new Object[]{limit, offset},
+                                                       new BundleRowMapper()
+                                                      );
         logger.info("Setting bundle trip to bundles");
         bundles.forEach(bundle -> bundle.setBundleTrips(attachBundleTrips(bundle.getBundleId())));
         logger.info("Attaching bundles services");
@@ -122,7 +134,10 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
     @Override
     public Optional<Bundle> find(Number id) {
         logger.info(String.format("Searching for bundle with id: %s", id));
-        Optional<Bundle> optBundle = Optional.ofNullable(getJdbcTemplate().queryForObject(SELECT_BY_ID, new Object[]{id}, new BundleRowMapper()));
+        Optional<Bundle> optBundle = Optional.ofNullable(getJdbcTemplate().queryForObject(SELECT_BY_ID,
+                                                                                          new Object[]{id},
+                                                                                          new BundleRowMapper()
+                                                                                         ));
 
         logger.info("Setting bundle trip to bundle");
         optBundle.ifPresent(bundle -> bundle.setBundleTrips(attachBundleTrips(bundle.getBundleId())));
@@ -162,7 +177,9 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
     private List<Trip> attachBundleTrips(Long bundleId) {
         List<Trip> trips = getJdbcTemplate().query(SELECT_BUNDLE_TRIP, new Object[]{bundleId}, tripMapper);
 
-        trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findTicketClassWithItemNumber(bundleId, trip.getTripId())));
+        trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findTicketClassWithItemNumber(bundleId,
+                                                                                                 trip.getTripId()
+                                                                                                )));
         return trips;
     }
 
@@ -183,30 +200,26 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
     }
 
     private void saveBundleTrips(Bundle bundle) {
-        bundle.getBundleTrips().forEach(trip -> trip.getTicketClasses()
-                .forEach(ticketClass -> getJdbcTemplate()
-                        .update(INSERT_BUNDLE_CLASS,
-                                bundle.getBundleId(),
-                                ticketClass.getClassId(),
-                                ticketClass.getItemNumber()
-                        )
-                )
-        );
+        bundle.getBundleTrips()
+              .forEach(trip -> trip.getTicketClasses()
+                                   .forEach(ticketClass -> getJdbcTemplate().update(INSERT_BUNDLE_CLASS,
+                                                                                    bundle.getBundleId(),
+                                                                                    ticketClass.getClassId(),
+                                                                                    ticketClass.getItemNumber()
+                                                                                   )));
     }
 
     private void saveBundleServices(Bundle bundle) {
         bundle.getBundleTrips()
-                .forEach(trip -> trip.getTicketClasses()
-                        .forEach(ticketClass -> bundle.getBundleServices()
-                                .forEach(service -> getJdbcTemplate()
-                                        .update(INSERT_BUNDLE_SERVICE,
-                                                bundle.getBundleId(),
-                                                ticketClass.getItemNumber(),
-                                                ticketClass.getClassId(),
-                                                service.getServiceId())
-                                )
-                        )
-                );
+              .forEach(trip -> trip.getTicketClasses()
+                                   .forEach(ticketClass -> bundle.getBundleServices()
+                                                                 .forEach(service -> getJdbcTemplate().update(
+                                                                         INSERT_BUNDLE_SERVICE,
+                                                                         bundle.getBundleId(),
+                                                                         ticketClass.getItemNumber(),
+                                                                         ticketClass.getClassId(),
+                                                                         service.getServiceId()
+                                                                                                             ))));
     }
 
     private void updateBundleTrip(Bundle bundle) {
