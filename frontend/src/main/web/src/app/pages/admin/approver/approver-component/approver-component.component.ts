@@ -72,7 +72,8 @@ export class ApproverComponentComponent implements OnInit {
           this.showMessage(this.createMessage('success', 'Approver creation', 'The approver was created'));
           this.isProgressBarActivated = false;
         }, (error: HttpErrorResponse) => {
-          this.showMessage(this.createMessage('error', `Error message - ${status}`, error.error.error));
+          this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
+          this.isProgressBarActivated = false;
         });
 
     this.form.reset({is_activated: true});
@@ -88,7 +89,8 @@ export class ApproverComponentComponent implements OnInit {
           this.showMessage(this.createMessage('success', 'Approver editing', 'The approver was edited'));
           this.isProgressBarActivated = false;
         }, (error: HttpErrorResponse) => {
-          this.showMessage(this.createMessage('error', `Error message - ${status}`, error.error.error));
+          this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
+          this.isProgressBarActivated = false;
         });
   }
 
@@ -102,7 +104,8 @@ export class ApproverComponentComponent implements OnInit {
             this.showMessage(this.createMessage('success', 'Approver deletion', 'The approver was deleted'));
             this.isProgressBarActivated = false;
           }, (error: HttpErrorResponse) => {
-            this.showMessage(this.createMessage('error', `Error message - ${status}`, error.error.error));
+            this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
+            this.isProgressBarActivated = false
           }
         );
   }
@@ -116,7 +119,8 @@ export class ApproverComponentComponent implements OnInit {
           this.approvers = data;
           this.isProgressBarActivated = false;
         }, (error: HttpErrorResponse) => {
-          this.showMessage(this.createMessage('error', `Error message - ${error.status}`, error.error.error));
+          this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
+          this.isProgressBarActivated = false
         });
   }
 
