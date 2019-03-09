@@ -12,6 +12,10 @@ export const MOCK_DATA: Bundle[] = [
         "bundle_trips": [
             {
                 "trip_id": 4,
+                "departure_spaceport_name": "porta",
+                "arrival_spaceport_name": "sem",
+                "departure_planet": "MOON",
+                "arrival_planet": "NIBIRU",
                 "ticket_classes": [
                     {
                         "class_id": 1,
@@ -52,6 +56,10 @@ export const MOCK_DATA: Bundle[] = [
         "bundle_trips": [
             {
                 "trip_id": 4,
+                "departure_spaceport_name": "porta",
+                "arrival_spaceport_name": "sem",
+                "departure_planet": "MOON",
+                "arrival_planet": "NIBIRU",
                 "ticket_classes": [
                     {
                         "class_id": 1,

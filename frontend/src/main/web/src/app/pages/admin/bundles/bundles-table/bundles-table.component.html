@@ -274,27 +274,35 @@
       <hr>
 
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-7">
           <h5>Trips:</h5>
           <div class="list-group">
             <ul>
               <li class="list-group-item"
                 *ngFor="let trip of bundle.bundle_trips"
               >
+                <div class="row">
+                  <h5 class="col-12">
+                    {{trip.departure_spaceport_name}}({{trip.departure_planet}}) - 
+                    {{trip.arrival_spaceport_name}}({{trip.arrival_planet}})
+                  </h5>
+                </div>
+                <hr>
+
                 <ul>
                   <li class="list-group-item"
                     *ngFor="let ticket_class of trip.ticket_classes"
                   >
                     <div class="row">
-                      <h3 class="col-2">{{ticket_class.item_number}}</h3>
-                      <h5 class="col-10 align-self-end">
+                      <h3 class="col-md-2">{{ticket_class.item_number}}</h3>
+                      <h5 class="col-md-10 align-self-end">
                         {{ticket_class.class_name}}
                       </h5>
                     </div>
                     <hr>
                     <div class="row">
-                      <h5 class="col-2">For:</h5>
-                      <p class="col-10 align-self-end">
+                      <h5 class="col-md-2">For:</h5>
+                      <p class="col-md-10 align-self-end">
                         {{ticket_class.ticket_price}}
                       </p>
                     </div>
@@ -304,7 +312,7 @@
             </ul>
           </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
           <h5>Services:</h5>
           <div class="list-group">
               <ul>
@@ -312,15 +320,15 @@
                   *ngFor="let service of bundle.bundle_services"
                 >
                   <div class="row">
-                    <h3 class="col-2">{{service.item_number}}</h3>
-                    <h5 class="col-10 align-self-end">
+                    <h3 class="col-md-2">{{service.item_number}}</h3>
+                    <h5 class="col-md-10 align-self-end">
                       {{service.service_name}}
                     </h5>
                   </div>
                   <hr>
                   <div class="row">
-                    <h5 class="col-2">For:</h5>
-                    <p class="col-10 align-self-end">
+                    <h5 class="col-md-2">For:</h5>
+                    <p class="col-md-10 align-self-end">
                       {{service.service_price}}
                     </p>
                   </div>
