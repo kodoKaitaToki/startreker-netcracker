@@ -17,6 +17,8 @@ import edu.netcracker.backend.model.state.trip.TripStateRegistry;
 import edu.netcracker.backend.service.SuggestionService;
 import edu.netcracker.backend.service.TicketClassService;
 import edu.netcracker.backend.service.TripService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class TripServiceImpl implements TripService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TripServiceImpl.class);
 
     private static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
 
@@ -65,6 +69,9 @@ public class TripServiceImpl implements TripService {
     @Override
     public List<TripWithArrivalAndDepartureDataDTO>
     getAllTripsWithTicketClassAndDiscountsBelongToCarrier(Number carrierId) {
+        logger.debug("get all trips with related ticket classes and discounts that belong to carrier with id "
+                + carrierId);
+
         List<TripWithArrivalAndDepartureData> trips = tripDAO
                 .getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
         List<DiscountTicketClassDTO> ticketClassDTOs = ticketClassService.getTicketClassesRelatedToCarrier(carrierId);
@@ -75,6 +82,8 @@ public class TripServiceImpl implements TripService {
     @Override
     public List<TripWithArrivalAndDepartureDataDTO>
     getAllTripsWithSuggestionAndDiscountsBelongToCarrier(Number carrierId) {
+        logger.debug("get all trips with related suggestion and discounts that belong to carrier with id " + carrierId);
+
         List<TripWithArrivalAndDepartureData> trips = tripDAO
                 .getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
 
@@ -117,7 +126,7 @@ public class TripServiceImpl implements TripService {
             }
 
             tripDTOs.add(createTripWithArrivalAndDepartureDataAndSuggestionDTO(
-                    trip,suggestionsRelatedToTrip));
+                    trip, suggestionsRelatedToTrip));
         }
 
         return tripDTOs;

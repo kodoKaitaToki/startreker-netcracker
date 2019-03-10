@@ -15,6 +15,8 @@ import edu.netcracker.backend.model.TicketClass;
 import edu.netcracker.backend.service.DiscountService;
 import edu.netcracker.backend.service.SuggestionService;
 import edu.netcracker.backend.service.TicketClassService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class SuggestionServiceImpl implements SuggestionService {
+
+    private static final Logger logger = LoggerFactory.getLogger(SuggestionServiceImpl.class);
+
     private SuggestionDAO suggestionDAO;
 
     private PossibleServiceDAO possibleServiceDAO;
@@ -174,6 +179,9 @@ public class SuggestionServiceImpl implements SuggestionService {
     @Override
     public Map<Long, List<DiscountSuggestionDTO>> getSuggestionsRelatedToTicketClasses(
             Map<Long, List<TicketClass>> relatedToTripsTicketClasses) {
+        logger.debug("get all suggestion that belong to ticket classes that relates to trips "
+                + relatedToTripsTicketClasses.keySet());
+
         Map<Long, List<Suggestion>> relatedSuggestions = getAllSuggestionBelongToTicketClasses(relatedToTripsTicketClasses);
         Map<Long, List<ServiceDescr>> relationServices = getAllServicesBelongToSuggestions(relatedSuggestions);
         List<DiscountDTO> discountsDTO = getDiscountDTOs(relatedSuggestions);
@@ -195,6 +203,8 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public DiscountSuggestionDTO createDiscountForSuggestion(DiscountSuggestionDTO suggestionDTO) {
+        logger.debug("Create discount for suggestion " + suggestionDTO.getSuggestionId());
+
         Suggestion suggestion = getSuggestion(suggestionDTO);
 
         DiscountDTO discountDTO = discountService.saveDiscount(suggestionDTO.getDiscountDTO());
@@ -220,6 +230,8 @@ public class SuggestionServiceImpl implements SuggestionService {
         Optional<Suggestion> optionalSuggestion = suggestionDAO.getSuggestionByDiscount(userId, discountId);
 
         if (!optionalSuggestion.isPresent()) {
+            logger.error("No such discount with id " + discountId);
+
             throw new RequestException("No such discount",
                     HttpStatus.NOT_FOUND);
         }
@@ -303,6 +315,8 @@ public class SuggestionServiceImpl implements SuggestionService {
         Optional<Suggestion> optionalSuggestion = suggestionDAO.find(simpleSuggestionDTO.getSuggestionId());
 
         if (!optionalSuggestion.isPresent()) {
+            logger.error("No such suggestion with id " + simpleSuggestionDTO.getSuggestionId());
+
             throw new RequestException("Suggestion with id " + simpleSuggestionDTO.getSuggestionId() + " is null",
                     HttpStatus.NOT_FOUND);
         }
@@ -310,6 +324,8 @@ public class SuggestionServiceImpl implements SuggestionService {
         Suggestion suggestion = optionalSuggestion.get();
 
         if (suggestion.getDiscountId() != null) {
+            logger.error("Discount already exist for suggestion " + suggestion.getSuggestionId());
+
             throw new RequestException("Discount already exist",
                     HttpStatus.CONFLICT);
         }
