@@ -63,10 +63,10 @@ public class TicketClassServiceImpl implements TicketClassService {
     }
 
     @Override
-    public DiscountTicketClassDTO createDiscountForTicketClass(DiscountTicketClassDTO ticketClassDTO) {
+    public DiscountTicketClassDTO createDiscountForTicketClass(DiscountTicketClassDTO ticketClassDTO, Number userId) {
         logger.debug("create discount for ticket class with id " + ticketClassDTO.getClassId());
 
-        TicketClass ticketClass = getTicketClass(ticketClassDTO);
+        TicketClass ticketClass = getTicketClass(ticketClassDTO, userId);
 
         DiscountDTO discountDTO = discountService.saveDiscount(ticketClassDTO.getDiscountDTO());
 
@@ -101,13 +101,14 @@ public class TicketClassServiceImpl implements TicketClassService {
         return ticketClassDAO.getAllTicketClassesBelongToTrips(tripIds);
     }
 
-    private TicketClass getTicketClass(DiscountTicketClassDTO ticketClassDTO) {
-        Optional<TicketClass> optionalTicketClass = ticketClassDAO.find(ticketClassDTO.getClassId());
+    private TicketClass getTicketClass(DiscountTicketClassDTO ticketClassDTO, Number userId) {
+        Optional<TicketClass> optionalTicketClass = ticketClassDAO
+                .findTicketClassBelongToCarrier(ticketClassDTO.getClassId(), userId);
 
         if (!optionalTicketClass.isPresent()) {
             logger.error("No such ticket class with id " + ticketClassDTO.getClassId());
 
-            throw new RequestException("Ticket class with id " + ticketClassDTO.getClassId() + " is null",
+            throw new RequestException("No such ticket class with id " + ticketClassDTO.getClassId(),
                     HttpStatus.NOT_FOUND);
         }
 

@@ -5,6 +5,7 @@ import edu.netcracker.backend.dao.SuggestionDAO;
 import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.Suggestion;
+import edu.netcracker.backend.model.TicketClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -58,11 +59,35 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
             "WHERE class_id IN (:ticketClassIds) "+
             "ORDER BY suggestion_id DESC";
 
+    private static final String GET_SUGGESTION_BELONG_TO_CARRIER = "SELECT " +
+            "  suggestion.suggestion_id, " +
+            "  suggestion.class_id, " +
+            "  suggestion.discount_id " +
+            "FROM user_a " +
+            "INNER JOIN trip ON user_a.user_id = trip.carrier_id " +
+            "INNER JOIN ticket_class ON trip.trip_id = ticket_class.trip_id " +
+            "INNER JOIN suggestion ON ticket_class.class_id = suggestion.class_id " +
+            "WHERE user_a.user_id = ? AND suggestion.suggestion_id = ?";
+
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
     public SuggestionDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
+
+    @Override
+    public Optional<Suggestion> findSuggestionBelongToCarrier(Number suggestionId, Number carrierId) {
+        try {
+            Suggestion suggestion = getJdbcTemplate().queryForObject(
+                    GET_SUGGESTION_BELONG_TO_CARRIER,
+                    new Object[]{carrierId, suggestionId},
+                    getGenericMapper());
+            return Optional.of(suggestion);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

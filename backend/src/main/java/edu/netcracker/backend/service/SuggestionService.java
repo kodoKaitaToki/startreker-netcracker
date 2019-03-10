@@ -21,7 +21,7 @@ public interface SuggestionService {
     Map<Long, List<DiscountSuggestionDTO>> getSuggestionsRelatedToTicketClasses(
             Map<Long, List<TicketClass>> relatedToTripsTicketClasses);
 
-    DiscountSuggestionDTO createDiscountForSuggestion(DiscountSuggestionDTO simpleSuggestionDTO);
+    DiscountSuggestionDTO createDiscountForSuggestion(DiscountSuggestionDTO simpleSuggestionDTO, Number userId);
 
     DiscountSuggestionDTO deleteDiscountForSuggestion(Number discountId, Number userId);
 }

@@ -13,6 +13,8 @@ public interface SuggestionDAO {
 
     Optional<Suggestion> find(Number id);
 
+    Optional<Suggestion> findSuggestionBelongToCarrier(Number suggestionId, Number carrierId);
+
     void delete(Suggestion suggestion);
 
     List<Suggestion> findAllWithClassId(Number id);

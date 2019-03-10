@@ -12,7 +12,7 @@ public interface TicketClassService {
 
     List<DiscountTicketClassDTO> getTicketClassesRelatedToCarrier(Number userId);
 
-    DiscountTicketClassDTO createDiscountForTicketClass(DiscountTicketClassDTO ticketClassDTO);
+    DiscountTicketClassDTO createDiscountForTicketClass(DiscountTicketClassDTO ticketClassDTO, Number userId);
 
     DiscountTicketClassDTO deleteDiscountForTicketClass(Number discountId, Number userId);
 

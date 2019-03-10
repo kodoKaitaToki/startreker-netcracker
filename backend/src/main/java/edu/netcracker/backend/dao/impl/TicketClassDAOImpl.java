@@ -69,11 +69,36 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
             "WHERE ticket_class.trip_id IN (:tripIds) "+
             "ORDER BY class_id DESC";
 
+    private static final String GET_TICKET_CLASSES_BELONG_TO_CARRIER = "SELECT " +
+            "  ticket_class.class_id, " +
+            "  ticket_class.class_name," +
+            "  ticket_class.trip_id, " +
+            "  ticket_class.ticket_price, " +
+            "  ticket_class.discount_id, " +
+            "  ticket_class.class_seats " +
+            "FROM user_a " +
+            "INNER JOIN trip on user_a.user_id = trip.carrier_id " +
+            "INNER JOIN ticket_class on trip.trip_id = ticket_class.trip_id " +
+            "WHERE user_a.user_id = ? AND ticket_class.class_id = ?";
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
     public TicketClassDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
+
+    @Override
+    public Optional<TicketClass> findTicketClassBelongToCarrier(Number ticketClassId, Number carrierId) {
+        try {
+            TicketClass ticketClass = getJdbcTemplate().queryForObject(
+                    GET_TICKET_CLASSES_BELONG_TO_CARRIER,
+                    new Object[]{carrierId, ticketClassId},
+                    getGenericMapper());
+            return Optional.of(ticketClass);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
@@ -111,11 +136,11 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
 
     public Optional<TicketClass> getTicketClassByDiscount(Number userId, Number discountId) {
         try {
-            TicketClass user = getJdbcTemplate().queryForObject(
+            TicketClass ticketClass = getJdbcTemplate().queryForObject(
                     GET_TICLET_CLASS_WITH_DISCOUNT,
                     new Object[]{userId, discountId},
                     getGenericMapper());
-            return user != null ? Optional.of(user) : Optional.empty();
+            return ticketClass != null ? Optional.of(ticketClass) : Optional.empty();
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }

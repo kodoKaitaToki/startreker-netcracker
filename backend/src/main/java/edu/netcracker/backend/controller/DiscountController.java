@@ -65,7 +65,7 @@ public class DiscountController {
             throw new RequestException("Carrier " + username + " not found ", HttpStatus.NOT_FOUND);
         }
 
-        return ticketClassService.createDiscountForTicketClass(ticketClassDTO);
+        return ticketClassService.createDiscountForTicketClass(ticketClassDTO, user.getUserId());
     }
 
     @DeleteMapping("/api/v1/class-ticket/discount/{discountId}")
@@ -100,7 +100,7 @@ public class DiscountController {
             throw new RequestException("Carrier " + username + " not found ", HttpStatus.NOT_FOUND);
         }
 
-        return suggestionService.createDiscountForSuggestion(simpleSuggestionDTO);
+        return suggestionService.createDiscountForSuggestion(simpleSuggestionDTO, user.getUserId());
     }
 
     @DeleteMapping("/api/v1/suggestion/discount/{discountId}")

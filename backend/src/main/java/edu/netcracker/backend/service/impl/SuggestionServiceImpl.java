@@ -203,10 +203,10 @@ public class SuggestionServiceImpl implements SuggestionService {
     }
 
     @Override
-    public DiscountSuggestionDTO createDiscountForSuggestion(DiscountSuggestionDTO suggestionDTO) {
+    public DiscountSuggestionDTO createDiscountForSuggestion(DiscountSuggestionDTO suggestionDTO, Number userId) {
         logger.debug("Create discount for suggestion " + suggestionDTO.getSuggestionId());
 
-        Suggestion suggestion = getSuggestion(suggestionDTO);
+        Suggestion suggestion = getSuggestion(suggestionDTO, userId);
 
         DiscountDTO discountDTO = discountService.saveDiscount(suggestionDTO.getDiscountDTO());
 
@@ -315,13 +315,14 @@ public class SuggestionServiceImpl implements SuggestionService {
                         .collect(Collectors.toList()));
     }
 
-    private Suggestion getSuggestion(DiscountSuggestionDTO simpleSuggestionDTO) {
-        Optional<Suggestion> optionalSuggestion = suggestionDAO.find(simpleSuggestionDTO.getSuggestionId());
+    private Suggestion getSuggestion(DiscountSuggestionDTO simpleSuggestionDTO, Number userId) {
+        Optional<Suggestion> optionalSuggestion = suggestionDAO
+                .findSuggestionBelongToCarrier(simpleSuggestionDTO.getSuggestionId(), userId);
 
         if (!optionalSuggestion.isPresent()) {
             logger.error("No such suggestion with id " + simpleSuggestionDTO.getSuggestionId());
 
-            throw new RequestException("Suggestion with id " + simpleSuggestionDTO.getSuggestionId() + " is null",
+            throw new RequestException("No such suggestion with id " + simpleSuggestionDTO.getSuggestionId(),
                     HttpStatus.NOT_FOUND);
         }
 
