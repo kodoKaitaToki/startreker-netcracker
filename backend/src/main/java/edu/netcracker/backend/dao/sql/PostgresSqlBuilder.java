@@ -80,7 +80,6 @@ public class PostgresSqlBuilder implements SQLBuilder {
           .append(tableName);
         addPrimaryKeysWhere(sb);
         sb.append(" LIMIT 1) sub");
-        System.out.println(sb.toString());
         return sb.toString();
     }
 

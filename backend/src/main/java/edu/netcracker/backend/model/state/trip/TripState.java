@@ -39,10 +39,17 @@ public enum TripState {
                            .contains(AuthorityUtils.ROLE_APPROVER)
                 && allowedStatesToSwitchFrom.contains(trip.getTripState()
                                                           .getDatabaseValue())) {
-                trip.setApprover(requestUser);
                 return true;
             }
             return false;
+        }
+
+        @Override
+        public TripStateAction getAction() {
+            return (ctx, trip, tripDTO, requestUser) -> {
+                trip.setApprover(requestUser);
+                return true;
+            };
         }
     },
 
@@ -76,7 +83,7 @@ public enum TripState {
         }
 
         @Override
-        public StateAction getAction() {
+        public TripStateAction getAction() {
             return (ctx, trip, tripDTO, requestUser) -> {
                 TripReplyDAO tripReplyDAO = ctx.getBean(TripReplyDAO.class);
 
@@ -130,7 +137,7 @@ public enum TripState {
 
     private int databaseValue;
 
-    public StateAction getAction() {
+    public TripStateAction getAction() {
         return (ctx, trip, tripDTO, requestUser) -> true;
     }
 
