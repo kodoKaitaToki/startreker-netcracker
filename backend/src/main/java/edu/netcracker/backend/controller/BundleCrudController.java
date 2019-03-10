@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 @RestController
 public class BundleCrudController {
 
-    private BundleCrudService bcs;
-    private ModelMapper bundleMapper;
+    private final BundleCrudService bcs;
+    private final ModelMapper bundleMapper;
 
     @Autowired
     BundleCrudController(BundleCrudService bcs, ModelMapper objectMapper) {

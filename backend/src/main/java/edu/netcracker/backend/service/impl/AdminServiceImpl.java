@@ -4,7 +4,6 @@ import edu.netcracker.backend.dao.SpaceportDAO;
 import edu.netcracker.backend.dao.TicketDAO;
 import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.dao.VehicleDAO;
-import edu.netcracker.backend.model.Spaceport;
 import edu.netcracker.backend.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

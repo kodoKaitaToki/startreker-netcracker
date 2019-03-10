@@ -2,7 +2,6 @@ package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.BundleDAO;
 import edu.netcracker.backend.dao.TicketClassDAO;
-import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.dao.mapper.BundleRowMapper;
 import edu.netcracker.backend.dao.mapper.BundleTripRowMapper;
 import edu.netcracker.backend.dao.sql.BundleQueries;
@@ -24,15 +23,13 @@ import java.util.Optional;
 public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
 
 
-    private TripDAO tripDAO;
-    private TicketClassDAO ticketClassDAO;
+    private final TicketClassDAO ticketClassDAO;
     private final BundleTripRowMapper tripMapper;
     private final Logger logger = LoggerFactory.getLogger(BundleDAOImpl.class);
 
     @Autowired
-    public BundleDAOImpl(TicketClassDAO ticketClassDAO, TripDAO tripDAO, BundleTripRowMapper tripMapper) {
+    public BundleDAOImpl(TicketClassDAO ticketClassDAO, BundleTripRowMapper tripMapper) {
         this.ticketClassDAO = ticketClassDAO;
-        this.tripDAO = tripDAO;
         this.tripMapper = tripMapper;
     }
 

@@ -1,13 +1,8 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
-import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.dao.TripDAO;
-import edu.netcracker.backend.message.request.DiscountSuggestionDTO;
-import edu.netcracker.backend.message.request.DiscountTicketClassDTO;
-import edu.netcracker.backend.message.request.TripWithArrivalAndDepartureDataAndSuggestionsDTO;
-import edu.netcracker.backend.message.request.TripWithArrivalAndDepartureDataAndTicketClassesDTO;
-import edu.netcracker.backend.message.request.TripWithArrivalAndDepartureDataDTO;
+import edu.netcracker.backend.message.request.*;
 import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.TripWithArrivalAndDepartureData;
@@ -67,31 +62,29 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<TripWithArrivalAndDepartureDataDTO>
-    getAllTripsWithTicketClassAndDiscountsBelongToCarrier(Number carrierId) {
+    public List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithTicketClassAndDiscountsBelongToCarrier(Number carrierId) {
         logger.debug("get all trips with related ticket classes and discounts that belong to carrier with id "
-                + carrierId);
+                     + carrierId);
 
-        List<TripWithArrivalAndDepartureData> trips = tripDAO
-                .getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
+        List<TripWithArrivalAndDepartureData> trips = tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(
+                carrierId);
         List<DiscountTicketClassDTO> ticketClassDTOs = ticketClassService.getTicketClassesRelatedToCarrier(carrierId);
 
         return createTripWithArrivalAndDepartureDataAndTicketClassesDTOs(trips, ticketClassDTOs);
     }
 
     @Override
-    public List<TripWithArrivalAndDepartureDataDTO>
-    getAllTripsWithSuggestionAndDiscountsBelongToCarrier(Number carrierId) {
+    public List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithSuggestionAndDiscountsBelongToCarrier(Number carrierId) {
         logger.debug("get all trips with related suggestion and discounts that belong to carrier with id " + carrierId);
 
-        List<TripWithArrivalAndDepartureData> trips = tripDAO
-                .getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
+        List<TripWithArrivalAndDepartureData> trips = tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(
+                carrierId);
 
-        Map<Long, List<DiscountSuggestionDTO>> suggestionsRelatedToTrip =
-                suggestionService.getSuggestionsRelatedToTicketClasses(ticketClassService
-                        .getAllTicketClassesBelongToTrips(trips.stream()
-                                .map(TripWithArrivalAndDepartureData::getTripId)
-                                .collect(Collectors.toList())));
+        Map<Long, List<DiscountSuggestionDTO>> suggestionsRelatedToTrip
+                = suggestionService.getSuggestionsRelatedToTicketClasses(ticketClassService.getAllTicketClassesBelongToTrips(
+                trips.stream()
+                     .map(TripWithArrivalAndDepartureData::getTripId)
+                     .collect(Collectors.toList())));
         return createTripWithArrivalAndDepartureDataAndSuggestionDTOs(trips, suggestionsRelatedToTrip);
     }
 
@@ -113,9 +106,8 @@ public class TripServiceImpl implements TripService {
         }
     }
 
-    private List<TripWithArrivalAndDepartureDataDTO> createTripWithArrivalAndDepartureDataAndSuggestionDTOs(
-            List<TripWithArrivalAndDepartureData> trips,
-            Map<Long, List<DiscountSuggestionDTO>> suggestionsRelatedToTrips) {
+    private List<TripWithArrivalAndDepartureDataDTO> createTripWithArrivalAndDepartureDataAndSuggestionDTOs(List<TripWithArrivalAndDepartureData> trips,
+                                                                                                            Map<Long, List<DiscountSuggestionDTO>> suggestionsRelatedToTrips) {
         List<TripWithArrivalAndDepartureDataDTO> tripDTOs = new ArrayList<>();
 
         for (TripWithArrivalAndDepartureData trip : trips) {
@@ -125,8 +117,7 @@ public class TripServiceImpl implements TripService {
                 continue;
             }
 
-            tripDTOs.add(createTripWithArrivalAndDepartureDataAndSuggestionDTO(
-                    trip, suggestionsRelatedToTrip));
+            tripDTOs.add(createTripWithArrivalAndDepartureDataAndSuggestionDTO(trip, suggestionsRelatedToTrip));
         }
 
         return tripDTOs;
@@ -136,15 +127,11 @@ public class TripServiceImpl implements TripService {
             TripWithArrivalAndDepartureData trip,
             List<DiscountSuggestionDTO> suggestionsRelatedToTrip) {
 
-        return TripWithArrivalAndDepartureDataAndSuggestionsDTO.form(
-                trip,
-                suggestionsRelatedToTrip,
-                DATE_PATTERN);
+        return TripWithArrivalAndDepartureDataAndSuggestionsDTO.form(trip, suggestionsRelatedToTrip, DATE_PATTERN);
     }
 
-    private List<TripWithArrivalAndDepartureDataDTO> createTripWithArrivalAndDepartureDataAndTicketClassesDTOs(
-            List<TripWithArrivalAndDepartureData> trips,
-            List<DiscountTicketClassDTO> ticketClassDTOs) {
+    private List<TripWithArrivalAndDepartureDataDTO> createTripWithArrivalAndDepartureDataAndTicketClassesDTOs(List<TripWithArrivalAndDepartureData> trips,
+                                                                                                               List<DiscountTicketClassDTO> ticketClassDTOs) {
         List<TripWithArrivalAndDepartureDataDTO> tripDTOs = new ArrayList<>();
         for (TripWithArrivalAndDepartureData trip : trips) {
             tripDTOs.add(createTripWithArrivalAndDepartureDataAndTicketClassesDTO(trip, ticketClassDTOs));
@@ -159,7 +146,8 @@ public class TripServiceImpl implements TripService {
 
         List<DiscountTicketClassDTO> relatedTicketClassDTOs = new ArrayList<>();
         for (DiscountTicketClassDTO ticketClassDTO : ticketClassDTOs) {
-            if (trip.getTripId().equals(ticketClassDTO.getTripId())) {
+            if (trip.getTripId()
+                    .equals(ticketClassDTO.getTripId())) {
                 relatedTicketClassDTOs.add(ticketClassDTO);
             }
         }

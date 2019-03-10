@@ -1,11 +1,9 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
-import edu.netcracker.backend.dao.DiscountDAO;
 import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.message.request.DiscountDTO;
 import edu.netcracker.backend.message.request.DiscountTicketClassDTO;
-import edu.netcracker.backend.model.Discount;
 import edu.netcracker.backend.model.TicketClass;
 import edu.netcracker.backend.service.DiscountService;
 import edu.netcracker.backend.service.TicketClassService;
@@ -16,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,8 +41,7 @@ public class TicketClassServiceImpl implements TicketClassService {
 
         if (!optionalTicketClass.isPresent()) {
             logger.error("No such ticket class with id " + ticketClassId);
-            throw new RequestException("No such ticket class",
-                    HttpStatus.NOT_FOUND);
+            throw new RequestException("No such ticket class", HttpStatus.NOT_FOUND);
         }
 
         return optionalTicketClass.get();
@@ -102,8 +98,8 @@ public class TicketClassServiceImpl implements TicketClassService {
     }
 
     private TicketClass getTicketClass(DiscountTicketClassDTO ticketClassDTO, Number userId) {
-        Optional<TicketClass> optionalTicketClass = ticketClassDAO
-                .findTicketClassBelongToCarrier(ticketClassDTO.getClassId(), userId);
+        Optional<TicketClass> optionalTicketClass
+                = ticketClassDAO.findTicketClassBelongToCarrier(ticketClassDTO.getClassId(), userId);
 
         if (!optionalTicketClass.isPresent()) {
             logger.error("No such ticket class with id " + ticketClassDTO.getClassId());

@@ -1,7 +1,6 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
-import edu.netcracker.backend.dao.ApproverDAO;
 import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.dao.ServiceReplyDAO;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
@@ -50,7 +49,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceCRUDDTO> findByStatus(String status){
+    public List<ServiceCRUDDTO> findByStatus(String status) {
         return serviceDAO.findByStatus(carrierId, getStatusValue(status));
     }
 
@@ -62,7 +61,7 @@ public class ServiceServiceImpl implements ServiceService {
         }
 
         String status = serviceCreateForm.getServiceStatus();
-        if((!status.equals(ServiceStatus.DRAFT.toString()))&&(!status.equals(ServiceStatus.OPEN.toString()))){
+        if ((!status.equals(ServiceStatus.DRAFT.toString())) && (!status.equals(ServiceStatus.OPEN.toString()))) {
             throw new RequestException("Status of new service must be draft or open", HttpStatus.BAD_REQUEST);
         }
 
@@ -95,10 +94,10 @@ public class ServiceServiceImpl implements ServiceService {
         }
 
         String status = serviceCRUDDTO.getServiceStatus();
-        if(((status.equals(ServiceStatus.ASSIGNED.toString()) ||
-                (status.equals(ServiceStatus.PUBLISHED.toString()) ||
-                        (status.equals(ServiceStatus.UNDER_CLARIFICATION.toString()))) &&
-                            (!Objects.equals(serviceCRUDDTO.getServiceStatus(),serviceDescr.getServiceStatus()))))){
+        if (((status.equals(ServiceStatus.ASSIGNED.toString())
+              || (status.equals(ServiceStatus.PUBLISHED.toString())
+                  || (status.equals(ServiceStatus.UNDER_CLARIFICATION.toString())))
+                 && (!Objects.equals(serviceCRUDDTO.getServiceStatus(), serviceDescr.getServiceStatus()))))) {
             throw new RequestException("Cannot set service_status = " + serviceCRUDDTO.getServiceStatus(),
                     HttpStatus.BAD_REQUEST);
         }
@@ -124,12 +123,15 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, String status, Integer approverId) {
-        if(status.equals(ServiceStatus.OPEN.toString())){
+    public List<ServiceCRUDDTO> getServicesForApprover(Integer from,
+                                                       Integer number,
+                                                       String status,
+                                                       Integer approverId) {
+        if (status.equals(ServiceStatus.OPEN.toString())) {
             return serviceDAO.getServicesForApprover(from, number, getStatusValue(status));
-        }else if(status.equals(ServiceStatus.ASSIGNED.toString())){
+        } else if (status.equals(ServiceStatus.ASSIGNED.toString())) {
             return serviceDAO.getServicesForApprover(from, number, getStatusValue(status), approverId);
-        }else{
+        } else {
             throw new IllegalArgumentException("Illegal service status");
         }
     }
@@ -161,11 +163,11 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceDTO;
     }
 
-    private Integer getStatusValue(String status){
+    private Integer getStatusValue(String status) {
         try {
             ServiceStatus stat = ServiceStatus.valueOf(status);
-            return stat.ordinal()+1;
-        }catch (IllegalArgumentException e) {
+            return stat.ordinal() + 1;
+        } catch (IllegalArgumentException e) {
             throw new RequestException("The status " + status + " doesn't exist", HttpStatus.NOT_FOUND);
         }
     }
