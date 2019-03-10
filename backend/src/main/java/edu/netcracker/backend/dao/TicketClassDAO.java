@@ -3,6 +3,7 @@ package edu.netcracker.backend.dao;
 import edu.netcracker.backend.model.TicketClass;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface TicketClassDAO extends CrudDAO<TicketClass> {
@@ -20,5 +21,5 @@ public interface TicketClassDAO extends CrudDAO<TicketClass> {
 
     Optional<TicketClass> getTicketClassByDiscount(Number userId, Number discountId);
 
-    void deleteDiscountsForTicketClasses(List<Long> collect);
+    Map<Long, List<TicketClass>> getAllTicketClassesBelongToTrips(List<Number> tripIds);
 }

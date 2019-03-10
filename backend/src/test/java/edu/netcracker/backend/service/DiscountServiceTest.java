@@ -84,7 +84,7 @@ public class DiscountServiceTest {
     @Test
     public void saveDiscountWithDateExpired() {
         expectedEx.expect(RequestException.class);
-        expectedEx.expectMessage("Finish date is less than current date");
+        expectedEx.expectMessage("Finish date of discount is less than current date");
 
         DiscountDTO discountDTO = new DiscountDTO();
         discountDTO.setDiscountId(1L);
@@ -101,7 +101,7 @@ public class DiscountServiceTest {
     @Test
     public void saveDiscountWithDateFinishLess() {
         expectedEx.expect(RequestException.class);
-        expectedEx.expectMessage("Finish date is less than start date");
+        expectedEx.expectMessage("Finish date of discount is less than start date");
 
         DiscountDTO discountDTO = new DiscountDTO();
         discountDTO.setDiscountId(1L);

@@ -2,12 +2,18 @@ package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.SuggestionDAO;
 import edu.netcracker.backend.dao.annotations.PrimaryKey;
+import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.Suggestion;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -42,6 +48,20 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
     private static final String DELETE_DISCOUNT_CONNECTION = "UPDATE suggestion " +
             "SET discount_id = null " +
             "WHERE suggestion_id = ?";
+
+    private static final String GET_ALL_SUGGESTIONS_BELONG_TO_TICKET_CLASSES = "SELECT\n" +
+            "  suggestion_id, " +
+            "  class_id, " +
+            "  discount_id " +
+            "FROM suggestion " +
+            "WHERE class_id IN (:ticketClassIds)";
+
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    public SuggestionDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
 
     @Override
     public List<Suggestion> findAllWithClassId(Number id) {
@@ -95,5 +115,38 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
         getJdbcTemplate().batchUpdate(DELETE_DISCOUNT_CONNECTION, suggestionIds.stream()
                 .map(ticketClassId -> new Object[]{ticketClassId})
                 .collect(Collectors.toList()));
+    }
+
+    @Override
+    public Map<Long, List<Suggestion>> getAllSuggestionBelongToTicketClasses(List<Number> ticketClassIds) {
+        Map<Long, List<Suggestion>> relatedSuggestion = new HashMap<>();
+
+        List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(
+                GET_ALL_SUGGESTIONS_BELONG_TO_TICKET_CLASSES,
+                new MapSqlParameterSource("ticketClassIds", ticketClassIds));
+        for (Map<String, Object> row : rows) {
+            List<Suggestion> ticketClasses = relatedSuggestion
+                    .computeIfAbsent(((Number) row.get("class_id")).longValue(),
+                            aLong -> new ArrayList<>());
+
+            ticketClasses.add(createSuggestion(row));
+        }
+
+        return relatedSuggestion;
+    }
+
+    private Suggestion createSuggestion(Map<String, Object> row) {
+        return Suggestion.builder()
+                .suggestionId(((Number) row.get("suggestion_id")).longValue())
+                .classId(((Number) row.get("class_id")).longValue())
+                .discountId(getDiscountId(row.get("discount_id")))
+                .build();
+    }
+
+    private Long getDiscountId(Object o) {
+        if (o == null) {
+            return null;
+        }
+        return ((Integer) o).longValue();
     }
 }

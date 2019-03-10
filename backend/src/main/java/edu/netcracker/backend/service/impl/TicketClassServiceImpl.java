@@ -34,6 +34,18 @@ public class TicketClassServiceImpl implements TicketClassService {
     }
 
     @Override
+    public TicketClass find(Number ticketClassId) {
+        Optional<TicketClass> optionalTicketClass = ticketClassDAO.find(ticketClassId);
+
+        if (!optionalTicketClass.isPresent()) {
+            throw new RequestException("Expected class_id in this request",
+                    HttpStatus.NOT_FOUND);
+        }
+
+        return optionalTicketClass.get();
+    }
+
+    @Override
     public List<DiscountTicketClassDTO> getTicketClassesRelatedToCarrier(Number userId) {
         List<TicketClass> ticketClasses = ticketClassDAO.getAllTicketClassesRelatedToCarrier(userId);
         List<DiscountDTO> discountsDTO = discountService.getDiscountDTOs(ticketClasses.stream()
@@ -71,6 +83,11 @@ public class TicketClassServiceImpl implements TicketClassService {
         DiscountDTO discountDTO = discountService.deleteDiscount(discountId);
 
         return DiscountTicketClassDTO.toTicketClassDTO(ticketClass, discountDTO);
+    }
+
+    @Override
+    public Map<Long, List<TicketClass>> getAllTicketClassesBelongToTrips(List<Number> tripIds) {
+        return ticketClassDAO.getAllTicketClassesBelongToTrips(tripIds);
     }
 
     private TicketClass getTicketClass(DiscountTicketClassDTO ticketClassDTO) {

@@ -1,16 +1,18 @@
 package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.TicketClassDAO;
-import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.model.TicketClass;
-import lombok.EqualsAndHashCode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements TicketClassDAO {
@@ -53,10 +55,22 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
             "INNER JOIN ticket_class ON ticket_class.trip_id = trip.trip_id " +
             "WHERE user_a.user_id = ? AND ticket_class.discount_id = ?";
 
-    private static final String DELETE_DISCOUNT_CONNECTION = "UPDATE ticket_class " +
-            "SET discount_id = null " +
-            "WHERE class_id = ?";
+    private static final String GET_ALL_TICKET_CLASSES_BELONG_TO_TRIPS_BELONG_TO_CARRIER = "SELECT " +
+            "ticket_class.class_id, " +
+            "ticket_class.class_name, " +
+            "ticket_class.trip_id, " +
+            "ticket_class.ticket_price, " +
+            "ticket_class.discount_id, " +
+            "ticket_class.class_seats " +
+            "FROM ticket_class " +
+            "WHERE ticket_class.trip_id IN (:tripIds)";
 
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    public TicketClassDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
 
     @Override
     public List<TicketClass> findByTripId(Number id) {
@@ -104,9 +118,38 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
     }
 
     @Override
-    public void deleteDiscountsForTicketClasses(List<Long> ticketClassIds) {
-        getJdbcTemplate().batchUpdate(DELETE_DISCOUNT_CONNECTION, ticketClassIds.stream()
-                .map(ticketClassId -> new Object[]{ticketClassId})
-                .collect(Collectors.toList()));
+    public Map<Long, List<TicketClass>> getAllTicketClassesBelongToTrips(List<Number> tripIds) {
+        Map<Long, List<TicketClass>> relatedTicketClasses = new HashMap<>();
+
+        List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(
+                GET_ALL_TICKET_CLASSES_BELONG_TO_TRIPS_BELONG_TO_CARRIER,
+                new MapSqlParameterSource("tripIds", tripIds));
+        for (Map<String, Object> row : rows) {
+            List<TicketClass> ticketClasses = relatedTicketClasses
+                    .computeIfAbsent((((Number) row.get("trip_id")).longValue()),
+                            aLong -> new ArrayList<>());
+
+            ticketClasses.add(createTicketClass(row));
+        }
+
+        return relatedTicketClasses;
+    }
+
+    private TicketClass createTicketClass(Map<String, Object> row) {
+        return TicketClass.builder()
+                .classId(((Number) row.get("class_id")).longValue())
+                .className((String) row.get("class_name"))
+                .tripId(((Number) row.get("trip_id")).longValue())
+                .ticketPrice((Integer) row.get("ticket_price"))
+                .discountId(getDiscountId(row.get("discount_id")))
+                .classSeats((Integer) row.get("class_seats"))
+                .build();
+    }
+
+    private Long getDiscountId(Object o) {
+        if (o == null) {
+            return null;
+        }
+        return ((Integer) o).longValue();
     }
 }

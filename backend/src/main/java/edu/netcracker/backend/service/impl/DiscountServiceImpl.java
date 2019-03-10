@@ -95,11 +95,12 @@ public class DiscountServiceImpl implements DiscountService {
         Discount discount = Discount.toDiscount(discountDTO);
 
         if (discount.getFinishDate().isBefore(LocalDateTime.now())) {
-            throw new RequestException("Finish date is less than current date", HttpStatus.BAD_REQUEST);
+            throw new RequestException("Finish date of discount is less than current date", HttpStatus.BAD_REQUEST);
         }
 
         if (discount.getFinishDate().isBefore(discount.getStartDate())) {
-            throw new RequestException("Finish date is less than start date", HttpStatus.BAD_REQUEST);
+            throw new RequestException("Finish date of discount is less than start date of discount",
+                    HttpStatus.BAD_REQUEST);
         }
 
         if (discount.getDiscountRate() <= 0) {

@@ -3,9 +3,11 @@ package edu.netcracker.backend.controller;
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.message.request.DiscountSuggestionDTO;
 import edu.netcracker.backend.message.request.DiscountTicketClassDTO;
+import edu.netcracker.backend.message.request.TripWithArrivalAndDepartureDataDTO;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.SuggestionService;
 import edu.netcracker.backend.service.TicketClassService;
+import edu.netcracker.backend.service.TripService;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.utils.AuthorityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,22 +32,28 @@ public class DiscountController {
 
     private final SuggestionService suggestionService;
 
+    private final TripService tripService;
+
     @Autowired
-    public DiscountController(TicketClassService ticketClassService, UserService userService, SuggestionService suggestionService) {
+    public DiscountController(TicketClassService ticketClassService,
+                              UserService userService,
+                              SuggestionService suggestionService,
+                              TripService tripService) {
         this.ticketClassService = ticketClassService;
         this.userService = userService;
         this.suggestionService = suggestionService;
+        this.tripService = tripService;
     }
 
     @GetMapping("/api/v1/class-ticket/discount")
-    public List<DiscountTicketClassDTO> getClassTickets(@RequestParam("username") String username) {
+    public List<TripWithArrivalAndDepartureDataDTO> getClassTickets(@RequestParam("username") String username) {
         User user = userService.findByUsernameWithRole(username, AuthorityUtils.ROLE_CARRIER);
 
         if (user == null) {
             throw new RequestException("Carrier " + username + " not found ", HttpStatus.NOT_FOUND);
         }
 
-        return ticketClassService.getTicketClassesRelatedToCarrier(user.getUserId());
+        return tripService.getAllTripsWithTicketClassAndDiscountsBelongToCarrier(user.getUserId());
     }
 
     @PostMapping("/api/v1/class-ticket/discount")
@@ -73,14 +81,14 @@ public class DiscountController {
     }
 
     @GetMapping("/api/v1/suggestion/discount")
-    public List<DiscountSuggestionDTO> getSuggestions(@RequestParam("username") String username) {
+    public List<TripWithArrivalAndDepartureDataDTO> getSuggestions(@RequestParam("username") String username) {
         User user = userService.findByUsernameWithRole(username, AuthorityUtils.ROLE_CARRIER);
 
         if (user == null) {
             throw new RequestException("Carrier " + username + " not found ", HttpStatus.NOT_FOUND);
         }
 
-        return suggestionService.getSuggestionsRelatedToCarrier(user.getUserId());
+        return tripService.getAllTripsWithSuggestionAndDiscountsBelongToCarrier(user.getUserId());
     }
 
     @PostMapping("/api/v1/suggestion/discount")

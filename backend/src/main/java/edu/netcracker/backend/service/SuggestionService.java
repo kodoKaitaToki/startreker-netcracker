@@ -2,8 +2,10 @@ package edu.netcracker.backend.service;
 
 import edu.netcracker.backend.message.response.SuggestionDTO;
 import edu.netcracker.backend.message.request.DiscountSuggestionDTO;
+import edu.netcracker.backend.model.TicketClass;
 
 import java.util.List;
+import java.util.Map;
 
 public interface SuggestionService {
     List<SuggestionDTO> getAllWithClassId(Number id);
@@ -16,7 +18,8 @@ public interface SuggestionService {
 
     void deleteSuggestion(Number id);
 
-    List<DiscountSuggestionDTO> getSuggestionsRelatedToCarrier(Number userId);
+    Map<Long, List<DiscountSuggestionDTO>> getSuggestionsRelatedToTicketClasses(
+            Map<Long, List<TicketClass>> relatedToTripsTicketClasses);
 
     DiscountSuggestionDTO createDiscountForSuggestion(DiscountSuggestionDTO simpleSuggestionDTO);
 
