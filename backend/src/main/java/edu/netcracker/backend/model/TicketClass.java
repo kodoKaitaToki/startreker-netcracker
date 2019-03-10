@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
@@ -33,4 +36,6 @@ public class TicketClass {
     private Integer classSeats;
   
     private Integer itemNumber;
+
+    private List<Service> services = new ArrayList<>();
 }
