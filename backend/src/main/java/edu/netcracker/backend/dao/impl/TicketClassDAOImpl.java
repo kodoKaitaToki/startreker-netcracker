@@ -1,5 +1,6 @@
 package edu.netcracker.backend.dao.impl;
 
+import edu.netcracker.backend.dao.DiscountDAO;
 import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.model.TicketClass;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,15 +142,8 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
                 .className((String) row.get("class_name"))
                 .tripId(((Number) row.get("trip_id")).longValue())
                 .ticketPrice((Integer) row.get("ticket_price"))
-                .discountId(getDiscountId(row.get("discount_id")))
+                .discountId(DiscountDAO.getDiscountId(row.get("discount_id")))
                 .classSeats((Integer) row.get("class_seats"))
                 .build();
-    }
-
-    private Long getDiscountId(Object o) {
-        if (o == null) {
-            return null;
-        }
-        return ((Integer) o).longValue();
     }
 }

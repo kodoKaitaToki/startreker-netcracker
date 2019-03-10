@@ -1,5 +1,6 @@
 package edu.netcracker.backend.dao.impl;
 
+import edu.netcracker.backend.dao.DiscountDAO;
 import edu.netcracker.backend.dao.SuggestionDAO;
 import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.model.ServiceDescr;
@@ -139,14 +140,7 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
         return Suggestion.builder()
                 .suggestionId(((Number) row.get("suggestion_id")).longValue())
                 .classId(((Number) row.get("class_id")).longValue())
-                .discountId(getDiscountId(row.get("discount_id")))
+                .discountId(DiscountDAO.getDiscountId(row.get("discount_id")))
                 .build();
-    }
-
-    private Long getDiscountId(Object o) {
-        if (o == null) {
-            return null;
-        }
-        return ((Integer) o).longValue();
     }
 }
