@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Bundle} from '../shared/model/bundle';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {BundlesService} from "../shared/service/bundles.service";
 
 @Component({
              selector: 'app-bundles-table',
@@ -8,12 +9,17 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
              styleUrls: ['./bundles-table.component.scss']
            })
 export class BundlesTableComponent implements OnInit {
-
-  @Input() bundles: Bundle[];
-
   @Input() filterCriteria: string;
 
   @Input() filterContent: string;
+
+  readonly pageNumber: number = 10;
+
+  pageFrom: number;
+
+  pageAmount: number;
+
+  bundles: Bundle[];
 
   currentBundlesForUpdate: Bundle;
 
@@ -23,24 +29,24 @@ export class BundlesTableComponent implements OnInit {
 
   form: FormGroup;
 
-  totalRec: number;
-
-  page: number = 1;
-
   entriesAmountOnPage = 10;
 
   @Output() onUpdateDataNotifier = new EventEmitter();
 
   @Output() onDeleteDataNotifier = new EventEmitter();
 
-  constructor() {
+  @Output() update = new EventEmitter<number>();
+
+  constructor(private bundlesSrvc: BundlesService) {
 
   }
 
   ngOnInit() {
+    this.pageFrom = 0;
+
+    this.getAllBundles();
 
     this.setFormInDefault();
-    this.totalRec = this.bundles.length;
   }
 
   setFormInDefault() {
@@ -89,12 +95,6 @@ export class BundlesTableComponent implements OnInit {
     this.closeUpdateForm();
   }
 
-  onChangePage($event) {
-
-    this.page = $event;
-    window.scrollTo(0, 0);
-  }
-
   static deleteUnnecessaryFieldAfterClick(bundles): Bundle {
     delete bundles['id'];
     delete bundles['start_date'];
@@ -105,5 +105,41 @@ export class BundlesTableComponent implements OnInit {
   closeUpdateForm() {
     this.currentBundlesForUpdate = null;
     this.isForUpdateAlertMessage = false;
+  }
+
+  getBundlesForUpdate(bundles) {
+
+    this.bundlesSrvc.putBundles(bundles)
+        .subscribe(() => {
+          this.getAllBundles();
+        }, () => {
+          alert('Something went wrong');
+        });
+  }
+
+  getBundlesForDelete(bundles) {
+
+    this.bundlesSrvc.deleteBundles(bundles)
+        .subscribe(() => {
+          this.getAllBundles();
+        });
+  }
+
+  getAllBundles() {
+
+    this.bundlesSrvc.getCount()
+        .subscribe(data => this.pageAmount = Math.floor(data/this.pageNumber));
+
+    this.bundlesSrvc.getBundlesInInterval(this.pageNumber, this.pageFrom)
+        .subscribe(data => this.bundles = data);
+  }
+
+/*  checkRepeatedPasswordTheSame() {
+    return this.form.get('password').value === this.form.get('repeat_password').value;
+  } */
+
+  onPageUpdate(from: number) {
+    this.pageFrom = from;
+    this.getAllBundles();
   }
 }
