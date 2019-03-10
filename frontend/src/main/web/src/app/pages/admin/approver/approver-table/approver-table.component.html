@@ -7,16 +7,16 @@
     >
       <div class="row">
         <div class="col-1"
-             title="id"
         >
-          <span class="badge badge-primary badge-pill idBadge">{{approver.id}}</span>
-
-          <h5
-            [style.color] = "(approver.is_activated === true) ? 'green' : 'red'"
+          <h5>Status:</h5>
+          <h6
+            [style.color]="(approver.is_activated === true) ? 'green' : 'red'"
             title="Status"
           >
             {{approver.is_activated | aprroverShowStatus}}
-          </h5>
+          </h6>
+
+          <hr>
         </div>
 
         <div class="row col-5 offset-6"
@@ -178,7 +178,8 @@
       </form>
     </li>
   </ul>
-  <pagination-controls id="listing_pagination" maxSize=5
+  <pagination-controls *ngIf="!isProgressSpinnerActivated"
+                       id="listing_pagination" maxSize=5
                        (pageChange)="onChangePage($event)"
                        class="text-center">
   </pagination-controls>

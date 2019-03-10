@@ -12,4 +12,8 @@ public interface DiscountDAO extends CrudDAO<Discount>{
     List<Discount> findIn(List<?> args);
 
     void deleteDiscounts(List<Long> collect);
+
+    static Long getDiscountId(Object discountId) {
+        return discountId != null ? ((Integer) discountId).longValue() : null;
+    }
 }

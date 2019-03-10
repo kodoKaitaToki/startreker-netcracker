@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {Approver} from "../model/approver";
 import {Injectable} from "@angular/core";
 
-import { Api } from '../../../../../modules/api/index';
+import {Api} from '../../../../../modules/api/index';
 
 @Injectable()
 export class ApproverService {
@@ -50,9 +50,10 @@ export class ApproverService {
   public deleteApprover(approver: Approver): Observable<any> {
 
     return this.http.request('DELETE',
-                             this.url,
-                             {
-                               body: approver
-                             });
+      this.url,
+      {
+        body: approver
+      }
+    );
   }
 }

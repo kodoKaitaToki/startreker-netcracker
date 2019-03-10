@@ -24,5 +24,5 @@ public class ServiceCreateForm {
 
     @NotNull
     @JsonProperty("service_status")
-    private Integer serviceStatus;
+    private String serviceStatus;
 }
