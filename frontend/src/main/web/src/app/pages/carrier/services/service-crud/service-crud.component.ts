@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import { clone } from 'ramda';
+import {clone} from 'ramda';
+import {MessageService} from 'primeng/components/common/messageservice';
 
-import { Service } from '../service.model';
-import { ServiceService } from '../service.service';
+import { Service } from '../shared/model/service.model';
+import { ServiceService } from '../shared/service/service.service';
 
 @Component({
   selector: 'app-service-crud',
@@ -14,17 +15,8 @@ export class ServiceCrudComponent implements OnInit {
 
   services: Service[] = [];
 
-  filterCriteria = [
-    {name: 'id'},
-    {name: 'name'},
-    {name: 'status'},
-  ];
-
   filterContent = '';
-
-  currentFilter = this.filterCriteria[0].name;
-
-  currentFilterPlaceholder = `Search by ${this.currentFilter}`;
+  page: number = 1;
 
   form: FormGroup;
   formTable: FormGroup;
@@ -32,14 +24,15 @@ export class ServiceCrudComponent implements OnInit {
   currentServiceForUpdate: Service;
   isForUpdateAlertMessage = false;
 
-  status: Number;
+  status: String;
 
-  constructor(private serviceService: ServiceService) {
+  constructor(private serviceService: ServiceService,
+              private messageService: MessageService) {
   }
 
   ngOnInit(): void {
     this.setFormInDefault();
-    this.getDarftServices();
+    this.getDraftServices();
   }
 
   setFormInDefault() {
@@ -58,17 +51,20 @@ export class ServiceCrudComponent implements OnInit {
     );
   }
 
-  chooseNewFilter(chosenFilterName) {
-
-    this.currentFilter = chosenFilterName.value;
-    this.currentFilterPlaceholder = `Search by ${this.currentFilter}`;
-  }
-
-  onPost(status: Number) {
+  onPost(status: String) {
 
     const service: Service = this.form.value;
     service['service_status'] = status;
-    console.log(service);
+    let createdMessage = '';
+    if (status == 'DRAFT'){
+      createdMessage = this.createMessage('success',
+                                          'The service ' + service.service_name + ' was created',
+                                          'You can continue to edit the service later');
+    }else{
+      createdMessage = this.createMessage('success',
+                                          'The service ' + service.service_name + ' was created',
+                                          'It was sent for approvement');
+    }
     this.serviceService.addService(service)
                       .subscribe(
                         (resp: Response) => {
@@ -76,7 +72,8 @@ export class ServiceCrudComponent implements OnInit {
                             localStorage.removeItem('at');
                             localStorage.setItem('at', resp.headers.get('New-Access-Token'));
                           }*/
-                          this.getDarftServices();
+                          this.getDraftServices();
+                          this.showMessage(createdMessage);
                         },
                         error => console.log(error)
                       );
@@ -84,8 +81,8 @@ export class ServiceCrudComponent implements OnInit {
     this.form.reset();
   }
 
-  getDarftServices(){
-    this.serviceService.getServiceByStatus(1)
+  getDraftServices(){
+    this.serviceService.getServiceByStatus('DRAFT')
                       .subscribe(
                         (resp: Response) => {
                           /*if (resp.headers.get('New-Access-Token')) {
@@ -98,22 +95,18 @@ export class ServiceCrudComponent implements OnInit {
                       );
   }
 
-  deleteService(id){
-    this.serviceService.deleteService(id)
-                      .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
-                          this.getDarftServices();
-                        },
-                        error => console.log(error)
-                      );
-  }
-
   updateService(service: Service){
     this.isForUpdateAlertMessage = true;
+    let createdMessage = '';
+    if (service.service_status == 'REMOVED'){
+      createdMessage = this.createMessage('success',
+                                          'The service ' + service.service_name + ' was removed',
+                                          "You won't see it any more");
+    }else{
+      createdMessage = this.createMessage('success',
+                                          'The service ' + service.service_name + ' was edited',
+                                          'It was sent for approvement');
+    }
     this.serviceService.updateService(service)
                       .subscribe(
                         (resp: Response) => {
@@ -121,7 +114,8 @@ export class ServiceCrudComponent implements OnInit {
                             localStorage.removeItem('at');
                             localStorage.setItem('at', resp.headers.get('New-Access-Token'));
                           }*/
-                          this.getDarftServices();
+                          this.showMessage(createdMessage);
+                          this.getDraftServices();
                           this.isForUpdateAlertMessage = false;
                         },
                         error => console.log(error)
@@ -131,16 +125,16 @@ export class ServiceCrudComponent implements OnInit {
   editService(service: Service){
     this.currentServiceForUpdate = service;
 
-    this.form.patchValue({
+    this.formTable.patchValue({
                           service_name: this.currentServiceForUpdate.service_name,
                           service_descr: this.currentServiceForUpdate.service_descr
                          });
   }
 
   changeService(service: Service){
-    service['service_name'] = this.form.get('service_name').value;
-    service['service_descr'] = this.form.get('service_descr').value;
-    service['service_status'] = 2;
+    service['service_name'] = this.formTable.get('service_name').value;
+    service['service_descr'] = this.formTable.get('service_descr').value;
+    service['service_status'] = 'OPEN';
     this.updateService(service);
   }
 
@@ -149,4 +143,19 @@ export class ServiceCrudComponent implements OnInit {
     this.isForUpdateAlertMessage = false;
   }
 
+  showMessage(msgObj: any){
+    this.messageService.add(msgObj);
+  }
+
+  createMessage(severity: string, summary: string, detail: string): any {
+    return {
+      severity: severity,
+      summary: summary,
+      detail: detail
+    };
+  }
+
+  onChangePage(event: number){
+    this.page = event;
+  }
 }

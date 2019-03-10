@@ -34,4 +34,6 @@ public interface UserDAO extends CrudDAO<User> {
     List<User> findPerPeriod(LocalDate from, LocalDate to);
 
     List<User> findPerPeriodByRole(Number id, LocalDate from, LocalDate to);
+
+    Optional<User> attachRoles(User user);
 }

@@ -1,6 +1,7 @@
 package edu.netcracker.backend.dao.mapper;
 
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
+import edu.netcracker.backend.utils.ServiceStatus;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.Date;
@@ -17,7 +18,9 @@ public class ServiceMapper implements RowMapper {
         service.setApproverName(rs.getString("user_name"));
         service.setServiceName(rs.getString("service_name"));
         service.setServiceDescription(rs.getString("service_description"));
-        service.setServiceStatus(rs.getInt("service_status"));
+        int status = rs.getInt("service_status");
+        String statusVal = ServiceStatus.values()[status-1].toString();
+        service.setServiceStatus(statusVal);
 
         Date date = rs.getDate("creation_date");
         String strDate = date.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));

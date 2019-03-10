@@ -21,6 +21,4 @@ public class Suggestion {
 
     @Attribute("class_id")
     private Long classId;
-
-    private Discount discount;
 }
