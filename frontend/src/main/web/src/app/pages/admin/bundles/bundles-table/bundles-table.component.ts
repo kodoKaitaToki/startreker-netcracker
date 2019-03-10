@@ -58,7 +58,6 @@ export class BundlesTableComponent implements OnInit {
         price: new FormControl('', [Validators.required, Validators.min(0)]),
         description: new FormControl(''),
         trips: new FormControl(''),
-        services: new FormControl('')
       }
     );
   }
@@ -75,7 +74,6 @@ export class BundlesTableComponent implements OnInit {
                            price: this.currentBundlesForUpdate.bundle_price,
                            description: this.currentBundlesForUpdate.bundle_description,
                            trips : this.currentBundlesForUpdate.bundle_trips,
-                           services : this.currentBundlesForUpdate.bundle_services
                          });
   }
 
