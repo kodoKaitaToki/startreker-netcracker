@@ -78,13 +78,10 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
             "        service.service_name,\n" +
             "        service.service_description,\n" +
             "        service.service_status,\n" +
-            "        service.creation_date,\n" +
-            "        service_reply.reply_text\n" +
+            "        service.creation_date,\n"+
             "FROM service\n" +
             "LEFT JOIN user_a\n" +
             "ON service.approver_id = user_a.user_id\n" +
-            "LEFT JOIN service_reply\n" +
-            "ON service.service_id = service_reply.service_id\n" +
             "WHERE service_status = ?\n" +
             "ORDER BY service_id\n" +
             "LIMIT ? OFFSET ?";
@@ -96,12 +93,9 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
             "        service.service_description,\n" +
             "        service.service_status,\n" +
             "        service.creation_date,\n" +
-            "        service_reply.reply_text\n" +
             "FROM service\n" +
             "LEFT JOIN user_a\n" +
             "ON service.approver_id = user_a.user_id\n" +
-            "LEFT JOIN service_reply\n" +
-            "ON service.service_id = service_reply.service_id\n" +
             "WHERE approver_id = ?\n" +
             "AND service_status = ?\n" +
             "ORDER BY service_id\n" +
