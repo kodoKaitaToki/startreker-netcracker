@@ -40,7 +40,8 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     @Value("${ROW_EXISTS}")
     private String ROW_EXISTS;
 
-    private static final String GET_ALL_TRIPS_WITH_ARRIVAL_AND_DEPARTURE_DATE_BELONG_TO_CARRIER = "SELECT trip_id, " +
+    private static final String GET_ALL_TRIPS_WITH_ARRIVAL_AND_DEPARTURE_DATE_BELONG_TO_CARRIER = "SELECT " +
+            "  trip_id, " +
             "  arrival_date, " +
             "  departure_date, " +
             "  arrival_sp.spaceport_name AS arrival_spaceport_name, " +
@@ -52,7 +53,8 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
             "INNER JOIN spaceport departure_sp ON  trip.departure_id = departure_sp.spaceport_id " +
             "INNER JOIN planet arrival_p on arrival_p.planet_id = arrival_sp.planet_id " +
             "INNER JOIN planet departure_p on departure_p.planet_id = departure_sp.planet_id " +
-            "WHERE carrier_id = ?";
+            "WHERE carrier_id = ? " +
+            "ORDER BY trip_id DESC";
 
     @Autowired
     public TripDAOImpl(TicketClassDAO ticketClassDAO, UserDAO userDAO, TripMapper tripMapper) {

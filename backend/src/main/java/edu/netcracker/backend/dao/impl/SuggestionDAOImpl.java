@@ -55,7 +55,8 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
             "  class_id, " +
             "  discount_id " +
             "FROM suggestion " +
-            "WHERE class_id IN (:ticketClassIds)";
+            "WHERE class_id IN (:ticketClassIds) "+
+            "ORDER BY suggestion_id DESC";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 

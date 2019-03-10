@@ -42,7 +42,8 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
             "FROM user_a " +
             "INNER JOIN trip ON trip.carrier_id = user_a.user_id " +
             "INNER JOIN ticket_class ON ticket_class.trip_id = trip.trip_id " +
-            "WHERE user_a.user_id = ?";
+            "WHERE user_a.user_id = ? " +
+            "ORDER BY class_id DESC";
 
     private static final String GET_TICLET_CLASS_WITH_DISCOUNT = "SELECT " +
             "ticket_class.class_id, " +
@@ -54,7 +55,8 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
             "FROM user_a " +
             "INNER JOIN trip ON trip.carrier_id = user_a.user_id " +
             "INNER JOIN ticket_class ON ticket_class.trip_id = trip.trip_id " +
-            "WHERE user_a.user_id = ? AND ticket_class.discount_id = ?";
+            "WHERE user_a.user_id = ? AND ticket_class.discount_id = ? " +
+            "ORDER BY class_id DESC";
 
     private static final String GET_ALL_TICKET_CLASSES_BELONG_TO_TRIPS_BELONG_TO_CARRIER = "SELECT " +
             "ticket_class.class_id, " +
@@ -64,7 +66,8 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
             "ticket_class.discount_id, " +
             "ticket_class.class_seats " +
             "FROM ticket_class " +
-            "WHERE ticket_class.trip_id IN (:tripIds)";
+            "WHERE ticket_class.trip_id IN (:tripIds) "+
+            "ORDER BY class_id DESC";
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
