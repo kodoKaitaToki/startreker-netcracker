@@ -1,0 +1,41 @@
+<div class="container-fluid text-right">
+  <select class="custom-select-lg"
+          (change)="setDiscountType(select.value)"
+          #select
+  >
+    <option *ngFor="let select of selects"
+            [value]="select"
+    > {{select}}
+    </option>
+  </select>
+</div>
+
+<hr>
+
+<div class="container-fluid">
+  <ul class="list-group"
+      *ngIf="currentTypeDataToRender === 'Ticket class'"
+  >
+    <li class="list-group-item"
+        *ngFor="let ticketClass of ticketClasses"
+    >
+      <ticket-class [ticketClass]="ticketClass"
+                    (onAddTicketClassEmitter)="postTicketClassDiscount($event)"
+                    (onDeleteTicketClassEmitter)="deleteTicketClassDiscount($event)"
+      ></ticket-class>
+    </li>
+  </ul>
+
+  <ul class="list-group"
+      *ngIf="currentTypeDataToRender === 'Suggestion'"
+  >
+    <li class="list-group-item"
+        *ngFor="let suggestion of suggestions"
+    >
+      <suggestion [suggestion]="suggestion"
+                  (onAddSuggestionEmitter)="postSuggestionDiscount($event)"
+                  (onDeleteSuggestionEmitter)="deleteSuggestionDiscount($event)"
+      ></suggestion>
+    </li>
+  </ul>
+</div>
