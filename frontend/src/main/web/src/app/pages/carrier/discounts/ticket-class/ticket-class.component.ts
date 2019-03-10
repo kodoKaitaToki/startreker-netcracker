@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TicketClass} from "../shared/model/ticket-class.model";
+import {Trip} from "../shared/model/trip.model";
 
 @Component({
   selector: 'ticket-class',
@@ -8,7 +9,7 @@ import {TicketClass} from "../shared/model/ticket-class.model";
 })
 export class TicketClassComponent implements OnInit {
 
-  @Input() ticketClass: TicketClass;
+  @Input() trip: Trip;
 
   @Output() onAddTicketClassEmitter = new EventEmitter<TicketClass>();
 
@@ -30,8 +31,9 @@ export class TicketClassComponent implements OnInit {
     this.isDiscountFormActivated = false;
   }
 
-  emitToMainComponentTicketClassOnDeleteEvent() {
-    this.onDeleteTicketClassEmitter.emit(this.ticketClass);
+  emitToMainComponentTicketClassOnDeleteEvent($event) {
+    this.onDeleteTicketClassEmitter.emit($event);
+    console.log($event);
   }
 
   emitToMainComponentTicketClassOnAddEvent($event) {

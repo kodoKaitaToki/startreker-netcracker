@@ -1,129 +1,222 @@
-<div class="row justify-content-center">
-  <div class="col-md-6 text-center">
-    <h4>Ticket class</h4>
-  </div>
-</div>
-
-<div class="row justify-content-center">
-  <div class="col-md-6 text-center">
-    <h5>Name</h5>
-  </div>
-  <div class="col-md-6 text-center">
-    <h6>{{ticketClass.class_name}}</h6>
-  </div>
-</div>
-
-<div class="row justify-content-center">
-  <div class="col-md-6 text-center">
-    <h5>Class seats</h5>
-  </div>
-  <div class="col-md-6 text-center">
-    <h6>{{ticketClass.class_seats}}</h6>
-  </div>
-</div>
-
-<div class="row justify-content-center">
-  <div class="col-md-6 text-center">
-    <h5>Price</h5>
-  </div>
-  <div class="col-md-6 text-center">
-    <h6>{{ticketClass.ticket_price}}</h6>
-  </div>
-</div>
-
-<hr>
-
-<div class="row justify-content-center">
-  <div class="col-md-6 text-center">
-    <h6>Discount</h6>
-  </div>
-</div>
-
-<div class="container"
-     *ngIf="ticketClass.discount !== null"
+<div class="container-fluid"
+     *ngFor="let ticketClass of trip.ticket_classes"
 >
-  <hr>
-
   <div class="row justify-content-center">
     <div class="col-md-6 text-center">
-      <h5>Type</h5>
+      <h4>Ticket class</h4>
     </div>
-    <!--<div class="col-md-6 text-center">-->
-      <!--<h6 *ngIf="ticketClass.discount.is_percent">-->
-        <!--By percent-->
-      <!--</h6>-->
+  </div>
 
-      <!--<h6 *ngIf="!ticketClass.discount.is_percent">-->
-        <!--By value-->
-      <!--</h6>-->
-    <!--</div>-->
+  <div class="row justify-content-center">
+    <h3 class="text-center">Departure information</h3>
   </div>
 
   <div class="row justify-content-center">
     <div class="col-md-6 text-center">
-      <h5>Rate</h5>
+      <h5>Departure planet</h5>
     </div>
     <div class="col-md-6 text-center">
-      <!--<h6>-->
-        <!--{{ticketClass.discount.discount_rate}}-->
-      <!--</h6>-->
+      <h6>{{trip.departure_planet_name}}</h6>
     </div>
   </div>
 
   <div class="row justify-content-center">
     <div class="col-md-6 text-center">
-      <h5>Start date</h5>
+      <h5>Departure spaceport</h5>
     </div>
     <div class="col-md-6 text-center">
-      <!--<h6>-->
-        <!--{{ticketClass.discount.start_date}}-->
-      <!--</h6>-->
+      <h6>{{trip.departure_spaceport_name}}</h6>
     </div>
   </div>
 
   <div class="row justify-content-center">
     <div class="col-md-6 text-center">
-      <h5>Finish date</h5>
+      <h5>Departure date</h5>
     </div>
     <div class="col-md-6 text-center">
-      <!--<h6>-->
-        <!--{{ticketClass.discount.finish_date}}-->
-      <!--</h6>-->
+      <h6>{{trip.departure_date}}</h6>
     </div>
-  </div>
-
-  <div class="row justify-content-center">
-    <button type="button"
-            class="btn btn-danger"
-            (click)="emitToMainComponentTicketClassOnDeleteEvent()"
-    >
-      Delete
-    </button>
   </div>
 
   <hr>
 
+  <div class="row justify-content-center">
+    <h3 class="text-center">Arrival information</h3>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h5>Arrival planet</h5>
+    </div>
+    <div class="col-md-6 text-center">
+      <h6>{{trip.arrival_planet_name}}</h6>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h5>Arrival spaceport</h5>
+    </div>
+    <div class="col-md-6 text-center">
+      <h6>{{trip.arrival_spaceport_name}}</h6>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h5>Arrival date</h5>
+    </div>
+    <div class="col-md-6 text-center">
+      <h6>{{trip.arrival_date}}</h6>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row justify-content-center">
+    <h3 class="text-center">Ticket class information</h3>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h5>Name</h5>
+    </div>
+    <div class="col-md-6 text-center">
+      <h6>{{ticketClass.class_name}}</h6>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h5>Class seats</h5>
+    </div>
+    <div class="col-md-6 text-center">
+      <h6>{{ticketClass.class_seats}}</h6>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h5>Price</h5>
+    </div>
+    <div class="col-md-6 text-center">
+      <h6>{{ticketClass.ticket_price}}</h6>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h6>Discount</h6>
+    </div>
+  </div>
+
+  <div class="container"
+       *ngIf="ticketClass.discount !== null"
+  >
+    <hr>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center">
+        <h5>Type</h5>
+      </div>
+      <div class="col-md-6 text-center">
+        <h6 *ngIf="ticketClass.discount.is_percent">
+          By percent
+        </h6>
+
+        <h6 *ngIf="!ticketClass.discount.is_percent">
+          By value
+        </h6>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center">
+        <h5>Rate</h5>
+      </div>
+      <div class="col-md-6 text-center">
+        <h6>
+          {{ticketClass.discount.discount_rate}}
+        </h6>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center">
+        <h5>Start date</h5>
+      </div>
+      <div class="col-md-6 text-center">
+        <h6>
+          {{ticketClass.discount.start_date}}
+        </h6>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center">
+        <h5>Finish date</h5>
+      </div>
+      <div class="col-md-6 text-center">
+        <h6>
+          {{ticketClass.discount.finish_date}}
+        </h6>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center">
+        <h5>Expired</h5>
+      </div>
+      <div class="col-md-6 text-center">
+        <h4 *ngIf="ticketClass.discount.is_expired === true"
+            style="color: red"
+        >
+          Expired
+        </h4>
+
+        <h4 *ngIf="ticketClass.discount.is_expired !== true"
+            style="color: green"
+        >
+          Not expired
+        </h4>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <button type="button"
+              class="btn btn-danger"
+              (click)="emitToMainComponentTicketClassOnDeleteEvent(ticketClass)"
+      >
+        Delete
+      </button>
+    </div>
+
+  </div>
+
+  <div class="container"
+       *ngIf="ticketClass.discount === null"
+  >
+    <div class="row justify-content-center">
+      <h4>None</h4>
+    </div>
+    <div class="row justify-content-center">
+      <button type="button"
+              class="btn btn-success"
+              (click)="openTicketClassDiscountForm()"
+      >
+        Add
+      </button>
+    </div>
+  </div>
+
+  <hr>
+
+  <discount-form
+    [obj]="ticketClass"
+    [isDiscountFormActivated]="isDiscountFormActivated"
+    (closeDiscountFormNotifier)="closeDiscountForm()"
+    (submitFormEmitter)="emitToMainComponentTicketClassOnAddEvent($event)"
+  ></discount-form>
 </div>
-
-<!--<div class="container"-->
-     <!--*ngIf="ticketClass.discount === null"-->
-<!--&gt;-->
-  <!--<div class="row justify-content-center">-->
-    <!--<h4>None</h4>-->
-  <!--</div>-->
-  <!--<div class="row justify-content-center">-->
-    <!--<button type="button"-->
-            <!--class="btn btn-success"-->
-            <!--(click)="openTicketClassDiscountForm()"-->
-    <!--&gt;-->
-      <!--Add-->
-    <!--</button>-->
-  <!--</div>-->
-<!--</div>-->
-
-<discount-form
-  [obj]="ticketClass"
-  [isDiscountFormActivated]="isDiscountFormActivated"
-  (closeDiscountFormNotifier)="closeDiscountForm()"
-  (submitFormEmitter)="emitToMainComponentTicketClassOnAddEvent($event)"
-></discount-form>

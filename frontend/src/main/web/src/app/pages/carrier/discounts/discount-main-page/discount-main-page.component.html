@@ -17,9 +17,9 @@
       *ngIf="currentTypeDataToRender === 'Ticket class'"
   >
     <li class="list-group-item"
-        *ngFor="let ticketClass of ticketClasses"
+        *ngFor="let trip of tripsWithTicketClasses"
     >
-      <ticket-class [ticketClass]="ticketClass"
+      <ticket-class [trip]="trip"
                     (onAddTicketClassEmitter)="postTicketClassDiscount($event)"
                     (onDeleteTicketClassEmitter)="deleteTicketClassDiscount($event)"
       ></ticket-class>
@@ -30,9 +30,9 @@
       *ngIf="currentTypeDataToRender === 'Suggestion'"
   >
     <li class="list-group-item"
-        *ngFor="let suggestion of suggestions"
+        *ngFor="let trip of tripsWithSuggestions"
     >
-      <suggestion [suggestion]="suggestion"
+      <suggestion [trip]="trip"
                   (onAddSuggestionEmitter)="postSuggestionDiscount($event)"
                   (onDeleteSuggestionEmitter)="deleteSuggestionDiscount($event)"
       ></suggestion>

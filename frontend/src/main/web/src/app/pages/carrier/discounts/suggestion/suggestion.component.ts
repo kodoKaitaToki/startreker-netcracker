@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Suggestion} from "../shared/model/suggestion.model";
+import {Trip} from "../shared/model/trip.model";
 
 @Component({
   selector: 'suggestion',
@@ -8,7 +9,7 @@ import {Suggestion} from "../shared/model/suggestion.model";
 })
 export class SuggestionComponent implements OnInit {
 
-  @Input() suggestion: Suggestion;
+  @Input() trip: Trip;
 
   @Output() onAddSuggestionEmitter = new EventEmitter<Suggestion>();
 
@@ -30,8 +31,9 @@ export class SuggestionComponent implements OnInit {
     this.isDiscountFormActivated = false;
   }
 
-  emitToMainComponentTicketClassOnDeleteEvent() {
-    this.onDeleteSuggestionEmitter.emit(this.suggestion);
+  emitToMainComponentSuggestionOnDeleteEvent($event) {
+    this.onDeleteSuggestionEmitter.emit($event);
+    console.log($event);
   }
 
   emitToMainComponentSuggestionOnAddEvent($event) {

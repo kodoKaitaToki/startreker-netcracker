@@ -7,7 +7,7 @@ import {Api} from '../../../../../modules/api/index';
 @Injectable()
 export class CarrierDiscountsService {
 
-  private url: string = 'http://localhost:80/api/v1/';
+  private url: string = Api.baseUrl + "api/v1/";
 
   private serviceTypeForDiscount: string = '';
 

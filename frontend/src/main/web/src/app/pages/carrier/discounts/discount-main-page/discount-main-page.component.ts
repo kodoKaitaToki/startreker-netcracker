@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {TicketClass} from "../shared/model/ticket-class.model";
 import {CarrierDiscountsService} from "../shared/service/carrier-discount.service";
 import {Suggestion} from "../shared/model/suggestion.model";
+import {Trip} from "../shared/model/trip.model";
 
 @Component({
   selector: 'app-discount-main-page',
@@ -22,9 +22,9 @@ export class DiscountMainPageComponent implements OnInit {
 
   currentTypeDataToRender = '';
 
-  ticketClasses: TicketClass[] = [];
+  tripsWithTicketClasses: Trip[] = [];
 
-  suggestions: Suggestion[] = [];
+  tripsWithSuggestions: Trip[] = [];
 
   constructor(private ticketClassDiscountSrvc: CarrierDiscountsService) {
   }
@@ -58,7 +58,7 @@ export class DiscountMainPageComponent implements OnInit {
 
     this.ticketClassDiscountSrvc.getAll()
         .subscribe((data) => {
-          this.ticketClasses = data;
+          this.tripsWithTicketClasses = data;
         }, (error) => {
           console.log(error);
         });
@@ -70,7 +70,7 @@ export class DiscountMainPageComponent implements OnInit {
 
     this.ticketClassDiscountSrvc.getAll()
         .subscribe((data) => {
-          this.suggestions = data;
+          this.tripsWithSuggestions = data;
         });
   }
 
@@ -84,8 +84,6 @@ export class DiscountMainPageComponent implements OnInit {
         }, (error) => {
           console.log(error);
         });
-
-    console.log($event);
   }
 
   postSuggestionDiscount($event) {
