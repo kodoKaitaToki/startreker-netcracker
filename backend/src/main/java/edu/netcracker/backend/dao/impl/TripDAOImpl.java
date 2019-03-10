@@ -53,7 +53,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
             "INNER JOIN spaceport departure_sp ON  trip.departure_id = departure_sp.spaceport_id " +
             "INNER JOIN planet arrival_p on arrival_p.planet_id = arrival_sp.planet_id " +
             "INNER JOIN planet departure_p on departure_p.planet_id = departure_sp.planet_id " +
-            "WHERE carrier_id = ? " +
+            "WHERE carrier_id = ? AND trip.trip_status = 4 " +
             "ORDER BY trip_id DESC";
 
     @Autowired
