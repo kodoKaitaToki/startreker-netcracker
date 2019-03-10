@@ -21,6 +21,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { RecoveryComponent } from './pages/recovery/recovery.component';
 
 import { Configuration } from './app.constants';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -38,12 +39,13 @@ import { Configuration } from './app.constants';
     RecoveryComponent
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     AngularFontAwesomeModule,
     ReactiveFormsModule,
-    LoadingBarHttpClientModule
+    LoadingBarHttpClientModule,
+    BrowserModule,
+    BrowserAnimationsModule
   ],
   providers: [Configuration],
   bootstrap: [AppComponent]
