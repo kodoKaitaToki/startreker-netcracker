@@ -12,6 +12,7 @@ import edu.netcracker.backend.model.Trip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
     }
 
     @Override
-    public Optional<Bundle> find(Number id) {
+    public Optional<Bundle> find(Number id) throws EmptyResultDataAccessException {
         logger.debug("Searching for bundle with id: {}", id);
         Optional<Bundle> optBundle
                 = Optional.ofNullable(getJdbcTemplate().queryForObject(BundleQueries.SELECT_BY_ID.toString(),
@@ -76,9 +77,9 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
     @Override
     public void delete(Number id) {
         int services = getJdbcTemplate().update(BundleQueries.DELETE_BUNDLE_SERVICES_BY_ID.toString(), id);
-        logger.info("Bundle services deleted: %d", services);
+        logger.debug("Bundle services deleted: {}", services);
         int classes = getJdbcTemplate().update(BundleQueries.DELETE_BUNDLE_CLASSES_BY_ID.toString(), id);
-        logger.info("Bundle classes deleted: %d", classes);
+        logger.debug("Bundle classes deleted: {}", classes);
         getJdbcTemplate().update(BundleQueries.DELETE_BUNDLE.toString(), id);
     }
 
