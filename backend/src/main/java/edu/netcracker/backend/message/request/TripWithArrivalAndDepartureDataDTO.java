@@ -29,7 +29,7 @@ public abstract class TripWithArrivalAndDepartureDataDTO {
     @JsonProperty("arrival_spaceport_name")
     private String arrivalSpacePort;
 
-    @JsonProperty("arrival _planet_name")
+    @JsonProperty("arrival_planet_name")
     private String arrivalPlanet;
 
     TripWithArrivalAndDepartureDataDTO(TripWithArrivalAndDepartureData tripWithArrivalAndDepartureData,
