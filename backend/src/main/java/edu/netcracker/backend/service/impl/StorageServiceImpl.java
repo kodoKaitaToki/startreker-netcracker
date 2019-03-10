@@ -47,10 +47,13 @@ public class StorageServiceImpl implements edu.netcracker.backend.service.Storag
     }
 
     public void init() {
-        try {
-            Files.createDirectory(rootLocation);
-        } catch (IOException e) {
-            throw new RuntimeException("Could not initialize storage!");
+        if (!rootLocation.toFile().exists())
+        {
+            try {
+                Files.createDirectory(rootLocation);
+            } catch (IOException e) {
+                throw new RuntimeException("Could not initialize storage!");
+            }
         }
     }
 }
