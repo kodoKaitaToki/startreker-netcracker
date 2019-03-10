@@ -1,17 +1,138 @@
 package edu.netcracker.backend.model.state.trip;
 
-import edu.netcracker.backend.message.response.TripDTO;
+import edu.netcracker.backend.dao.TripReplyDAO;
 import edu.netcracker.backend.model.Trip;
+import edu.netcracker.backend.model.TripReply;
 import edu.netcracker.backend.model.User;
+import edu.netcracker.backend.utils.AuthorityUtils;
+import lombok.Getter;
 
-public abstract class TripState {
+import java.time.LocalDateTime;
+import java.util.*;
 
-    public abstract boolean isStateChangeAllowed(Trip trip, User user, TripState tripState);
+@Getter
+public enum TripState {
 
-    public abstract int getDatabaseValue();
+    DRAFT(1) {
+        @Override
+        public boolean isStateChangeAllowed(Trip trip, User user) {
+            return false;
+        }
+    },
 
-    public boolean apply(Trip trip, User requestUser, TripState tripState, TripDTO tripDTO) {
-        return true;
+    OPEN(2) {
+        private final List<Integer> allowedStatesToSwitchFrom = Arrays.asList(1, 5, 6);
+
+        @Override
+        public boolean isStateChangeAllowed(Trip trip, User requestUser) {
+            return requestUser.equals(trip.getOwner()) && allowedStatesToSwitchFrom.contains(trip.getTripState()
+                                                                                                 .getDatabaseValue());
+        }
+    },
+
+    ASSIGNED(3) {
+        private final List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(2);
+
+        @Override
+        public boolean isStateChangeAllowed(Trip trip, User requestUser) {
+            if (requestUser.getUserRoles()
+                           .contains(AuthorityUtils.ROLE_APPROVER)
+                && allowedStatesToSwitchFrom.contains(trip.getTripState()
+                                                          .getDatabaseValue())) {
+                trip.setApprover(requestUser);
+                return true;
+            }
+            return false;
+        }
+    },
+
+    PUBLISHED(4) {
+        private final List<Integer> allowedStatesToSwitchFrom = Arrays.asList(3, 6);
+
+        @Override
+        public boolean isStateChangeAllowed(Trip trip, User requestUser) {
+            return requestUser.equals(trip.getApprover()) && allowedStatesToSwitchFrom.contains(trip.getTripState()
+                                                                                                    .getDatabaseValue());
+        }
+    },
+
+    ARCHIVED(5) {
+        private final List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(4);
+
+        @Override
+        public boolean isStateChangeAllowed(Trip trip, User requestUser) {
+            return requestUser.equals(trip.getOwner()) && allowedStatesToSwitchFrom.contains(trip.getTripState()
+                                                                                                 .getDatabaseValue());
+        }
+    },
+
+    UNDER_CLARIFICATION(6) {
+        private final List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(3);
+
+        @Override
+        public boolean isStateChangeAllowed(Trip trip, User requestUser) {
+            return requestUser.equals(trip.getApprover()) && allowedStatesToSwitchFrom.contains(trip.getTripState()
+                                                                                                    .getDatabaseValue());
+        }
+
+        @Override
+        public StateAction getAction() {
+            return (ctx, trip, tripDTO, requestUser) -> {
+                TripReplyDAO tripReplyDAO = ctx.getBean(TripReplyDAO.class);
+
+                if (tripDTO.getReplies()
+                           .get(0) == null) {
+                    return false;
+                }
+
+                TripReply tripReply = new TripReply();
+                tripReply.setCreationDate(LocalDateTime.now());
+                tripReply.setReportText(tripDTO.getReplies()
+                                               .get(0)
+                                               .getReplyText());
+                tripReply.setTripId(trip.getTripId());
+                tripReply.setWriterId(requestUser.getUserId());
+                tripReplyDAO.save(tripReply);
+                return true;
+            };
+        }
+    },
+
+    REMOVED(7) {
+        private final List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(6);
+
+        @Override
+        public boolean isStateChangeAllowed(Trip trip, User requestUser) {
+            return requestUser.equals(trip.getOwner()) && allowedStatesToSwitchFrom.contains(trip.getTripState()
+                                                                                                 .getDatabaseValue());
+        }
+    };
+
+    TripState(int databaseValue) {
+        this.databaseValue = databaseValue;
     }
 
+    private static final Map<Integer, TripState> registry = new HashMap<>();
+
+    static {
+        for (TripState tripState : TripState.values()) {
+            registry.put(tripState.getDatabaseValue(), tripState);
+        }
+    }
+
+    public static TripState getState(int databaseValue) {
+        TripState tripState = registry.get(databaseValue);
+        if (tripState == null) {
+            throw new IllegalArgumentException();
+        }
+        return tripState;
+    }
+
+    private int databaseValue;
+
+    public StateAction getAction() {
+        return (ctx, trip, tripDTO, requestUser) -> true;
+    }
+
+    public abstract boolean isStateChangeAllowed(Trip trip, User user);
 }

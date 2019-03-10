@@ -8,6 +8,7 @@ import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.model.state.trip.*;
 import edu.netcracker.backend.service.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -19,22 +20,13 @@ import java.util.Optional;
 public class TripServiceImpl implements TripService {
 
     private final TripDAO tripDAO;
-    private final TripStateRegistry tripStateRegistry;
-    private final Removed removed;
-    private final Open open;
-    private final Assigned assigned;
+    private final ApplicationContext applicationContext;
 
     @Autowired
     public TripServiceImpl(TripDAO tripDAO,
-                           TripStateRegistry tripStateRegistry,
-                           Removed removed,
-                           Open open,
-                           Assigned assigned) {
+                           ApplicationContext applicationContext) {
         this.tripDAO = tripDAO;
-        this.tripStateRegistry = tripStateRegistry;
-        this.removed = removed;
-        this.open = open;
-        this.assigned = assigned;
+        this.applicationContext = applicationContext;
     }
 
     @Override
@@ -50,7 +42,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<Trip> findCarrierTripsByStatus(User requestUser, Integer status, Long offset, Long limit) {
-        if (status == removed.getDatabaseValue()) {
+        if (status == TripState.REMOVED.getDatabaseValue()) {
             return new ArrayList<>();
         }
 
@@ -59,34 +51,51 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<Trip> findCarrierTrips(User requestUser, Long offset, Long limit) {
-        return tripDAO.findAllByCarrier(requestUser.getUserId(), removed.getDatabaseValue(), offset, limit);
+        return tripDAO.findAllByCarrier(requestUser.getUserId(), TripState.REMOVED.getDatabaseValue(), offset, limit);
     }
 
     @Override
     public List<Trip> findApproverTrips(User requestUser, Integer status, Long offset, Long limit) {
-        if (status == open.getDatabaseValue()) {
+        if (status == TripState.OPEN.getDatabaseValue()) {
             return tripDAO.findAllByStatus(status, offset, limit);
         }
-        if (status == assigned.getDatabaseValue()) {
+        if (status == TripState.ASSIGNED.getDatabaseValue()) {
             return tripDAO.findAllByApproverByStatus(requestUser.getUserId(), status, offset, limit);
         }
         throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
     }
 
     private Trip updateTrip(User requestUser, Trip trip, TripDTO tripDTO) {
-        TripState dtoState = tripStateRegistry.getState(tripDTO.getStatus());
+        TripState desiredState = TripState.getState(tripDTO.getStatus());
 
-        if (!dtoState.equals(trip.getTripState())) {
-            changeStatus(requestUser, trip, dtoState, tripDTO);
+        if (!desiredState.equals(trip.getTripState())) {
+            startStatusChange(requestUser, trip, desiredState, tripDTO);
         }
 
         tripDAO.save(trip);
         return trip;
     }
 
-    private void changeStatus(User requestUser, Trip trip, TripState tripState, TripDTO tripDTO) {
-        if (!trip.changeStatus(requestUser, tripState, tripDTO)) {
+    private void startStatusChange(User requestUser, Trip trip, TripState tripState, TripDTO tripDTO) {
+        if (!changeStatus(requestUser, tripState, tripDTO, trip)) {
             throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
         }
+    }
+
+    private boolean changeStatus(User requestUser, TripState newTripState, TripDTO tripDTO, Trip trip) {
+        if (requestUser == null
+            || newTripState == null
+            || trip.getTripState() == null
+            || !newTripState.isStateChangeAllowed(trip, requestUser)) {
+            return false;
+        }
+
+        if (newTripState.getAction()
+                        .apply(applicationContext, trip, tripDTO, requestUser)) {
+            trip.setTripState(newTripState);
+            return true;
+        }
+
+        return false;
     }
 }

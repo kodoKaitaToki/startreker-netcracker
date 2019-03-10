@@ -3,7 +3,7 @@ package edu.netcracker.backend.dao.mapper;
 import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.User;
-import edu.netcracker.backend.model.state.trip.TripStateRegistry;
+import edu.netcracker.backend.model.state.trip.TripState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -14,12 +14,10 @@ import java.sql.SQLException;
 @Component
 public class TripMapper implements RowMapper<Trip> {
 
-    private final TripStateRegistry tripStateRegistry;
     private final UserDAO userDAO;
 
     @Autowired
-    public TripMapper(TripStateRegistry tripStateRegistry, UserDAO userDAO) {
-        this.tripStateRegistry = tripStateRegistry;
+    public TripMapper(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
@@ -29,7 +27,7 @@ public class TripMapper implements RowMapper<Trip> {
         trip.setTripId(rs.getLong("trip_id"));
         trip.setDepartureId(rs.getLong("departure_id"));
         trip.setArrivalId(rs.getLong("arrival_id"));
-        trip.setTripState(tripStateRegistry.getState(rs.getInt("trip_status")));
+        trip.setTripState(TripState.getState(rs.getInt("trip_status")));
         trip.setDepartureDate(rs.getTimestamp("departure_date")
                                 .toLocalDateTime());
         trip.setArrivalDate(rs.getTimestamp("arrival_date")
