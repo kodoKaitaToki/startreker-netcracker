@@ -1,0 +1,120 @@
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center">
+    <h4>Suggestion</h4>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center">
+    <h5>Id</h5>
+  </div>
+  <div class="col-md-6 text-center">
+    <h6>{{suggestion.suggestion_id}}</h6>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center">
+    <h5>Class ID</h5>
+  </div>
+  <div class="col-md-6 text-center">
+    <h6>{{suggestion.class_id}}</h6>
+  </div>
+</div>
+
+<hr>
+
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center">
+    <h6>Discount</h6>
+  </div>
+</div>
+
+<div class="container"
+     *ngIf="suggestion.discount !== null"
+>
+  <hr>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h5>Type</h5>
+    </div>
+    <div class="col-md-6 text-center">
+      <!--<h6 *ngIf="suggestion.discount.is_percent">-->
+        <!--By percent-->
+      <!--</h6>-->
+
+      <!--<h6 *ngIf="!suggestion.discount.is_percent">-->
+        <!--By value-->
+      <!--</h6>-->
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h5>Value</h5>
+    </div>
+    <div class="col-md-6 text-center">
+      <!--<h6>-->
+        <!--{{suggestion.discount.discount_rate}}-->
+      <!--</h6>-->
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h5>Start date</h5>
+    </div>
+    <div class="col-md-6 text-center">
+      <!--<h6>-->
+        <!--{{suggestion.discount.start_date}}-->
+      <!--</h6>-->
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h5>Finish date</h5>
+    </div>
+    <div class="col-md-6 text-center">
+      <!--<h6>-->
+        <!--{{suggestion.discount.finish_date}}-->
+      <!--</h6>-->
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <button type="button"
+            class="btn btn-danger"
+            (click)="emitToMainComponentTicketClassOnDeleteEvent()"
+    >
+      Delete
+    </button>
+  </div>
+
+  <hr>
+
+</div>
+
+<!--<div class="container"-->
+     <!--*ngIf="suggestion.discount === null"-->
+<!--&gt;-->
+  <!--<div class="row justify-content-center">-->
+    <!--<h4>None</h4>-->
+  <!--</div>-->
+  <!--<div class="row justify-content-center">-->
+    <!--<button type="button"-->
+            <!--class="btn btn-success"-->
+            <!--(click)="openSuggestionDiscountForm()"-->
+    <!--&gt;-->
+      <!--Add-->
+    <!--</button>-->
+  <!--</div>-->
+<!--</div>-->
+
+<discount-form
+  [obj]="suggestion"
+  [isDiscountFormActivated]="isDiscountFormActivated"
+  (closeDiscountFormNotifier)="closeDiscountForm()"
+  (submitFormEmitter)="emitToMainComponentSuggestionOnAddEvent($event)"
+></discount-form>

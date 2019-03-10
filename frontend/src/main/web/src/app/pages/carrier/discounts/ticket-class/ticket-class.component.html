@@ -1,0 +1,129 @@
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center">
+    <h4>Ticket class</h4>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center">
+    <h5>Name</h5>
+  </div>
+  <div class="col-md-6 text-center">
+    <h6>{{ticketClass.class_name}}</h6>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center">
+    <h5>Class seats</h5>
+  </div>
+  <div class="col-md-6 text-center">
+    <h6>{{ticketClass.class_seats}}</h6>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center">
+    <h5>Price</h5>
+  </div>
+  <div class="col-md-6 text-center">
+    <h6>{{ticketClass.ticket_price}}</h6>
+  </div>
+</div>
+
+<hr>
+
+<div class="row justify-content-center">
+  <div class="col-md-6 text-center">
+    <h6>Discount</h6>
+  </div>
+</div>
+
+<div class="container"
+     *ngIf="ticketClass.discount !== null"
+>
+  <hr>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h5>Type</h5>
+    </div>
+    <!--<div class="col-md-6 text-center">-->
+      <!--<h6 *ngIf="ticketClass.discount.is_percent">-->
+        <!--By percent-->
+      <!--</h6>-->
+
+      <!--<h6 *ngIf="!ticketClass.discount.is_percent">-->
+        <!--By value-->
+      <!--</h6>-->
+    <!--</div>-->
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h5>Rate</h5>
+    </div>
+    <div class="col-md-6 text-center">
+      <!--<h6>-->
+        <!--{{ticketClass.discount.discount_rate}}-->
+      <!--</h6>-->
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h5>Start date</h5>
+    </div>
+    <div class="col-md-6 text-center">
+      <!--<h6>-->
+        <!--{{ticketClass.discount.start_date}}-->
+      <!--</h6>-->
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h5>Finish date</h5>
+    </div>
+    <div class="col-md-6 text-center">
+      <!--<h6>-->
+        <!--{{ticketClass.discount.finish_date}}-->
+      <!--</h6>-->
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <button type="button"
+            class="btn btn-danger"
+            (click)="emitToMainComponentTicketClassOnDeleteEvent()"
+    >
+      Delete
+    </button>
+  </div>
+
+  <hr>
+
+</div>
+
+<!--<div class="container"-->
+     <!--*ngIf="ticketClass.discount === null"-->
+<!--&gt;-->
+  <!--<div class="row justify-content-center">-->
+    <!--<h4>None</h4>-->
+  <!--</div>-->
+  <!--<div class="row justify-content-center">-->
+    <!--<button type="button"-->
+            <!--class="btn btn-success"-->
+            <!--(click)="openTicketClassDiscountForm()"-->
+    <!--&gt;-->
+      <!--Add-->
+    <!--</button>-->
+  <!--</div>-->
+<!--</div>-->
+
+<discount-form
+  [obj]="ticketClass"
+  [isDiscountFormActivated]="isDiscountFormActivated"
+  (closeDiscountFormNotifier)="closeDiscountForm()"
+  (submitFormEmitter)="emitToMainComponentTicketClassOnAddEvent($event)"
+></discount-form>
