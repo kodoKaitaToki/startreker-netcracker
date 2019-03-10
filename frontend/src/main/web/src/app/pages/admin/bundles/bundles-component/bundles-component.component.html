@@ -97,6 +97,17 @@
 
         <hr>
 
+        <p-tree
+        [value]="trips"
+        selectionMode="checkbox"
+        [(selection)]="tripSelected"
+        [propagateSelectionDown]="false"
+        [style]="{'width':'100%'}"
+        >
+        </p-tree>
+
+        <hr>
+
         <div class="text-center">
           <button class="btn-success btn col-md-12"
                   type="submit"

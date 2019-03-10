@@ -40,6 +40,9 @@ import {ApproverService} from "./approver/shared/service/approver.service";
 import {BundlesService} from "./bundles/shared/service/bundles.service";
 import {ApproverFilterPipe} from './approver/shared/pipes/approver-filter.pipe';
 
+import {TreeModule} from 'primeng/tree';
+import {TreeNode} from 'primeng/api';
+
 import { SharedModule } from 'src/app/shared/shared.module';
 
 
@@ -77,6 +80,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
               FormsModule,
               ReactiveFormsModule,
               NgxPaginationModule,
+              TreeModule,
               SharedModule
             ],
             providers: [

@@ -3,6 +3,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Bundle} from '../shared/model/bundle';
 import {BundlesService} from "../shared/service/bundles.service";
 import {BundlesTableComponent} from "../bundles-table/bundles-table.component";
+import {TreeNode} from 'primeng/api';
+import {MOCK_TREE} from '../shared/model/mock-tree';
 
 @Component({
              selector: 'app-bundles-component',
@@ -12,6 +14,10 @@ import {BundlesTableComponent} from "../bundles-table/bundles-table.component";
 )
 export class BundlesComponentComponent implements OnInit {
   @ViewChild(BundlesTableComponent) table:BundlesTableComponent;
+
+  trips: TreeNode[];
+
+  tripSelected: TreeNode[];
 
 
   filterCriteria = [
@@ -31,6 +37,7 @@ export class BundlesComponentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.trips = MOCK_TREE;
     this.form = new FormGroup(
       {
         start_date: new FormControl('', Validators.required),
