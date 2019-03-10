@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { IndexComponent } from './index/index.component';
 import { CarrierCrudComponent } from './carrier/carrier-crud/carrier-crud.component';
 import { BundlesCrudComponent } from './bundles-crud/bundles-crud.component';
 
@@ -14,7 +13,7 @@ import { TroubleStatisticsComponent } from './dashboards/trouble-statistics/trou
 const routes: Routes = [
   {
       path: '',
-      component: IndexComponent
+      redirectTo: 'dashboards/popularity'
   },
   {
       path: 'approvers',

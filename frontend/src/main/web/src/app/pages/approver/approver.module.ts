@@ -11,9 +11,20 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { OpenComponent } from './service/open/open.component';
 import { AssignedComponent } from './service/assigned/assigned.component';
+import { AssignedTripComponent } from './trip/assigned/assigned.component';
+import { OpenTripComponent } from './trip/open/open.component';
 
 @NgModule({
-  declarations: [ServiceComponent, ApproverComponent, NavbarComponent, TripComponent, DashboardComponent, NotificationsComponent, OpenComponent, AssignedComponent],
+  declarations: [ServiceComponent, 
+                ApproverComponent, 
+                NavbarComponent, 
+                TripComponent, 
+                DashboardComponent, 
+                NotificationsComponent, 
+                OpenComponent, 
+                AssignedComponent,
+                AssignedTripComponent,
+                OpenTripComponent],
   imports: [
     CommonModule,
     ApproverRoutingModule,

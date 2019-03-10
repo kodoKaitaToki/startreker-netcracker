@@ -1,7 +1,6 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
-import edu.netcracker.backend.dao.ApproverDAO;
 import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.dao.ServiceReplyDAO;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
@@ -21,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ServiceServiceImpl implements ServiceService {
@@ -38,14 +38,6 @@ public class ServiceServiceImpl implements ServiceService {
 
     public ServiceServiceImpl(){
         //setCurCarrier();
-    }
-
-    @Override
-    public List<ServiceCRUDDTO> getServicesOfCarrier(){ return serviceDAO.findAllByCarrierId(carrierId);}
-
-    @Override
-    public List<ServiceCRUDDTO> getPaginServicesOfCarrier(Integer from, Integer amount){
-        return serviceDAO.findPaginByCarrierId(carrierId, from, amount);
     }
 
     @Override
@@ -82,11 +74,13 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public ServiceCRUDDTO updateService(ServiceCRUDDTO serviceCRUDDTO){
-        ServiceDescr serviceDescr = serviceDAO.find(serviceCRUDDTO.getId()).orElse(null);
+        Optional<ServiceDescr> serviceOpt = serviceDAO.find(serviceCRUDDTO.getId());
 
-        if(serviceDescr == null){
+        if(!serviceOpt.isPresent()){
             throw new RequestException("Service " + serviceCRUDDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
         }
+
+        ServiceDescr serviceDescr = serviceOpt.get();
 
         if((ifServiceExists(serviceCRUDDTO.getServiceName(), carrierId))&&
                 (!Objects.equals(serviceCRUDDTO.getServiceName(),serviceDescr.getServiceName()))){
@@ -105,17 +99,6 @@ public class ServiceServiceImpl implements ServiceService {
         serviceDescr.setServiceStatus(serviceCRUDDTO.getServiceStatus());
 
         serviceDAO.update(serviceDescr);
-
-        return serviceCRUDDTO;
-    }
-
-    @Override
-    public ServiceCRUDDTO deleteService(Long serviceId){
-        ServiceDescr serviceDescr = serviceDAO.find(serviceId).orElse(null);
-        User approver = userService.findByIdWithRole(serviceDescr.getApproverId(), AuthorityUtils.ROLE_APPROVER);
-        ServiceCRUDDTO serviceCRUDDTO = ServiceCRUDDTO.form(serviceDescr, approver.getUsername());
-
-        serviceDAO.delete(serviceId);
 
         return serviceCRUDDTO;
     }

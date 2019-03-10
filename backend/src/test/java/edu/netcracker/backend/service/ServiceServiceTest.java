@@ -1,12 +1,15 @@
 package edu.netcracker.backend.service;
 
+import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.service.impl.ServiceServiceImpl;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -17,8 +20,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,11 +40,15 @@ public class ServiceServiceTest {
     @InjectMocks
     ServiceServiceImpl serviceService;
 
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
+
     List<ServiceCRUDDTO> ret;
+    private ServiceDescr serviceDescr = new ServiceDescr();
+    private ServiceCRUDDTO serviceCRUDDTO = new ServiceCRUDDTO();
 
     @Before
     public void setUp() throws Exception {
-        ServiceDescr serviceDescr = new ServiceDescr();
         serviceDescr.setServiceId(2L);
         serviceDescr.setServiceName("quis turpis eget");
         serviceDescr.setServiceDescription(
@@ -48,6 +59,8 @@ public class ServiceServiceTest {
         ServiceCRUDDTO testService = ServiceCRUDDTO.form(serviceDescr, null);
         ret = new ArrayList<>();
         ret.add(testService);
+
+        serviceCRUDDTO = ServiceCRUDDTO.form(serviceDescr, "");
     }
 
     @Test
@@ -55,6 +68,27 @@ public class ServiceServiceTest {
         when(serviceDAO.getServicesForApprover(0, 10, 2)).thenReturn(ret);
 
         Assert.assertEquals(serviceService.getServicesForApprover(0, 10, 2, 3), ret);
+    }
+
+    @Test
+    public void updateServiceExceptionTest(){
+        expectedEx.expect(RequestException.class);
+        expectedEx.expectMessage("Service " + serviceCRUDDTO.getId() + " not found ");
+
+        when(serviceDAO.find(serviceCRUDDTO.getId())).thenReturn(Optional.empty());
+
+        serviceService.updateService(serviceCRUDDTO);
+    }
+
+    @Test
+    public void FindByStatusTest(){
+        Integer expectedStatus = 2;
+
+        when(serviceDAO.findByStatus(any(), eq(2))).thenReturn(ret);
+
+        Integer actualStatus = serviceService.findByStatus(2).get(0).getServiceStatus();
+
+        Assert.assertEquals(expectedStatus, actualStatus);
     }
 
     @Test
