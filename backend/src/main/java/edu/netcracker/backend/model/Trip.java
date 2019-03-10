@@ -3,12 +3,11 @@ package edu.netcracker.backend.model;
 import edu.netcracker.backend.dao.annotations.Attribute;
 import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.dao.annotations.Table;
-import edu.netcracker.backend.utils.TripStatus;
+import edu.netcracker.backend.model.state.trip.TripState;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,15 +22,6 @@ public class Trip {
     @EqualsAndHashCode.Include
     private Long tripId;
 
-    @Attribute("trip_status")
-    private Integer tripStatus;
-
-    @Attribute("approver_id")
-    private Integer approverId;
-
-    @Attribute("carrier_id")
-    private Long carrierId;
-
     @Attribute("creation_date")
     private LocalDateTime creationDate;
 
@@ -43,6 +33,12 @@ public class Trip {
 
     @Attribute("trip_photo")
     private String tripPhoto;
+
+    private TripState tripState;
+
+    private User owner;
+
+    private User approver;
 
     private Planet departurePlanet;
     private Planet arrivalPlanet;

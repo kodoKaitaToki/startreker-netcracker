@@ -11,6 +11,8 @@ public interface TripDAO {
 
     Optional<Trip> find(Long id);
 
+    List<Trip> allCarriersTrips(Long carrierId);
+
     List<Trip> paginationForCarrier(Integer limit, Integer offset, Long carrierId);
 
     List<Trip> findByStatusForCarrier(Integer status, Long carrierId);

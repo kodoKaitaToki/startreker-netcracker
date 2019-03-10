@@ -1,13 +1,11 @@
 package edu.netcracker.backend.controller;
 
-import com.sun.xml.bind.v2.TODO;
 import edu.netcracker.backend.message.request.MandatoryTimeInterval;
 import edu.netcracker.backend.message.request.OptionalTimeInterval;
-import edu.netcracker.backend.message.request.TripCreation;
+import edu.netcracker.backend.message.request.trips.TripCreation;
 import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
 import edu.netcracker.backend.message.response.TripDistributionElement;
-import edu.netcracker.backend.model.Planet;
-import edu.netcracker.backend.model.Trip;
+import edu.netcracker.backend.message.response.trips.AllCarriersTripsDTO;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.StatisticsService;
 import edu.netcracker.backend.service.TripService;
@@ -35,8 +33,13 @@ public class TripController {
         this.tripService = tripService;
     }
 
-    @PostMapping("api/v1/trip")
-    //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    @GetMapping("api/v1/trips")
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<AllCarriersTripsDTO> getAllTrips() {return tripService.getAllTripsForCarrier();}
+
+    @PostMapping("api/v1/trips")
+//    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public void saveTrip(@RequestBody TripCreation trip) {tripService.saveTrip(trip);}
 
     @GetMapping("api/v1/trip/distribution")

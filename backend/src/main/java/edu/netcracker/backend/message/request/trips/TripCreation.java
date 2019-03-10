@@ -1,4 +1,4 @@
-package edu.netcracker.backend.message.request;
+package edu.netcracker.backend.message.request.trips;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;

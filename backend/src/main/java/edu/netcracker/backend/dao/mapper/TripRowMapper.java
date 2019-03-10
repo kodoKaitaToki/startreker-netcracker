@@ -16,7 +16,7 @@ public class TripRowMapper implements RowMapper<Trip> {
         trip.setDepartureDate(new Timestamp(resultSet.getDate(3).getTime()).toLocalDateTime());
         trip.setArrivalDate(new Timestamp(resultSet.getDate(4).getTime()).toLocalDateTime());
         trip.setTripPhoto(resultSet.getString(5));
-        trip.setCreationDate(resultSet.getDate(6).toLocalDate());
+        trip.setCreationDate(new Timestamp(resultSet.getDate(6).getTime()).toLocalDateTime());
         return trip;
     }
 }
