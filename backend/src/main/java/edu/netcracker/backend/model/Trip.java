@@ -30,8 +30,14 @@ public class Trip {
     @Attribute("departure_date")
     private LocalDateTime departureDate;
 
+    @Attribute("departure_id")
+    private Long departureId;
+
     @Attribute("arrival_date")
     private LocalDateTime arrivalDate;
+
+    @Attribute("arrival_id")
+    private Long arrivalId;
 
     @Attribute("trip_photo")
     private String tripPhoto;
@@ -41,6 +47,8 @@ public class Trip {
     private User owner;
 
     private User approver;
+
+    private List<TripReply> replies;
 
     private List<TicketClass> ticketClasses = new ArrayList<>();
 

@@ -1,5 +1,6 @@
 package edu.netcracker.backend.dao.mapper;
 
+import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.model.state.trip.TripStateRegistry;
@@ -14,16 +15,20 @@ import java.sql.SQLException;
 public class TripMapper implements RowMapper<Trip> {
 
     private final TripStateRegistry tripStateRegistry;
+    private final UserDAO userDAO;
 
     @Autowired
-    public TripMapper(TripStateRegistry tripStateRegistry) {
+    public TripMapper(TripStateRegistry tripStateRegistry, UserDAO userDAO) {
         this.tripStateRegistry = tripStateRegistry;
+        this.userDAO = userDAO;
     }
 
     @Override
     public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
         Trip trip = new Trip();
         trip.setTripId(rs.getLong("trip_id"));
+        trip.setDepartureId(rs.getLong("departure_id"));
+        trip.setArrivalId(rs.getLong("arrival_id"));
         trip.setTripState(tripStateRegistry.getState(rs.getInt("trip_status")));
         trip.setDepartureDate(rs.getTimestamp("departure_date")
                                 .toLocalDateTime());
@@ -55,6 +60,8 @@ public class TripMapper implements RowMapper<Trip> {
         user.setUserRefreshToken(rs.getString(prefix + "_token"));
         user.setUserEmail(rs.getString(prefix + "_email"));
         user.setUserTelephone(rs.getString(prefix + "_telephone"));
+
+        userDAO.attachRoles(user);
 
         return user;
     }

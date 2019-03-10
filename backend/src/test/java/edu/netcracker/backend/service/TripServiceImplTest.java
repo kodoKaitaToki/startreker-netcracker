@@ -4,6 +4,7 @@ import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.dao.TripReplyDAO;
 import edu.netcracker.backend.message.response.TripDTO;
+import edu.netcracker.backend.message.response.TripReplyDTO;
 import edu.netcracker.backend.model.Role;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.User;
@@ -131,10 +132,17 @@ public class TripServiceImplTest {
         publishedTripDTO = TripDTO.from(publishedTrip);
         archivedTripDTO = TripDTO.from(archivedTrip);
         underClarificationTripDTO = TripDTO.from(underClarificationTrip);
-        underClarificationTripDTO.setReply("test reply");
+
+        TripReplyDTO reply = TripReplyDTO.builder()
+                                         .replyText("test reply")
+                                         .build();
+        List<TripReplyDTO> replies = new ArrayList<>();
+        replies.add(reply);
+
+        underClarificationTripDTO.setReplies(replies);
         removedTripDTO = TripDTO.from(removedTrip);
 
-        tripService = new TripServiceImpl(tripDAOMock, tripStateRegistry);
+        tripService = new TripServiceImpl(tripDAOMock, tripStateRegistry, new Removed(), new Open(), new Assigned());
     }
 
     // Draft tests
@@ -175,7 +183,7 @@ public class TripServiceImplTest {
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
-    @Test
+    @Test(expected = RequestException.class)
     public void draftToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(draftTrip));
         tripService.updateTrip(approver, removedTripDTO);
@@ -221,7 +229,7 @@ public class TripServiceImplTest {
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
-    @Test
+    @Test(expected = RequestException.class)
     public void openToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(openTrip));
         tripService.updateTrip(approver, removedTripDTO);
@@ -267,7 +275,7 @@ public class TripServiceImplTest {
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
-    @Test
+    @Test(expected = RequestException.class)
     public void assignedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(assignedTrip));
         tripService.updateTrip(approver, removedTripDTO);
@@ -313,7 +321,7 @@ public class TripServiceImplTest {
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
-    @Test
+    @Test(expected = RequestException.class)
     public void publishedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(publishedTrip));
         tripService.updateTrip(approver, removedTripDTO);
@@ -359,7 +367,7 @@ public class TripServiceImplTest {
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
-    @Test
+    @Test(expected = RequestException.class)
     public void archivedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(archivedTrip));
         tripService.updateTrip(approver, removedTripDTO);
@@ -408,7 +416,7 @@ public class TripServiceImplTest {
     @Test
     public void underClarificationToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(underClarificationTrip));
-        tripService.updateTrip(approver, removedTripDTO);
+        tripService.updateTrip(carrier, removedTripDTO);
     }
 
 
@@ -488,7 +496,7 @@ public class TripServiceImplTest {
     @Test(expected = RequestException.class)
     public void illegalUnderClarificationToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(underClarificationTrip));
-        tripService.updateTrip(illegalApprover, removedTripDTO);
+        tripService.updateTrip(illegalCarrier, removedTripDTO);
     }
 
     @Test(expected = RequestException.class)
