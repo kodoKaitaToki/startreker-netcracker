@@ -112,11 +112,11 @@ public class ServiceServiceTest {
 
     @Test
     public void FindByStatusTest(){
-        Integer expectedStatus = 2;
+        String expectedStatus = ServiceStatus.OPEN.toString();
 
         when(serviceDAO.findByStatus(any(), eq(2))).thenReturn(ret);
 
-        Integer actualStatus = serviceService.findByStatus(2).get(0).getServiceStatus();
+        String actualStatus = serviceService.findByStatus(ServiceStatus.OPEN.toString()).get(0).getServiceStatus();
 
         Assert.assertEquals(expectedStatus, actualStatus);
     }
