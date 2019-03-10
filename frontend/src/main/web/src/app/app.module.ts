@@ -3,6 +3,8 @@ import {NgModule} from '@angular/core';
 import {HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from '@angular/forms';
 
+import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
+
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import { LandingComponent } from './pages/landing/landing.component';
@@ -19,6 +21,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { RecoveryComponent } from './pages/recovery/recovery.component';
 
 import { Configuration } from './app.constants';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -36,11 +39,13 @@ import { Configuration } from './app.constants';
     RecoveryComponent
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     AngularFontAwesomeModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    LoadingBarHttpClientModule,
+    BrowserModule,
+    BrowserAnimationsModule
   ],
   providers: [Configuration],
   bootstrap: [AppComponent]

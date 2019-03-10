@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface ServiceService {
 
-    List<ServiceCRUDDTO> findByStatus(Integer status);
+    List<ServiceCRUDDTO> findByStatus(String status);
 
     ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm);
 
     ServiceCRUDDTO updateService(ServiceCRUDDTO serviceDTO);
 
-    List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId);
+    List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, String status, Integer approverId);
 
     public ServiceCRUDDTO reviewService(ServiceCRUDDTO serviceDTO, Integer approverId);
 }

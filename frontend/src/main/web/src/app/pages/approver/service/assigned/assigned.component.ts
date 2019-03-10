@@ -18,6 +18,8 @@ export class AssignedComponent implements OnInit {
 
   currentServiceForReply: Service;
 
+  loadingService: Service;
+
   setFormInDefault() {
     this.form = new FormGroup(
       {
@@ -34,12 +36,21 @@ export class AssignedComponent implements OnInit {
     this.currentServiceForReply = null;
   }
 
+  resetLoading() {
+    this.loadingService = null;
+  }
+
   onPublish(service) {
     service.service_status = 4;
+
+    this.loadingService = service;
+
     this.serviceService.updateServiceReview(service)
     .subscribe(() => {
       this.getServices();
+      alert(service.service_name + ' is now published');
     }, () => {
+      this.resetLoading();
       alert('Something went wrong');
     });
   }
@@ -47,10 +58,15 @@ export class AssignedComponent implements OnInit {
   onReview(service) {
     service.service_status = 5;
     service.reply_text = this.form.value.reply_text;
+
+    this.loadingService = service;
+
     this.serviceService.updateServiceReview(service)
     .subscribe(() => {
       this.getServices();
+      alert(service.service_name + ' is now under clarification');
     }, () => {
+      this.resetLoading();
       alert('Something went wrong');
     });
   }
@@ -58,6 +74,7 @@ export class AssignedComponent implements OnInit {
   getServices() {
     this.serviceService.getServicesForApprover(0, 10, 3)
     .subscribe(data => {
+      this.resetLoading();
       this.services = data;
     });
   }
