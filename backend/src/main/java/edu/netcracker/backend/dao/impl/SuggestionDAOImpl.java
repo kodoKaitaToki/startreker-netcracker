@@ -50,7 +50,7 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
             "SET discount_id = null " +
             "WHERE suggestion_id = ?";
 
-    private static final String GET_ALL_SUGGESTIONS_BELONG_TO_TICKET_CLASSES = "SELECT\n" +
+    private static final String GET_ALL_SUGGESTIONS_BELONG_TO_TICKET_CLASSES = "SELECT " +
             "  suggestion_id, " +
             "  class_id, " +
             "  discount_id " +

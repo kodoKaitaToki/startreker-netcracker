@@ -23,89 +23,89 @@ import java.util.*;
 @Repository
 public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements ServiceDAO {
 
-    private final String FIND_SERVICE_BY_NAME = "SELECT * \n" +
-            "FROM service\n" +
-            "WHERE carrier_id = ?\n" +
+    private final String FIND_SERVICE_BY_NAME = "SELECT * " +
+            "FROM service " +
+            "WHERE carrier_id = ? " +
             "AND service_name = ?";
 
-    private final String FIND_ALL_SERVICES = "SELECT service.service_id,\n" +
-            "        service.carrier_id,\n" +
-            "        user_a.user_name,\n" +
-            "        service.service_name,\n" +
-            "        service.service_description,\n" +
-            "        service.service_status,\n" +
-            "        service.creation_date\n" +
-            "FROM service\n" +
-            "LEFT JOIN user_a\n" +
-            "ON service.approver_id = user_a.user_id\n" +
-            "WHERE carrier_id = ?\n" +
+    private final String FIND_ALL_SERVICES = "SELECT service.service_id, " +
+            "        service.carrier_id, " +
+            "        user_a.user_name," +
+            "        service.service_name, " +
+            "        service.service_description, " +
+            "        service.service_status, " +
+            "        service.creation_date " +
+            "FROM service" +
+            "LEFT JOIN user_a " +
+            "ON service.approver_id = user_a.user_id " +
+            "WHERE carrier_id = ?" +
             "ORDER BY service_id";
 
-    private final String FIND_PAGIN_SERVICES = "SELECT service.service_id,\n" +
-            "        service.carrier_id,\n" +
-            "        user_a.user_name,\n" +
-            "        service.service_name,\n" +
-            "        service.service_description,\n" +
-            "        service.service_status,\n" +
-            "        service.creation_date\n" +
-            "FROM service\n" +
-            "LEFT JOIN user_a\n" +
-            "ON service.approver_id = user_a.user_id\n" +
-            "WHERE carrier_id = ?\n" +
-            "ORDER BY service_id\n" +
+    private final String FIND_PAGIN_SERVICES = "SELECT service.service_id, " +
+            "        service.carrier_id, " +
+            "        user_a.user_name, " +
+            "        service.service_name," +
+            "        service.service_description, " +
+            "        service.service_status, " +
+            "        service.creation_date " +
+            "FROM service " +
+            "LEFT JOIN user_a " +
+            "ON service.approver_id = user_a.user_id " +
+            "WHERE carrier_id = ? " +
+            "ORDER BY service_id " +
             "LIMIT ? OFFSET ?";
 
-    private final String DELETE_SERVICE = "DELETE FROM service\n" +
+    private final String DELETE_SERVICE = "DELETE FROM service " +
             "WHERE service_id = ?";
 
-    private final String FIND_BY_STATUS = "SELECT service.service_id,\n" +
-            "        service.carrier_id,\n" +
-            "        user_a.user_name,\n" +
-            "        service.service_name,\n" +
-            "        service.service_description,\n" +
-            "        service.service_status,\n" +
-            "        service.creation_date\n" +
-            "FROM service\n" +
-            "LEFT JOIN user_a\n" +
-            "ON service.approver_id = user_a.user_id\n" +
-            "WHERE carrier_id = ?\n" +
-            "AND service_status = ?\n" +
+    private final String FIND_BY_STATUS = "SELECT service.service_id, " +
+            "        service.carrier_id, " +
+            "        user_a.user_name, " +
+            "        service.service_name, " +
+            "        service.service_description, " +
+            "        service.service_status, " +
+            "        service.creation_date " +
+            "FROM service " +
+            "LEFT JOIN user_a " +
+            "ON service.approver_id = user_a.user_id " +
+            "WHERE carrier_id = ? " +
+            "AND service_status = ? " +
             "ORDER BY service_id";
 
-    private final String APPROVER_FIND_BY_STATUS = "SELECT service.service_id,\n" +
-            "        service.carrier_id,\n" +
-            "        user_a.user_name,\n" +
-            "        service.service_name,\n" +
-            "        service.service_description,\n" +
-            "        service.service_status,\n" +
-            "        service.creation_date,\n"+
-            "FROM service\n" +
-            "LEFT JOIN user_a\n" +
-            "ON service.approver_id = user_a.user_id\n" +
-            "WHERE service_status = ?\n" +
-            "ORDER BY service_id\n" +
+    private final String APPROVER_FIND_BY_STATUS = "SELECT service.service_id, " +
+            "        service.carrier_id, " +
+            "        user_a.user_name, " +
+            "        service.service_name, " +
+            "        service.service_description, " +
+            "        service.service_status, " +
+            "        service.creation_date "+
+            "FROM service " +
+            "LEFT JOIN user_a " +
+            "ON service.approver_id = user_a.user_id " +
+            "WHERE service_status = ? " +
+            "ORDER BY service_id " +
             "LIMIT ? OFFSET ?";
 
-    private final String APPROVER_FIND_BY_STATUS_AND_ID = "SELECT service.service_id,\n" +
-            "        service.carrier_id,\n" +
-            "        user_a.user_name,\n" +
-            "        service.service_name,\n" +
-            "        service.service_description,\n" +
-            "        service.service_status,\n" +
-            "        service.creation_date,\n" +
-            "FROM service\n" +
-            "LEFT JOIN user_a\n" +
-            "ON service.approver_id = user_a.user_id\n" +
-            "WHERE approver_id = ?\n" +
-            "AND service_status = ?\n" +
-            "ORDER BY service_id\n" +
+    private final String APPROVER_FIND_BY_STATUS_AND_ID = "SELECT service.service_id, " +
+            "        service.carrier_id, " +
+            "        user_a.user_name, " +
+            "        service.service_name, " +
+            "        service.service_description, " +
+            "        service.service_status, " +
+            "        service.creation_date " +
+            "FROM service " +
+            "LEFT JOIN user_a " +
+            "ON service.approver_id = user_a.user_id " +
+            "WHERE approver_id = ? " +
+            "AND service_status = ? " +
+            "ORDER BY service_id " +
             "LIMIT ? OFFSET ?";
 
-    private final String FIND_ALL_REPLY_TEXTS = "SELECT reply_text\n" +
-            "FROM service_reply\n" +
-            "WHERE service_id = ?\n" +
-            "AND creation_date = (SELECT MAX(creation_date)\n" +
-            "                    FROM service_reply\n" +
+    private final String FIND_ALL_REPLY_TEXTS = "SELECT reply_text " +
+            "FROM service_reply " +
+            "WHERE service_id = ? " +
+            "AND creation_date = (SELECT MAX(creation_date) " +
+            "                    FROM service_reply " +
             "                    WHERE service_id = ?)";
 
     private final static String GET_ALL_SERVICES_BELONG_TO_SUGGESTIONS = "SELECT " +
