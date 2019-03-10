@@ -108,11 +108,11 @@
     </div>
 
     <div class="col-md-9">
-      <app-bundles-table [bundles]="bundles"
-                          [filterCriteria]="currentFilter"
-                          [filterContent]="filterContent"
-                          (onUpdateDataNotifier)="getBundlesForUpdate($event)"
-                          (onDeleteDataNotifier)="getBundlesForDelete($event)">
+      <app-bundles-table
+      [filterCriteria]="currentFilter"
+      [filterContent]="filterContent"
+      (onUpdateDataNotifier)="getBundlesForUpdate($event)"
+      (onDeleteDataNotifier)="getBundlesForDelete($event)">
       </app-bundles-table>
     </div>
   </div>

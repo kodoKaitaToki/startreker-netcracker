@@ -1,8 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Bundle} from '../shared/model/bundle';
 import {BundlesService} from "../shared/service/bundles.service";
-import { MOCK_DATA } from '../shared/model/mock-data';
+import {BundlesTableComponent} from "../bundles-table/bundles-table.component";
 
 @Component({
              selector: 'app-bundles-component',
@@ -11,8 +11,7 @@ import { MOCK_DATA } from '../shared/model/mock-data';
            },
 )
 export class BundlesComponentComponent implements OnInit {
-
-  bundles: Bundle[] = [];
+  @ViewChild(BundlesTableComponent) table:BundlesTableComponent;
 
 
   filterCriteria = [
@@ -32,7 +31,6 @@ export class BundlesComponentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.form = new FormGroup(
       {
         start_date: new FormControl('', Validators.required),
@@ -43,10 +41,6 @@ export class BundlesComponentComponent implements OnInit {
         services: new FormControl('')
       }
     );
-
-
-    this.bundles = MOCK_DATA;
-    //this.getAllBundles();
   }
 
   chooseNewFilter(chosenFilterName) {
@@ -63,7 +57,7 @@ export class BundlesComponentComponent implements OnInit {
 
     this.bundlesSrvc.postBundles(bundle)
         .subscribe(() => {
-          this.getAllBundles();
+          this.table.getAllBundles();
         }, () => {
           alert('Something went wrong');
         });
@@ -71,31 +65,5 @@ export class BundlesComponentComponent implements OnInit {
     this.form.reset({is_activated: true});
   }
 
-  getBundlesForUpdate(bundles) {
-
-    this.bundlesSrvc.putBundles(bundles)
-        .subscribe(() => {
-          this.getAllBundles();
-        }, () => {
-          alert('Something went wrong');
-        });
-  }
-
-  getBundlesForDelete(bundles) {
-
-    this.bundlesSrvc.deleteBundles(bundles)
-        .subscribe(() => {
-          this.getAllBundles();
-        });
-  }
-
-  getAllBundles() {
-
-    this.bundlesSrvc.getAll()
-        .subscribe(data => this.bundles = data);
-  }
-
-/*  checkRepeatedPasswordTheSame() {
-    return this.form.get('password').value === this.form.get('repeat_password').value;
-  } */
+  
 }

@@ -10,9 +10,7 @@ export class BundlesService {
 
   private defaultUrl: string = Api.baseUrl;
 
-  private apiVersion: string = 'v1/api/';
-
-  private user: string = 'admin/';
+  private apiVersion: string = 'api/v1/';
 
   private page: string = 'bundles';
 
@@ -20,7 +18,7 @@ export class BundlesService {
 
   constructor(private http: HttpClient) {
 
-    this.url = this.defaultUrl + this.apiVersion + this.user + this.page;
+    this.url = this.defaultUrl + this.apiVersion + this.page;
   }
 
   public getCount(): Observable<any> {
@@ -30,12 +28,12 @@ export class BundlesService {
 
   public getAll(): Observable<any> {
 
-    return this.http.get(this.url + '/all');
+    return this.http.get(this.url);
   }
 
   public getBundlesInInterval(limit: number, offset: number): Observable<any> {
 
-    return this.http.get(this.url + '/paging?limit=' + limit + '&offset=' + offset);
+    return this.http.get(this.url + '?limit=' + limit + '&offset=' + offset);
   }
 
   public postBundles(bundles: Bundle): Observable<any> {
