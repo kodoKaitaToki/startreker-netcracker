@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -27,7 +28,9 @@ public class Ticket {
     @Attribute("seat")
     private Integer seat;
 
+    @Attribute("end_price")
+    private Float endPrice;
+
     @Attribute("purchase_date")
     private LocalDateTime purchaseDate;
-
 }
