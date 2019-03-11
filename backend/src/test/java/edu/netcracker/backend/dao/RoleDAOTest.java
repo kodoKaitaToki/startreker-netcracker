@@ -15,7 +15,6 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureTestDatabase

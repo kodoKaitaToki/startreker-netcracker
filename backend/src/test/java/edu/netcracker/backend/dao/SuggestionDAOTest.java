@@ -1,6 +1,5 @@
 package edu.netcracker.backend.dao;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
 import static org.junit.Assert.*;
-
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

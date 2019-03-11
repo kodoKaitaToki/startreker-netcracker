@@ -1,13 +1,8 @@
 package edu.netcracker.backend.controller;
 
-import edu.netcracker.backend.security.SecurityContext;
-import edu.netcracker.backend.service.ServiceService;
-import edu.netcracker.backend.service.StatisticsService;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
