@@ -3,9 +3,10 @@ package edu.netcracker.backend.controller;
 import edu.netcracker.backend.message.request.MandatoryTimeInterval;
 import edu.netcracker.backend.message.request.OptionalTimeInterval;
 import edu.netcracker.backend.message.request.Pageable;
+import edu.netcracker.backend.message.request.TripRequest;
 import edu.netcracker.backend.message.response.CarrierRevenueResponse;
 import edu.netcracker.backend.message.response.CarrierViewsResponse;
-import edu.netcracker.backend.message.response.TripDTO;
+import edu.netcracker.backend.message.response.TripResponse;
 import edu.netcracker.backend.message.response.TripDistributionElement;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.security.SecurityContext;
@@ -48,9 +49,9 @@ public class TripController {
 
     @PatchMapping(value = "api/v1/trip/{id}", consumes = MediaType.APPLICATION_JSON)
     @PreAuthorize("hasAuthority('ROLE_CARRIER') or hasAuthority('ROLE_APPROVER')")
-    public TripDTO update(@Valid @RequestBody TripDTO tripDTO, @PathVariable("id") Long id) {
-        tripDTO.setTripId(id);
-        return TripDTO.from(tripService.updateTrip(securityContext.getUser(), tripDTO));
+    public TripResponse update(@Valid @RequestBody TripRequest tripRequest, @PathVariable("id") Long id) {
+        tripRequest.setTripId(id);
+        return TripResponse.from(tripService.updateTrip(securityContext.getUser(), tripRequest));
     }
 
     @GetMapping("api/v1/trip/distribution")
@@ -129,7 +130,7 @@ public class TripController {
 
     @GetMapping(value = "api/v1/carrier/trip", params = {"status"})
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<TripDTO> getCarrierTripsByStatus(@RequestParam("status") Integer status, @Valid Pageable pageable) {
+    public List<TripResponse> getCarrierTripsByStatus(@RequestParam("status") Integer status, @Valid Pageable pageable) {
         ensureLimit(pageable);
         return toTripDTO(tripService.findCarrierTripsByStatus(securityContext.getUser(),
                                                               status,
@@ -139,7 +140,7 @@ public class TripController {
 
     @GetMapping(value = "api/v1/approver/trip", params = {"status"})
     @PreAuthorize("hasAuthority('ROLE_APPROVER')")
-    public List<TripDTO> getApproverTripsByStatus(@RequestParam("status") Integer status, @Valid Pageable pageable) {
+    public List<TripResponse> getApproverTripsByStatus(@RequestParam("status") Integer status, @Valid Pageable pageable) {
         ensureLimit(pageable);
         return toTripDTO(tripService.findApproverTrips(securityContext.getUser(),
                                                        status,
@@ -149,7 +150,7 @@ public class TripController {
 
     @GetMapping(value = "api/v1/carrier/trip")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<TripDTO> getCarrierTripsByStatus(@Valid Pageable pageable) {
+    public List<TripResponse> getCarrierTripsByStatus(@Valid Pageable pageable) {
         ensureLimit(pageable);
         return toTripDTO(tripService.findCarrierTrips(securityContext.getUser(),
                                                       pageable.getOffset(),
@@ -162,9 +163,9 @@ public class TripController {
         }
     }
 
-    private List<TripDTO> toTripDTO(List<Trip> trips) {
+    private List<TripResponse> toTripDTO(List<Trip> trips) {
         return trips.stream()
-                    .map(TripDTO::from)
+                    .map(TripResponse::from)
                     .collect(Collectors.toList());
     }
 }

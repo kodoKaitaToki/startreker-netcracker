@@ -20,10 +20,10 @@ public class PostgresSqlBuilder implements SQLBuilder {
                               Map<Field, Attribute> fieldAttributeMap) {
         this.fieldPrimaryKeyMap = fieldPrimaryKeyMap;
         this.fieldAttributeMap = fieldAttributeMap;
-        this.selectInTemplateSql = assembleSelectInSql();
-        this.attributesSql = assembleAttributes();
         this.tableName = entityClass.getAnnotation(Table.class)
                                     .value();
+        this.attributesSql = assembleAttributes();
+        this.selectInTemplateSql = assembleSelectInSql();
     }
 
     public String assembleInsertSql() {

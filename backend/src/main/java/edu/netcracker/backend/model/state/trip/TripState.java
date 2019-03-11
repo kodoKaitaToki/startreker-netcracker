@@ -1,11 +1,13 @@
 package edu.netcracker.backend.model.state.trip;
 
 import edu.netcracker.backend.dao.TripReplyDAO;
+import edu.netcracker.backend.message.request.TripRequest;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.TripReply;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.utils.AuthorityUtils;
 import lombok.Getter;
+import org.springframework.context.ApplicationContext;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -35,21 +37,16 @@ public enum TripState {
 
         @Override
         public boolean isStateChangeAllowed(Trip trip, User requestUser) {
-            if (requestUser.getUserRoles()
-                           .contains(AuthorityUtils.ROLE_APPROVER)
-                && allowedStatesToSwitchFrom.contains(trip.getTripState()
-                                                          .getDatabaseValue())) {
-                return true;
-            }
-            return false;
+            return requestUser.getUserRoles()
+                              .contains(AuthorityUtils.ROLE_APPROVER)
+                   && allowedStatesToSwitchFrom.contains(trip.getTripState()
+                                                             .getDatabaseValue());
         }
 
         @Override
-        public TripStateAction getAction() {
-            return (ctx, trip, tripDTO, requestUser) -> {
-                trip.setApprover(requestUser);
-                return true;
-            };
+        public boolean apply(ApplicationContext ctx, Trip trip, TripRequest tripDTO, User requestUser) {
+            trip.setApprover(requestUser);
+            return true;
         }
     },
 
@@ -83,25 +80,23 @@ public enum TripState {
         }
 
         @Override
-        public TripStateAction getAction() {
-            return (ctx, trip, tripDTO, requestUser) -> {
-                TripReplyDAO tripReplyDAO = ctx.getBean(TripReplyDAO.class);
+        public boolean apply(ApplicationContext ctx, Trip trip, TripRequest tripDTO, User requestUser) {
+            TripReplyDAO tripReplyDAO = ctx.getBean(TripReplyDAO.class);
 
-                if (tripDTO.getReplies()
-                           .get(0) == null) {
-                    return false;
-                }
+            if (tripDTO.getReplies()
+                       .get(0) == null) {
+                return false;
+            }
 
-                TripReply tripReply = new TripReply();
-                tripReply.setCreationDate(LocalDateTime.now());
-                tripReply.setReportText(tripDTO.getReplies()
-                                               .get(0)
-                                               .getReplyText());
-                tripReply.setTripId(trip.getTripId());
-                tripReply.setWriterId(requestUser.getUserId());
-                tripReplyDAO.save(tripReply);
-                return true;
-            };
+            TripReply tripReply = new TripReply();
+            tripReply.setCreationDate(LocalDateTime.now());
+            tripReply.setReportText(tripDTO.getReplies()
+                                           .get(0)
+                                           .getReplyText());
+            tripReply.setTripId(trip.getTripId());
+            tripReply.setWriterId(requestUser.getUserId());
+            tripReplyDAO.save(tripReply);
+            return true;
         }
     },
 
@@ -137,8 +132,8 @@ public enum TripState {
 
     private int databaseValue;
 
-    public TripStateAction getAction() {
-        return (ctx, trip, tripDTO, requestUser) -> true;
+    public boolean apply(ApplicationContext ctx, Trip trip, TripRequest tripDTO, User requestUser) {
+        return true;
     }
 
     public abstract boolean isStateChangeAllowed(Trip trip, User user);

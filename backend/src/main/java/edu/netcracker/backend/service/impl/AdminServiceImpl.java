@@ -4,7 +4,6 @@ import edu.netcracker.backend.dao.SpaceportDAO;
 import edu.netcracker.backend.dao.TicketDAO;
 import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.dao.VehicleDAO;
-import edu.netcracker.backend.model.Spaceport;
 import edu.netcracker.backend.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -86,7 +85,7 @@ public class AdminServiceImpl implements AdminService {
     public Map<LocalDate, Integer> getLocationsIncreasingPerPeriod(LocalDate from, LocalDate to) {
         HashMap<LocalDate, Integer> inc = new HashMap<>();
 
-        spaceportDAO.findPerPeriod(from, to).forEach(spaceport -> inc.merge(spaceport.getCreationDate(), 1, (a, b) -> a + b));
+        spaceportDAO.findPerPeriod(from, to).forEach(spaceport -> inc.merge(spaceport.getCreationDate().toLocalDate(), 1, (a, b) -> a + b));
 
         return inc;
     }

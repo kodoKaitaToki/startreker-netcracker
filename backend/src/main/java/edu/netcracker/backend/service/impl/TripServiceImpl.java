@@ -2,7 +2,8 @@ package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.TripDAO;
-import edu.netcracker.backend.message.response.TripDTO;
+import edu.netcracker.backend.message.request.TripRequest;
+import edu.netcracker.backend.message.response.TripResponse;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.model.state.trip.*;
@@ -12,6 +13,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,20 +25,19 @@ public class TripServiceImpl implements TripService {
     private final ApplicationContext applicationContext;
 
     @Autowired
-    public TripServiceImpl(TripDAO tripDAO,
-                           ApplicationContext applicationContext) {
+    public TripServiceImpl(TripDAO tripDAO, ApplicationContext applicationContext) {
         this.tripDAO = tripDAO;
         this.applicationContext = applicationContext;
     }
 
     @Override
-    public Trip updateTrip(User requestUser, TripDTO tripDTO) {
-        Optional<Trip> optionalTrip = tripDAO.find(tripDTO.getTripId());
+    public Trip updateTrip(User requestUser, TripRequest tripRequest) {
+        Optional<Trip> optionalTrip = tripDAO.find(tripRequest.getTripId());
 
         if (!optionalTrip.isPresent()) {
             throw new RequestException("Illegal operation", HttpStatus.NOT_FOUND);
         } else {
-            return updateTrip(requestUser, optionalTrip.get(), tripDTO);
+            return updateTrip(requestUser, optionalTrip.get(), tripRequest);
         }
     }
 
@@ -65,24 +66,24 @@ public class TripServiceImpl implements TripService {
         throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
     }
 
-    private Trip updateTrip(User requestUser, Trip trip, TripDTO tripDTO) {
-        TripState desiredState = TripState.getState(tripDTO.getStatus());
+    private Trip updateTrip(User requestUser, Trip trip, TripRequest tripRequest) {
+        TripState desiredState = TripState.getState(tripRequest.getStatus());
 
         if (!desiredState.equals(trip.getTripState())) {
-            startStatusChange(requestUser, trip, desiredState, tripDTO);
+            startStatusChange(requestUser, trip, desiredState, tripRequest);
         }
 
         tripDAO.save(trip);
-        return trip;
+        return tripDAO.find(trip.getTripId()).orElseThrow(RequestException::new);
     }
 
-    private void startStatusChange(User requestUser, Trip trip, TripState tripState, TripDTO tripDTO) {
-        if (!changeStatus(requestUser, tripState, tripDTO, trip)) {
+    private void startStatusChange(User requestUser, Trip trip, TripState tripState, TripRequest tripRequest) {
+        if (!changeStatus(requestUser, tripState, tripRequest, trip)) {
             throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
         }
     }
 
-    private boolean changeStatus(User requestUser, TripState newTripState, TripDTO tripDTO, Trip trip) {
+    private boolean changeStatus(User requestUser, TripState newTripState, TripRequest tripRequest, Trip trip) {
         if (requestUser == null
             || newTripState == null
             || trip.getTripState() == null
@@ -90,8 +91,7 @@ public class TripServiceImpl implements TripService {
             return false;
         }
 
-        if (newTripState.getAction()
-                        .apply(applicationContext, trip, tripDTO, requestUser)) {
+        if (newTripState.apply(applicationContext, trip, tripRequest, requestUser)) {
             trip.setTripState(newTripState);
             return true;
         }

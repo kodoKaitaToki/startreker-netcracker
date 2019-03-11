@@ -72,6 +72,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
 
             if (trip != null) {
                 attachTicketClassed(trip);
+                attachReplies(trip);
                 return Optional.of(trip);
             }
         } catch (EmptyResultDataAccessException ignored) {

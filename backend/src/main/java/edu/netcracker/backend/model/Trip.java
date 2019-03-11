@@ -3,13 +3,11 @@ package edu.netcracker.backend.model;
 import edu.netcracker.backend.dao.annotations.Attribute;
 import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.dao.annotations.Table;
-import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.model.state.trip.TripState;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +45,11 @@ public class Trip {
     private User owner;
 
     private User approver;
+
+    private Spaceport departureSpaceport;
+
+    private Spaceport arrivalSpaceport;
+
 
     private List<TripReply> replies;
 

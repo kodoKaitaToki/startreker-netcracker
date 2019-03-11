@@ -1,6 +1,8 @@
 package edu.netcracker.backend.dao.mapper;
 
 import edu.netcracker.backend.dao.UserDAO;
+import edu.netcracker.backend.model.Planet;
+import edu.netcracker.backend.model.Spaceport;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.model.state.trip.TripState;
@@ -25,8 +27,6 @@ public class TripMapper implements RowMapper<Trip> {
     public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
         Trip trip = new Trip();
         trip.setTripId(rs.getLong("trip_id"));
-        trip.setDepartureId(rs.getLong("departure_id"));
-        trip.setArrivalId(rs.getLong("arrival_id"));
         trip.setTripState(TripState.getState(rs.getInt("trip_status")));
         trip.setDepartureDate(rs.getTimestamp("departure_date")
                                 .toLocalDateTime());
@@ -38,6 +38,9 @@ public class TripMapper implements RowMapper<Trip> {
 
         trip.setOwner(mapUser(rs, "owner"));
         trip.setApprover(mapUser(rs, "approver"));
+
+        trip.setDepartureSpaceport(mapSpaceport(rs, "departure_spaceport"));
+        trip.setArrivalSpaceport(mapSpaceport(rs, "arrival_spaceport"));
 
         return trip;
     }
@@ -51,6 +54,7 @@ public class TripMapper implements RowMapper<Trip> {
             return null;
         }
 
+        user.setUserName(rs.getString(prefix + "_user_name"));
         user.setUserPassword(rs.getString(prefix + "_password"));
         user.setUserIsActivated(rs.getBoolean(prefix + "_activated"));
         user.setRegistrationDate(rs.getTimestamp(prefix + "_date_created")
@@ -62,5 +66,25 @@ public class TripMapper implements RowMapper<Trip> {
         userDAO.attachRoles(user);
 
         return user;
+    }
+
+    private Spaceport mapSpaceport(ResultSet rs, String prefix) throws SQLException {
+        Spaceport spaceport = new Spaceport();
+
+        spaceport.setSpaceportId(rs.getLong(prefix + "_id"));
+        spaceport.setSpaceportName(rs.getString(prefix + "_name"));
+        spaceport.setCreationDate(rs.getTimestamp(prefix + "_creation_date")
+                                    .toLocalDateTime());
+        spaceport.setPlanet(mapPlanet(rs, prefix));
+        return spaceport;
+    }
+
+    private Planet mapPlanet(ResultSet rs, String prefix) throws SQLException {
+        Planet planet = new Planet();
+
+        planet.setPlanetId(rs.getLong(prefix + "_id"));
+        planet.setPlanetName(rs.getString(prefix + "_name"));
+
+        return planet;
     }
 }

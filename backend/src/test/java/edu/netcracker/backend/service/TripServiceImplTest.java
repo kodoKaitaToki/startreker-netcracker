@@ -2,8 +2,8 @@ package edu.netcracker.backend.service;
 
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.TripDAO;
-import edu.netcracker.backend.dao.TripReplyDAO;
-import edu.netcracker.backend.message.response.TripDTO;
+import edu.netcracker.backend.message.request.TripRequest;
+import edu.netcracker.backend.message.response.TripResponse;
 import edu.netcracker.backend.message.response.TripReplyDTO;
 import edu.netcracker.backend.model.Role;
 import edu.netcracker.backend.model.Trip;
@@ -55,13 +55,13 @@ public class TripServiceImplTest {
     private Trip underClarificationTrip;
     private Trip removedTrip;
 
-    private TripDTO draftTripDTO;
-    private TripDTO openTripDTO;
-    private TripDTO assignedTripDTO;
-    private TripDTO publishedTripDTO;
-    private TripDTO archivedTripDTO;
-    private TripDTO underClarificationTripDTO;
-    private TripDTO removedTripDTO;
+    private TripRequest draftTripDTO;
+    private TripRequest openTripDTO;
+    private TripRequest assignedTripDTO;
+    private TripRequest publishedTripDTO;
+    private TripRequest archivedTripDTO;
+    private TripRequest underClarificationTripDTO;
+    private TripRequest removedTripDTO;
 
     @PostConstruct
     public void init() {
@@ -124,12 +124,12 @@ public class TripServiceImplTest {
         removedTrip.setOwner(carrier);
         removedTrip.setTripState(TripState.REMOVED);
 
-        draftTripDTO = TripDTO.from(draftTrip);
-        openTripDTO = TripDTO.from(openTrip);
-        assignedTripDTO = TripDTO.from(assignedTrip);
-        publishedTripDTO = TripDTO.from(publishedTrip);
-        archivedTripDTO = TripDTO.from(archivedTrip);
-        underClarificationTripDTO = TripDTO.from(underClarificationTrip);
+        draftTripDTO = TripRequest.from(draftTrip);
+        openTripDTO = TripRequest.from(openTrip);
+        assignedTripDTO = TripRequest.from(assignedTrip);
+        publishedTripDTO = TripRequest.from(publishedTrip);
+        archivedTripDTO = TripRequest.from(archivedTrip);
+        underClarificationTripDTO = TripRequest.from(underClarificationTrip);
 
         TripReplyDTO reply = TripReplyDTO.builder()
                                          .replyText("test reply")
@@ -138,7 +138,7 @@ public class TripServiceImplTest {
         replies.add(reply);
 
         underClarificationTripDTO.setReplies(replies);
-        removedTripDTO = TripDTO.from(removedTrip);
+        removedTripDTO = TripRequest.from(removedTrip);
 
         tripService = new TripServiceImpl(tripDAOMock, applicationContext);
     }
