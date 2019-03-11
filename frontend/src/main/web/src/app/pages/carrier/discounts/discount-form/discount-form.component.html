@@ -50,6 +50,7 @@
                  class="custom-control-input"
                  [value]="false"
                  formControlName="is_percent"
+                 (change)="calculateNewPrice()"
           >
           <label class="custom-control-label"
                  for="byValue"
@@ -64,6 +65,7 @@
                  class="custom-control-input"
                  [value]="true"
                  formControlName="is_percent"
+                 (change)="calculateNewPrice()"
           >
           <label class="custom-control-label"
                  for="byPercent"
@@ -74,10 +76,25 @@
       </div>
     </div>
 
+    <div class="row justify-content-center"
+         *ngIf="isInputtedDateIncorrect && form.get('start_date').touched && form.get('finish_date').touched"
+    >
+      <span class="text-center"
+            style="color: red"
+      >
+        The date is incorrect
+      </span>
+    </div>
+
+    <hr>
+
     <div class="row justify-content-center">
       <div class="col-md-6 text-center">
-        <label for="discountRate">
-        </label>
+        <h5>
+          Discount rate
+        </h5>
+      </div>
+      <div class="col-md-6 text-center">
         <input type="text"
                class="form-control"
                id="discountRate"
@@ -86,13 +103,25 @@
                (change)="calculateNewPrice()"
         >
       </div>
+    </div>
+
+
+    <hr>
+
+    <div class="row justify-content-center">
       <div class="col-md-6 text-center">
-        <label for="outcomeValue">
-        </label>
+        <h5>
+          New price
+        </h5>
+      </div>
+      <div class="col-md-6 text-center">
         <input type="text"
                class="form-control"
                id="outcomeValue"
+               name="outcomeValue"
                placeholder="Price with discount"
+               [ngModel]="valueWithDiscount"
+               [ngModelOptions]="{standalone: true}"
                disabled
         >
       </div>

@@ -33,6 +33,7 @@ export class DiscountFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.valueWithDiscount = this.obj.ticket_price;
   }
 
   closeDiscountForm() {
@@ -52,15 +53,22 @@ export class DiscountFormComponent implements OnInit {
 
   calculateNewPrice() {
 
+    this.valueWithDiscount = (this.form.get('is_percent').value === true)
+      ? this.valueWithDiscount =
+        this.obj.ticket_price * (1 - (this.form.get('discount_rate').value / 100))
+      : this.valueWithDiscount =
+        this.obj.ticket_price - this.form.get('discount_rate').value;
   }
 
   compareDatePickerValues() {
 
-    if ((this.form.get('start_date').value >= this.form.get('finish_date').value)
-        && this.form.get('start_date').value !== ''
-        && this.form.get('finish_date').value !== '') {
-      this.isInputtedDateIncorrect = true;
-    }
+    const startDate = new Date(this.form.get('start_date').value).toLocaleDateString("en-US");
+    const currentDate = new Date().toLocaleDateString("en-US");
+
+    this.isInputtedDateIncorrect = ((this.form.get('start_date').value >= this.form.get('finish_date').value)
+                                   && this.form.get('start_date').value !== ''
+                                   && this.form.get('finish_date').value !== '')
+                                   || startDate < currentDate;
   }
 
   convert_YYYY_mm_dd_to_dd_mm_YYYY(stringDate): string {

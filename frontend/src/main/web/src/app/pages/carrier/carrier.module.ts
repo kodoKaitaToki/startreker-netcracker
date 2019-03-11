@@ -26,39 +26,42 @@ import {DiscountMainPageComponent} from "./discounts/discount-main-page/discount
 import {CarrierDiscountsService} from "./discounts/shared/service/carrier-discount.service";
 import {SuggestionComponent} from "./discounts/suggestion/suggestion.component";
 import {TicketClassComponent} from "./discounts/ticket-class/ticket-class.component";
+import {ToastModule} from "primeng/toast";
 
 @NgModule({
-  declarations:
-    [NavbarComponent,
-     IndexComponent,
-     TripsComponent,
-     ServicesComponent,
-     SuggestionsComponent,
-     DashboardsComponent,
-     CarrierComponent,
-     SalesComponent,
-     ViewsComponent,
-     ServiceTableComponent,
-     ServiceCrudComponent,
-     ClarificationComponent,
-     ArchiveComponent,
-     ServiceFilterPipe,
-     DiscountFormComponent,
-     DiscountMainPageComponent,
-     SuggestionComponent,
-     TicketClassComponent
-    ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CarrierRoutingModule,
-    GrowlModule,
-    NgxPaginationModule
-  ],
-  providers: [
-    MessageService, CarrierDiscountsService
-  ]
-})
+            declarations:
+              [NavbarComponent,
+               IndexComponent,
+               TripsComponent,
+               ServicesComponent,
+               SuggestionsComponent,
+               DashboardsComponent,
+               CarrierComponent,
+               SalesComponent,
+               ViewsComponent,
+               ServiceTableComponent,
+               ServiceCrudComponent,
+               ClarificationComponent,
+               ArchiveComponent,
+               ServiceFilterPipe,
+               DiscountFormComponent,
+               DiscountMainPageComponent,
+               SuggestionComponent,
+               TicketClassComponent
+              ],
+            imports: [
+              CommonModule,
+              FormsModule,
+              ReactiveFormsModule,
+              CarrierRoutingModule,
+              GrowlModule,
+              NgxPaginationModule,
+              ToastModule
+            ],
+            providers: [
+              MessageService,
+              CarrierDiscountsService
+            ]
+          })
 export class CarrierModule {
 }

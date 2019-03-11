@@ -165,6 +165,23 @@
       </div>
     </div>
 
+    <div class="row justify-content-center"
+         *ngIf="ticketClass.discount !== null"
+    >
+      <div class="col-md-6 text-center">
+        <h5>Price with discount</h5>
+      </div>
+      <div class="col-md-6 text-center">
+        <h6 *ngIf="ticketClass.discount.is_percent">
+          {{(ticketClass.ticket_price * (1 - ticketClass.discount.discount_rate / 100))}}
+        </h6>
+
+        <h6 *ngIf="!ticketClass.discount.is_percent">
+          {{(ticketClass.ticket_price - ticketClass.discount.discount_rate)}}
+        </h6>
+      </div>
+    </div>
+
     <div class="row justify-content-center">
       <div class="col-md-6 text-center">
         <h5>Expired</h5>
