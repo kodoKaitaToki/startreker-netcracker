@@ -38,7 +38,7 @@ public class DiscountSuggestionDTO {
     @JsonProperty("discount")
     private DiscountDTO discountDTO;
 
-    @JsonProperty("service_ names")
+    @JsonProperty("service_names")
     private List<String> serviceNames;
 
     public static DiscountSuggestionDTO toDiscountSuggestionDTO(Suggestion suggestion, DiscountDTO discountDTO) {
