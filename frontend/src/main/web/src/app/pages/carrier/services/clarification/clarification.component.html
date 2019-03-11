@@ -1,12 +1,16 @@
+<div class="row">
+  <input [(ngModel)]="filterContent" class="form-control col-3 ml-auto"
+         placeholder="Filter by name"
+         style="margin-top: 1.5%; margin-right: 1.5%;"
+         type="text"
+  />
+</div>
 <div class="list-group">
   <ul>
-    <!--<li class="list-group-item"
-        *ngFor="let service of services
-        | approverFilter: filterCriteria: filterContent
-        | paginate: {id: 'listing_pagination', itemsPerPage: entriesAmountOnPage, currentPage: page ,totalItems: totalRec}"
-    >-->
     <li class="list-group-item"
-        *ngFor="let service of services"
+        *ngFor="let service of services 
+                | serviceFilter: filterContent
+                | paginate: { itemsPerPage: 5, currentPage: page}"
         style="margin-top:1.5%;"
     >
       <h5>{{service.approver_name}} :</h5>
@@ -40,7 +44,8 @@
             <p data-placement="top"
                data-toggle="tooltip"
                title="Delete"
-               (click)="deleteService(service.id);"
+               (click)="service.service_status = 'REMOVED';
+                        updateService(service)"
                class="deletePrgph"
             >
               <button class="btn btn-danger btn-md"
@@ -95,15 +100,6 @@
                         cols=40
                         rows=10
               ></textarea>
-              <!--<input type="text" class="form-control"
-                     *ngIf="currentApproverForUpdate === approver && !isForUpdateAlertMessage"
-                     formControlName="email"
-                     [value]="currentApproverForUpdate.email"
-                     [ngClass]="{
-                   'is-invalid':form.get('email').invalid,
-                   'is-valid': form.get('email').valid
-                   }"
-              >-->
             </div>
 
             <hr>
@@ -136,10 +132,15 @@
       </form>
     </li>
   </ul>
-  <!--<pagination-controls id="listing_pagination" maxSize=5
-                       (pageChange)="onChangePage($event)"
-                       class="text-center">
-  </pagination-controls>-->
+  <p-growl></p-growl>
+</div>
+<div class="row justify-content-center">
+  <div class="col-8">
+    <pagination-controls class="listing-pagination"
+                         maxSize=5
+                         (pageChange)="onChangePage($event)">
+    </pagination-controls>
+  </div>
 </div>
 
 <hr>

@@ -8,5 +8,8 @@ public interface DiscountDAO extends CrudDAO<Discount>{
 
     void delete(Number discountId);
 
+    @Override
+    List<Discount> findIn(List<?> args);
+
     void deleteDiscounts(List<Long> collect);
 }

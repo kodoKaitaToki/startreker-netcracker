@@ -16,4 +16,8 @@ export class TripsService {
   setExistingTrips(): Observable<any> {
     return this.http.get<any>(Api.trips.getExistingPlanets(), HttpOptionsAuthorized);
   }
+
+  createTrip(payload): Observable<any> {
+    return this.http.post<any>(Api.trips.addTrip(), payload, HttpOptionsAuthorized);
+  }
 }

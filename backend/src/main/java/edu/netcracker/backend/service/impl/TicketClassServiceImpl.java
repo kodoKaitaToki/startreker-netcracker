@@ -1,63 +1,54 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
-import edu.netcracker.backend.dao.DiscountDAO;
 import edu.netcracker.backend.dao.TicketClassDAO;
+import edu.netcracker.backend.message.request.DiscountDTO;
 import edu.netcracker.backend.message.request.DiscountTicketClassDTO;
-import edu.netcracker.backend.model.Discount;
 import edu.netcracker.backend.model.TicketClass;
+import edu.netcracker.backend.service.DiscountService;
 import edu.netcracker.backend.service.TicketClassService;
-import edu.netcracker.backend.utils.DiscountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class TicketClassServiceImpl implements TicketClassService {
 
-    private static final String DATE_PATTERN = "dd-MM-yyyy";
-
     private final TicketClassDAO ticketClassDAO;
 
-    private final DiscountDAO discountDAO;
+    private final DiscountService discountService;
 
     @Autowired
-    public TicketClassServiceImpl(TicketClassDAO ticketClassDAO, DiscountDAO discountDAO) {
+    public TicketClassServiceImpl(TicketClassDAO ticketClassDAO, DiscountService discountService) {
         this.ticketClassDAO = ticketClassDAO;
-        this.discountDAO = discountDAO;
+        this.discountService = discountService;
     }
 
     @Override
     public List<DiscountTicketClassDTO> getTicketClassesRelatedToCarrier(Number userId) {
         List<TicketClass> ticketClasses = ticketClassDAO.getAllTicketClassesRelatedToCarrier(userId);
-        List<Discount> discounts = discountDAO.findIn(ticketClasses.stream()
-                .map(TicketClass::getDiscountId)
-                .collect(Collectors.toList()));
+        List<DiscountDTO> discountsDTO = discountService.getDiscountDTOs(ticketClasses.stream()
+                                                                                      .map(TicketClass::getDiscountId)
+                                                                                      .collect(Collectors.toList()));
 
-        attachTicketClassesToDiscounts(ticketClasses, discounts);
-
-        return createTicketClassDTOs(ticketClasses);
+        return createTicketClassDTOs(ticketClasses, discountsDTO);
     }
 
     @Override
     public DiscountTicketClassDTO createDiscountForTicketClass(DiscountTicketClassDTO ticketClassDTO) {
         TicketClass ticketClass = getTicketClass(ticketClassDTO);
 
-        Discount discount = DiscountUtils.getDiscount(ticketClassDTO.getDiscount());
+        DiscountDTO discountDTO = discountService.saveDiscount(ticketClassDTO.getDiscountDTO());
 
-        discountDAO.save(discount);
-        ticketClass.setDiscountId(discount.getDiscountId());
-        ticketClass.setDiscount(discount);
+        ticketClass.setDiscountId(discountDTO.getDiscountId());
         ticketClassDAO.save(ticketClass);
 
-        return DiscountTicketClassDTO.toTicketClassDTO(ticketClass, DATE_PATTERN);
+        return DiscountTicketClassDTO.toTicketClassDTO(ticketClass, discountDTO);
     }
 
     @Override
@@ -73,9 +64,9 @@ public class TicketClassServiceImpl implements TicketClassService {
         ticketClass.setDiscountId(null);
         ticketClassDAO.save(ticketClass);
 
-        discountDAO.delete(discountId);
+        DiscountDTO discountDTO = discountService.deleteDiscount(discountId);
 
-        return DiscountTicketClassDTO.toTicketClassDTO(ticketClass, DATE_PATTERN);
+        return DiscountTicketClassDTO.toTicketClassDTO(ticketClass, discountDTO);
     }
 
     private TicketClass getTicketClass(DiscountTicketClassDTO ticketClassDTO) {
@@ -84,10 +75,6 @@ public class TicketClassServiceImpl implements TicketClassService {
         if (!optionalTicketClass.isPresent()) {
             throw new RequestException("Ticket class with id " + ticketClassDTO.getClassId() + " is null",
                     HttpStatus.NOT_FOUND);
-        }
-
-        if (ticketClassDTO.getDiscount() == null) {
-            throw new RequestException("Discount is null", HttpStatus.BAD_REQUEST);
         }
 
         TicketClass ticketClass = optionalTicketClass.get();
@@ -99,30 +86,14 @@ public class TicketClassServiceImpl implements TicketClassService {
         return ticketClass;
     }
 
-    private void attachTicketClassesToDiscounts(List<TicketClass> ticketClasses, List<Discount> discounts) {
-        Map<Long, Long> ticketClassesIdWithOverdueDiscount = new HashMap<>();
-        for (TicketClass ticketClass: ticketClasses) {
-            Discount relatedDiscount = DiscountUtils.findDiscount(ticketClass.getDiscountId(), discounts);
-            if (relatedDiscount!= null && DiscountUtils.isOverdueDiscount(relatedDiscount)) {
-                ticketClassesIdWithOverdueDiscount.put(ticketClass.getClassId(), relatedDiscount.getDiscountId());
-
-                ticketClass.setDiscountId(null);
-                continue;
-            }
-
-            ticketClass.setDiscount(relatedDiscount);
+    private List<DiscountTicketClassDTO> createTicketClassDTOs(List<TicketClass> ticketClasses,
+                                                               List<DiscountDTO> discountDTOs) {
+        List<DiscountTicketClassDTO> discountTicketClassDTOs = new ArrayList<>();
+        for (TicketClass ticketClass : ticketClasses) {
+            DiscountDTO relatedDiscount =
+                    discountService.getRelatedDiscountDTO(ticketClass.getDiscountId(), discountDTOs);
+            discountTicketClassDTOs.add(DiscountTicketClassDTO.toTicketClassDTO(ticketClass, relatedDiscount));
         }
-
-        deleteOverdueDiscount(ticketClassesIdWithOverdueDiscount);
-    }
-
-    private void deleteOverdueDiscount(Map<Long, Long> ticketClassesIdWithOverdueDiscount) {
-        ticketClassDAO.deleteDiscountsForTicketClasses(new ArrayList<>(ticketClassesIdWithOverdueDiscount.keySet()));
-        discountDAO.deleteDiscounts(new ArrayList<>(ticketClassesIdWithOverdueDiscount.values()));
-    }
-
-    private List<DiscountTicketClassDTO> createTicketClassDTOs(List<TicketClass> ticketClasses) {
-        return ticketClasses.stream().map(ticketClass ->
-                DiscountTicketClassDTO.toTicketClassDTO(ticketClass, DATE_PATTERN)).collect(Collectors.toList());
+        return discountTicketClassDTOs;
     }
 }

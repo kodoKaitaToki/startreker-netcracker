@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import java.util.Map;
 @Getter
 @NoArgsConstructor
 public class AllCarriersTripsDTO {
+
     @JsonProperty("trip_id")
     private Long tripId;
 
@@ -36,32 +38,32 @@ public class AllCarriersTripsDTO {
     private LocalDateTime arrivalDate;
 
     @JsonProperty("ticket_classes")
-    private List<Map<String, String>> ticketClasses;
+    private List<Map<String, Object>> ticketClasses;
 
-    @JsonProperty("carrier_id")
-    private Long carrierId;
-
-    @JsonProperty("carrier_name")
-    private String carrierName;
-
-    public static AllCarriersTripsDTO from(Trip trip){
+    public static AllCarriersTripsDTO from(Trip trip) {
         AllCarriersTripsDTO dto = new AllCarriersTripsDTO();
         dto.tripId = trip.getTripId();
-        dto.departureSpaceportName = trip.getDepartureSpaceport().getSpaceportName();
-        dto.arrivalSpaceportName = trip.getArrivalSpaceport().getSpaceportName();
-        dto.departurePlanet = trip.getDeparturePlanet().getPlanetName();
-        dto.arrivalPlanet = trip.getArrivalPlanet().getPlanetName();
-        dto.carrierId = trip.getOwner().getUserId();
-        dto.carrierName = trip.getOwner().getUserName();
+        dto.departureSpaceportName = trip.getDepartureSpaceport()
+                                         .getSpaceportName();
+        dto.arrivalSpaceportName = trip.getArrivalSpaceport()
+                                       .getSpaceportName();
+        dto.departurePlanet = trip.getDeparturePlanet()
+                                  .getPlanetName();
+        dto.arrivalPlanet = trip.getArrivalPlanet()
+                                .getPlanetName();
         dto.departureDate = trip.getDepartureDate();
         dto.arrivalDate = trip.getArrivalDate();
-        for (TicketClass ticketClass: trip.getTicketClasses()) {
-            Map<String, String> tcProperties = new HashMap<>();
+        dto.ticketClasses = new ArrayList<>();
+
+        for (TicketClass ticketClass : trip.getTicketClasses()) {
+            Map<String, Object> tcProperties = new HashMap<>();
             tcProperties.put("class_id", ticketClass.getClassId());
             tcProperties.put("class_name", ticketClass.getClassName());
             tcProperties.put("ticket_price", ticketClass.getTicketPrice());
+            tcProperties.put("class_seats", ticketClass.getClassSeats());
             dto.ticketClasses.add(tcProperties);
         }
+
         return dto;
     }
 }

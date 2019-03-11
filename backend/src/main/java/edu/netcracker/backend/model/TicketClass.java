@@ -31,8 +31,6 @@ public class TicketClass {
 
     @Attribute("class_seats")
     private Integer classSeats;
-
-    private Discount discount;
   
     private Integer itemNumber;
 }

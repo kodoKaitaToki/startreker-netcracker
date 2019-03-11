@@ -24,7 +24,7 @@
 
       <hr>
 
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <form class="form" [formGroup]="form" (ngSubmit)="onSubmit()">
         <h3>From:</h3>
         <div class="form-group">
           <select
@@ -65,11 +65,30 @@
           </span>
         </div>
 
+        <div class="form-group">
+          <input
+            type="date"
+            name="flightDate"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid':form.get('departure_date').touched && form.get('departure_date').invalid,
+              'is-valid': form.get('departure_date').valid
+            }"
+            formControlName="departure_date"
+          />
+          <span class="invalid-feedback">
+            <span
+              *ngIf="form.get('departure_date').touched && form.get('departure_date').invalid"
+            >
+              Please choose a departure date
+            </span>
+          </span>
+        </div>
+
         <input
-          type="date"
-          name="flightDate"
           class="form-control"
-          formControlName="departure_date"
+          type="time"
+          formControlName="departure_time"
         />
 
         <h3>To:</h3>
@@ -113,13 +132,38 @@
           </span>
         </div>
 
+        <div class="form-group">
+          <input
+            type="date"
+            name="flightDate"
+            class="form-control"
+            [ngClass]="{
+              'is-invalid':form.get('arrival_date').touched && form.get('arrival_date').invalid,
+              'is-valid': form.get('arrival_date').valid
+            }"
+            formControlName="arrival_date"
+          />
+          <span *ngIf="form.get('arrival_date').touched && form.get('arrival_date').invalid" class="invalid-feedback">
+            Please choose a arrival date
+          </span>
+          <span
+            *ngIf="currentDateError"
+            class="date-error"
+          >
+            Departure date must be greater than current date
+          </span>
+          <span
+            *ngIf="departureDateError"
+            class="date-error"
+          >
+            You can't choose arrival date earlier than departure date
+          </span>
+        </div>
         <input
-          type="date"
-          name="flightDate"
           class="form-control"
-          formControlName="arrival_date"
+          type="time"
+          formControlName="arrival_time"
         />
-
         <hr>
 
         <div class="text-center">
@@ -131,6 +175,19 @@
           </button>
         </div>
       </form>
+      <p-message
+        *ngIf="showSuccess"
+        style="width: 100%; text-align: center;"
+        severity="success"
+        text="Record Saved"
+      ></p-message>
+
+      <p-message
+        *ngIf="showError"
+        style="width: 100%; text-align: center;"
+        severity="error"
+        text="Something went wrong. Please try again"
+      ></p-message>
     </div>
 
     <div class="col-md-9">

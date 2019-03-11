@@ -62,6 +62,9 @@ const carrier = {
 const trips = {
   getExistingPlanets() {
     return `${baseUrl}api/v1/planets`;
+  },
+  addTrip() {
+    return `${baseUrl}api/v1/trips`;
   }
 }
 

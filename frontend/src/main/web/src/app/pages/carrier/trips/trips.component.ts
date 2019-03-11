@@ -26,6 +26,9 @@ export class TripsComponent implements OnInit {
 
   general: any = {};
 
+  showSuccess: boolean = false;
+  showError: boolean = false;
+
   filterContent = '';
 
   currentFilter = this.filterCriteria[0].name;
@@ -33,6 +36,8 @@ export class TripsComponent implements OnInit {
 
   form: FormGroup;
   submitData: any = {};
+  currentDateError: boolean = false;
+  departureDateError: boolean = false;
 
   constructor(private tripsApi: TripsService) {
     this.form = new FormGroup(
@@ -43,7 +48,9 @@ export class TripsComponent implements OnInit {
         arrival_spaceport: new FormControl('', Validators.required),
         departure_date: new FormControl('', Validators.required),
         arrival_date: new FormControl('', Validators.required),
-      }
+        arrival_time: new FormControl('', Validators.required),
+        departure_time: new FormControl('', Validators.required),
+      },
     );
   }
 
@@ -167,18 +174,43 @@ export class TripsComponent implements OnInit {
     const endDate = new Date(this.form.value.arrival_date);
     const currentDate = new Date();
     // + will then compare the dates' millisecond values
-    if (+startDate > +endDate) {
-      console.log('Date is invalid');
-    } else if (+startDate < +currentDate) {
+    if (+startDate < +currentDate) {
+      this.currentDateError = true;
+      setTimeout(() => this.currentDateError = false, 3000);
+      console.log('yes')
+    } else if (+startDate > +endDate) {
       console.log('Start date is less than current date');
+      this.departureDateError = true;
+      setTimeout(() => this.departureDateError = false, 3000);
     }
   }
 
   onSubmit() {
     // method to send data to server
-    console.log(this.form);
     this.validateDate();
-    // this.form.reset();
+    this.submitData = this.form.value;
+    this.submitData.departure_date = `${this.submitData.departure_date} ${this.submitData.departure_time}:00`;
+    this.submitData.arrival_date = `${this.submitData.arrival_date} ${this.submitData.arrival_time}:00`;
+    delete this.submitData.arrival_time;
+    delete this.submitData.departure_time;
+    // this.submitData.arrival_time = `${this.submitData.arrival_time}:00`;
+    // this.submitData.departure_time = `${this.submitData.departure_time}:00`;
+    console.log(this.submitData);
+    this.tripsApi.createTrip(this.submitData)
+      .subscribe(
+        (resp: Response) => {
+            console.log(resp);
+            this.showSuccess = true;
+            setTimeout(() => this.showSuccess = false, 3000);
+        },
+        error => {
+            console.error(error);
+            this.showError = true;
+            setTimeout(() => this.showError = false, 3000);
+        }
+      );
+    // submit form if !this.currentDateError && !this.departureDateError
+    this.form.reset();
   }
 
 }

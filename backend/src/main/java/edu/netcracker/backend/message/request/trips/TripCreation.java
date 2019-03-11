@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 
 @Getter
 public class TripCreation {
@@ -23,24 +24,18 @@ public class TripCreation {
     @JsonProperty("departure_date")
     private String departureDate;
 
-    @JsonProperty("departure_time")
-    private String departureTime;
-
     @JsonProperty("arrival_date")
     private String arrivalDate;
 
-    @JsonProperty("arrival_time")
-    private String arrivalTime;
-
-
     public LocalDateTime getDepartureDateTime() {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
-        return LocalDateTime.parse(this.departureDate + " " + this.departureTime, dateFormatter);
+        DateTimeFormatter dateFormatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd' 'HH:mm:ss")
+                                                                        .toFormatter();
+        return LocalDateTime.parse(this.departureDate, dateFormatter);
     }
 
     public LocalDateTime getArrivalDateTime() {
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
-        return LocalDateTime.parse(this.arrivalDate + " " + this.arrivalTime, dateFormatter);
+        DateTimeFormatter dateFormatter = new DateTimeFormatterBuilder().appendPattern("yyyy-MM-dd' 'HH:mm:ss")
+                                                                        .toFormatter();
+        return LocalDateTime.parse(this.arrivalDate, dateFormatter);
     }
-
 }

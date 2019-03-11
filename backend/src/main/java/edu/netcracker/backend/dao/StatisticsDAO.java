@@ -1,6 +1,7 @@
 package edu.netcracker.backend.dao;
 
-import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
+import edu.netcracker.backend.message.response.CarrierRevenueResponse;
+import edu.netcracker.backend.message.response.CarrierViewsResponse;
 import edu.netcracker.backend.message.response.ServiceDistributionElement;
 import edu.netcracker.backend.message.response.TripDistributionElement;
 
@@ -12,14 +13,38 @@ public interface StatisticsDAO {
 
     List<TripDistributionElement> getTripsStatistics();
     List<ServiceDistributionElement> getServicesDistribution();
-    CarrierStatisticsResponse getServiceSalesStatistics(long carrierId);
-    CarrierStatisticsResponse getServiceSalesStatistics(long carrierId, LocalDate from, LocalDate to);
-    CarrierStatisticsResponse getTripsSalesStatistics(long carrierId);
-    CarrierStatisticsResponse getTripsSalesStatistics(long carrierId, LocalDate from, LocalDate to);
+
+    CarrierRevenueResponse getServiceSalesStatistics(long carrierId);
+
+    CarrierRevenueResponse getServiceSalesStatistics(long carrierId, LocalDate from, LocalDate to);
+
+    CarrierRevenueResponse getTripsSalesStatistics(long carrierId);
+
+    CarrierRevenueResponse getTripsSalesStatistics(long carrierId, LocalDate from, LocalDate to);
     Map<String, Double> getTroubleTicketStatistics();
     Map<String, Double> getTroubleTicketStatisticsByApprover(Long approverId);
-    List<CarrierStatisticsResponse> getTripsSalesStatisticsByWeek(long carrierId, LocalDate from, LocalDate to);
-    List<CarrierStatisticsResponse> getTripsSalesStatisticsByMonth(long carrierId, LocalDate from, LocalDate to);
-    List<CarrierStatisticsResponse> getServicesSalesStatisticsByWeek(long carrierId, LocalDate from, LocalDate to);
-    List<CarrierStatisticsResponse> getServicesSalesStatisticsByMonth(long carrierId, LocalDate from, LocalDate to);
+
+    List<CarrierRevenueResponse> getTripsSalesStatisticsByWeek(long carrierId, LocalDate from, LocalDate to);
+
+    List<CarrierRevenueResponse> getTripsSalesStatisticsByMonth(long carrierId, LocalDate from, LocalDate to);
+
+    List<CarrierRevenueResponse> getServicesSalesStatisticsByWeek(long carrierId, LocalDate from, LocalDate to);
+
+    List<CarrierRevenueResponse> getServicesSalesStatisticsByMonth(long carrierId, LocalDate from, LocalDate to);
+
+    List<CarrierViewsResponse> getTripsViewsStatisticsByWeek(long carrierId, LocalDate from, LocalDate to);
+
+    List<CarrierViewsResponse> getTripsViewsStatisticsByMonth(long carrierId, LocalDate from, LocalDate to);
+
+    List<CarrierViewsResponse> getTripsViewsStatisticsByTripByWeek(long tripId, LocalDate from, LocalDate to);
+
+    List<CarrierViewsResponse> getTripsViewsStatisticsByTripByMonth(long tripId, LocalDate from, LocalDate to);
+
+    List<CarrierViewsResponse> getServiceViewsStatisticsByWeek(long carrierId, LocalDate from, LocalDate to);
+
+    List<CarrierViewsResponse> getServiceViewsStatisticsByMonth(long carrierId, LocalDate from, LocalDate to);
+
+    List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByWeek(long serviceId, LocalDate from, LocalDate to);
+
+    List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByMonth(long serviceId, LocalDate from, LocalDate to);
 }

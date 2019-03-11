@@ -11,7 +11,7 @@ public interface ServiceService {
 
     List<ServiceCRUDDTO> getPaginServicesOfCarrier(Integer from, Integer amount);
 
-    List<ServiceCRUDDTO> findByStatus(Integer status);
+    List<ServiceCRUDDTO> findByStatus(String status);
 
     ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm);
 
@@ -19,7 +19,7 @@ public interface ServiceService {
 
     ServiceCRUDDTO deleteService(Long serviceId);
 
-    List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId);
+    List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, String status, Integer approverId);
 
-    public ServiceCRUDDTO reviewService(ServiceCRUDDTO serviceDTO, Integer approverId);
+    ServiceCRUDDTO reviewService(ServiceCRUDDTO serviceDTO, Integer approverId);
 }

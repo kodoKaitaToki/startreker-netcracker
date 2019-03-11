@@ -1,7 +1,6 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
-import edu.netcracker.backend.dao.ApproverDAO;
 import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.dao.ServiceReplyDAO;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
@@ -12,6 +11,7 @@ import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.ServiceService;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.utils.AuthorityUtils;
+import edu.netcracker.backend.utils.ServiceStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -49,20 +49,19 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceCRUDDTO> findByStatus(Integer status){
-        return serviceDAO.findByStatus(carrierId, status);
+    public List<ServiceCRUDDTO> findByStatus(String status) {
+        return serviceDAO.findByStatus(carrierId, getStatusValue(status));
     }
 
     @Override
     public ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm){
         String serviceName = serviceCreateForm.getServiceName();
-
         if(ifServiceExists(serviceName, carrierId)){
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
-        Integer status = serviceCreateForm.getServiceStatus();
-        if((status != 1)&(status != 2)){
+        String status = serviceCreateForm.getServiceStatus();
+        if ((!status.equals(ServiceStatus.DRAFT.toString())) && (!status.equals(ServiceStatus.OPEN.toString()))) {
             throw new RequestException("Status of new service must be draft or open", HttpStatus.BAD_REQUEST);
         }
 
@@ -70,7 +69,8 @@ public class ServiceServiceImpl implements ServiceService {
         serviceDescr.setCarrierId(carrierId);
         serviceDescr.setServiceName(serviceCreateForm.getServiceName());
         serviceDescr.setServiceDescription(serviceCreateForm.getServiceDescription());
-        serviceDescr.setServiceStatus(serviceCreateForm.getServiceStatus());
+
+        serviceDescr.setServiceStatus(getStatusValue(status));
         serviceDescr.setCreationDate(LocalDateTime.now());
 
         serviceDAO.save(serviceDescr);
@@ -93,16 +93,18 @@ public class ServiceServiceImpl implements ServiceService {
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
-        Integer status = serviceCRUDDTO.getServiceStatus();
-        if(((status == 3) | (status == 4) | (status == 6)) &&
-                (!Objects.equals(serviceCRUDDTO.getServiceStatus(),serviceDescr.getServiceStatus()))){
+        String status = serviceCRUDDTO.getServiceStatus();
+        if (((status.equals(ServiceStatus.ASSIGNED.toString())
+              || (status.equals(ServiceStatus.PUBLISHED.toString())
+                  || (status.equals(ServiceStatus.UNDER_CLARIFICATION.toString())))
+                 && (!Objects.equals(serviceCRUDDTO.getServiceStatus(), serviceDescr.getServiceStatus()))))) {
             throw new RequestException("Cannot set service_status = " + serviceCRUDDTO.getServiceStatus(),
                     HttpStatus.BAD_REQUEST);
         }
 
         serviceDescr.setServiceName(serviceCRUDDTO.getServiceName());
         serviceDescr.setServiceDescription(serviceCRUDDTO.getServiceDescription());
-        serviceDescr.setServiceStatus(serviceCRUDDTO.getServiceStatus());
+        serviceDescr.setServiceStatus(getStatusValue(status));
 
         serviceDAO.update(serviceDescr);
 
@@ -121,14 +123,16 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId) {
-        switch (status) {
-            case 2:
-                return serviceDAO.getServicesForApprover(from, number, status);
-            case 3:
-                return serviceDAO.getServicesForApprover(from, number, status, approverId);
-            default:
-                throw new IllegalArgumentException("Illegal service status");
+    public List<ServiceCRUDDTO> getServicesForApprover(Integer from,
+                                                       Integer number,
+                                                       String status,
+                                                       Integer approverId) {
+        if (status.equals(ServiceStatus.OPEN.toString())) {
+            return serviceDAO.getServicesForApprover(from, number, getStatusValue(status));
+        } else if (status.equals(ServiceStatus.ASSIGNED.toString())) {
+            return serviceDAO.getServicesForApprover(from, number, getStatusValue(status), approverId);
+        } else {
+            throw new IllegalArgumentException("Illegal service status");
         }
     }
 
@@ -140,7 +144,7 @@ public class ServiceServiceImpl implements ServiceService {
             throw new RequestException("Service " + serviceDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
         }
 
-        serviceDescr.setServiceStatus(serviceDTO.getServiceStatus());
+        serviceDescr.setServiceStatus(getStatusValue(serviceDTO.getServiceStatus()));
         serviceDescr.setApproverId(approverId);
         serviceDAO.update(serviceDescr);
 
@@ -157,6 +161,15 @@ public class ServiceServiceImpl implements ServiceService {
         }
 
         return serviceDTO;
+    }
+
+    private Integer getStatusValue(String status) {
+        try {
+            ServiceStatus stat = ServiceStatus.valueOf(status);
+            return stat.ordinal() + 1;
+        } catch (IllegalArgumentException e) {
+            throw new RequestException("The status " + status + " doesn't exist", HttpStatus.NOT_FOUND);
+        }
     }
 
     private boolean ifServiceExists(String name, Number id){

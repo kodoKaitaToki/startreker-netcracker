@@ -3,18 +3,16 @@ package edu.netcracker.backend.message.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.netcracker.backend.model.Discount;
 import edu.netcracker.backend.validation.annotation.DateValidation;
-import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class DiscountDTO {
 
     @JsonProperty("discount_id")
@@ -38,7 +36,10 @@ public class DiscountDTO {
     @JsonProperty("is_percent")
     private Boolean isPercent;
 
-    static DiscountDTO toDiscountDTO(Discount discount, String datePattern) {
+    @JsonProperty("is_expired")
+    private Boolean isExpired;
+
+    public static DiscountDTO toDiscountDTO(Discount discount, String datePattern) {
         if (discount == null) {
             return null;
         }
@@ -47,6 +48,7 @@ public class DiscountDTO {
         discountDTO.setDiscountId(discount.getDiscountId());
         discountDTO.setDiscountRate(discount.getDiscountRate());
         discountDTO.setIsPercent(discount.getIsPercent());
+        discountDTO.setIsExpired(discount.isExpired());
         discountDTO.setStartDate(discount.getStartDate().format(DateTimeFormatter.ofPattern(datePattern)));
         discountDTO.setFinishDate(discount.getFinishDate().format(DateTimeFormatter.ofPattern(datePattern)));
 

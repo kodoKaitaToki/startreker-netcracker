@@ -26,24 +26,24 @@ public class TripCRUDMapper implements RowMapper<Trip> {
         trip.setTripId(rs.getLong("trip_id"));
         trip.setTripState(tripStateRegistry.getState(rs.getInt("trip_status")));
         trip.setDepartureDate(rs.getTimestamp("departure_date")
-                .toLocalDateTime());
+                                .toLocalDateTime());
         trip.setArrivalDate(rs.getTimestamp("arrival_date")
-                .toLocalDateTime());
+                              .toLocalDateTime());
         trip.setCreationDate(rs.getTimestamp("creation_date")
-                .toLocalDateTime());
+                               .toLocalDateTime());
         trip.setTripPhoto(rs.getString("trip_photo"));
 
-        trip.setOwner(mapUser(rs, "owner"));
+        trip.setOwner(mapUser(rs, "carrier"));
         trip.setApprover(mapUser(rs, "approver"));
 
-        trip.setDeparturePlanet(new Planet(rs.getLong("departure_planet_id"),
-                resultSet.getString("departure_planet_name")));
-        trip.setArrivalPlanet(new Planet(rs.getLong("arrival_planet_id"),
-                resultSet.getString("arrival_planet_name")));
+        trip.setDeparturePlanet(new Planet(rs.getLong("departure_planet_id"), rs.getString("departure_planet_name")));
+        trip.setArrivalPlanet(new Planet(rs.getLong("arrival_planet_id"), rs.getString("arrival_planet_name")));
         trip.setDepartureSpaceport(new Spaceport(rs.getLong("departure_spaceport_id"),
-                resultSet.getString("departure_spaceport_name"), resultSet.getLong("departure_planet_id")));
+                                                 rs.getString("departure_spaceport_name"),
+                                                 rs.getLong("departure_planet_id")));
         trip.setArrivalSpaceport(new Spaceport(rs.getLong("arrival_spaceport_id"),
-                resultSet.getString("arrival_spaceport_name"), resultSet.getLong("arrival_planet_id")));
+                                               rs.getString("arrival_spaceport_name"),
+                                               rs.getLong("arrival_planet_id")));
         return trip;
     }
 

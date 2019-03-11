@@ -10,7 +10,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -212,7 +211,7 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
         }
     }
 
-    private Optional<User> attachRoles(User user) {
+    public Optional<User> attachRoles(User user) {
         List<Long> rows = getJdbcTemplate().queryForList(findAllRolesSql, Long.class, user.getUserId());
         user.setUserRoles(roleDAO.findIn(rows));
         return Optional.of(user);

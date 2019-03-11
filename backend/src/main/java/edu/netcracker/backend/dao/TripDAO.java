@@ -1,15 +1,15 @@
 package edu.netcracker.backend.dao;
 
 import edu.netcracker.backend.model.Trip;
-import edu.netcracker.backend.model.User;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface TripDAO {
+
     void save(Trip trip);
 
-    Optional<Trip> find(Long id);
+    Optional<Trip> find(Number id);
 
     List<Trip> allCarriersTrips(Long carrierId);
 
@@ -17,7 +17,11 @@ public interface TripDAO {
 
     List<Trip> findByStatusForCarrier(Integer status, Long carrierId);
 
+    List<Trip> findByStatusForCarrierPagination(Integer status, Long carrierId, Integer limit, Integer offset);
+
     List<Trip> findByPlanetsForCarrier(String departurePlanet, String arrivalPlanet, Long carrierId);
+
+    void add(Trip trip);
 
     void update(Trip trip);
 

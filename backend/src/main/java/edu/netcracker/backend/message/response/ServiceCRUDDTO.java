@@ -2,6 +2,7 @@ package edu.netcracker.backend.message.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.netcracker.backend.model.ServiceDescr;
+import edu.netcracker.backend.utils.ServiceStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ public class ServiceCRUDDTO {
     private String serviceDescription;
 
     @JsonProperty("service_status")
-    private Integer serviceStatus;
+    private String serviceStatus;
 
     @JsonProperty("creation_date")
     private String creationDate;
@@ -33,11 +34,10 @@ public class ServiceCRUDDTO {
     public ServiceCRUDDTO(){}
 
     private ServiceCRUDDTO(Long id,
-                       String approverName,
-                       String serviceName,
-                       String serviceDescription,
-                       Integer serviceStatus,
-                       LocalDateTime creationDate) {
+                           String approverName,
+                           String serviceName,
+                           String serviceDescription, String serviceStatus,
+                           LocalDateTime creationDate) {
         this.id = id;
         this.approverName = approverName;
         this.serviceName = serviceName;
@@ -47,12 +47,13 @@ public class ServiceCRUDDTO {
     }
 
     public static ServiceCRUDDTO form(ServiceDescr serviceDescr, String approver_name) {
+        int status = serviceDescr.getServiceStatus();
+        String statusVal = ServiceStatus.values()[status - 1].toString();
         return new ServiceCRUDDTO(
                 serviceDescr.getServiceId(),
                 approver_name,
                 serviceDescr.getServiceName(),
-                serviceDescr.getServiceDescription(),
-                serviceDescr.getServiceStatus(),
+                serviceDescr.getServiceDescription(), statusVal,
                 serviceDescr.getCreationDate());
     }
 }
