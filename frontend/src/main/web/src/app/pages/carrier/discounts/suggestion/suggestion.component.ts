@@ -33,7 +33,6 @@ export class SuggestionComponent implements OnInit {
 
   emitToMainComponentSuggestionOnDeleteEvent($event) {
     this.onDeleteSuggestionEmitter.emit($event);
-    console.log($event);
   }
 
   emitToMainComponentSuggestionOnAddEvent($event) {

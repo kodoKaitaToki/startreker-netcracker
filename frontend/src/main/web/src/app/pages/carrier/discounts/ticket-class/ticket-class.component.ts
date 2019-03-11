@@ -33,7 +33,6 @@ export class TicketClassComponent implements OnInit {
 
   emitToMainComponentTicketClassOnDeleteEvent($event) {
     this.onDeleteTicketClassEmitter.emit($event);
-    console.log($event);
   }
 
   emitToMainComponentTicketClassOnAddEvent($event) {
