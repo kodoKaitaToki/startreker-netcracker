@@ -66,23 +66,25 @@ public class SuggestionServiceImpl implements SuggestionService {
     public List<SuggestionDTO> getAllWithClassId(Number id) {
         List<Suggestion> suggestions = suggestionDAO.findAllWithClassId(id);
 
-        if (suggestions.size() == 0)
+        if (suggestions.size() == 0) {
             throw new RequestException("No suggestions yet", HttpStatus.NOT_FOUND);
+        }
 
         return suggestions.stream()
-                .map(suggestion -> SuggestionDTO.from(suggestion,
-                        getAttachedPServices(suggestion).stream()
-                                .map(PossibleService::getPServiceId)
-                                .collect(Collectors.toList())))
-                .collect(Collectors.toList());
+                          .map(suggestion -> SuggestionDTO.from(suggestion,
+                                                                getAttachedPServices(suggestion).stream()
+                                                                                                .map(PossibleService::getPServiceId)
+                                                                                                .collect(Collectors.toList())))
+                          .collect(Collectors.toList());
     }
 
     @Override
     public SuggestionDTO getById(Number id) {
         Optional<Suggestion> optSuggestion = suggestionDAO.find(id);
 
-        if (!optSuggestion.isPresent())
+        if (!optSuggestion.isPresent()) {
             throw new RequestException("Suggestion with id " + id + " not found", HttpStatus.NOT_FOUND);
+        }
 
         Suggestion suggestion = optSuggestion.get();
 
@@ -91,20 +93,25 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public SuggestionDTO createSuggestion(SuggestionDTO suggestionDTO) {
-        if (suggestionDTO.getPServiceIds().size() == 0)
+        if (suggestionDTO.getPServiceIds()
+                         .size() == 0) {
             throw new RequestException("No services attached", HttpStatus.BAD_REQUEST);
+        }
 
         Suggestion suggestion = from(suggestionDTO);
         suggestionDAO.save(suggestion);
 
-        suggestionDTO.getPServiceIds().forEach(item -> {
-            Optional<PossibleService> optPossibleService = possibleServiceDAO.find(item);
+        suggestionDTO.getPServiceIds()
+                     .forEach(item -> {
+                         Optional<PossibleService> optPossibleService = possibleServiceDAO.find(item);
 
-            if (!optPossibleService.isPresent())
-                throw new RequestException("Possible service with id " + item + " not found", HttpStatus.NOT_FOUND);
+                         if (!optPossibleService.isPresent()) {
+                             throw new RequestException("Possible service with id " + item + " not found",
+                                                        HttpStatus.NOT_FOUND);
+                         }
 
-            suggestionDAO.addPossibleService(suggestion.getSuggestionId(), item);
-        });
+                         suggestionDAO.addPossibleService(suggestion.getSuggestionId(), item);
+                     });
 
         return SuggestionDTO.from(suggestion, suggestionDTO.getPServiceIds());
     }
@@ -113,16 +120,17 @@ public class SuggestionServiceImpl implements SuggestionService {
     public SuggestionDTO updateSuggestion(SuggestionDTO suggestionDTO) {
         Optional<Suggestion> optSuggestion = suggestionDAO.find(suggestionDTO.getId());
 
-        if (!optSuggestion.isPresent())
+        if (!optSuggestion.isPresent()) {
             throw new RequestException("Suggestion with id " + suggestionDTO.getId() + " not found",
-                    HttpStatus.NOT_FOUND);
+                                       HttpStatus.NOT_FOUND);
+        }
 
         Suggestion suggestion = from(suggestionDTO);
         suggestionDAO.save(suggestion);
 
         updateAttachedPServices(suggestion.getSuggestionId(),
-                suggestionDTO.getPServiceIds(),
-                toIdList(getAttachedPServices(optSuggestion.get())));
+                                suggestionDTO.getPServiceIds(),
+                                toIdList(getAttachedPServices(optSuggestion.get())));
 
         return SuggestionDTO.from(suggestion, toIdList(getAttachedPServices(suggestion)));
     }
@@ -131,9 +139,9 @@ public class SuggestionServiceImpl implements SuggestionService {
     public void deleteSuggestion(Number id) {
         Optional<Suggestion> optSuggestion = suggestionDAO.find(id);
 
-        if (!optSuggestion.isPresent())
-            throw new RequestException("Suggestion with id " + id + " not found",
-                    HttpStatus.NOT_FOUND);
+        if (!optSuggestion.isPresent()) {
+            throw new RequestException("Suggestion with id " + id + " not found", HttpStatus.NOT_FOUND);
+        }
 
         Suggestion suggestion = optSuggestion.get();
         toIdList(getAttachedPServices(suggestion)).forEach(i -> suggestionDAO.deletePossibleService(id, i));
@@ -145,9 +153,7 @@ public class SuggestionServiceImpl implements SuggestionService {
         return possibleServiceDAO.findAllPossibleServicesBySuggestionId(suggestion.getSuggestionId());
     }
 
-    private void updateAttachedPServices(Number suggestionId,
-                                         List<Long> newServices,
-                                         List<Long> oldServices) {
+    private void updateAttachedPServices(Number suggestionId, List<Long> newServices, List<Long> oldServices) {
         for (Long id : newServices) {
             if (!oldServices.contains(id)) {
                 suggestionDAO.addPossibleService(suggestionId, id);
@@ -173,30 +179,29 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     private List<Long> toIdList(List<PossibleService> possibleServices) {
         return possibleServices.stream()
-                .map(PossibleService::getPServiceId)
-                .collect(Collectors.toList());
+                               .map(PossibleService::getPServiceId)
+                               .collect(Collectors.toList());
     }
 
     @Override
-    public Map<Long, List<DiscountSuggestionDTO>> getSuggestionsRelatedToTicketClasses(
-            Map<Long, List<TicketClass>> relatedToTripsTicketClasses) {
+    public Map<Long, List<DiscountSuggestionDTO>> getSuggestionsRelatedToTicketClasses(Map<Long, List<TicketClass>> relatedToTripsTicketClasses) {
         logger.debug("get all suggestion that belong to ticket classes that relates to trips "
-                + relatedToTripsTicketClasses.keySet());
+                     + relatedToTripsTicketClasses.keySet());
 
-        Map<Long, List<Suggestion>> relatedSuggestions = getAllSuggestionBelongToTicketClasses(relatedToTripsTicketClasses);
+        Map<Long, List<Suggestion>> relatedSuggestions = getAllSuggestionBelongToTicketClasses(
+                relatedToTripsTicketClasses);
         Map<Long, List<ServiceDescr>> relationServices = getAllServicesBelongToSuggestions(relatedSuggestions);
         List<DiscountDTO> discountsDTO = getDiscountDTOs(relatedSuggestions);
 
         Map<Long, List<DiscountSuggestionDTO>> relatedToTripSuggestion = new HashMap<>();
 
         for (Long tripId : relatedToTripsTicketClasses.keySet()) {
-            createSuggestionDTOsBelongToTrip(
-                    relatedToTripsTicketClasses,
-                    relatedSuggestions,
-                    relationServices,
-                    discountsDTO,
-                    relatedToTripSuggestion,
-                    tripId);
+            createSuggestionDTOsBelongToTrip(relatedToTripsTicketClasses,
+                                             relatedSuggestions,
+                                             relationServices,
+                                             discountsDTO,
+                                             relatedToTripSuggestion,
+                                             tripId);
         }
 
         return relatedToTripSuggestion;
@@ -215,15 +220,16 @@ public class SuggestionServiceImpl implements SuggestionService {
 
         TicketClass ticketClass = ticketClassService.find(suggestion.getClassId());
 
-        List<ServiceDescr> serviceDescrs = serviceDAO
-                .getAllServicesBelongToSuggestions(Collections.singletonList(suggestion.getSuggestionId()))
-                .get(suggestion.getSuggestionId());
+        List<ServiceDescr> serviceDescrs = serviceDAO.getAllServicesBelongToSuggestions(Collections.singletonList(
+                suggestion.getSuggestionId()))
+                                                     .get(suggestion.getSuggestionId());
 
-        return DiscountSuggestionDTO.toDiscountSuggestionDTO(
-                ticketClass,
-                suggestion,
-                discountDTO,
-                serviceDescrs.stream().map(ServiceDescr::getServiceName).collect(Collectors.toList()));
+        return DiscountSuggestionDTO.toDiscountSuggestionDTO(ticketClass,
+                                                             suggestion,
+                                                             discountDTO,
+                                                             serviceDescrs.stream()
+                                                                          .map(ServiceDescr::getServiceName)
+                                                                          .collect(Collectors.toList()));
     }
 
     @Override
@@ -233,28 +239,28 @@ public class SuggestionServiceImpl implements SuggestionService {
         if (!optionalSuggestion.isPresent()) {
             logger.error("No such discount with id " + discountId);
 
-            throw new RequestException("No such discount",
-                    HttpStatus.NOT_FOUND);
+            throw new RequestException("No such discount", HttpStatus.NOT_FOUND);
         }
 
         Suggestion suggestion = optionalSuggestion.get();
 
         TicketClass ticketClass = ticketClassService.find(suggestion.getClassId());
 
-        List<ServiceDescr> serviceDescrs = serviceDAO
-                .getAllServicesBelongToSuggestions(Collections.singletonList(suggestion.getSuggestionId()))
-                .get(suggestion.getSuggestionId());
+        List<ServiceDescr> serviceDescrs = serviceDAO.getAllServicesBelongToSuggestions(Collections.singletonList(
+                suggestion.getSuggestionId()))
+                                                     .get(suggestion.getSuggestionId());
 
         suggestion.setDiscountId(null);
         suggestionDAO.save(suggestion);
 
         DiscountDTO discountDTO = discountService.deleteDiscount(discountId);
 
-        return DiscountSuggestionDTO.toDiscountSuggestionDTO(
-                ticketClass,
-                suggestion,
-                discountDTO,
-                serviceDescrs.stream().map(ServiceDescr::getServiceName).collect(Collectors.toList()));
+        return DiscountSuggestionDTO.toDiscountSuggestionDTO(ticketClass,
+                                                             suggestion,
+                                                             discountDTO,
+                                                             serviceDescrs.stream()
+                                                                          .map(ServiceDescr::getServiceName)
+                                                                          .collect(Collectors.toList()));
     }
 
     private void createSuggestionDTOsBelongToTrip(Map<Long, List<TicketClass>> relatedToTripsTicketClasses,
@@ -275,55 +281,49 @@ public class SuggestionServiceImpl implements SuggestionService {
                 continue;
             }
 
-            allDiscountSuggestionDTOsRelatedToTrip.addAll(createSuggestionDTOs(
-                    ticketClass,
-                    suggestions,
-                    relationServices,
-                    discountsDTO));
+            allDiscountSuggestionDTOsRelatedToTrip.addAll(createSuggestionDTOs(ticketClass,
+                                                                               suggestions,
+                                                                               relationServices,
+                                                                               discountsDTO));
         }
 
-        allDiscountSuggestionDTOsRelatedToTrip.sort(Comparator.comparing(
-                discountSuggestionDTO -> discountSuggestionDTO.getSuggestionId() * -1));
+        allDiscountSuggestionDTOsRelatedToTrip.sort(Comparator.comparing(discountSuggestionDTO -> discountSuggestionDTO.getSuggestionId()
+                                                                                                  * -1));
     }
 
     private List<DiscountDTO> getDiscountDTOs(Map<Long, List<Suggestion>> relatedSuggestions) {
-        return discountService.getDiscountDTOs(relatedSuggestions
-                .values()
-                .stream()
-                .flatMap(Collection::stream)
-                .map(Suggestion::getDiscountId)
-                .collect(Collectors.toList()));
+        return discountService.getDiscountDTOs(relatedSuggestions.values()
+                                                                 .stream()
+                                                                 .flatMap(Collection::stream)
+                                                                 .map(Suggestion::getDiscountId)
+                                                                 .collect(Collectors.toList()));
     }
 
     private Map<Long, List<ServiceDescr>> getAllServicesBelongToSuggestions(Map<Long, List<Suggestion>> relatedSuggestions) {
-        return serviceDAO.getAllServicesBelongToSuggestions(
-                relatedSuggestions
-                        .values()
-                        .stream()
-                        .flatMap(Collection::stream)
-                        .map(Suggestion::getSuggestionId)
-                        .collect(Collectors.toList()));
+        return serviceDAO.getAllServicesBelongToSuggestions(relatedSuggestions.values()
+                                                                              .stream()
+                                                                              .flatMap(Collection::stream)
+                                                                              .map(Suggestion::getSuggestionId)
+                                                                              .collect(Collectors.toList()));
     }
 
     private Map<Long, List<Suggestion>> getAllSuggestionBelongToTicketClasses(Map<Long, List<TicketClass>> relatedToTripsTicketClasses) {
-        return suggestionDAO.getAllSuggestionBelongToTicketClasses(
-                relatedToTripsTicketClasses
-                        .values()
-                        .stream()
-                        .flatMap(Collection::stream)
-                        .map(TicketClass::getClassId)
-                        .collect(Collectors.toList()));
+        return suggestionDAO.getAllSuggestionBelongToTicketClasses(relatedToTripsTicketClasses.values()
+                                                                                              .stream()
+                                                                                              .flatMap(Collection::stream)
+                                                                                              .map(TicketClass::getClassId)
+                                                                                              .collect(Collectors.toList()));
     }
 
     private Suggestion getSuggestion(DiscountSuggestionDTO simpleSuggestionDTO, Number userId) {
-        Optional<Suggestion> optionalSuggestion = suggestionDAO
-                .findSuggestionBelongToCarrier(simpleSuggestionDTO.getSuggestionId(), userId);
+        Optional<Suggestion> optionalSuggestion
+                = suggestionDAO.findSuggestionBelongToCarrier(simpleSuggestionDTO.getSuggestionId(), userId);
 
         if (!optionalSuggestion.isPresent()) {
             logger.error("No such suggestion with id " + simpleSuggestionDTO.getSuggestionId());
 
             throw new RequestException("No such suggestion with id " + simpleSuggestionDTO.getSuggestionId(),
-                    HttpStatus.NOT_FOUND);
+                                       HttpStatus.NOT_FOUND);
         }
 
         Suggestion suggestion = optionalSuggestion.get();
@@ -331,8 +331,7 @@ public class SuggestionServiceImpl implements SuggestionService {
         if (suggestion.getDiscountId() != null) {
             logger.error("Discount already exist for suggestion " + suggestion.getSuggestionId());
 
-            throw new RequestException("Discount already exist",
-                    HttpStatus.CONFLICT);
+            throw new RequestException("Discount already exist", HttpStatus.CONFLICT);
         }
         return suggestion;
     }
@@ -343,16 +342,17 @@ public class SuggestionServiceImpl implements SuggestionService {
                                                              List<DiscountDTO> discountDTOs) {
         List<DiscountSuggestionDTO> discountSuggestionDTOs = new ArrayList<>();
         for (Suggestion suggestion : suggestions) {
-            discountSuggestionDTOs.add(DiscountSuggestionDTO.toDiscountSuggestionDTO(
-                    ticketClass,
-                    suggestion,
-                    discountService.getRelatedDiscountDTO(suggestion.getDiscountId(), discountDTOs),
-                    relatedToSuggestionServices
-                            .get(suggestion.getSuggestionId())
-                            .stream()
-                            .map(ServiceDescr::getServiceName)
-                            .collect(Collectors.toList())
-            ));
+            discountSuggestionDTOs.add(DiscountSuggestionDTO.toDiscountSuggestionDTO(ticketClass,
+                                                                                     suggestion,
+                                                                                     discountService.getRelatedDiscountDTO(
+                                                                                             suggestion.getDiscountId(),
+                                                                                             discountDTOs),
+                                                                                     relatedToSuggestionServices.get(
+                                                                                             suggestion.getSuggestionId())
+                                                                                                                .stream()
+                                                                                                                .map(ServiceDescr::getServiceName)
+                                                                                                                .collect(
+                                                                                                                        Collectors.toList())));
         }
 
         return discountSuggestionDTOs;
