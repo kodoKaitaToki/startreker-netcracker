@@ -36,7 +36,7 @@ const routes: Routes = [
                       component: ServiceCrudComponent
                   },
                   {
-                      path: 'yourServices',
+                      path: 'approved-services',
                       component: ServiceTableComponent
                   },
                   {

@@ -39,6 +39,9 @@ import {TroubleStatisticsService} from './dashboards/trouble-statistics.service'
 import {ApproverService} from "./approver/shared/service/approver.service";
 import {BundlesService} from "./bundles/shared/service/bundles.service";
 import {ApproverFilterPipe} from './approver/shared/pipes/approver-filter.pipe';
+import {GrowlModule, MessageService, ProgressBarModule} from "primeng/primeng";
+import {ToastModule} from "primeng/toast";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import {TreeModule} from 'primeng/tree';
 import {TreeNode} from 'primeng/api';
@@ -47,48 +50,56 @@ import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
-            declarations: [
-              NavbarComponent,
-              ApproverCrudComponent,
-              IndexComponent,
-              CarrierCrudComponent,
-              BundlesCrudComponent,
-              BundlesComponentComponent,
-              BundlesTableComponent,
-              TripsServicesComponent,
-              TripDashboardComponent,
-              ServiceDashboardComponent,
-              DashboardsComponent,
-              ApproverComponentComponent,
-              ApproverTableComponent,
-              ApproverCrudComponent,
-              FilterPipePipe,
-              AprroverShowStatusPipe,
-              DashboardDeltaComponent,
-              TroubleStatisticsComponent,
-              CarrierComponentComponent,
-              CarrierTableComponent,
-              CarrierShowStatusPipe,
-              CostsComponent,
-              CommonChartComponent,
-              CarCostDashComponent,
-              ApproverFilterPipe
-            ],
-            imports: [
-              CommonModule,
-              AdminRoutingModule,
-              FormsModule,
-              ReactiveFormsModule,
-              NgxPaginationModule,
-              TreeModule,
-              SharedModule
-            ],
-            providers: [
-              FilterPipePipe,
-              TroubleStatisticsService,
-              ApproverService,
-              BundlesService
-            ]
-          })
+  declarations: [
+    NavbarComponent,
+    ApproverCrudComponent,
+    IndexComponent,
+    CarrierCrudComponent,
+    BundlesCrudComponent,
+    BundlesComponentComponent,
+    BundlesTableComponent,
+    TripsServicesComponent,
+    TripDashboardComponent,
+    ServiceDashboardComponent,
+    DashboardsComponent,
+    ApproverComponentComponent,
+    ApproverTableComponent,
+    ApproverCrudComponent,
+    FilterPipePipe,
+    AprroverShowStatusPipe,
+    TripsServicesComponent,
+    TripDashboardComponent,
+    ServiceDashboardComponent,
+    DashboardDeltaComponent,
+    TroubleStatisticsComponent,
+    CarrierComponentComponent,
+    CarrierTableComponent,
+    CarrierShowStatusPipe,
+    CommonChartComponent,
+    CarCostDashComponent,
+    CostsComponent,
+    ApproverFilterPipe
+  ],
+  imports: [
+    CommonModule,
+    AdminRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgxPaginationModule,
+    ToastModule,
+    ProgressBarModule,
+    TreeModule,
+    SharedModule,
+  ],
+  providers: [
+    FilterPipePipe,
+    AprroverShowStatusPipe,
+    TroubleStatisticsService,
+    ApproverService,
+    ApproverFilterPipe,
+    MessageService,
+    BundlesService
+  ]
+})
 export class AdminModule {
 }

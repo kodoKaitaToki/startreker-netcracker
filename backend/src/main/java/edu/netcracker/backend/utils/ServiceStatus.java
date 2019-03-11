@@ -10,11 +10,16 @@ public enum ServiceStatus {
     ASSIGNED(3),
     PUBLISHED(4),
     ARCHIVED(5),
-    UNDER_CLARIFICATION(6);
+    UNDER_CLARIFICATION(6),
+    REMOVED(7);
 
     private final int value;
 
     ServiceStatus(int value){
         this.value = value;
+    }
+
+    public int getStatusNumber() {
+        return this.value;
     }
 }
