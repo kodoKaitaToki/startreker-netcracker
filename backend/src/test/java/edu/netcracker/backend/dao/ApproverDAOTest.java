@@ -22,7 +22,9 @@ import static org.hamcrest.Matchers.equalTo;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @ActiveProfiles(profiles = "test")
+@Ignore("have been made for an old database")
 public class ApproverDAOTest {
+
     private final int ROLE_APPROVER_ID = 4;
 
     @Autowired
@@ -31,7 +33,8 @@ public class ApproverDAOTest {
     @Autowired
     RoleDAO roleDAO;
 
-    @Autowired UserDAO userDAO;
+    @Autowired
+    UserDAO userDAO;
 
     @Test
     public void testApproverDao() {
@@ -46,7 +49,9 @@ public class ApproverDAOTest {
             user.setRegistrationDate(LocalDateTime.now());
 
             if (i % 2 == 0) {
-                user.getUserRoles().add(roleDAO.find(ROLE_APPROVER_ID).get());
+                user.getUserRoles()
+                    .add(roleDAO.find(ROLE_APPROVER_ID)
+                                .get());
                 user.setUserIsActivated(true);
             }
             users.add(user);
@@ -68,7 +73,8 @@ public class ApproverDAOTest {
         String newName = "newTestName";
         user1.setUserName(newName);
         approverDAO.update(user1);
-        User check = approverDAO.find(user1.getUserId()).get();
+        User check = approverDAO.find(user1.getUserId())
+                                .get();
         assertThat(check.getUsername(), equalTo(user1.getUsername()));
 
         assertThat(approverDAO.count(), equalTo(BigInteger.valueOf(5L)));

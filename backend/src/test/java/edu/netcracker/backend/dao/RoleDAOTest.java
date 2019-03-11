@@ -26,21 +26,24 @@ public class RoleDAOTest {
     private RoleDAO roleDAO;
 
     @Test
-    public void daoTest(){
+    public void daoTest() {
         // Basically a CrudDAOImpl test
         Role role = new Role();
         role.setRoleName("testrole");
         roleDAO.save(role);
-        Role check = roleDAO.find(role.getRoleId()).get();
+        Role check = roleDAO.find(role.getRoleId())
+                            .get();
         assertThat(check.getRoleName(), equalTo("testrole"));
 
         role.setRoleName("updatedname");
         roleDAO.save(role);
-        check = roleDAO.find(role.getRoleId()).get();
+        check = roleDAO.find(role.getRoleId())
+                       .get();
         assertThat(check.getRoleName(), equalTo("updatedname"));
 
         roleDAO.delete(check);
-        check = roleDAO.find(role.getRoleId()).orElse(null);
+        check = roleDAO.find(role.getRoleId())
+                       .orElse(null);
         assertThat(check, equalTo(null));
     }
 
@@ -52,7 +55,8 @@ public class RoleDAOTest {
             throw new RuntimeException();
         }
 
-        Assert.assertEquals(admin.get().getRoleName(), "ROLE_ADMIN");
+        Assert.assertEquals(admin.get()
+                                 .getRoleName(), "ROLE_ADMIN");
     }
 
     @Test
@@ -63,7 +67,8 @@ public class RoleDAOTest {
             throw new RuntimeException();
         }
 
-        Assert.assertEquals(carrier.get().getRoleName(), "ROLE_CARRIER");
+        Assert.assertEquals(carrier.get()
+                                   .getRoleName(), "ROLE_CARRIER");
     }
 
     @Test
@@ -74,7 +79,8 @@ public class RoleDAOTest {
             throw new RuntimeException();
         }
 
-        Assert.assertEquals(approver.get().getRoleName(), "ROLE_APPROVER");
+        Assert.assertEquals(approver.get()
+                                    .getRoleName(), "ROLE_APPROVER");
     }
 
     @Test
@@ -85,7 +91,8 @@ public class RoleDAOTest {
             throw new RuntimeException();
         }
 
-        Assert.assertEquals(user.get().getRoleName(), "ROLE_USER");
+        Assert.assertEquals(user.get()
+                                .getRoleName(), "ROLE_USER");
     }
 
     @Test

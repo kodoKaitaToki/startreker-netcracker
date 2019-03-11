@@ -4,14 +4,6 @@
       *ngFor="let service of services"
     >
       <div class="row">
-        <div class="col-1"
-             title="id"
-        >
-          <span class="badge badge-primary badge-pill idBadge">{{service.id}}</span>
-        </div>
-      </div>
-
-      <div class="row">
         <div class="col-sm-12">
 
           <div class="row">
@@ -47,7 +39,7 @@
       </div>
 
       <div class="row justify-content-around"
-         *ngIf="currentServiceForReply !== service"
+         *ngIf="currentServiceForReply !== service && loadingService !== service"
       >
         <button class="btn btn-success col-4"
                 (click)="onPublish(service)"
@@ -64,7 +56,7 @@
 
       <form [formGroup]="form"
             (ngSubmit)="onReview(service)"
-            *ngIf="currentServiceForReply == service"
+            *ngIf="currentServiceForReply == service && loadingService !== service"
       >
         <div class="form-group">
           <label for="reply"><h5>Reply:</h5></label>

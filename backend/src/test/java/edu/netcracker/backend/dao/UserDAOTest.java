@@ -30,7 +30,7 @@ public class UserDAOTest {
     private RoleDAO roleDAO;
 
     @Test
-    public void roleListTest(){
+    public void roleListTest() {
         User user = new User();
         user.setUserName("testuser");
         user.setUserPassword("testpassword");
@@ -38,36 +38,51 @@ public class UserDAOTest {
         user.setUserRefreshToken("testrefreshtoken");
         user.setRegistrationDate(LocalDateTime.now());
         List<Role> expectedRoles = new ArrayList<>();
-        expectedRoles.add(roleDAO.find(1).get());
-        expectedRoles.add(roleDAO.find(2).get());
-        user.getUserRoles().add(expectedRoles.get(0));
-        user.getUserRoles().add(expectedRoles.get(1));
+        expectedRoles.add(roleDAO.find(1)
+                                 .get());
+        expectedRoles.add(roleDAO.find(2)
+                                 .get());
+        user.getUserRoles()
+            .add(expectedRoles.get(0));
+        user.getUserRoles()
+            .add(expectedRoles.get(1));
         userDAO.save(user);
-        User check = userDAO.find(user.getUserId()).get();
+        User check = userDAO.find(user.getUserId())
+                            .get();
         assertThat(check.getUserRoles(), equalTo(expectedRoles));
 
-        user.getUserRoles().remove(1);
+        user.getUserRoles()
+            .remove(1);
         expectedRoles.remove(1);
         userDAO.save(user);
-        check = userDAO.find(user.getUserId()).get();
+        check = userDAO.find(user.getUserId())
+                       .get();
         assertThat(check.getUserRoles(), equalTo(expectedRoles));
 
-        user.getUserRoles().add(roleDAO.find(2).get());
-        expectedRoles.add(roleDAO.find(2).get());
+        user.getUserRoles()
+            .add(roleDAO.find(2)
+                        .get());
+        expectedRoles.add(roleDAO.find(2)
+                                 .get());
         userDAO.save(user);
-        check = userDAO.find(user.getUserId()).get();
+        check = userDAO.find(user.getUserId())
+                       .get();
         assertThat(check.getUserRoles(), equalTo(expectedRoles));
 
-        user.getUserRoles().clear();
+        user.getUserRoles()
+            .clear();
         expectedRoles.clear();
         userDAO.save(user);
-        check = userDAO.find(user.getUserId()).get();
+        check = userDAO.find(user.getUserId())
+                       .get();
         assertThat(check.getUserRoles(), equalTo(expectedRoles));
 
-        check = userDAO.findByEmail("testemail").get();
+        check = userDAO.findByEmail("testemail")
+                       .get();
         assertThat(check.getUserEmail(), equalTo("testemail"));
 
-        check = userDAO.findByUsername("testuser").get();
+        check = userDAO.findByUsername("testuser")
+                       .get();
         assertThat(check.getUsername(), equalTo("testuser"));
     }
 }

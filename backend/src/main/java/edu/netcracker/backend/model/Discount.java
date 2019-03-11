@@ -37,6 +37,8 @@ public class Discount {
     @Attribute("is_percent")
     private Boolean isPercent;
 
+    private boolean isExpired;
+
     public static Discount toDiscount(DiscountDTO discountDTO) {
         Discount discount = new Discount();
         discount.setDiscountRate(discountDTO.getDiscountRate());

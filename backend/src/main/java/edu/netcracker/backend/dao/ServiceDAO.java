@@ -2,6 +2,7 @@ package edu.netcracker.backend.dao;
 
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
@@ -28,4 +29,6 @@ public interface ServiceDAO {
     List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status);
 
     List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId);
+
+    Map<Long, List<ServiceDescr>> getAllServicesBelongToSuggestions(List<Number> suggestionIds);
 }
