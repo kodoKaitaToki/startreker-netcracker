@@ -44,8 +44,7 @@ public class TicketClassServiceImpl implements TicketClassService {
 
         if (!optionalTicketClass.isPresent()) {
             logger.error("No such ticket class with id " + ticketClassId);
-            throw new RequestException("No such ticket class",
-                    HttpStatus.NOT_FOUND);
+            throw new RequestException("No such ticket class", HttpStatus.NOT_FOUND);
         }
 
         return optionalTicketClass.get();
@@ -56,8 +55,8 @@ public class TicketClassServiceImpl implements TicketClassService {
         logger.debug("get ticket classes that belong to carrier with id " + userId);
         List<TicketClass> ticketClasses = ticketClassDAO.getAllTicketClassesRelatedToCarrier(userId);
         List<DiscountDTO> discountsDTO = discountService.getDiscountDTOs(ticketClasses.stream()
-                .map(TicketClass::getDiscountId)
-                .collect(Collectors.toList()));
+                                                                                      .map(TicketClass::getDiscountId)
+                                                                                      .collect(Collectors.toList()));
 
         return createTicketClassDTOs(ticketClasses, discountsDTO);
     }
@@ -83,8 +82,7 @@ public class TicketClassServiceImpl implements TicketClassService {
         Optional<TicketClass> optionalTicketClass = ticketClassDAO.getTicketClassByDiscount(userId, discountId);
 
         if (!optionalTicketClass.isPresent()) {
-            throw new RequestException("No such discount",
-                    HttpStatus.NOT_FOUND);
+            throw new RequestException("No such discount", HttpStatus.NOT_FOUND);
         }
 
         TicketClass ticketClass = optionalTicketClass.get();
@@ -102,14 +100,14 @@ public class TicketClassServiceImpl implements TicketClassService {
     }
 
     private TicketClass getTicketClass(DiscountTicketClassDTO ticketClassDTO, Number userId) {
-        Optional<TicketClass> optionalTicketClass = ticketClassDAO
-                .findTicketClassBelongToCarrier(ticketClassDTO.getClassId(), userId);
+        Optional<TicketClass> optionalTicketClass
+                = ticketClassDAO.findTicketClassBelongToCarrier(ticketClassDTO.getClassId(), userId);
 
         if (!optionalTicketClass.isPresent()) {
             logger.error("No such ticket class with id " + ticketClassDTO.getClassId());
 
             throw new RequestException("No such ticket class with id " + ticketClassDTO.getClassId(),
-                    HttpStatus.NOT_FOUND);
+                                       HttpStatus.NOT_FOUND);
         }
 
         TicketClass ticketClass = optionalTicketClass.get();
@@ -117,8 +115,7 @@ public class TicketClassServiceImpl implements TicketClassService {
         if (ticketClass.getDiscountId() != null) {
             logger.error("Discount already exist for ticket class with id" + ticketClass.getClassId());
 
-            throw new RequestException("Discount already exist",
-                    HttpStatus.CONFLICT);
+            throw new RequestException("Discount already exist", HttpStatus.CONFLICT);
         }
         return ticketClass;
     }
@@ -127,9 +124,8 @@ public class TicketClassServiceImpl implements TicketClassService {
                                                                List<DiscountDTO> discountDTOs) {
         List<DiscountTicketClassDTO> discountTicketClassDTOs = new ArrayList<>();
         for (TicketClass ticketClass : ticketClasses) {
-            DiscountDTO relatedDiscount = discountService.getRelatedDiscountDTO(
-                    ticketClass.getDiscountId(),
-                    discountDTOs);
+            DiscountDTO relatedDiscount = discountService.getRelatedDiscountDTO(ticketClass.getDiscountId(),
+                                                                                discountDTOs);
             discountTicketClassDTOs.add(DiscountTicketClassDTO.toTicketClassDTO(ticketClass, relatedDiscount));
         }
         return discountTicketClassDTOs;
