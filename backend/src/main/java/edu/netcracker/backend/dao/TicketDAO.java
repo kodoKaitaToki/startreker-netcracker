@@ -1,5 +1,6 @@
 package edu.netcracker.backend.dao;
 
+import edu.netcracker.backend.model.history.HistoryTicket;
 import edu.netcracker.backend.model.Ticket;
 
 import java.util.List;
@@ -13,4 +14,6 @@ public interface TicketDAO {
     void delete(Ticket ticket);
 
     List<Ticket> findAllByClass(Number id);
+
+    List<HistoryTicket> findAllPurchasedByUser (String username);
 }
