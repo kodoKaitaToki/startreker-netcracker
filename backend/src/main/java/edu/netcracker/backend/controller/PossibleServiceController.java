@@ -22,7 +22,6 @@ public class PossibleServiceController {
         return possibleServiceService.getAllWithClassId(classId);
     }
 
-
     @GetMapping("/api/v1/carrier/possible-services/{possibleServiceId}")
     public PossibleServiceDTO getPossibleService(@PathVariable Integer possibleServiceId) {
         return possibleServiceService.getPossibleService(possibleServiceId);
