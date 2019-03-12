@@ -5,6 +5,8 @@ import edu.netcracker.backend.dao.mapper.history.HistoryTicketMapper;
 import edu.netcracker.backend.model.history.HistoryTicket;
 import edu.netcracker.backend.model.Ticket;
 import lombok.extern.log4j.Log4j2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,6 +19,8 @@ import java.util.List;
 @Log4j2
 @PropertySource("classpath:sql/ticketdao.properties")
 public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
+
+    private final Logger logger = LoggerFactory.getLogger(TicketDAOImpl.class);
 
     @Value("${FIND_ALL_BY_CLASS}")
     private String FIND_ALL_BY_CLASS;
@@ -53,6 +57,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
 
     @Override
     public List<HistoryTicket> findAllPurchasedByUser(Number user_id, Number limit, Number offset) {
+        logger.info(String.format("Querying %s purchased tickets from %s for user %d", limit, offset, user_id));
         return getJdbcTemplate().query(FIND_ALL_BY_USER,
                                        new Object[]{user_id, limit, offset},
                                        new HistoryTicketMapper());
