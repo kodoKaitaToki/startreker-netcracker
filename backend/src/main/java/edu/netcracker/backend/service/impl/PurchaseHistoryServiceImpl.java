@@ -24,8 +24,8 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService {
 
 
     @Override
-    public List<HistoryTicket> getPurchaseHistory(String username, Number limit, Number offset) {
-        return ticketDAO.findAllPurchasedByUser(username, limit, offset);
+    public List<HistoryTicket> getPurchaseHistory(Number user_id, Number limit, Number offset) {
+        return ticketDAO.findAllPurchasedByUser(user_id, limit, offset);
     }
 
     @Override

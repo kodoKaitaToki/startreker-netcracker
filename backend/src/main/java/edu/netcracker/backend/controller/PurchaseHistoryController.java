@@ -20,10 +20,10 @@ public class PurchaseHistoryController {
     }
 
     @GetMapping("api/v1/ticket/history")
-    public List<HistoryTicketDTO> getPurchaseHistory(@RequestParam("username") String username,
+    public List<HistoryTicketDTO> getPurchaseHistory(@RequestParam("user_id") Number user_id,
                                                      @RequestParam("limit") Number limit,
                                                      @RequestParam("offset") Number offset){
-        return phs.getPurchaseHistory(username, limit, offset)
+        return phs.getPurchaseHistory(user_id, limit, offset)
                   .stream()
                   .map(HistoryTicketDTO::from)
                   .collect(Collectors.toList());

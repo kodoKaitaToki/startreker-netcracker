@@ -15,5 +15,5 @@ public interface TicketDAO {
 
     List<Ticket> findAllByClass(Number id);
 
-    List<HistoryTicket> findAllPurchasedByUser (String username, Number limit, Number offset);
+    List<HistoryTicket> findAllPurchasedByUser (Number user_id, Number limit, Number offset);
 }
