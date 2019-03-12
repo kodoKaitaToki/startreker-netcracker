@@ -1,3 +1,138 @@
-<p>
-  assigned works!
-</p>
+<div class="list-group">
+    <ul>
+      <li class="list-group-item">
+        <div class="row">
+          <div class="col-sm-12">
+  
+              <div class="row">
+                <h3 class="col-6">
+                  Trip data:
+                </h3>
+                <div class="col-6">
+                  <div class="row align-items-start">
+                    <div class="col">
+                      Planet1
+                    </div>
+                    <div class="col"></div>
+                    <div class="col">
+                      Planet2
+                    </div>
+                   </div>
+                  <div class="row align-items-center">
+                    <div class="col">
+                      Spaceport1
+                    </div>
+                    <div class="col" style="text-align: center">
+                      <i class="fa fa-arrow-right" style="margin: 0 auto"></i>
+                    </div>
+                    <div class="col">
+                      Spaceport2
+                    </div>
+                  </div>
+                  <div class="row align-items-end">
+                    <div class="col">
+                      Date1
+                  </div>
+                  <div class="col"></div>
+                    <div class="col">
+                      Date2
+                    </div>
+                  </div>
+                </div>
+                  
+              </div>
+  
+            <hr>
+  
+            <div class="row">
+              <h3 class="col-6">Carrier:</h3>
+              <p class="col-6">Carrier name</p>
+            </div>
+  
+            <hr>
+  
+            <div class="row">
+              <h5 class="col-6">Date of creation:</h5>
+              <p class="col-6">
+                2019.15.11
+              </p>
+            </div>
+  
+            <hr>
+
+            <div class="row">
+              <h5 class="col-2">History:</h5>
+              <button class="btn btn-success btn-md offset-9"
+                      (click) = "moreFlag = !moreFlag;;">
+                <i *ngIf="!moreFlag" class="fa fa-caret-down"></i>
+                <i *ngIf="moreFlag" class="fa fa-caret-up"></i>
+              </button>
+                <ul class="col-10 offset-1" *ngIf="moreFlag">
+                  <li>
+                      <p style="font-weight: bold">2019.15.11</p>
+                      <div class="offset-1">carrier name:</div>
+                      <div class="offset-2">"reply"</div>
+                  </li>
+                  <li>
+                      <p style="font-weight: bold">2019.15.11</p>
+                      <div class="offset-1">carrier name:</div>
+                      <div class="offset-2">"reply"</div>
+                  </li>
+                </ul>
+            </div>
+
+            <hr>
+
+          </div>
+        </div>
+  
+        <div class="row justify-content-around">
+          <button class="btn btn-success col-4"
+                  (click)="onPublish(service)"
+          >
+            Publish
+          </button>
+  
+          <button class="btn btn-info col-4"
+                  (click)="onWriteReply(service)"
+          >
+            Under clarification
+          </button>
+        </div>
+  
+        <form [formGroup]="form"
+              (ngSubmit)="onReview(service)"
+              *ngIf="currentServiceForReply == service && loadingService !== service"
+        >
+          <div class="form-group">
+            <label for="reply"><h5>Reply:</h5></label>
+            <textarea class="form-control"
+                      id="reply"
+                      rows="3"
+                      formControlName="reply_text"
+                      [ngClass]="{
+                     'is-invalid':form.get('reply_text').invalid,
+                     'is-valid': form.get('reply_text').valid
+                     }"
+            >
+            </textarea>
+          </div>
+  
+          <div class="row justify-content-around"
+          >
+            <button class="btn btn-success col-4"
+                    type="submit"
+            >
+              Write a reply
+            </button>
+            <button class="btn btn-danger col-4"
+                    (click)="resetReply()"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </li>
+    </ul>
+  </div>
+  

@@ -1,3 +1,140 @@
-<p>
-  open works!
-</p>
+<div class="list-group">
+  <ul>
+
+      <li class="list-group-item">
+      <div class="row">
+        <div class="col-sm-12">
+
+          <div class="row">
+            <h3 class="col-6">
+              Trip data:
+            </h3>
+            <div class="col-6">
+                <div class="row align-items-start">
+                  <div class="col">
+                    Planet1
+                  </div>
+                  <div class="col"></div>
+                  <div class="col">
+                    Planet2
+                  </div>
+                </div>
+                <div class="row align-items-center">
+                  <div class="col">
+                    Spaceport1
+                  </div>
+                  <div class="col" style="text-align: center">
+                    <i class="fa fa-arrow-right" style="margin: 0 auto"></i>
+                  </div>
+                  <div class="col">
+                    Spaceport2
+                  </div>
+                </div>
+                <div class="row align-items-end">
+                  <div class="col">
+                    Date1
+                  </div>
+                  <div class="col"></div>
+                  <div class="col">
+                    Date2
+                  </div>
+                </div>
+            </div>
+            
+          </div>
+
+          <hr>
+
+          <div class="row">
+            <h3 class="col-6">Carrier:</h3>
+            <p class="col-6">Carrier name</p>
+          </div>
+
+          <hr>
+
+          <div class="row">
+            <h5 class="col-6">Date of creation:</h5>
+            <p class="col-6">
+              2019.15.11
+            </p>
+          </div>
+
+          <hr>
+        </div>
+      </div>
+
+      <form>
+          <div class="col-sm-12">
+            <div class="row justify-content-around"
+            >
+              <button class="btn btn-primary col-4"
+                      (click)="onAssign(service)"
+              >
+                Assign to me
+              </button>
+            </div>
+          </div>
+      </form>
+    </li>
+
+
+
+
+
+
+
+    <li class="list-group-item"
+      *ngFor="let trip of trips"
+    >
+      <div class="row">
+        <div class="col-sm-12">
+
+          <div class="row">
+            <h3 class="col-6">
+              Trip data:
+            </h3>
+            <h3 class="col-6">
+              {{trip.departure_date}} - {{trip.arrival_date}}
+            </h3>
+          </div>
+
+         <!-- <hr>
+
+          <div class="row">
+            <h3 class="col-12">Description:</h3>
+          </div>
+
+          <div class="row">
+            <p class="col-12">{{service.service_descr}}</p>
+          </div>-->
+
+          <hr>
+
+          <div class="row">
+            <h5 class="col-6">Date of creation:</h5>
+            <p class="col-6">
+              {{trip.creation_date | date}}
+            </p>
+          </div>
+
+          <hr>
+        </div>
+      </div>
+
+      <form
+        *ngIf="loadingService !== service"
+      >
+          <div class="col-sm-12">
+            <div class="row justify-content-around"
+            >
+              <button class="btn btn-primary col-4"
+                      (click)="onAssign(service)"
+              >
+                Assign to me
+              </button>
+            </div>
+          </div>
+      </form>
+    </li>
+  </ul>
+</div>
