@@ -6,8 +6,6 @@ import edu.netcracker.backend.dao.TripReplyDAO;
 import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.dao.mapper.TripMapper;
 import edu.netcracker.backend.model.Trip;
-import edu.netcracker.backend.model.TripReply;
-import edu.netcracker.backend.model.state.trip.Removed;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -74,6 +72,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
 
             if (trip != null) {
                 attachTicketClassed(trip);
+                attachReplies(trip);
                 return Optional.of(trip);
             }
         } catch (EmptyResultDataAccessException ignored) {

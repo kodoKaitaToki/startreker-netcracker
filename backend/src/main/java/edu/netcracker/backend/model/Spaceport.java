@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -22,8 +23,8 @@ public class Spaceport {
     private String spaceportName;
 
     @Attribute("creation_date")
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 
     @Attribute("planet_id")
-    private Long planetId;
+    private Planet planet;
 }

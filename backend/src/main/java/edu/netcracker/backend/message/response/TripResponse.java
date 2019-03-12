@@ -1,21 +1,19 @@
 package edu.netcracker.backend.message.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.netcracker.backend.model.Spaceport;
 import edu.netcracker.backend.model.Trip;
-import edu.netcracker.backend.model.TripReply;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.NotNull;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class TripDTO {
+public class TripResponse {
 
     @JsonProperty("trip_id")
     private Long tripId;
@@ -23,14 +21,17 @@ public class TripDTO {
     @JsonProperty("carrier_id")
     private Integer carrierId;
 
+    @JsonProperty("carrier_name")
+    private String carrierName;
+
     @JsonProperty("approver_id")
     private Integer approverId;
 
-    @JsonProperty("departure_id")
-    private Long departureId;
+    @JsonProperty("departure_spaceport")
+    private SpaceportDTO departureSpaceport;
 
-    @JsonProperty("arrival_id")
-    private Long arrivalId;
+    @JsonProperty("arrival_spaceport")
+    private SpaceportDTO arrivalSpaceport;
 
     @JsonProperty("trip_status")
     private Integer status;
@@ -45,15 +46,14 @@ public class TripDTO {
     private String creationDate;
 
     @JsonProperty("trip_reply")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     @Length(min = 2, max = 5000)
     private List<TripReplyDTO> replies;
 
     @JsonProperty("trip_photo")
     private String tripPhoto;
 
-    public static TripDTO from(Trip trip) {
-        TripDTO dto = new TripDTO();
+    public static TripResponse from(Trip trip) {
+        TripResponse dto = new TripResponse();
         dto.tripId = trip.getTripId();
         dto.status = trip.getTripState()
                          .getDatabaseValue();
@@ -66,8 +66,11 @@ public class TripDTO {
                                   : trip.getApprover()
                                         .getUserId());
         dto.setTripPhoto(trip.getTripPhoto());
-        dto.setDepartureId(trip.getDepartureId());
-        dto.setArrivalId(trip.getArrivalId());
+
+        dto.setCarrierName(trip.getOwner().getUsername());
+
+        dto.setDepartureSpaceport(SpaceportDTO.from(trip.getDepartureSpaceport()));
+        dto.setArrivalSpaceport(SpaceportDTO.from(trip.getArrivalSpaceport()));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 

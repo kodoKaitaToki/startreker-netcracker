@@ -20,10 +20,10 @@ public class PostgresSqlBuilder implements SQLBuilder {
                               Map<Field, Attribute> fieldAttributeMap) {
         this.fieldPrimaryKeyMap = fieldPrimaryKeyMap;
         this.fieldAttributeMap = fieldAttributeMap;
-        this.selectInTemplateSql = assembleSelectInSql();
-        this.attributesSql = assembleAttributes();
         this.tableName = entityClass.getAnnotation(Table.class)
                                     .value();
+        this.attributesSql = assembleAttributes();
+        this.selectInTemplateSql = assembleSelectInSql();
     }
 
     public String assembleInsertSql() {
@@ -74,11 +74,12 @@ public class PostgresSqlBuilder implements SQLBuilder {
     }
 
     public String assembleExistsSql() {
-        StringBuilder sb = new StringBuilder("SELECT COUNT(*) FROM (SELECT * FROM ");
-        sb.append(tableName);
+        StringBuilder sb = new StringBuilder("SELECT COUNT(*) FROM (SELECT ");
+        sb.append(attributesSql)
+          .append(" FROM ")
+          .append(tableName);
         addPrimaryKeysWhere(sb);
         sb.append(" LIMIT 1) sub");
-        System.out.println(sb.toString());
         return sb.toString();
     }
 
@@ -128,7 +129,6 @@ public class PostgresSqlBuilder implements SQLBuilder {
               .append(", ");
         }
         sb.delete(sb.length() - 2, sb.length());
-        System.out.println(sb.toString());
         return sb.toString();
     }
 }
