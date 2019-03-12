@@ -1,5 +1,6 @@
 package edu.netcracker.backend.controller;
 
+import edu.netcracker.backend.message.response.HistoryDTO.HistoryServiceDTO;
 import edu.netcracker.backend.message.response.HistoryDTO.HistoryTicketDTO;
 import edu.netcracker.backend.service.PurchaseHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,20 @@ public class PurchaseHistoryController {
     }
 
     @GetMapping("api/v1/ticket/history")
-    public List<HistoryTicketDTO> getPurchaseHistory(@RequestParam("username") String username){
-        return phs.getPurchaseHistory(username).stream().map(HistoryTicketDTO::from).collect(Collectors.toList());
+    public List<HistoryTicketDTO> getPurchaseHistory(@RequestParam("username") String username,
+                                                     @RequestParam("limit") Number limit,
+                                                     @RequestParam("offset") Number offset){
+        return phs.getPurchaseHistory(username, limit, offset)
+                  .stream()
+                  .map(HistoryTicketDTO::from)
+                  .collect(Collectors.toList());
+    }
+
+    @GetMapping("api/v1/service/history")
+    public List<HistoryServiceDTO> getServiceNamesByTicket(@RequestParam("ticket_id") Number id){
+        return phs.getServiceNamesByTicket(id)
+                  .stream()
+                  .map(HistoryServiceDTO::from)
+                  .collect(Collectors.toList());
     }
 }

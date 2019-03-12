@@ -37,7 +37,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
     }
 
     @Override
-    public List<HistoryTicket> findAllPurchasedByUser(String username) {
+    public List<HistoryTicket> findAllPurchasedByUser(String username, Number limit, Number offset) {
         return null;
     }
 }

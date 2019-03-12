@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 public class HistoryTripDTO {
     private static final String datePattern = "yyyy-MM-dd HH:mm";
 
+
     @JsonProperty("departure_spaceport_name")
     private String departureSpaceportName;
     @JsonProperty("arrival_spaceport_name")

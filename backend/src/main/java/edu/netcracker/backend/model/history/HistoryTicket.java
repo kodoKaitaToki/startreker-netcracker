@@ -9,11 +9,9 @@ import java.util.List;
 
 @Getter
 @Setter
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true)
 public class HistoryTicket extends Ticket {
     private String className;
 
     private HistoryTrip trip;
-
-    private List<String> boughtServicesNames;
 }

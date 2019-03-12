@@ -31,4 +31,6 @@ public interface ServiceDAO {
     List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId);
 
     Map<Long, List<ServiceDescr>> getAllServicesBelongToSuggestions(List<Number> suggestionIds);
+
+    List<String> getServiceNamesByTicket(Number id);
 }

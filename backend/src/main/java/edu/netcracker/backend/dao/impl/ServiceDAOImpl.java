@@ -253,6 +253,11 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
         return relatedServices;
     }
 
+    @Override
+    public List<String> getServiceNamesByTicket(Number id) {
+        return null;
+    }
+
     private ServiceDescr createService(Map<String, Object> row) {
         return ServiceDescr.builder()
                 .serviceId(((Number) row.get("servicedescr_service_id")).longValue())
