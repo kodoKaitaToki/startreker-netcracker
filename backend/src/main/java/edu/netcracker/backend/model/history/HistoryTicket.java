@@ -11,6 +11,7 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 public class HistoryTicket extends Ticket {
+
     private String className;
 
     private HistoryTrip trip;

@@ -16,10 +16,13 @@ public class HistoryTicketMapper implements RowMapper<HistoryTicket> {
         ticket.setTicketId(resultSet.getInt(1));
         ticket.setSeat(resultSet.getInt(2));
         ticket.setEndPrice(resultSet.getFloat(3));
-        ticket.setPurchaseDate(resultSet.getTimestamp(4).toLocalDateTime());
+        ticket.setPurchaseDate(resultSet.getTimestamp(4)
+                                        .toLocalDateTime());
         ticket.setClassName(resultSet.getString(5));
-        trip.setDepartureDate(resultSet.getTimestamp(6).toLocalDateTime());
-        trip.setArrivalDate(resultSet.getTimestamp(7).toLocalDateTime());
+        trip.setDepartureDate(resultSet.getTimestamp(6)
+                                       .toLocalDateTime());
+        trip.setArrivalDate(resultSet.getTimestamp(7)
+                                     .toLocalDateTime());
         trip.setDepartureSpaceportName(resultSet.getString(8));
         trip.setArrivalSpaceportName(resultSet.getString(9));
         trip.setDeparturePlanetName(resultSet.getString(10));

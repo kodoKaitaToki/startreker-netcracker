@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TicketDAO {
+
     void save(Ticket ticket);
 
     Optional<Ticket> find(Number id);
@@ -15,5 +16,5 @@ public interface TicketDAO {
 
     List<Ticket> findAllByClass(Number id);
 
-    List<HistoryTicket> findAllPurchasedByUser (Number user_id, Number limit, Number offset);
+    List<HistoryTicket> findAllPurchasedByUser(Number user_id, Number limit, Number offset);
 }

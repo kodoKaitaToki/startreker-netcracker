@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class HistoryTrip {
+
     private LocalDateTime departureDate;
 
     private LocalDateTime arrivalDate;

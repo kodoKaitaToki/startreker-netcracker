@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class HistoryTicketDTO {
+
     private static final String datePattern = "yyyy-MM-dd HH:mm";
 
     @JsonProperty("id")
@@ -27,12 +28,13 @@ public class HistoryTicketDTO {
     @JsonProperty("trip")
     private HistoryTripDTO trip;
 
-    public static HistoryTicketDTO from(HistoryTicket historyTicket){
+    public static HistoryTicketDTO from(HistoryTicket historyTicket) {
         HistoryTicketDTO htd = new HistoryTicketDTO();
         htd.ticketId = historyTicket.getTicketId();
         htd.seat = historyTicket.getSeat();
         htd.endPrice = historyTicket.getEndPrice();
-        htd.purchaseDate = historyTicket.getPurchaseDate().format(DateTimeFormatter.ofPattern(datePattern));
+        htd.purchaseDate = historyTicket.getPurchaseDate()
+                                        .format(DateTimeFormatter.ofPattern(datePattern));
         htd.className = historyTicket.getClassName();
         htd.trip = HistoryTripDTO.from(historyTicket.getTrip());
         return htd;

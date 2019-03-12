@@ -42,10 +42,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
         ArrayList<Ticket> tickets = new ArrayList<>();
 
         try {
-            tickets.addAll(getJdbcTemplate().query(
-                    FIND_ALL_BY_CLASS,
-                    new Object[]{id},
-                    getGenericMapper()));
+            tickets.addAll(getJdbcTemplate().query(FIND_ALL_BY_CLASS, new Object[]{id}, getGenericMapper()));
 
         } catch (EmptyResultDataAccessException e) {
             log.error(e.getMessage());
@@ -56,9 +53,8 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
 
     @Override
     public List<HistoryTicket> findAllPurchasedByUser(Number user_id, Number limit, Number offset) {
-        return getJdbcTemplate().query(
-                FIND_ALL_BY_USER,
-                new Object[]{user_id, limit, offset},
-                new HistoryTicketMapper());
+        return getJdbcTemplate().query(FIND_ALL_BY_USER,
+                                       new Object[]{user_id, limit, offset},
+                                       new HistoryTicketMapper());
     }
 }

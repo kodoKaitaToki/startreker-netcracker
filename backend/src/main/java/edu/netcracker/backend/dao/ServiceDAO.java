@@ -10,6 +10,7 @@ import edu.netcracker.backend.model.ServiceDescr;
 
 
 public interface ServiceDAO {
+
     void save(ServiceDescr service);
 
     void delete(Long id);

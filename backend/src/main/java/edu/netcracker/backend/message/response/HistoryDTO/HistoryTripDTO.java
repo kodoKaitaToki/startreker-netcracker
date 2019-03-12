@@ -6,6 +6,7 @@ import edu.netcracker.backend.model.history.HistoryTrip;
 import java.time.format.DateTimeFormatter;
 
 public class HistoryTripDTO {
+
     private static final String datePattern = "yyyy-MM-dd HH:mm";
 
 
@@ -24,15 +25,17 @@ public class HistoryTripDTO {
     @JsonProperty("arrival_date")
     private String arrivalDate;
 
-    public static HistoryTripDTO from(HistoryTrip trip){
+    public static HistoryTripDTO from(HistoryTrip trip) {
         HistoryTripDTO htd = new HistoryTripDTO();
         htd.departureSpaceportName = trip.getDepartureSpaceportName();
         htd.arrivalSpaceportName = trip.getArrivalSpaceportName();
         htd.departurePlanetName = trip.getDeparturePlanetName();
         htd.arrivalPlanetName = trip.getArrivalPlanetName();
         htd.carrierName = trip.getCarrierName();
-        htd.departureDate = trip.getDepartureDate().format(DateTimeFormatter.ofPattern(datePattern));
-        htd.arrivalDate = trip.getArrivalDate().format(DateTimeFormatter.ofPattern(datePattern));
+        htd.departureDate = trip.getDepartureDate()
+                                .format(DateTimeFormatter.ofPattern(datePattern));
+        htd.arrivalDate = trip.getArrivalDate()
+                              .format(DateTimeFormatter.ofPattern(datePattern));
         return htd;
     }
 }
