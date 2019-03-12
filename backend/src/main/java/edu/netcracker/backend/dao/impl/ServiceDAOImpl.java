@@ -110,17 +110,15 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     @Override
     public Optional<ServiceDescr> findByName(String name, Number id){
         logger.debug("Querying a service by name = {} of carrier  = {}", name, id);
-        Optional<ServiceDescr> serviceOpt =
-                Optional.of(
-                        getJdbcTemplate().queryForObject(FIND_SERVICE_BY_NAME, new Object[]{id, name}, getGenericMapper()));
-
-        if(serviceOpt.isPresent()){
+        try{
+            Optional<ServiceDescr> serviceOpt =
+                    Optional.of(
+                            getJdbcTemplate().queryForObject(FIND_SERVICE_BY_NAME, new Object[]{id, name}, getGenericMapper()));
             return serviceOpt;
+        }catch(EmptyResultDataAccessException e){
+            logger.debug("Carrier {} doesn't have service with name = {}", id, name);
+            return Optional.empty();
         }
-
-        logger.debug("Carrier {} doesn't have service with name = {}", id, name);
-        return Optional.empty();
-
     }
 
     @Override

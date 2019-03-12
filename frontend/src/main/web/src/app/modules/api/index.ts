@@ -80,6 +80,9 @@ const service = {
 const trip = {
   trips(){
     return `${baseUrl}api/v1/approver/trip`;
+  },
+  update(){
+    return `${baseUrl}api/v1/trip`;
   }
 }
 

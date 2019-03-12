@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { clone } from 'ramda';
+import {MessageService} from 'primeng/components/common/messageservice';
 
 import { TripService } from '../trip.service'; 
 import { Trip } from '../trip.model';
@@ -12,25 +13,69 @@ import { Trip } from '../trip.model';
 export class OpenTripComponent implements OnInit {
 
   trips: Trip[] = [];
+  loadingTrip: Trip;
 
-  constructor(private tripService: TripService) { }
+  constructor(private tripService: TripService,
+              private messageService: MessageService) { }
 
   ngOnInit() {
-    this.getTrips(3);
+    this.getTrips(2);
   }
 
   getTrips(status: Number){
-    this.tripService.getTrips(status, 1, 10)
+    this.tripService.getTrips(status, 0, 10)
                       .subscribe(
                         (resp: Response) => {
                           /*if (resp.headers.get('New-Access-Token')) {
                             localStorage.removeItem('at');
                             localStorage.setItem('at', resp.headers.get('New-Access-Token'));
                           }*/
+                          this.loadingTrip = null;
                           this.trips = clone(resp);
                         },
-                        error => console.log(error)
+                        error => {
+                          console.log(error);
+                          this.loadingTrip = null;
+                        }
                       );
+  }
+
+  onAssign(trip: Trip) {
+    trip.trip_status = 3;
+    //trip.trip_reply.writer_id = 3;
+
+    this.loadingTrip = trip;
+
+    this.tripService.updateTripStatus(trip)
+                    .subscribe(
+                      (resp: Response) => {
+                        /*if (resp.headers.get('New-Access-Token')) {
+                            localStorage.removeItem('at');
+                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
+                          }*/
+                        this.showMessage(this.createMessage('success',
+                                                            'The trip was assigned by you',
+                                                            'You can find it in "Assigned to me"'));
+                        this.getTrips(2);
+                        this.loadingTrip = null;
+                      }, 
+                      error => {
+                        console.log(error);
+                        this.loadingTrip = null;
+                      }
+                    );
+  }
+
+  showMessage(msgObj: any){
+    this.messageService.add(msgObj);
+  }
+
+  createMessage(severity: string, summary: string, detail: string): any {
+    return {
+      severity: severity,
+      summary: summary,
+      detail: detail
+    };
   }
 
 }

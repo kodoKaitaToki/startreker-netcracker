@@ -1,6 +1,6 @@
 <div class="list-group">
     <ul>
-      <li class="list-group-item">
+      <li class="list-group-item" *ngFor="let trip of trips">
         <div class="row">
           <div class="col-sm-12">
   
@@ -11,31 +11,31 @@
                 <div class="col-6">
                   <div class="row align-items-start">
                     <div class="col">
-                      Planet1
+                      {{trip.departure_spaceport.planet.planet_name}}
                     </div>
                     <div class="col"></div>
                     <div class="col">
-                      Planet2
+                      {{trip.arrival_spaceport.planet.planet_name}}
                     </div>
                    </div>
                   <div class="row align-items-center">
                     <div class="col">
-                      Spaceport1
+                      {{trip.departure_spaceport.spaceport_name}}
                     </div>
                     <div class="col" style="text-align: center">
                       <i class="fa fa-arrow-right" style="margin: 0 auto"></i>
                     </div>
                     <div class="col">
-                      Spaceport2
+                      {{trip.arrival_spaceport.spaceport_name}}
                     </div>
                   </div>
                   <div class="row align-items-end">
                     <div class="col">
-                      Date1
+                      {{trip.departure_date | date}}
                   </div>
                   <div class="col"></div>
                     <div class="col">
-                      Date2
+                      {{trip.arrival_date | date}}
                     </div>
                   </div>
                 </div>
@@ -46,7 +46,7 @@
   
             <div class="row">
               <h3 class="col-6">Carrier:</h3>
-              <p class="col-6">Carrier name</p>
+              <p class="col-6">{{trip.carrier_name}}</p>
             </div>
   
             <hr>
@@ -54,7 +54,7 @@
             <div class="row">
               <h5 class="col-6">Date of creation:</h5>
               <p class="col-6">
-                2019.15.11
+                {{trip.creation_date | date}}
               </p>
             </div>
   
@@ -63,20 +63,16 @@
             <div class="row">
               <h5 class="col-2">History:</h5>
               <button class="btn btn-success btn-md offset-9"
-                      (click) = "moreFlag = !moreFlag;;">
+                      (click) = "moreFlag = !moreFlag;"
+                      [disabled] = "trip.trip_reply.length == 0">
                 <i *ngIf="!moreFlag" class="fa fa-caret-down"></i>
                 <i *ngIf="moreFlag" class="fa fa-caret-up"></i>
               </button>
                 <ul class="col-10 offset-1" *ngIf="moreFlag">
-                  <li>
-                      <p style="font-weight: bold">2019.15.11</p>
-                      <div class="offset-1">carrier name:</div>
-                      <div class="offset-2">"reply"</div>
-                  </li>
-                  <li>
-                      <p style="font-weight: bold">2019.15.11</p>
-                      <div class="offset-1">carrier name:</div>
-                      <div class="offset-2">"reply"</div>
+                  <li *ngFor="let reply of trip.trip_reply">
+                    <p style="font-weight: bold">{{reply.creation_date | date}}</p>
+                    <div class="offset-1">carrier name:</div>
+                    <div class="offset-2">{{reply.reply_text}}</div>
                   </li>
                 </ul>
             </div>
@@ -86,24 +82,22 @@
           </div>
         </div>
   
-        <div class="row justify-content-around">
+        <div class="row justify-content-around"
+            *ngIf="currentTripForReply !== trip && loadingTrip !== trip">
           <button class="btn btn-success col-4"
-                  (click)="onPublish(service)"
-          >
+                  (click)="onPublish(trip)">
             Publish
           </button>
   
           <button class="btn btn-info col-4"
-                  (click)="onWriteReply(service)"
-          >
+                  (click)="currentTripForReply = trip">
             Under clarification
           </button>
         </div>
   
         <form [formGroup]="form"
-              (ngSubmit)="onReview(service)"
-              *ngIf="currentServiceForReply == service && loadingService !== service"
-        >
+              (ngSubmit)="onReview(trip)"
+              *ngIf="currentTripForReply == trip && loadingTrip !== trip">
           <div class="form-group">
             <label for="reply"><h5>Reply:</h5></label>
             <textarea class="form-control"
@@ -113,21 +107,18 @@
                       [ngClass]="{
                      'is-invalid':form.get('reply_text').invalid,
                      'is-valid': form.get('reply_text').valid
-                     }"
-            >
+                     }">
             </textarea>
           </div>
   
-          <div class="row justify-content-around"
-          >
+          <div class="row justify-content-around">
             <button class="btn btn-success col-4"
                     type="submit"
-            >
+                    [disabled]="form.invalid">
               Write a reply
             </button>
             <button class="btn btn-danger col-4"
-                    (click)="resetReply()"
-            >
+                    (click)="resetReply()">
               Cancel
             </button>
           </div>

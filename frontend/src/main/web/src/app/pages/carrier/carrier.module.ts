@@ -2,8 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {GrowlModule} from "primeng/primeng";
-import {MessageService} from 'primeng/components/common/messageservice';
+import {GrowlModule, MessageService, ProgressBarModule} from "primeng/primeng";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ToastModule} from "primeng/toast";
 
 import { CarrierRoutingModule } from './carrier-routing.module';
 import { NavbarComponent } from './navbar/navbar.component';
@@ -45,7 +46,8 @@ import { NgxPaginationModule } from 'ngx-pagination';
     ReactiveFormsModule,
     CarrierRoutingModule,
     GrowlModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    ToastModule
   ],
   providers:[
     MessageService
