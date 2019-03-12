@@ -27,54 +27,57 @@ public class AdminController {
 
     @GetMapping("/api/v1/admin/costs/{carrierId}")
     public String getCostsPerCarrier(@PathVariable Long carrierId,
-                                     @RequestParam("from") @DateTimeFormat(pattern="yyyy-MM-dd") Date from,
-                                     @RequestParam("to") @DateTimeFormat(pattern="yyyy-MM-dd") Date to) {
+                                     @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+                                     @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
         return new Gson().toJson(adminService.getCostsPerPeriodPerCarrier(carrierId,
-                convertToLocalDateTimeViaInstant(from),
-                convertToLocalDateTimeViaInstant(to)));
+                                                                          convertToLocalDateTimeViaInstant(from),
+                                                                          convertToLocalDateTimeViaInstant(to)));
     }
 
     @GetMapping("/api/v1/admin/costs")
-    public String getCostsPerPeriodPerCarrier(@RequestParam("from") @DateTimeFormat(pattern="yyyy-MM-dd") Date from,
-                                              @RequestParam("to") @DateTimeFormat(pattern="yyyy-MM-dd") Date to) {
+    public String getCostsPerPeriodPerCarrier(@RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+                                              @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
         return new Gson().toJson(adminService.getCostsPerPeriod(convertToLocalDateTimeViaInstant(from),
-                convertToLocalDateTimeViaInstant(to)));
+                                                                convertToLocalDateTimeViaInstant(to)));
     }
 
     @GetMapping("/api/v1/admin/increasing/users")
-    public String getUsersIncreasingPerPeriod(@RequestParam("from") @DateTimeFormat(pattern="yyyy-MM-dd") Date from,
-                                              @RequestParam("to") @DateTimeFormat(pattern="yyyy-MM-dd") Date to) {
+    public String getUsersIncreasingPerPeriod(@RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+                                              @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
 
-        Map<LocalDateTime, Integer> map = adminService.getUsersIncreasingPerPeriod(convertToLocalDateTimeViaInstant(from)
-                , convertToLocalDateTimeViaInstant(to));
+        Map<LocalDateTime, Integer> map
+                = adminService.getUsersIncreasingPerPeriod(convertToLocalDateTimeViaInstant(from),
+                                                           convertToLocalDateTimeViaInstant(to));
 
         return new Gson().toJson(map);
     }
 
     @GetMapping("/api/v1/admin/increasing/carriers")
-    public String getCarriersIncreasingPerPeriod(@RequestParam("from") @DateTimeFormat(pattern="yyyy-MM-dd") Date from,
-                                                 @RequestParam("to") @DateTimeFormat(pattern="yyyy-MM-dd") Date to) {
+    public String getCarriersIncreasingPerPeriod(
+            @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+            @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
 
-        Map<LocalDateTime, Integer> map = adminService.getCarriersIncreasingPerPeriod(convertToLocalDateTimeViaInstant(from)
-                , convertToLocalDateTimeViaInstant(to));
+        Map<LocalDateTime, Integer> map = adminService.getCarriersIncreasingPerPeriod(convertToLocalDateTimeViaInstant(
+                from), convertToLocalDateTimeViaInstant(to));
 
         return new Gson().toJson(map);
     }
 
     @GetMapping("/api/v1/admin/increasing/locations")
-    public String getLocationsIncreasingPerPeriod(@RequestParam("from") @DateTimeFormat(pattern="yyyy-MM-dd") Date from,
-                                                  @RequestParam("to") @DateTimeFormat(pattern="yyyy-MM-dd") Date to) {
+    public String getLocationsIncreasingPerPeriod(
+            @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
+            @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
 
-        Map<LocalDateTime, Integer> map = adminService.getLocationsIncreasingPerPeriod(convertToLocalDateTimeViaInstant(from)
-                , convertToLocalDateTimeViaInstant(to));
+        Map<LocalDateTime, Integer> map = adminService.getLocationsIncreasingPerPeriod(convertToLocalDateTimeViaInstant(
+                from), convertToLocalDateTimeViaInstant(to));
 
         return new Gson().toJson(map);
     }
 
     private LocalDateTime convertToLocalDateTimeViaInstant(Date dateToConvert) {
         return dateToConvert.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime();
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDateTime();
     }
 
 }
