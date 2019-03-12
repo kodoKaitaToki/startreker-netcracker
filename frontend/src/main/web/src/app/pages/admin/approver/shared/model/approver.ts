@@ -14,6 +14,5 @@ export class Approver {
   user_created_date: Date;
 
   constructor() {
-
   }
 }

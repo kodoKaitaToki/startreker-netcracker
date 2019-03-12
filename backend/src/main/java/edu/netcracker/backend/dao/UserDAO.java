@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserDAO {
+public interface UserDAO extends CrudDAO<User> {
 
     void save(User user);
 
@@ -35,4 +35,6 @@ public interface UserDAO {
     List<User> findPerPeriod(LocalDateTime from, LocalDateTime to);
 
     List<User> findPerPeriodByRole(Number id, LocalDateTime from, LocalDateTime to);
+
+    Optional<User> attachRoles(User user);
 }

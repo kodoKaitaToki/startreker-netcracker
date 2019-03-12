@@ -7,6 +7,7 @@ import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.ServiceService;
 import edu.netcracker.backend.service.StatisticsService;
+import edu.netcracker.backend.utils.ServiceStatus;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,7 +59,7 @@ public class ServiceControllerUnitTest {
 
     @Test
     public void shouldPassServices() throws Exception {
-        when(serviceService.getServicesForApprover(1, 10, 2, 3))
+        when(serviceService.getServicesForApprover(1, 10, ServiceStatus.OPEN.toString(), 3))
                 .thenReturn(ret);
 
         User usr = new User();
@@ -67,12 +68,12 @@ public class ServiceControllerUnitTest {
 
         ServiceController controller = new ServiceController(statisticsService, securityContext, serviceService);
 
-        Assert.assertEquals(controller.getServicesForApprover(1, 10, 2), ret);
+        Assert.assertEquals(controller.getServicesForApprover(1, 10, ServiceStatus.OPEN.toString()), ret);
     }
 
     @Test(expected = RequestException.class)
     public void shouldRejectIllegalStatus() throws Exception {
-        int illegalStatus = 1;
+        String illegalStatus = ServiceStatus.DRAFT.toString();
 
         ServiceController controller = new ServiceController(statisticsService, securityContext, serviceService);
 
