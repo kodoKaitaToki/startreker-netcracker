@@ -22,6 +22,7 @@ import { RecoveryComponent } from './pages/recovery/recovery.component';
 
 import { Configuration } from './app.constants';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { PaginatorComponent } from './paginator/paginator.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     HeaderComponent,
     RegistrationComponent,
     LoginComponent,
-    RecoveryComponent
+    RecoveryComponent,
+    PaginatorComponent
   ],
   imports: [
     AppRoutingModule,

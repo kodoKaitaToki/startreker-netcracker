@@ -16,6 +16,7 @@ import { OpenComponent } from './service/open/open.component';
 import { AssignedComponent } from './service/assigned/assigned.component';
 import { AssignedTripComponent } from './trip/assigned/assigned.component';
 import { OpenTripComponent } from './trip/open/open.component';
+//import { PaginatorComponent } from '../../paginator/paginator.component';
 
 @NgModule({
   declarations: [ServiceComponent, 
@@ -27,7 +28,8 @@ import { OpenTripComponent } from './trip/open/open.component';
                 OpenComponent, 
                 AssignedComponent,
                 AssignedTripComponent,
-                OpenTripComponent],
+                OpenTripComponent//,
+                /*PaginatorComponent*/],
   imports: [
     CommonModule,
     ApproverRoutingModule,
