@@ -5,6 +5,7 @@ import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.dao.TripReplyDAO;
 import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.dao.mapper.TripMapper;
+import edu.netcracker.backend.dao.mapper.TripReplyMapper;
 import edu.netcracker.backend.model.Trip;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +25,8 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     private final String findAllTicketTrips = "SELECT class_id FROM ticket_class WHERE trip_id = ?";
 
     private final UserDAO userDAO;
-    private final TripReplyDAO tripReplyDAO;
     private final TripMapper tripMapper;
+    private final TripReplyMapper tripReplyMapper;
 
     @Value("${SELECT_FULL}")
     private String SELECT_FULL;
@@ -57,12 +58,11 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     @Autowired
     public TripDAOImpl(TicketClassDAO ticketClassDAO,
                        UserDAO userDAO,
-                       TripReplyDAO tripReplyDAO,
-                       TripMapper tripMapper) {
+                       TripMapper tripMapper, TripReplyMapper tripReplyMapper) {
         this.ticketClassDAO = ticketClassDAO;
         this.userDAO = userDAO;
-        this.tripReplyDAO = tripReplyDAO;
         this.tripMapper = tripMapper;
+        this.tripReplyMapper = tripReplyMapper;
     }
 
     @Override
@@ -173,7 +173,8 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     private Trip attachReplies(Trip trip) {
         trip.setReplies(getJdbcTemplate().query(SELECT_REPLIES_BY_TRIP,
                                                 new Object[]{trip.getTripId()},
-                                                tripReplyDAO.getGenericMapper()));
+                                                tripReplyMapper));
+
         return trip;
     }
 }

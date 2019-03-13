@@ -16,11 +16,11 @@ import java.sql.SQLException;
 @Component
 public class TripMapper implements RowMapper<Trip> {
 
-    private final UserDAO userDAO;
+    private final MapperHelper mapperHelper;
 
     @Autowired
-    public TripMapper(UserDAO userDAO) {
-        this.userDAO = userDAO;
+    public TripMapper(MapperHelper mapperHelper) {
+        this.mapperHelper = mapperHelper;
     }
 
     @Override
@@ -36,36 +36,13 @@ public class TripMapper implements RowMapper<Trip> {
                                .toLocalDateTime());
         trip.setTripPhoto(rs.getString("trip_photo"));
 
-        trip.setOwner(mapUser(rs, "owner"));
-        trip.setApprover(mapUser(rs, "approver"));
+        trip.setOwner(mapperHelper.mapUser(rs, "owner"));
+        trip.setApprover(mapperHelper.mapUser(rs, "approver"));
 
         trip.setDepartureSpaceport(mapSpaceport(rs, "departure_spaceport"));
         trip.setArrivalSpaceport(mapSpaceport(rs, "arrival_spaceport"));
 
         return trip;
-    }
-
-    private User mapUser(ResultSet rs, String prefix) throws SQLException {
-        User user = new User();
-
-        user.setUserId(rs.getInt(prefix + "_id"));
-
-        if (user.getUserId() == 0) {
-            return null;
-        }
-
-        user.setUserName(rs.getString(prefix + "_user_name"));
-        user.setUserPassword(rs.getString(prefix + "_password"));
-        user.setUserIsActivated(rs.getBoolean(prefix + "_activated"));
-        user.setRegistrationDate(rs.getTimestamp(prefix + "_date_created")
-                                   .toLocalDateTime());
-        user.setUserRefreshToken(rs.getString(prefix + "_token"));
-        user.setUserEmail(rs.getString(prefix + "_email"));
-        user.setUserTelephone(rs.getString(prefix + "_telephone"));
-
-        userDAO.attachRoles(user);
-
-        return user;
     }
 
     private Spaceport mapSpaceport(ResultSet rs, String prefix) throws SQLException {
@@ -75,7 +52,7 @@ public class TripMapper implements RowMapper<Trip> {
         spaceport.setSpaceportName(rs.getString(prefix + "_name"));
         spaceport.setCreationDate(rs.getTimestamp(prefix + "_creation_date")
                                     .toLocalDateTime());
-        spaceport.setPlanet(mapPlanet(rs, prefix));
+        spaceport.setPlanet(mapPlanet(rs, prefix + "_planet"));
         return spaceport;
     }
 

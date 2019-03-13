@@ -17,6 +17,8 @@ public class TripReplyDTO {
     private Long tripId;
     @JsonProperty("writer_id")
     private Integer writerId;
+    @JsonProperty("writer_name")
+    private String writerName;
     @JsonProperty("reply_text")
     private String replyText;
     @JsonProperty("creation_date")
@@ -27,6 +29,8 @@ public class TripReplyDTO {
         return TripReplyDTO.builder()
                            .tripId(tripReply.getTripId())
                            .writerId(tripReply.getWriterId())
+                           .writerName(tripReply.getWriter() != null ? tripReply.getWriter()
+                                                                                .getUsername() : null)
                            .replyText(tripReply.getReportText())
                            .creationDate(tripReply.getCreationDate()
                                                   .format(formatter))
