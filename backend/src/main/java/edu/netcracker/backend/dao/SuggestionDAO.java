@@ -1,8 +1,6 @@
 package edu.netcracker.backend.dao;
 
-import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.Suggestion;
-import edu.netcracker.backend.model.TicketClass;
 
 import java.util.List;
 import java.util.Map;
@@ -29,5 +27,5 @@ public interface SuggestionDAO {
 
     void deleteDiscountsForSuggestion(List<Long> SuggestionIds);
 
-     Map<Long, List<Suggestion>> getAllSuggestionBelongToTicketClasses(List<Number> ticketClassIds);
+    Map<Long, List<Suggestion>> getAllSuggestionBelongToTicketClasses(List<Number> ticketClassIds);
 }

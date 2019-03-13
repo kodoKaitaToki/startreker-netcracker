@@ -17,16 +17,19 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @PropertySource("classpath:sql/tripdao.properties")
 public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
 
     private TicketClassDAO ticketClassDAO;
-    private final String findAllTicketTrips = "SELECT class_id FROM ticket_class WHERE trip_id = ?";
+    private final String FIND_ALL_TICKET_TRIPS = "SELECT class_id FROM ticket_class WHERE trip_id = ?";
 
     private final UserDAO userDAO;
     private final TripMapper tripMapper;
+    private final String findAllByCarrierId = "SELECT * FROM trip WHERE carrier_id = ?";
+    private final String findAll = "SELECT * FROM trip";
 
     @Value("${SELECT_FULL}")
     private String SELECT_FULL;
@@ -40,21 +43,21 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     @Value("${ROW_EXISTS}")
     private String ROW_EXISTS;
 
-    private static final String GET_ALL_TRIPS_WITH_ARRIVAL_AND_DEPARTURE_DATE_BELONG_TO_CARRIER = "SELECT " +
-            "  trip_id, " +
-            "  arrival_date, " +
-            "  departure_date, " +
-            "  arrival_sp.spaceport_name AS arrival_spaceport_name, " +
-            "  departure_sp.spaceport_name AS departure_spaceport_name, " +
-            "  arrival_p.planet_name AS arrival_planet_name, " +
-            "  departure_p.planet_name AS departure_planet_name " +
-            "FROM trip " +
-            "INNER JOIN spaceport arrival_sp ON  trip.arrival_id = arrival_sp.spaceport_id " +
-            "INNER JOIN spaceport departure_sp ON  trip.departure_id = departure_sp.spaceport_id " +
-            "INNER JOIN planet arrival_p on arrival_p.planet_id = arrival_sp.planet_id " +
-            "INNER JOIN planet departure_p on departure_p.planet_id = departure_sp.planet_id " +
-            "WHERE carrier_id = ? AND trip.trip_status = 4 " +
-            "ORDER BY trip_id DESC";
+    private static final String GET_ALL_TRIPS_WITH_ARRIVAL_AND_DEPARTURE_DATE_BELONG_TO_CARRIER = "SELECT "
+                                                                                                  + "  trip_id, "
+                                                                                                  + "  arrival_date, "
+                                                                                                  + "  departure_date, "
+                                                                                                  + "  arrival_sp.spaceport_name AS arrival_spaceport_name, "
+                                                                                                  + "  departure_sp.spaceport_name AS departure_spaceport_name, "
+                                                                                                  + "  arrival_p.planet_name AS arrival_planet_name, "
+                                                                                                  + "  departure_p.planet_name AS departure_planet_name "
+                                                                                                  + "FROM trip "
+                                                                                                  + "INNER JOIN spaceport arrival_sp ON  trip.arrival_id = arrival_sp.spaceport_id "
+                                                                                                  + "INNER JOIN spaceport departure_sp ON  trip.departure_id = departure_sp.spaceport_id "
+                                                                                                  + "INNER JOIN planet arrival_p on arrival_p.planet_id = arrival_sp.planet_id "
+                                                                                                  + "INNER JOIN planet departure_p on departure_p.planet_id = departure_sp.planet_id "
+                                                                                                  + "WHERE carrier_id = ? AND trip.trip_status = 4 "
+                                                                                                  + "ORDER BY trip_id DESC";
 
     @Autowired
     public TripDAOImpl(TicketClassDAO ticketClassDAO, UserDAO userDAO, TripMapper tripMapper) {
@@ -87,10 +90,9 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
 
     @Override
     public List<TripWithArrivalAndDepartureData> getAllTripsWitArrivalAndDepatureDataBelongToCarrier(Number carrierId) {
-        return new ArrayList<>(getJdbcTemplate().query(
-                GET_ALL_TRIPS_WITH_ARRIVAL_AND_DEPARTURE_DATE_BELONG_TO_CARRIER,
-                new Object[]{carrierId},
-                new TripWithArrivalAndDepartureDataMapper()));
+        return new ArrayList<>(getJdbcTemplate().query(GET_ALL_TRIPS_WITH_ARRIVAL_AND_DEPARTURE_DATE_BELONG_TO_CARRIER,
+                                                       new Object[]{carrierId},
+                                                       new TripWithArrivalAndDepartureDataMapper()));
     }
 
     @Override
@@ -113,20 +115,19 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
 
     protected void update(Trip trip) {
         getJdbcTemplate().update(UPDATE_FULL,
-                trip.getCreationDate(),
-                trip.getDepartureDate(),
-                trip.getArrivalDate(),
-                trip.getTripState()
-                        .getDatabaseValue(),
-                trip.getOwner()
-                        .getUserId(),
-                (trip.getApprover() == null
-                        ? null
-                        : trip.getApprover()
-                        .getUserId()),
-                trip.getTripPhoto(),
-                trip.getTripId()
-        );
+                                 trip.getCreationDate(),
+                                 trip.getDepartureDate(),
+                                 trip.getArrivalDate(),
+                                 trip.getTripState()
+                                     .getDatabaseValue(),
+                                 trip.getOwner()
+                                     .getUserId(),
+                                 (trip.getApprover() == null
+                                         ? null
+                                         : trip.getApprover()
+                                               .getUserId()),
+                                 trip.getTripPhoto(),
+                                 trip.getTripId());
     }
 
     private void create(Trip trip) {
@@ -135,21 +136,49 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
 
     private Object[] getTripArguments(Trip trip) {
         return new Object[]{trip.getCreationDate(),
-                trip.getDepartureDate(),
-                trip.getArrivalDate(),
-                trip.getTripState().getDatabaseValue(),
-                trip.getOwner().getUserId(),
-                (trip.getApprover() == null
-                        ? null
-                        : trip.getApprover()
-                        .getUserId()),
-                trip.getTripPhoto()};
+                            trip.getDepartureDate(),
+                            trip.getArrivalDate(),
+                            trip.getTripState().getDatabaseValue(),
+                            trip.getOwner().getUserId(),
+                            (trip.getApprover() == null
+                                    ? null
+                                    : trip.getApprover()
+                                          .getUserId()),
+                            trip.getTripPhoto()};
     }
 
-    private Trip attachTicketClassed(Trip trip) {
-        List<Long> rows = getJdbcTemplate().queryForList(findAllTicketTrips, Long.class, trip.getTripId());
+
+    @Override
+    public List<Trip> findByCarrierId(Number id) {
+        List<Trip> trips = new ArrayList<>();
+
+        trips.addAll(getJdbcTemplate().query(findAllByCarrierId, new Object[]{id}, getGenericMapper()));
+
+        return trips.stream()
+                    .map(trip -> attachTicketClassed(trip).orElse(null))
+                    .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Trip> findAll() {
+        List<Trip> trips = new ArrayList<>();
+
+        trips.addAll(getJdbcTemplate().query(findAll, getGenericMapper()));
+
+        return trips.stream()
+                    .map(trip -> attachTicketClassed(trip).orElse(null))
+                    .collect(Collectors.toList());
+    }
+
+    private Optional<Trip> attachTicketClassed(Trip trip) {
+        if (trip == null) {
+            return Optional.empty();
+        }
+
+        List<Long> rows = getJdbcTemplate().queryForList(FIND_ALL_TICKET_TRIPS, Long.class, trip.getTripId());
         trip.setTicketClasses(ticketClassDAO.findIn(rows));
-        return trip;
+
+        return Optional.of(trip);
     }
 
 }

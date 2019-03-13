@@ -14,5 +14,9 @@ public interface TripDAO {
 
     void delete(Trip trip);
 
+    List<Trip> findByCarrierId(Number id);
+
+    List<Trip> findAll();
+
     List<TripWithArrivalAndDepartureData> getAllTripsWitArrivalAndDepatureDataBelongToCarrier(Number carrierId);
 }
