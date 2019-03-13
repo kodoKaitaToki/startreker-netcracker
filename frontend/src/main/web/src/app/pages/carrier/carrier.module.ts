@@ -5,9 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {GrowlModule, MessageService, ProgressBarModule} from "primeng/primeng";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastModule} from "primeng/toast";
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {GrowlModule} from "primeng/primeng";
-import {MessageService} from 'primeng/components/common/messageservice';
 
 import {CarrierRoutingModule} from './carrier-routing.module';
 import {NavbarComponent} from './navbar/navbar.component';
