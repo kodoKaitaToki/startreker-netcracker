@@ -256,11 +256,11 @@ insert into SERVICE (CARRIER_ID, APPROVER_ID, SERVICE_NAME, SERVICE_DESCRIPTION,
 insert into SERVICE (CARRIER_ID, APPROVER_ID, SERVICE_NAME, SERVICE_DESCRIPTION, SERVICE_STATUS, CREATION_DATE) values (7, 1, 'nullam porttitor lacus', 'dapibus dolor vel est donec odio justo sollicitudin ut suscipit a feugiat', 6, '2015-05-05 07:03:57');
 insert into SERVICE (CARRIER_ID, APPROVER_ID, SERVICE_NAME, SERVICE_DESCRIPTION, SERVICE_STATUS, CREATION_DATE) values (7, 4, 'quis orci nullam', 'luctus et ultrices posuere cubilia curae mauris viverra diam vitae quam suspendisse potenti nullam porttitor lacus at turpis donec posuere', 7, '2015-07-29 18:56:38');
 
-insert into POSSIBLE_SERVICE (CLASS_ID, SERVICE_ID, SERVICE_PRICE) values (1, 4, 251);
-insert into POSSIBLE_SERVICE (CLASS_ID, SERVICE_ID, SERVICE_PRICE) values (2, 4, 356);
-insert into POSSIBLE_SERVICE (CLASS_ID, SERVICE_ID, SERVICE_PRICE) values (2, 5, 406);
-insert into POSSIBLE_SERVICE (CLASS_ID, SERVICE_ID, SERVICE_PRICE) values (3, 4, 417);
-insert into POSSIBLE_SERVICE (CLASS_ID, SERVICE_ID, SERVICE_PRICE) values (3, 5, 475);
+insert into POSSIBLE_SERVICE (CLASS_ID, SERVICE_ID, SERVICE_PRICE, P_SERVICE_STATUS) values (1, 4, 251, 1);
+insert into POSSIBLE_SERVICE (CLASS_ID, SERVICE_ID, SERVICE_PRICE, P_SERVICE_STATUS) values (2, 4, 356, 1);
+insert into POSSIBLE_SERVICE (CLASS_ID, SERVICE_ID, SERVICE_PRICE, P_SERVICE_STATUS) values (2, 5, 406, 1);
+insert into POSSIBLE_SERVICE (CLASS_ID, SERVICE_ID, SERVICE_PRICE, P_SERVICE_STATUS) values (3, 4, 417, 1);
+insert into POSSIBLE_SERVICE (CLASS_ID, SERVICE_ID, SERVICE_PRICE, P_SERVICE_STATUS) values (3, 5, 475, 1);
 
 insert into BOUGHT_SERVICE (TICKET_ID, P_SERVICE_ID) values (4, 1);
 insert into BOUGHT_SERVICE (TICKET_ID, P_SERVICE_ID) values (8, 1);
