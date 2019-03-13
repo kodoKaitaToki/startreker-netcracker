@@ -133,7 +133,7 @@ export class BundlesTableComponent implements OnInit {
   getAllBundles() {
 
     this.bundlesSrvc.getCount()
-        .subscribe(data => this.pageAmount = Math.floor(data/this.pageNumber));
+        .subscribe(data => this.pageAmount = data);
 
     this.bundlesSrvc.getBundlesInInterval(this.pageNumber, this.pageFrom)
         .subscribe(data => {
