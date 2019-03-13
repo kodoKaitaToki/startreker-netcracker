@@ -22,10 +22,11 @@ import {ClarificationComponent} from './services/clarification/clarification.com
 import {ArchiveComponent} from './services/archive/archive.component';
 import {TripsTableComponent} from './trips/trips-table/trips-table.component';
 import {TripsCrudComponent} from './trips/trips-crud/trips-crud.component';
-import {AprroverShowStatusPipe} from './trips/shared/pipes/aprrover-show-status.pipe';
-import {FilterPipePipe} from './trips/shared/pipes/filter-pipe.pipe';
+import {TripFilterPipe} from './trips/shared/pipes/filter-pipe.pipe';
 import {ServiceFilterPipe} from './services/shared/pipe/service-filter.pipe';
 import {NgxPaginationModule} from 'ngx-pagination';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
 
 @NgModule({
   declarations: [NavbarComponent,
@@ -45,8 +46,8 @@ import {NgxPaginationModule} from 'ngx-pagination';
                  ServiceFilterPipe,
                  TripsTableComponent,
                  TripsCrudComponent,
-                 AprroverShowStatusPipe,
-                 FilterPipePipe],
+                 TripFilterPipe
+                ],
 
   imports: [
     CommonModule,
@@ -54,7 +55,9 @@ import {NgxPaginationModule} from 'ngx-pagination';
     ReactiveFormsModule,
     CarrierRoutingModule,
     GrowlModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    MessageModule, 
+    MessagesModule
   ],
   providers: [
     MessageService

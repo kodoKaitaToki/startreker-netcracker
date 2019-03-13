@@ -13,15 +13,15 @@ import java.util.stream.Collectors;
 @Repository
 public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements TicketClassDAO {
 
-    private static final String SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER = "SELECT " +
-            "tc.class_id, " +
-            "class_name, " +
-            "trip_id, " +
-            "ticket_price, " +
-            "bc.item_number " +
-            "FROM ticket_class tc " +
-            "INNER JOIN bundle_class bc on tc.class_id = bc.class_id " +
-            "WHERE bc.bundle_id = ? AND trip_id = ?;";
+    private static final String SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER = "SELECT "
+                                                                     + "tc.class_id, "
+                                                                     + "class_name, "
+                                                                     + "trip_id, "
+                                                                     + "ticket_price, "
+                                                                     + "bc.item_number "
+                                                                     + "FROM ticket_class tc "
+                                                                     + "INNER JOIN bundle_class bc on tc.class_id = bc.class_id "
+                                                                     + "WHERE bc.bundle_id = ? AND trip_id = ?;";
 
     private static final String GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER = "SELECT "
                                                                             + "ticket_class.class_id, "
@@ -48,14 +48,47 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
     private static final String DELETE_DISCOUNT_CONNECTION =
             "UPDATE ticket_class " + "SET discount_id = null " + "WHERE class_id = ?";
     private final String SELECT_BY_TRIP_ID =
-            "SELECT class_id, class_name, trip_id, ticket_price, discount_id, class_seats " +
-            "FROM ticket_class " +
-            "WHERE trip_id = ?";
+            "SELECT class_id, class_name, trip_id, ticket_price, discount_id, class_seats "
+            + "FROM ticket_class "
+            + "WHERE trip_id = ?";
+
+    private final String INSERT_TICKET_CLASS =
+            "INSERT INTO ticket_class (class_name, trip_id, class_seats, ticket_price) VALUES (?, ?, ?, ?)";
+
+    private final String UPDATE_TICKET_CLASS =
+            "UPDATE ticket_class SET class_seats = ?, ticket_price = ? WHERE class_id = ?";
 
 
     @Override
     public List<TicketClass> findByTripId(Number id) {
         return getJdbcTemplate().query(SELECT_BY_TRIP_ID, new Object[]{id}, getGenericMapper());
+    }
+
+    /**
+     * Method for adding new ticket classes to database
+     *
+     * @param ticketClass - ticket class to be added
+     */
+    @Override
+    public void create(TicketClass ticketClass) {
+        getJdbcTemplate().update(INSERT_TICKET_CLASS,
+                                 ticketClass.getClassName(),
+                                 ticketClass.getTripId(),
+                                 ticketClass.getClassSeats(),
+                                 ticketClass.getTicketPrice());
+    }
+
+    /**
+     * Method for updating of ticket classes
+     *
+     * @param ticketClass - ticket class to be updated
+     */
+    @Override
+    public void update(TicketClass ticketClass) {
+        getJdbcTemplate().update(UPDATE_TICKET_CLASS,
+                                 ticketClass.getClassSeats(),
+                                 ticketClass.getTicketPrice(),
+                                 ticketClass.getClassId());
     }
 
     /**
@@ -81,18 +114,16 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
 
     @Override
     public List<TicketClass> getAllTicketClassesRelatedToCarrier(Number carrierId) {
-        return new ArrayList<>(getJdbcTemplate()
-                .query(GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER,
-                        new Object[]{carrierId},
-                        getGenericMapper()));
+        return new ArrayList<>(getJdbcTemplate().query(GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER,
+                                                       new Object[]{carrierId},
+                                                       getGenericMapper()));
     }
 
     public Optional<TicketClass> getTicketClassByDiscount(Number userId, Number discountId) {
         try {
-            TicketClass user = getJdbcTemplate().queryForObject(
-                    GET_TICLET_CLASS_WITH_DISCOUNT,
-                    new Object[]{userId, discountId},
-                    getGenericMapper());
+            TicketClass user = getJdbcTemplate().queryForObject(GET_TICLET_CLASS_WITH_DISCOUNT,
+                                                                new Object[]{userId, discountId},
+                                                                getGenericMapper());
             return user != null ? Optional.of(user) : Optional.empty();
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -101,9 +132,9 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
 
     @Override
     public void deleteDiscountsForTicketClasses(List<Long> ticketClassIds) {
-        getJdbcTemplate().batchUpdate(DELETE_DISCOUNT_CONNECTION, ticketClassIds.stream()
-                                                                                .map(ticketClassId -> new Object[]{
-                                                                                        ticketClassId})
-                                                                                .collect(Collectors.toList()));
+        getJdbcTemplate().batchUpdate(DELETE_DISCOUNT_CONNECTION,
+                                      ticketClassIds.stream()
+                                                    .map(ticketClassId -> new Object[]{ticketClassId})
+                                                    .collect(Collectors.toList()));
     }
 }

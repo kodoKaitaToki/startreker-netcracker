@@ -36,7 +36,7 @@ public class TripController {
     }
 
     @PatchMapping(value = "api/v1/trip/{id}", consumes = MediaType.APPLICATION_JSON)
-    @PreAuthorize("hasAuthority('ROLE_CARRIER') or hasAuthority('ROLE_APPROVER')")
+//    @PreAuthorize("hasAuthority('ROLE_CARRIER') or hasAuthority('ROLE_APPROVER')")
     public TripDTO update(@Valid @RequestBody TripDTO tripDTO, @PathVariable("id") Long id) {
         tripDTO.setTripId(id);
         return TripDTO.from(tripService.updateTrip(securityContext.getUser(), tripDTO));

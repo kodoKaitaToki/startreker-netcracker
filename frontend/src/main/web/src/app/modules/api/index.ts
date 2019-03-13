@@ -65,8 +65,11 @@ const trips = {
   },
   addTrip() {
     return `${baseUrl}api/v1/trips`;
+  },
+  getAllTrips() {
+    return `${baseUrl}api/v1/trips`;
   }
-}
+ }
 
 const costDash = {
   getCosts(){

@@ -57,7 +57,11 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
                                                 + "INNER JOIN planet AS arp ON arp.planet_id = ars.planet_id "
                                                 + "WHERE carrier_id = ? AND trip_status != 7 ";
 
-    private String PAGINATION = "ORDER BY t.creation_date DESC LIMIT ? OFFSET ?";
+    private String ORDERED = "ORDER BY t.creation_date DESC ";
+
+    private String PAGINATION = ORDERED + "LIMIT ? OFFSET ?";
+
+    private String ALL_TRIPS_ORDERED = FIND_ALL_TRIPS_FOR_CARRIER + ORDERED;
 
     private String ALL_TRIPS_PAGINATION = FIND_ALL_TRIPS_FOR_CARRIER + PAGINATION;
 
@@ -83,16 +87,32 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
         this.tripStateRegistry = tripStateRegistry;
     }
 
+    /**
+     * Method for selecting all trips which belong to specified carrier
+     *
+     * @param carrierId - id of carrier
+     * @return list of trips ordered by creation date with attached ticket classes
+     */
     @Override
     public List<Trip> allCarriersTrips(Long carrierId) {
         logger.debug("Getting all trips for carrier");
-        List<Trip> trips = getJdbcTemplate().query(FIND_ALL_TRIPS_FOR_CARRIER,
+        List<Trip> trips = getJdbcTemplate().query(ALL_TRIPS_ORDERED,
                                                    new Object[]{carrierId},
                                                    new TripCRUDMapper(this.tripStateRegistry));
         logger.debug("Attaching ticket classes to trip");
         trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findByTripId(trip.getTripId())));
         return trips;
     }
+
+
+    /**
+     * Method for selecting all trips which belong to specified carrier with pagination
+     *
+     * @param carrierId - id of carrier
+     * @param limit     - amount of trips which should be returned
+     * @param offset    - specifies from which number query should begin
+     * @return list of trips ordered by creation date with attached ticket classes
+     */
 
     @Override
     public List<Trip> paginationForCarrier(Integer limit, Integer offset, Long carrierId) {
@@ -104,6 +124,14 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
         return trips;
     }
 
+    /**
+     * Method for selecting trips with specified status which belong to specified carrier
+     *
+     * @param carrierId - id of carrier
+     * @param status    - status of trip
+     * @return list of trips ordered by creation date with attached ticket classes
+     */
+
     @Override
     public List<Trip> findByStatusForCarrier(Integer status, Long carrierId) {
         logger.debug("Getting trips for carrier filtered by status {}", status);
@@ -114,6 +142,16 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
         trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findByTripId(trip.getTripId())));
         return trips;
     }
+
+    /**
+     * Method for selecting trips with specified status which belong to specified carrier with pagination
+     *
+     * @param carrierId - id of carrier
+     * @param status    - status of trip
+     * @param limit     - amount of trips which should be returned
+     * @param offset    - specifies from which number query should begin
+     * @return list of trips ordered by creation date with attached ticket classes
+     */
 
     @Override
     public List<Trip> findByStatusForCarrierPagination(Integer status, Long carrierId, Integer limit, Integer offset) {
@@ -129,6 +167,15 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
         return trips;
     }
 
+    /**
+     * Method for selecting trips with specified status which belong to specified carrier with pagination
+     *
+     * @param carrierId       - id of carrier
+     * @param departurePlanet - planet where from trip starts
+     * @param arrivalPlanet   - planet of destination
+     * @return list of trips ordered by creation date with attached ticket classes
+     */
+
     @Override
     public List<Trip> findByPlanetsForCarrier(String departurePlanet, String arrivalPlanet, Long carrierId) {
         logger.debug("Getting all trips from {} to {}", departurePlanet, arrivalPlanet);
@@ -139,6 +186,29 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
         logger.debug("Attaching ticket classes to trip");
         trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findByTripId(trip.getTripId())));
         return trips;
+    }
+
+    /**
+     * Method for adding new trips to database
+     *
+     * @param trip - trip to be added
+     */
+
+    public void add(Trip trip) {
+        logger.debug("Inserting new trip to database");
+        getJdbcTemplate().update(INSERT_TRIP,
+                                 trip.getOwner()
+                                     .getUserId(),
+                                 trip.getTripState()
+                                     .getDatabaseValue(),
+                                 trip.getTripPhoto(),
+                                 trip.getDepartureSpaceport()
+                                     .getSpaceportId(),
+                                 trip.getDepartureDate(),
+                                 trip.getArrivalSpaceport()
+                                     .getSpaceportId(),
+                                 trip.getArrivalDate(),
+                                 trip.getCreationDate());
     }
 
     @Override
@@ -198,23 +268,6 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
                                  trip.getTripId());
     }
 
-    public void add(Trip trip) {
-        logger.debug("Inserting new trip to database");
-        getJdbcTemplate().update(INSERT_TRIP,
-                                 trip.getOwner()
-                                     .getUserId(),
-                                 trip.getTripState()
-                                     .getDatabaseValue(),
-                                 trip.getTripPhoto(),
-                                 trip.getDepartureSpaceport()
-                                     .getSpaceportId(),
-                                 trip.getDepartureDate(),
-                                 trip.getArrivalSpaceport()
-                                     .getSpaceportId(),
-                                 trip.getArrivalDate(),
-                                 trip.getCreationDate());
-    }
-
     private void create(Trip trip) {
         getJdbcTemplate().update(CREATE_FULL, getTripArguments(trip));
     }
@@ -231,6 +284,13 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
                                           .getUserId()),
                             trip.getTripPhoto()};
     }
+
+    /**
+     * Method for attachment ticket classes to specified trip
+     *
+     * @param trip - trip for attachment
+     * @return trip with attached ticket classes
+     */
 
     private Trip attachTicketClassed(Trip trip) {
         List<Long> rows = getJdbcTemplate().queryForList(FIND_ALL_TICKET_TRIPS, Long.class, trip.getTripId());

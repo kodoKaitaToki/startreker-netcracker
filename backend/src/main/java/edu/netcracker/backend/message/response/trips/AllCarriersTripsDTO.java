@@ -32,10 +32,13 @@ public class AllCarriersTripsDTO {
     private String arrivalPlanet;
 
     @JsonProperty("departure_date")
-    private LocalDateTime departureDate;
+    private String departureDate;
 
     @JsonProperty("arrival_date")
-    private LocalDateTime arrivalDate;
+    private String arrivalDate;
+
+    @JsonProperty("creation_date")
+    private String creationDate;
 
     @JsonProperty("ticket_classes")
     private List<Map<String, Object>> ticketClasses;
@@ -51,8 +54,9 @@ public class AllCarriersTripsDTO {
                                   .getPlanetName();
         dto.arrivalPlanet = trip.getArrivalPlanet()
                                 .getPlanetName();
-        dto.departureDate = trip.getDepartureDate();
-        dto.arrivalDate = trip.getArrivalDate();
+        dto.departureDate = getStringFromDate(trip.getDepartureDate());
+        dto.arrivalDate = getStringFromDate(trip.getArrivalDate());
+        dto.creationDate = getStringFromDate(trip.getCreationDate());
         dto.ticketClasses = new ArrayList<>();
 
         for (TicketClass ticketClass : trip.getTicketClasses()) {
@@ -65,5 +69,19 @@ public class AllCarriersTripsDTO {
         }
 
         return dto;
+    }
+
+    private static String getStringFromDate(LocalDateTime date) {
+        return date.getYear()
+               + "-"
+               + String.format("%02d", date.getMonthValue())
+               + "-"
+               + String.format("%02d", date.getDayOfMonth())
+               + " "
+               + String.format("%02d", date.getHour())
+               + ":"
+               + String.format("%02d", date.getMinute())
+               + ":"
+               + String.format("%02d", date.getSecond());
     }
 }

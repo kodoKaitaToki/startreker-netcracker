@@ -1,12 +1,24 @@
 import {Pipe, PipeTransform} from '@angular/core';
+import {Trip} from "../model/trip";
 
 @Pipe({
-  name: 'filter'
-})
-export class FilterPipePipe implements PipeTransform {
+        name: 'tripFilter',
+      })
+export class TripFilterPipe implements PipeTransform {
 
-  transform(object: any[], fieldName: string, searchStr: string): any {
+  transform(value: Trip[], filterCriteria: string, filterContent: string): Trip[] {
 
-    return object.filter(obj => obj[fieldName].toLowerCase().indexOf(searchStr.toLowerCase()) !== -1);
+    if (filterCriteria === 'departure planet') {
+      filterCriteria = 'departure_planet';
+    }
+
+    if (filterCriteria === 'arrival planet') {
+      filterCriteria = 'arrival_planet';
+    }
+
+
+    return value.filter(trip => trip[filterCriteria].toString()
+                                                            .toLowerCase()
+                                                            .indexOf(filterContent.toLowerCase()) !== -1);
   }
 }

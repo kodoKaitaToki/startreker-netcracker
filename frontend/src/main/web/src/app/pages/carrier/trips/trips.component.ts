@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Approver} from './shared/model/approver';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TripsService } from '../../../services/trips.service';
 import { ExisitingTrips } from '../../../services/interfaces/trips.interface';
+import { Trip } from './shared/model/trip';
 import { clone } from 'ramda';
+import { DateValidator } from './trips.helper';
 
 @Component({
   selector: 'app-trips',
@@ -12,13 +13,14 @@ import { clone } from 'ramda';
 })
 export class TripsComponent implements OnInit {
 
-  defaultApprovers: Approver[] = [];
-  currentApproverForUpdate: Approver;
+  defaultTrips: Trip[] = [];
+  currentTripForUpdate: Trip;
 
   filterCriteria = [
-    {name: 'id'},
-    {name: 'name'},
-    {name: 'status'},
+    { name: 'departure planet' },
+    { name: 'arrival planet' },
+    { name: 'departure_date'},
+    { name: 'id' }
   ];
 
   departureSpaceports: any = [];
@@ -39,123 +41,50 @@ export class TripsComponent implements OnInit {
   currentDateError: boolean = false;
   departureDateError: boolean = false;
 
+  
+  get f() {
+    return this.form.controls;
+  }
+
   constructor(private tripsApi: TripsService) {
     this.form = new FormGroup(
       {
-        departure_planet: new FormControl('', [Validators.required]),
+        departure_planet: new FormControl('', Validators.required),
         departure_spaceport: new FormControl('', Validators.required),
         arrival_planet: new FormControl('', Validators.required),
         arrival_spaceport: new FormControl('', Validators.required),
-        departure_date: new FormControl('', Validators.required),
-        arrival_date: new FormControl('', Validators.required),
+        departure_date: new FormControl('', [Validators.required, DateValidator.notEarlierThanCurrentDate]),
+        arrival_date: new FormControl('', [Validators.required, DateValidator.notEarlierThanCurrentDate]),
         arrival_time: new FormControl('', Validators.required),
         departure_time: new FormControl('', Validators.required),
-      },
+      }, 
+      // {
+      //   validators: Validators.compose([
+      //     DateValidator.dateLessThan('arrival_date', 'departure_date', { 'arrival_date': true })])
+      // }
     );
   }
 
   ngOnInit(): void {
     this.tripsApi.setExistingTrips()
-    .subscribe(
-      (resp: ExisitingTrips) => {
+      .subscribe(
+        (resp: ExisitingTrips) => {
           this.general = clone(resp);
-      },
-      error => console.log(error)
-    );
-    this.defaultApprovers = this.getDefaultApprovers();
+        },
+        error => console.log(error)
+      );
+    this.getTrips();
+    // this.defaultTrips = this.getDefaultTrips();
   }
 
-  getDefaultApprovers() {
-    return [
-      {
-        id: '1',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '2',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '3',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '4',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '5',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '6',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '7',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '8',
-        name: 'anotherName1',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '9',
-        name: 'anotherName2',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'off',
-        creation_date: new Date()
-      },
-      {
-        id: '10',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'on',
-        creation_date: new Date()
-      },
-      {
-        id: '11',
-        name: 'testName',
-        email: 'test@mail.com',
-        telephone: '111-22-33',
-        status: 'off',
-        creation_date: new Date()
-      }
-    ];
+  getTrips() {
+    this.tripsApi.getAllTrips()
+      .subscribe(
+        (resp: Trip) => {
+          this.defaultTrips = clone(resp);
+        },
+        error => console.log(error)
+      );
   }
 
   choosePlanet(direction) {
@@ -169,25 +98,25 @@ export class TripsComponent implements OnInit {
     this.currentFilterPlaceholder = `Search by ${this.currentFilter}`;
   }
 
-  validateDate() {
-    const startDate = new Date(this.form.value.departure_date);
-    const endDate = new Date(this.form.value.arrival_date);
-    const currentDate = new Date();
-    // + will then compare the dates' millisecond values
-    if (+startDate < +currentDate) {
-      this.currentDateError = true;
-      setTimeout(() => this.currentDateError = false, 3000);
-      console.log('yes')
-    } else if (+startDate > +endDate) {
-      console.log('Start date is less than current date');
-      this.departureDateError = true;
-      setTimeout(() => this.departureDateError = false, 3000);
-    }
-  }
+  // validateDate() {
+  //   const startDate = new Date(this.form.value.departure_date);
+  //   const endDate = new Date(this.form.value.arrival_date);
+  //   const currentDate = new Date();
+  //   // + will then compare the dates' millisecond values
+  //   if (+startDate < +currentDate) {
+  //     this.currentDateError = true;
+  //     setTimeout(() => this.currentDateError = false, 3000);
+  //     // console.log('yes')
+  //   } else if (+startDate > +endDate) {
+  //     // console.log('Start date is less than current date');
+  //     this.departureDateError = true;
+  //     setTimeout(() => this.departureDateError = false, 3000);
+  //   }
+  // }
 
   onSubmit() {
     // method to send data to server
-    this.validateDate();
+    // this.validateDate();
     this.submitData = this.form.value;
     this.submitData.departure_date = `${this.submitData.departure_date} ${this.submitData.departure_time}:00`;
     this.submitData.arrival_date = `${this.submitData.arrival_date} ${this.submitData.arrival_time}:00`;
@@ -195,18 +124,19 @@ export class TripsComponent implements OnInit {
     delete this.submitData.departure_time;
     // this.submitData.arrival_time = `${this.submitData.arrival_time}:00`;
     // this.submitData.departure_time = `${this.submitData.departure_time}:00`;
-    console.log(this.submitData);
+    // console.log(this.submitData);
     this.tripsApi.createTrip(this.submitData)
       .subscribe(
         (resp: Response) => {
-            console.log(resp);
-            this.showSuccess = true;
-            setTimeout(() => this.showSuccess = false, 3000);
+          // console.log(resp);
+          this.showSuccess = true;
+          setTimeout(() => this.showSuccess = false, 3000);
+          this.getTrips();
         },
         error => {
-            console.error(error);
-            this.showError = true;
-            setTimeout(() => this.showError = false, 3000);
+          // console.error(error);
+          this.showError = true;
+          setTimeout(() => this.showError = false, 3000);
         }
       );
     // submit form if !this.currentDateError && !this.departureDateError

@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {Approver} from '../shared/model/approver';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Trip} from '../shared/model/trip';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
@@ -9,16 +9,29 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 })
 export class TripsTableComponent implements OnInit {
 
-  @Input() approvers: Approver;
+  @Input() trips: Trip[];
 
   @Input() filterCriteria: string;
+
   @Input() filterContent: string;
 
-  currentApproverForUpdate = new Approver();
-  isForUpdateMessage = false;
+  currentTripForUpdate: Trip;
+
+  isForUpdateAlertMessage = false;
+
+  isEditButtonBlockedAfterSubmit = true;
 
   form: FormGroup;
-  isEditButtonBlockedAfterSubmit = true;
+
+  totalRec: number;
+
+  page: number = 1;
+
+  entriesAmountOnPage = 10;
+
+  @Output() onUpdateDataNotifier = new EventEmitter();
+
+  @Output() onDeleteDataNotifier = new EventEmitter();
 
   constructor() {
 
@@ -27,50 +40,67 @@ export class TripsTableComponent implements OnInit {
   ngOnInit() {
 
     this.setFormInDefault();
+    this.totalRec = this.trips.length;
   }
 
   setFormInDefault() {
 
-    this.form = new FormGroup(
-      {
-        email: new FormControl('', [Validators.required, Validators.email]),
-        name: new FormControl('', Validators.required),
-        tel: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
-        status: new FormControl('on')
-      }
-    );
+  //   this.form = new FormGroup(
+  //     {
+  //       email: new FormControl('', [Validators.required, Validators.email]),
+  //       username: new FormControl('', Validators.required),
+  //       telephone_number: new FormControl('', Validators.required),
+  //       is_activated: new FormControl(false, Validators.required),
+  //     }
+  //   );
+  // }
+
+  // onTripUpdate(onClickedTripForUpdate) {
+
+  //   this.isEditButtonBlockedAfterSubmit = true;
+
+  //   this.currentTripForUpdate = onClickedTripForUpdate;
+
+  //   this.form.patchValue({
+  //                          email: this.currentApproverForUpdate.email,
+  //                          username: this.currentApproverForUpdate.username,
+  //                          telephone_number: this.currentApproverForUpdate.telephone_number,
+  //                          is_activated: this.currentApproverForUpdate.is_activated
+  //                        });
   }
 
-  onUpdate(event) {
+  onTripDelete(onClickedTripForDelete) {
 
-    this.currentApproverForUpdate = event;
-    this.isEditButtonBlockedAfterSubmit = true;
-
-    this.form = new FormGroup(
-      {
-        email: new FormControl(this.currentApproverForUpdate.email, [Validators.required, Validators.email]),
-        name: new FormControl(this.currentApproverForUpdate.name, Validators.required),
-        tel: new FormControl(this.currentApproverForUpdate.telephone, [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
-        status: new FormControl(this.currentApproverForUpdate.status)
-      }
-    );
+    this.onDeleteDataNotifier.emit((TripsTableComponent.deleteUnnecessaryFieldAfterClick(onClickedTripForDelete)));
   }
 
-  onDelete() {
+  onSubmitUpdate() {
 
-  }
-
-  onSubmit() {
-
-    this.isForUpdateMessage = true;
     this.isEditButtonBlockedAfterSubmit = false;
+    this.isForUpdateAlertMessage = true;
 
-    setTimeout(() => {
+    this.form.value.id = this.currentTripForUpdate.trip_id;
 
-      this.isForUpdateMessage = false;
-      this.currentApproverForUpdate = new Approver();
+    this.onUpdateDataNotifier.emit(this.form.value);
+    this.closeUpdateForm();
+  }
 
-    }, 5000);
+  onChangePage($event) {
+
+    this.page = $event;
+    window.scrollTo(0, 0);
+  }
+
+  static deleteUnnecessaryFieldAfterClick(trip): Trip {
+    // delete approver['roles'];
+    // delete approver['user_created_date'];
+
+    return trip;
+  }
+
+  closeUpdateForm() {
+    this.currentTripForUpdate = null;
+    this.isForUpdateAlertMessage = false;
   }
 }
 
