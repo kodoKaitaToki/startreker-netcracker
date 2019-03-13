@@ -17,16 +17,19 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @PropertySource("classpath:sql/tripdao.properties")
 public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
 
     private TicketClassDAO ticketClassDAO;
-    private final String findAllTicketTrips = "SELECT class_id FROM ticket_class WHERE trip_id = ?";
+    private final String FIND_ALL_TICKET_TRIPS = "SELECT class_id FROM ticket_class WHERE trip_id = ?";
 
     private final UserDAO userDAO;
     private final TripMapper tripMapper;
+    private final String findAllByCarrierId = "SELECT * FROM trip WHERE carrier_id = ?";
+    private final String findAll = "SELECT * FROM trip";
 
     @Value("${SELECT_FULL}")
     private String SELECT_FULL;
@@ -144,10 +147,38 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
                             trip.getTripPhoto()};
     }
 
-    private Trip attachTicketClassed(Trip trip) {
-        List<Long> rows = getJdbcTemplate().queryForList(findAllTicketTrips, Long.class, trip.getTripId());
+
+    @Override
+    public List<Trip> findByCarrierId(Number id) {
+        List<Trip> trips = new ArrayList<>();
+
+        trips.addAll(getJdbcTemplate().query(findAllByCarrierId, new Object[]{id}, getGenericMapper()));
+
+        return trips.stream()
+                    .map(trip -> attachTicketClassed(trip).orElse(null))
+                    .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Trip> findAll() {
+        List<Trip> trips = new ArrayList<>();
+
+        trips.addAll(getJdbcTemplate().query(findAll, getGenericMapper()));
+
+        return trips.stream()
+                    .map(trip -> attachTicketClassed(trip).orElse(null))
+                    .collect(Collectors.toList());
+    }
+
+    private Optional<Trip> attachTicketClassed(Trip trip) {
+        if (trip == null) {
+            return Optional.empty();
+        }
+
+        List<Long> rows = getJdbcTemplate().queryForList(FIND_ALL_TICKET_TRIPS, Long.class, trip.getTripId());
         trip.setTicketClasses(ticketClassDAO.findIn(rows));
-        return trip;
+
+        return Optional.of(trip);
     }
 
 }

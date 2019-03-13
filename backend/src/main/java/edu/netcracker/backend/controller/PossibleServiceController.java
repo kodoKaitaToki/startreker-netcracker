@@ -17,28 +17,28 @@ public class PossibleServiceController {
         this.possibleServiceService = possibleServiceService;
     }
 
-    @GetMapping("/api/v1/carrier/possible-services")
+    @GetMapping("/api/v1/possible-services")
     public List<PossibleServiceDTO> getAll(@RequestParam("class-id") Integer classId) {
         return possibleServiceService.getAllWithClassId(classId);
     }
 
 
-    @GetMapping("/api/v1/carrier/possible-services/{possibleServiceId}")
+    @GetMapping("/api/v1/possible-services/{possibleServiceId}")
     public PossibleServiceDTO getPossibleService(@PathVariable Integer possibleServiceId) {
         return possibleServiceService.getPossibleService(possibleServiceId);
     }
 
-    @PostMapping("/api/v1/carrier/possible-services")
+    @PostMapping("/api/v1/possible-services")
     public PossibleServiceDTO createPossibleService(@Valid @RequestBody PossibleServiceDTO possibleServiceDTO) {
         return possibleServiceService.createPossibleService(possibleServiceDTO);
     }
 
-    @PutMapping("/api/v1/carrier/possible-services")
+    @PutMapping("/api/v1/possible-services")
     public PossibleServiceDTO updatePossibleService(@Valid @RequestBody PossibleServiceDTO possibleServiceDTO) {
         return possibleServiceService.updatePossibleService(possibleServiceDTO);
     }
 
-    @DeleteMapping("/api/v1/carrier/possible-services/{possibleServiceId}")
+    @DeleteMapping("/api/v1/possible-services/{possibleServiceId}")
     public void deletePossibleService(@PathVariable Integer possibleServiceId) {
         possibleServiceService.deletePossibleService(possibleServiceId);
     }

@@ -46,6 +46,11 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     IndexComponent,
     CarrierCrudComponent,
     BundlesCrudComponent,
+    BundlesComponentComponent,
+    BundlesTableComponent,
+    TripsServicesComponent,
+    TripDashboardComponent,
+    ServiceDashboardComponent,
     DashboardsComponent,
     ApproverComponentComponent,
     ApproverTableComponent,
@@ -72,14 +77,18 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     ReactiveFormsModule,
     NgxPaginationModule,
     ToastModule,
-    ProgressBarModule
+    ProgressBarModule,
+    TreeModule,
+    SharedModule,
   ],
   providers: [
+    FilterPipePipe,
     AprroverShowStatusPipe,
     TroubleStatisticsService,
     ApproverService,
     ApproverFilterPipe,
-    MessageService
+    MessageService,
+    BundlesService
   ]
 })
 export class AdminModule {

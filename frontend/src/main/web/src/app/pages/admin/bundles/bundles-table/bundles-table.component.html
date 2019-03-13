@@ -188,6 +188,7 @@
 <hr>
 
 -->
+<p-toast></p-toast>
 
 <div class="list-group">
   <ul>
@@ -274,7 +275,7 @@
       <hr>
 
       <div class="row">
-        <div class="col-md-7">
+        <div class="col-12">
           <h5>Trips:</h5>
           <div class="list-group">
             <ul>
@@ -287,53 +288,46 @@
                     {{trip.arrival_spaceport_name}}({{trip.arrival_planet}})
                   </h5>
                 </div>
-                <hr>
-
+                <h5>Classes:</h5>
                 <ul>
                   <li class="list-group-item"
                     *ngFor="let ticket_class of trip.ticket_classes"
                   >
-                    <div class="row">
-                      <h3 class="col-md-2">{{ticket_class.item_number}}</h3>
-                      <h5 class="col-md-10 align-self-end">
+                    <div class="row align-items-end">
+                      <h3 class="col-md-1">{{ticket_class.item_number}}</h3>
+                      <h5 class="col-md-4 mr-auto">
                         {{ticket_class.class_name}}
                       </h5>
-                    </div>
-                    <hr>
-                    <div class="row">
-                      <h5 class="col-md-2">For:</h5>
-                      <p class="col-md-10 align-self-end">
+                      <h5 class="col-md-1">For:</h5>
+                      <span class="col-md-4" style="margin-bottom: 0.5rem">
                         {{ticket_class.ticket_price}}
-                      </p>
+                      </span>
                     </div>
+                    <ng-container *ngIf="ticket_class.services.length > 0">
+                      <h5>Services:</h5>
+                      <div class="list-group">
+                        <ul>
+                          <li class="list-group-item"
+                            *ngFor="let service of ticket_class.services"
+                          >
+                            <div class="row align-items-end">
+                              <h3 class="col-md-1">{{service.item_number}}</h3>
+                              <h5 class="col-md-4 mr-auto">
+                                {{service.service_name}}
+                              </h5>
+                              <h5 class="col-md-1">For:</h5>
+                              <span class="col-md-4" style="margin-bottom: 0.5rem">
+                                {{service.service_price}}
+                              </span>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </ng-container>
                   </li>
                 </ul>
               </li>
             </ul>
-          </div>
-        </div>
-        <div class="col-md-5">
-          <h5>Services:</h5>
-          <div class="list-group">
-              <ul>
-                <li class="list-group-item"
-                  *ngFor="let service of bundle.bundle_services"
-                >
-                  <div class="row">
-                    <h3 class="col-md-2">{{service.item_number}}</h3>
-                    <h5 class="col-md-10 align-self-end">
-                      {{service.service_name}}
-                    </h5>
-                  </div>
-                  <hr>
-                  <div class="row">
-                    <h5 class="col-md-2">For:</h5>
-                    <p class="col-md-10 align-self-end">
-                      {{service.service_price}}
-                    </p>
-                  </div>
-                </li>
-              </ul>
           </div>
         </div>
       </div>

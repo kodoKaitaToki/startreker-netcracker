@@ -2,6 +2,9 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Bundle} from '../shared/model/bundle';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {BundlesService} from "../shared/service/bundles.service";
+import {MessageService} from "primeng/api";
+import {HttpErrorResponse} from "@angular/common/http";
+
 
 @Component({
              selector: 'app-bundles-table',
@@ -37,7 +40,7 @@ export class BundlesTableComponent implements OnInit {
 
   @Output() update = new EventEmitter<number>();
 
-  constructor(private bundlesSrvc: BundlesService) {
+  constructor(private bundlesSrvc: BundlesService, private messageService: MessageService) {
 
   }
 
@@ -58,7 +61,6 @@ export class BundlesTableComponent implements OnInit {
         price: new FormControl('', [Validators.required, Validators.min(0)]),
         description: new FormControl(''),
         trips: new FormControl(''),
-        services: new FormControl('')
       }
     );
   }
@@ -75,7 +77,6 @@ export class BundlesTableComponent implements OnInit {
                            price: this.currentBundlesForUpdate.bundle_price,
                            description: this.currentBundlesForUpdate.bundle_description,
                            trips : this.currentBundlesForUpdate.bundle_trips,
-                           services : this.currentBundlesForUpdate.bundle_services
                          });
   }
 
@@ -110,19 +111,23 @@ export class BundlesTableComponent implements OnInit {
   getBundlesForUpdate(bundles) {
 
     this.bundlesSrvc.putBundles(bundles)
-        .subscribe(() => {
-          this.getAllBundles();
-        }, () => {
-          alert('Something went wrong');
-        });
+    .subscribe(() => {
+      this.showMessage(this.createMessage('success', 'Bundle editing', 'The bundle was updated'));
+      this.getAllBundles();
+    }, (error: HttpErrorResponse) => {
+      this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
+    });
   }
 
   getBundlesForDelete(bundles) {
 
     this.bundlesSrvc.deleteBundles(bundles)
-        .subscribe(() => {
-          this.getAllBundles();
-        });
+    .subscribe(() => {
+      this.showMessage(this.createMessage('success', 'Bundle deletion', 'The bundle was deleted'));
+      this.getAllBundles();
+    }, (error: HttpErrorResponse) => {
+      this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
+    });
   }
 
   getAllBundles() {
@@ -131,7 +136,12 @@ export class BundlesTableComponent implements OnInit {
         .subscribe(data => this.pageAmount = Math.floor(data/this.pageNumber));
 
     this.bundlesSrvc.getBundlesInInterval(this.pageNumber, this.pageFrom)
-        .subscribe(data => this.bundles = data);
+        .subscribe(data => {
+          this.showMessage(this.createMessage('success', 'Bundle list', 'The list was updated'));
+          this.bundles = data;
+        }, (error: HttpErrorResponse) => {
+          this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
+        })
   }
 
 /*  checkRepeatedPasswordTheSame() {
@@ -141,5 +151,17 @@ export class BundlesTableComponent implements OnInit {
   onPageUpdate(from: number) {
     this.pageFrom = from;
     this.getAllBundles();
+  }
+
+  createMessage(severity: string, summary: string, detail: string): any {
+    return {
+      severity: severity,
+      summary: summary,
+      detail: detail
+    };
+  }
+
+  showMessage(msgObj: any) {
+    this.messageService.add(msgObj);
   }
 }

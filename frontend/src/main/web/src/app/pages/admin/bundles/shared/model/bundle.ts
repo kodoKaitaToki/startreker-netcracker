@@ -1,4 +1,3 @@
-import {Service} from "./service";
 import {Trip} from "./trip";
 
 export class Bundle {
@@ -13,8 +12,6 @@ export class Bundle {
   bundle_description: string;
 
   bundle_trips: Trip[];
-
-  bundle_services: Service[];
 
   constructor() {
 
