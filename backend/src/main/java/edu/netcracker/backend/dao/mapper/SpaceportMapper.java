@@ -26,8 +26,7 @@ public class SpaceportMapper implements RowMapper<Spaceport> {
         sp.setSpaceportId(resultSet.getLong("spaceport_id"));
         sp.setSpaceportName(resultSet.getString("spaceport_name"));
         sp.setCreationDate(resultSet.getTimestamp("creation_date")
-                                    .toLocalDateTime()
-                                    .toLocalDate());
+                                    .toLocalDateTime());
         sp.setPlanet(planetMapper.mapRow(resultSet, i));
 
         //Mapping id for compatibility
