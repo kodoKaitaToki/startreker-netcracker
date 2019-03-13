@@ -47,7 +47,7 @@ public class TripController {
         this.tripService = tripService;
     }
 
-    @PatchMapping(value = "api/v1/trip/{id}", consumes = MediaType.APPLICATION_JSON)
+    @PatchMapping(value = "api/v1/trip/{id}/status/published", consumes = MediaType.APPLICATION_JSON)
     @PreAuthorize("hasAuthority('ROLE_CARRIER') or hasAuthority('ROLE_APPROVER')")
     public TripResponse update(@Valid @RequestBody TripRequest tripRequest, @PathVariable("id") Long id) {
         tripRequest.setTripId(id);
