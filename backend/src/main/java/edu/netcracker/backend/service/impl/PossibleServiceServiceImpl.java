@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class PossibleServiceServiceImpl implements PossibleServiceService {
+
     private PossibleServiceDAO possibleServiceDAO;
     private ServiceDAO serviceDAO;
 
@@ -30,8 +31,9 @@ public class PossibleServiceServiceImpl implements PossibleServiceService {
     public PossibleServiceDTO getPossibleService(Number id) {
         Optional<PossibleService> optPossibleService = possibleServiceDAO.find(id);
 
-        if (!optPossibleService.isPresent())
+        if (!optPossibleService.isPresent()) {
             throw new RequestException("Possible service with id " + id + " not found", HttpStatus.NOT_FOUND);
+        }
 
         return PossibleServiceDTO.from(optPossibleService.get());
     }
@@ -40,15 +42,20 @@ public class PossibleServiceServiceImpl implements PossibleServiceService {
     public List<PossibleServiceDTO> getAllWithClassId(Number classId) {
         List<PossibleService> possibleServices = possibleServiceDAO.findAllWithClassId(classId);
 
-        if (possibleServices.size() == 0)
+        if (possibleServices.size() == 0) {
             throw new RequestException("No possible services yet", HttpStatus.NOT_FOUND);
+        }
 
-        return possibleServices.stream().map(PossibleServiceDTO::from).collect(Collectors.toList());
+        return possibleServices.stream()
+                               .map(PossibleServiceDTO::from)
+                               .collect(Collectors.toList());
     }
 
     @Override
     public PossibleServiceDTO createPossibleService(PossibleServiceDTO possibleServiceDTO) {
         PossibleService possibleService = from(possibleServiceDTO);
+        possibleService.setPServiceStatus(1L);
+
         possibleServiceDAO.save(possibleService);
 
         return PossibleServiceDTO.from(possibleService);
@@ -58,8 +65,9 @@ public class PossibleServiceServiceImpl implements PossibleServiceService {
     public void deletePossibleService(Number id) {
         Optional<PossibleService> optPossibleService = possibleServiceDAO.find(id);
 
-        if (!optPossibleService.isPresent())
+        if (!optPossibleService.isPresent()) {
             throw new RequestException("Possible service with id" + id + " not found ", HttpStatus.NOT_FOUND);
+        }
 
         possibleServiceDAO.delete(optPossibleService.get());
     }
@@ -68,12 +76,15 @@ public class PossibleServiceServiceImpl implements PossibleServiceService {
     public PossibleServiceDTO updatePossibleService(PossibleServiceDTO possibleServiceDTO) {
         Optional<PossibleService> optPossibleService = possibleServiceDAO.find(possibleServiceDTO.getId());
 
-        if (!optPossibleService.isPresent())
-            throw new RequestException("Possible service with id" + possibleServiceDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
+        if (!optPossibleService.isPresent()) {
+            throw new RequestException("Possible service with id" + possibleServiceDTO.getId() + " not found ",
+                                       HttpStatus.NOT_FOUND);
+        }
 
         possibleServiceDAO.save(from(possibleServiceDTO));
 
-        return PossibleServiceDTO.from(possibleServiceDAO.find(possibleServiceDTO.getId()).get());
+        return PossibleServiceDTO.from(possibleServiceDAO.find(possibleServiceDTO.getId())
+                                                         .get());
     }
 
     private PossibleService from(PossibleServiceDTO possibleServiceDTO) {
@@ -86,8 +97,10 @@ public class PossibleServiceServiceImpl implements PossibleServiceService {
 
         Optional<ServiceDescr> optService = serviceDAO.find(possibleServiceDTO.getServiceId());
 
-        if (!optService.isPresent())
-            throw new RequestException("Service with id " + possibleServiceDTO.getServiceId() + " not found ", HttpStatus.NOT_FOUND);
+        if (!optService.isPresent()) {
+            throw new RequestException("Service with id " + possibleServiceDTO.getServiceId() + " not found ",
+                                       HttpStatus.NOT_FOUND);
+        }
 
         possibleService.setService(optService.get());
 
