@@ -3,6 +3,7 @@ import {CommonModule} from '@angular/common';
 
 import {AdminRoutingModule} from './admin-routing.module';
 import {NavbarComponent} from './navbar/navbar.component';
+import {IndexComponent} from './index/index.component';
 import {ApproverCrudComponent} from './approver/approver-crud/approver-crud.component';
 import {CarrierCrudComponent} from './carrier/carrier-crud/carrier-crud.component';
 import {DashboardsComponent} from './dashboards/dashboards.component';
@@ -33,46 +34,53 @@ import {NgxPaginationModule} from 'ngx-pagination';
 import {TroubleStatisticsService} from './dashboards/trouble-statistics.service';
 import {ApproverService} from "./approver/shared/service/approver.service";
 import {ApproverFilterPipe} from './approver/shared/pipes/approver-filter.pipe';
+import {GrowlModule, MessageService, ProgressBarModule} from "primeng/primeng";
+import {ToastModule} from "primeng/toast";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 
 @NgModule({
-            declarations: [
-              NavbarComponent,
-              ApproverCrudComponent,
-              CarrierCrudComponent,
-              BundlesCrudComponent,
-              DashboardsComponent,
-              ApproverComponentComponent,
-              ApproverTableComponent,
-              ApproverCrudComponent,
-              FilterPipePipe,
-              AprroverShowStatusPipe,
-              TripsServicesComponent,
-              TripDashboardComponent,
-              ServiceDashboardComponent,
-              DashboardDeltaComponent,
-              TroubleStatisticsComponent,
-              CarrierComponentComponent,
-              CarrierTableComponent,
-              CarrierShowStatusPipe,
-              CommonChartComponent,
-              CarCostDashComponent,
-              CostsComponent,
-              ApproverFilterPipe
-            ],
-            imports: [
-              CommonModule,
-              AdminRoutingModule,
-              FormsModule,
-              ReactiveFormsModule,
-              NgxPaginationModule
-            ],
-            providers: [
-              AprroverShowStatusPipe,
-              TroubleStatisticsService,
-              ApproverService,
-              ApproverFilterPipe
-            ]
-          })
+  declarations: [
+    NavbarComponent,
+    ApproverCrudComponent,
+    IndexComponent,
+    CarrierCrudComponent,
+    BundlesCrudComponent,
+    DashboardsComponent,
+    ApproverComponentComponent,
+    ApproverTableComponent,
+    ApproverCrudComponent,
+    FilterPipePipe,
+    AprroverShowStatusPipe,
+    TripsServicesComponent,
+    TripDashboardComponent,
+    ServiceDashboardComponent,
+    DashboardDeltaComponent,
+    TroubleStatisticsComponent,
+    CarrierComponentComponent,
+    CarrierTableComponent,
+    CarrierShowStatusPipe,
+    CommonChartComponent,
+    CarCostDashComponent,
+    CostsComponent,
+    ApproverFilterPipe
+  ],
+  imports: [
+    CommonModule,
+    AdminRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgxPaginationModule,
+    ToastModule,
+    ProgressBarModule
+  ],
+  providers: [
+    AprroverShowStatusPipe,
+    TroubleStatisticsService,
+    ApproverService,
+    ApproverFilterPipe,
+    MessageService
+  ]
+})
 export class AdminModule {
 }

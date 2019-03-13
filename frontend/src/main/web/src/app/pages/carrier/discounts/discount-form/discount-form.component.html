@@ -1,0 +1,153 @@
+<div class="container"
+     *ngIf="obj && isDiscountFormActivated"
+>
+  <form [formGroup]="form">
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center">
+        <h5>
+          From
+        </h5>
+      </div>
+      <div class="col-md-6 text-center">
+        <input type="date"
+               class="date-picker"
+               placeholder="From"
+               formControlName="start_date"
+               (change)="compareDatePickerValues()"
+               value="start_date"
+        >
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center">
+        <h5>
+          To
+        </h5>
+      </div>
+      <div class="col-md-6 text-center">
+        <input type="date"
+               class="date-picker"
+               placeholder="From"
+               formControlName="finish_date"
+               (change)="compareDatePickerValues()"
+               value="finish_date"
+        >
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center">
+        <h5>
+          Type
+        </h5>
+      </div>
+      <div class="col-md-6 text-center">
+        <div class="custom-control custom-radio custom-control-inline">
+          <input type="radio"
+                 id="byValue"
+                 name="is_percent"
+                 class="custom-control-input"
+                 [value]="false"
+                 formControlName="is_percent"
+                 (change)="calculateNewPrice()"
+          >
+          <label class="custom-control-label"
+                 for="byValue"
+          >
+            By value
+          </label>
+        </div>
+        <div class="custom-control custom-radio custom-control-inline">
+          <input type="radio"
+                 id="byPercent"
+                 name="is_percent"
+                 class="custom-control-input"
+                 [value]="true"
+                 formControlName="is_percent"
+                 (change)="calculateNewPrice()"
+          >
+          <label class="custom-control-label"
+                 for="byPercent"
+          >
+            Percent
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center"
+         *ngIf="isInputtedDateIncorrect && form.get('start_date').touched && form.get('finish_date').touched"
+    >
+      <span class="text-center"
+            style="color: red"
+      >
+        The date is incorrect
+      </span>
+    </div>
+
+    <hr>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center">
+        <h5>
+          Discount rate
+        </h5>
+      </div>
+      <div class="col-md-6 text-center">
+        <input type="text"
+               class="form-control"
+               id="discountRate"
+               placeholder="Discount value"
+               formControlName="discount_rate"
+               (change)="calculateNewPrice()"
+        >
+      </div>
+    </div>
+
+
+    <hr>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center">
+        <h5>
+          New price
+        </h5>
+      </div>
+      <div class="col-md-6 text-center">
+        <input type="text"
+               class="form-control"
+               id="outcomeValue"
+               name="outcomeValue"
+               placeholder="Price with discount"
+               [ngModel]="valueWithDiscount"
+               [ngModelOptions]="{standalone: true}"
+               disabled
+        >
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6 text-center">
+        <button type="button"
+                class="btn btn-success"
+                [disabled]="isInputtedDateIncorrect || form.invalid"
+                (click)="onSubmitNewDiscount(obj)"
+        >
+          Confirm
+        </button>
+      </div>
+      <div class="col-md-6 text-center">
+        <button type="button"
+                class="btn btn-info"
+                (click)="closeDiscountForm()"
+        >
+          Close form
+        </button>
+      </div>
+    </div>
+  </form>
+  <hr>
+</div>

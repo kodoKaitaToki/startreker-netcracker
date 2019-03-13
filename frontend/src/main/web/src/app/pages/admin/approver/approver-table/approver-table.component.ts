@@ -1,12 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostBinding, Input, OnInit, Output} from '@angular/core';
 import {Approver} from '../shared/model/approver';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
-             selector: 'app-approver-table',
-             templateUrl: './approver-table.component.html',
-             styleUrls: ['./approver-table.component.scss']
-           })
+  selector: 'app-approver-table',
+  templateUrl: './approver-table.component.html',
+  styleUrls: ['./approver-table.component.scss']
+})
 export class ApproverTableComponent implements OnInit {
 
   @Input() approvers: Approver[];
@@ -62,16 +62,17 @@ export class ApproverTableComponent implements OnInit {
     this.currentApproverForUpdate = onClickedApproverForUpdate;
 
     this.form.patchValue({
-                           email: this.currentApproverForUpdate.email,
-                           username: this.currentApproverForUpdate.username,
-                           telephone_number: this.currentApproverForUpdate.telephone_number,
-                           is_activated: this.currentApproverForUpdate.is_activated
-                         });
+      email: this.currentApproverForUpdate.email,
+      username: this.currentApproverForUpdate.username,
+      telephone_number: this.currentApproverForUpdate.telephone_number,
+      is_activated: this.currentApproverForUpdate.is_activated
+    });
   }
 
   onApproverDelete(onClickedApproverForDelete) {
 
-    this.onDeleteDataNotifier.emit((ApproverTableComponent.deleteUnnecessaryFieldAfterClick(onClickedApproverForDelete)));
+    this.onDeleteDataNotifier.emit((ApproverTableComponent.deleteUnnecessaryFieldAfterClick(
+      onClickedApproverForDelete)));
   }
 
   onSubmitUpdate() {
