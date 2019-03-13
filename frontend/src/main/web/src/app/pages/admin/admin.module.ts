@@ -42,7 +42,6 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
   declarations: [
     NavbarComponent,
     ApproverCrudComponent,
-    IndexComponent,
     CarrierCrudComponent,
     BundlesCrudComponent,
     DashboardsComponent,
