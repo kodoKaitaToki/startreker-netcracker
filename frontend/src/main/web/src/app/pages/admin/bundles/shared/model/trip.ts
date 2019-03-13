@@ -1,4 +1,4 @@
-import {TicketClass} from "./ticker-class";
+import {TicketClass} from "./ticket-class";
 
 export class Trip {
   trip_id : number;

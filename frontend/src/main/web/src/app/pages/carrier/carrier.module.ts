@@ -11,7 +11,6 @@ import {IndexComponent} from './index/index.component';
 import {TripsComponent} from './trips/trips.component';
 import {ServicesComponent} from './services/services.component';
 import {SuggestionsComponent} from './suggestions/suggestions.component';
-import {DiscountsComponent} from './discounts/discounts.component';
 import {DashboardsComponent} from './dashboard/dashboards/dashboards.component';
 import {CarrierComponent} from './carrier.component';
 import {SalesComponent} from './dashboard/sales/sales.component';
@@ -22,33 +21,47 @@ import {ClarificationComponent} from './services/clarification/clarification.com
 import {ArchiveComponent} from './services/archive/archive.component';
 import {ServiceFilterPipe} from './services/shared/pipe/service-filter.pipe';
 import {NgxPaginationModule} from 'ngx-pagination';
+import {DiscountFormComponent} from "./discounts/discount-form/discount-form.component";
+import {DiscountMainPageComponent} from "./discounts/discount-main-page/discount-main-page.component";
+import {CarrierDiscountsService} from "./discounts/shared/service/carrier-discount.service";
+import {SuggestionComponent} from "./discounts/suggestion/suggestion.component";
+import {TicketClassComponent} from "./discounts/ticket-class/ticket-class.component";
+import {ToastModule} from "primeng/toast";
 
 @NgModule({
-  declarations: [NavbarComponent,
-                 IndexComponent,
-                 TripsComponent,
-                 ServicesComponent,
-                 SuggestionsComponent,
-                 DiscountsComponent,
-                 DashboardsComponent,
-                 CarrierComponent,
-                 SalesComponent,
-                 ViewsComponent,
-                 ServiceTableComponent,
-                 ServiceCrudComponent,
-                 ClarificationComponent,
-                 ArchiveComponent,
-                 ServiceFilterPipe],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CarrierRoutingModule,
-    GrowlModule,
-    NgxPaginationModule
-  ],
-  providers: [
-    MessageService
-  ]
-})
-export class CarrierModule { }
+            declarations:
+              [NavbarComponent,
+               IndexComponent,
+               TripsComponent,
+               ServicesComponent,
+               SuggestionsComponent,
+               DashboardsComponent,
+               CarrierComponent,
+               SalesComponent,
+               ViewsComponent,
+               ServiceTableComponent,
+               ServiceCrudComponent,
+               ClarificationComponent,
+               ArchiveComponent,
+               ServiceFilterPipe,
+               DiscountFormComponent,
+               DiscountMainPageComponent,
+               SuggestionComponent,
+               TicketClassComponent
+              ],
+            imports: [
+              CommonModule,
+              FormsModule,
+              ReactiveFormsModule,
+              CarrierRoutingModule,
+              GrowlModule,
+              NgxPaginationModule,
+              ToastModule
+            ],
+            providers: [
+              MessageService,
+              CarrierDiscountsService
+            ]
+          })
+export class CarrierModule {
+}

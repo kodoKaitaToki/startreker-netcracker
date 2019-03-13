@@ -55,23 +55,25 @@ public class SuggestionServiceImpl implements SuggestionService {
     public List<SuggestionDTO> getAllWithClassId(Number id) {
         List<Suggestion> suggestions = suggestionDAO.findAllWithClassId(id);
 
-        if (suggestions.size() == 0)
+        if (suggestions.size() == 0) {
             throw new RequestException("No suggestions yet", HttpStatus.NOT_FOUND);
+        }
 
         return suggestions.stream()
-                .map(suggestion -> SuggestionDTO.from(suggestion,
-                        getAttachedPServices(suggestion).stream()
-                                .map(PossibleService::getPServiceId)
-                                .collect(Collectors.toList())))
-                .collect(Collectors.toList());
+                          .map(suggestion -> SuggestionDTO.from(suggestion,
+                                                                getAttachedPServices(suggestion).stream()
+                                                                                                .map(PossibleService::getPServiceId)
+                                                                                                .collect(Collectors.toList())))
+                          .collect(Collectors.toList());
     }
 
     @Override
     public SuggestionDTO getById(Number id) {
         Optional<Suggestion> optSuggestion = suggestionDAO.find(id);
 
-        if (!optSuggestion.isPresent())
+        if (!optSuggestion.isPresent()) {
             throw new RequestException("Suggestion with id " + id + " not found", HttpStatus.NOT_FOUND);
+        }
 
         Suggestion suggestion = optSuggestion.get();
 
@@ -80,20 +82,25 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public SuggestionDTO createSuggestion(SuggestionDTO suggestionDTO) {
-        if (suggestionDTO.getPServiceIds().size() == 0)
+        if (suggestionDTO.getPServiceIds()
+                         .size() == 0) {
             throw new RequestException("No services attached", HttpStatus.BAD_REQUEST);
+        }
 
         Suggestion suggestion = from(suggestionDTO);
         suggestionDAO.save(suggestion);
 
-        suggestionDTO.getPServiceIds().forEach(item -> {
-            Optional<PossibleService> optPossibleService = possibleServiceDAO.find(item);
+        suggestionDTO.getPServiceIds()
+                     .forEach(item -> {
+                         Optional<PossibleService> optPossibleService = possibleServiceDAO.find(item);
 
-            if (!optPossibleService.isPresent())
-                throw new RequestException("Possible service with id " + item + " not found", HttpStatus.NOT_FOUND);
+                         if (!optPossibleService.isPresent()) {
+                             throw new RequestException("Possible service with id " + item + " not found",
+                                                        HttpStatus.NOT_FOUND);
+                         }
 
-            suggestionDAO.addPossibleService(suggestion.getSuggestionId(), item);
-        });
+                         suggestionDAO.addPossibleService(suggestion.getSuggestionId(), item);
+                     });
 
         return SuggestionDTO.from(suggestion, suggestionDTO.getPServiceIds());
     }
@@ -102,16 +109,17 @@ public class SuggestionServiceImpl implements SuggestionService {
     public SuggestionDTO updateSuggestion(SuggestionDTO suggestionDTO) {
         Optional<Suggestion> optSuggestion = suggestionDAO.find(suggestionDTO.getId());
 
-        if (!optSuggestion.isPresent())
+        if (!optSuggestion.isPresent()) {
             throw new RequestException("Suggestion with id " + suggestionDTO.getId() + " not found",
-                    HttpStatus.NOT_FOUND);
+                                       HttpStatus.NOT_FOUND);
+        }
 
         Suggestion suggestion = from(suggestionDTO);
         suggestionDAO.save(suggestion);
 
         updateAttachedPServices(suggestion.getSuggestionId(),
-                suggestionDTO.getPServiceIds(),
-                toIdList(getAttachedPServices(optSuggestion.get())));
+                                suggestionDTO.getPServiceIds(),
+                                toIdList(getAttachedPServices(optSuggestion.get())));
 
         return SuggestionDTO.from(suggestion, toIdList(getAttachedPServices(suggestion)));
     }
@@ -120,9 +128,9 @@ public class SuggestionServiceImpl implements SuggestionService {
     public void deleteSuggestion(Number id) {
         Optional<Suggestion> optSuggestion = suggestionDAO.find(id);
 
-        if (!optSuggestion.isPresent())
-            throw new RequestException("Suggestion with id " + id + " not found",
-                    HttpStatus.NOT_FOUND);
+        if (!optSuggestion.isPresent()) {
+            throw new RequestException("Suggestion with id " + id + " not found", HttpStatus.NOT_FOUND);
+        }
 
         Suggestion suggestion = optSuggestion.get();
         toIdList(getAttachedPServices(suggestion)).forEach(i -> suggestionDAO.deletePossibleService(id, i));
@@ -134,9 +142,7 @@ public class SuggestionServiceImpl implements SuggestionService {
         return possibleServiceDAO.findAllPossibleServicesBySuggestionId(suggestion.getSuggestionId());
     }
 
-    private void updateAttachedPServices(Number suggestionId,
-                                         List<Long> newServices,
-                                         List<Long> oldServices) {
+    private void updateAttachedPServices(Number suggestionId, List<Long> newServices, List<Long> oldServices) {
         for (Long id : newServices) {
             if (!oldServices.contains(id)) {
                 suggestionDAO.addPossibleService(suggestionId, id);
@@ -162,8 +168,8 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     private List<Long> toIdList(List<PossibleService> possibleServices) {
         return possibleServices.stream()
-                .map(PossibleService::getPServiceId)
-                .collect(Collectors.toList());
+                               .map(PossibleService::getPServiceId)
+                               .collect(Collectors.toList());
     }
 
     @Override
@@ -222,8 +228,7 @@ public class SuggestionServiceImpl implements SuggestionService {
         if (!optionalSuggestion.isPresent()) {
             logger.error("No such discount with id " + discountId);
 
-            throw new RequestException("No such discount",
-                    HttpStatus.NOT_FOUND);
+            throw new RequestException("No such discount", HttpStatus.NOT_FOUND);
         }
 
         Suggestion suggestion = optionalSuggestion.get();
@@ -307,7 +312,7 @@ public class SuggestionServiceImpl implements SuggestionService {
             logger.error("No such suggestion with id " + simpleSuggestionDTO.getSuggestionId());
 
             throw new RequestException("No such suggestion with id " + simpleSuggestionDTO.getSuggestionId(),
-                    HttpStatus.NOT_FOUND);
+                                       HttpStatus.NOT_FOUND);
         }
 
         Suggestion suggestion = optionalSuggestion.get();
@@ -315,8 +320,7 @@ public class SuggestionServiceImpl implements SuggestionService {
         if (suggestion.getDiscountId() != null) {
             logger.error("Discount already exist for suggestion " + suggestion.getSuggestionId());
 
-            throw new RequestException("Discount already exist",
-                    HttpStatus.CONFLICT);
+            throw new RequestException("Discount already exist", HttpStatus.CONFLICT);
         }
         return suggestion;
     }
