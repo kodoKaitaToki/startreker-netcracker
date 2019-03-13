@@ -140,7 +140,7 @@ public class TripServiceImplTest {
         underClarificationTripDTO.setReplies(replies);
         removedTripDTO = TripRequest.from(removedTrip);
 
-        tripService = new TripServiceImpl(tripDAOMock, applicationContext);
+        tripService = new TripServiceImpl(tripDAOMock, applicationContext, null, null);
     }
 
     // Draft tests

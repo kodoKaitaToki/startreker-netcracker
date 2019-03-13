@@ -20,6 +20,10 @@ public interface ServiceDAO {
 
     Optional<ServiceDescr> findByName(String name, Number id);
 
+    List<ServiceCRUDDTO> findAllByCarrierId(Number id);
+
+    List<ServiceCRUDDTO> findPaginByCarrierId(Number id, Integer from, Integer amount);
+
     List<ServiceCRUDDTO> findByStatus(Number id, Integer status);
 
     List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status);
