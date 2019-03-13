@@ -3,8 +3,8 @@ import { clone } from 'ramda';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MessageService} from 'primeng/components/common/messageservice';
 
-import { Trip } from '../trip.model';
-import { TripService } from '../trip.service'; 
+import { Trip } from '../shared/model/trip.model';
+import { TripService } from '../shared/service/trip.service'; 
 
 @Component({
   selector: 'app-assigned',
@@ -22,10 +22,15 @@ export class AssignedTripComponent implements OnInit {
 
   currentTripForReply: Trip;
 
+  pageNumber: number = 10;
+
+  pageFrom: number;
+
   constructor(private tripService: TripService,
               private messageService: MessageService) { }
 
   ngOnInit() {
+    this.pageFrom = 0;
     this.getTrips(3);
     this.setFormInDefault();
   }
@@ -59,11 +64,12 @@ export class AssignedTripComponent implements OnInit {
   }
 
   onReview(trip: Trip) {
-    trip.trip_status = 5;
+    this.moreFlag = false;
+    trip.trip_status = 6;
 
     trip.trip_reply.push({
       trip_id: trip.trip_id,
-      reply_text: this.form['reply_text'],
+      reply_text: this.form.get('reply_text').value,
       writer_id: 0,
       creation_date: new Date()
     });
@@ -90,8 +96,8 @@ export class AssignedTripComponent implements OnInit {
   }
 
   onPublish(trip: Trip){
+    this.moreFlag = false;
     trip.trip_status = 4;
-
     this.loadingTrip = trip;
 
     this.tripService.updateTripStatus(trip)
@@ -102,8 +108,8 @@ export class AssignedTripComponent implements OnInit {
                             localStorage.setItem('at', resp.headers.get('New-Access-Token'));
                           }*/
                         this.showMessage(this.createMessage('success',
-                                                            'The trip was assigned by you',
-                                                            'You can find it in "Assigned to me"'));
+                                                            'The trip was published',
+                                                            'Users can buy tickets of this trip'));
                         this.getTrips(3);
                         this.loadingTrip = null;
                       }, 
@@ -112,6 +118,11 @@ export class AssignedTripComponent implements OnInit {
                         this.loadingTrip = null;
                       }
                     );
+  }
+
+  onPageUpdate(from: number) {
+    this.pageFrom = from;
+    this.getTrips(3);
   }
 
   showMessage(msgObj: any){
