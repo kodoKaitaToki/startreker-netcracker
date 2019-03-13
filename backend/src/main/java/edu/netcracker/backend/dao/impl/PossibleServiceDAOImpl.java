@@ -17,12 +17,20 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
 
     private ServiceDAO serviceDAO;
 
-    private String FIND_ALL_WITH_CLASS_ID = "SELECT * FROM possible_service " +
-            "WHERE class_id = ?";
+    private String FIND_ALL_WITH_CLASS_ID = "SELECT p_service_id, "
+                                            + "service_id, "
+                                            + "class_id, "
+                                            + "service_price, "
+                                            + "p_service_status "
+                                            + "FROM possible_service WHERE class_id = ? AND p_service_status = 1";
 
-    private String FIND_ALL_P_SERVICES_BY_SUGGESTION_ID = "SELECT * FROM possible_service " +
-            "INNER JOIN suggested_service ON possible_service.p_service_id = suggested_service.p_service_id " +
-            "WHERE suggestion_id = ?";
+    private String FIND_ALL_P_SERVICES_BY_SUGGESTION_ID = "SELECT possible_service.p_service_id, "
+                                                          + "service_id, "
+                                                          + "class_id, "
+                                                          + "service_price, "
+                                                          + "p_service_status FROM possible_service "
+                                                          + "INNER JOIN suggested_service ON possible_service.p_service_id = suggested_service.p_service_id "
+                                                          + "WHERE suggestion_id = ? AND p_service_status = 1";
 
     @Autowired
     public PossibleServiceDAOImpl(ServiceDAO serviceDAO) {
@@ -33,8 +41,9 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
     public Optional<PossibleService> find(Number id) {
         Optional<PossibleService> optPossibleService = super.find(id);
 
-        if (!optPossibleService.isPresent())
+        if (!optPossibleService.isPresent()) {
             return Optional.empty();
+        }
 
         PossibleService possibleService = optPossibleService.get();
         Optional<ServiceDescr> attachedService = findService(possibleService);
@@ -45,16 +54,18 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
     }
 
     @Override
+    public void delete(PossibleService possibleService) {
+        possibleService.setPServiceStatus(2L);
+        update(possibleService);
+    }
+
+    @Override
     public List<PossibleService> findAllWithClassId(Number id) {
         List<PossibleService> possibleServices = new ArrayList<>();
 
-        possibleServices.addAll(getJdbcTemplate().query(
-                FIND_ALL_WITH_CLASS_ID,
-                new Object[]{id},
-                getGenericMapper()));
+        possibleServices.addAll(getJdbcTemplate().query(FIND_ALL_WITH_CLASS_ID, new Object[]{id}, getGenericMapper()));
 
-        possibleServices.forEach(possibleService
-                -> findService(possibleService).ifPresent(possibleService::setService));
+        possibleServices.forEach(possibleService -> findService(possibleService).ifPresent(possibleService::setService));
 
         return possibleServices;
     }
@@ -67,10 +78,9 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
     public List<PossibleService> findAllPossibleServicesBySuggestionId(Number suggestionId) {
         List<PossibleService> possibleServices = new ArrayList<>();
 
-        possibleServices.addAll(getJdbcTemplate().query(
-                FIND_ALL_P_SERVICES_BY_SUGGESTION_ID,
-                new Object[]{suggestionId},
-                getGenericMapper()));
+        possibleServices.addAll(getJdbcTemplate().query(FIND_ALL_P_SERVICES_BY_SUGGESTION_ID,
+                                                        new Object[]{suggestionId},
+                                                        getGenericMapper()));
 
         return possibleServices;
     }

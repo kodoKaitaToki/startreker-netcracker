@@ -5,6 +5,7 @@ import edu.netcracker.backend.model.Spaceport;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class SpaceportDAOImpl extends CrudDAOImpl<Spaceport> implements Spacepor
     }
 
     @Override
-    public List<Spaceport> findPerPeriod(LocalDate from, LocalDate to) {
+    public List<Spaceport> findPerPeriod(LocalDateTime from, LocalDateTime to) {
         List<Spaceport> spaceports = new ArrayList<>();
 
         spaceports.addAll(getJdbcTemplate().query(

@@ -3,18 +3,27 @@ package edu.netcracker.backend.service.impl;
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.PlanetDAO;
 import edu.netcracker.backend.dao.SpaceportDAO;
+import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.dao.impl.BundleDAOImpl;
 import edu.netcracker.backend.message.request.trips.TripCreation;
+import edu.netcracker.backend.message.request.DiscountSuggestionDTO;
+import edu.netcracker.backend.message.request.DiscountTicketClassDTO;
+import edu.netcracker.backend.message.request.TripWithArrivalAndDepartureDataAndSuggestionsDTO;
+import edu.netcracker.backend.message.request.TripWithArrivalAndDepartureDataAndTicketClassesDTO;
+import edu.netcracker.backend.message.request.TripWithArrivalAndDepartureDataDTO;
 import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.message.response.trips.AllCarriersTripsDTO;
 import edu.netcracker.backend.model.Planet;
 import edu.netcracker.backend.model.Spaceport;
 import edu.netcracker.backend.model.Trip;
+import edu.netcracker.backend.model.TripWithArrivalAndDepartureData;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.model.state.trip.Draft;
 import edu.netcracker.backend.model.state.trip.TripState;
 import edu.netcracker.backend.model.state.trip.TripStateRegistry;
+import edu.netcracker.backend.service.SuggestionService;
+import edu.netcracker.backend.service.TicketClassService;
 import edu.netcracker.backend.service.TripService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +34,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TripServiceImpl implements TripService {
@@ -34,21 +47,32 @@ public class TripServiceImpl implements TripService {
     private PlanetDAO planetDAO;
     private SpaceportDAO spaceportDAO;
     private TripStateRegistry tripStateRegistry;
+    private final TicketClassService ticketClassService;
+    private final SuggestionService suggestionService;
 
-    private final Logger logger = LoggerFactory.getLogger(BundleDAOImpl.class);
+    private static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
+
+
+    private static final Logger logger = LoggerFactory.getLogger(TripServiceImpl.class);
 
     @Autowired
     private Draft draft;
+
+
 
     @Autowired
     public TripServiceImpl(TripDAO tripDAO,
                            PlanetDAO planetDAO,
                            SpaceportDAO spaceportDAO,
-                           TripStateRegistry tripStateRegistry) {
+                           TripStateRegistry tripStateRegistry,
+                           TicketClassService ticketClassService,
+                           SuggestionService suggestionService) {
         this.tripDAO = tripDAO;
         this.planetDAO = planetDAO;
         this.spaceportDAO = spaceportDAO;
         this.tripStateRegistry = tripStateRegistry;
+        this.ticketClassService = ticketClassService;
+        this.suggestionService = suggestionService;
     }
 
     @Override
@@ -82,6 +106,34 @@ public class TripServiceImpl implements TripService {
         }
     }
 
+    @Override
+    public List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithTicketClassAndDiscountsBelongToCarrier(Number carrierId) {
+        logger.debug("get all trips with related ticket classes and discounts that belong to carrier with id "
+                     + carrierId);
+
+        List<TripWithArrivalAndDepartureData> trips = tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(
+                carrierId);
+        List<DiscountTicketClassDTO> ticketClassDTOs = ticketClassService.getTicketClassesRelatedToCarrier(carrierId);
+
+        return createTripWithArrivalAndDepartureDataAndTicketClassesDTOs(trips, ticketClassDTOs);
+    }
+
+    @Override
+    public List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithSuggestionAndDiscountsBelongToCarrier(Number carrierId) {
+        logger.debug("get all trips with related suggestion and discounts that belong to carrier with id " + carrierId);
+
+        List<TripWithArrivalAndDepartureData> trips = tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(
+                carrierId);
+
+        Map<Long, List<DiscountSuggestionDTO>> suggestionsRelatedToTrip
+                = suggestionService.getSuggestionsRelatedToTicketClasses(ticketClassService.getAllTicketClassesBelongToTrips(
+                trips.stream()
+                     .map(TripWithArrivalAndDepartureData::getTripId)
+                     .collect(Collectors.toList())));
+        return createTripWithArrivalAndDepartureDataAndSuggestionDTOs(trips, suggestionsRelatedToTrip);
+    }
+
+
     private Trip updateTrip(User requestUser, Trip trip, TripDTO tripDTO) {
         TripState dtoState = tripStateRegistry.getState(tripDTO.getStatus());
 
@@ -97,6 +149,55 @@ public class TripServiceImpl implements TripService {
         if (!trip.changeStatus(requestUser, tripState, tripDTO)) {
             throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
         }
+    }
+
+    private List<TripWithArrivalAndDepartureDataDTO> createTripWithArrivalAndDepartureDataAndSuggestionDTOs(List<TripWithArrivalAndDepartureData> trips,
+                                                                                                            Map<Long, List<DiscountSuggestionDTO>> suggestionsRelatedToTrips) {
+        List<TripWithArrivalAndDepartureDataDTO> tripDTOs = new ArrayList<>();
+
+        for (TripWithArrivalAndDepartureData trip : trips) {
+            List<DiscountSuggestionDTO> suggestionsRelatedToTrip = suggestionsRelatedToTrips.get(trip.getTripId());
+
+            if (suggestionsRelatedToTrip.isEmpty()) {
+                continue;
+            }
+
+            tripDTOs.add(createTripWithArrivalAndDepartureDataAndSuggestionDTO(trip, suggestionsRelatedToTrip));
+        }
+
+        return tripDTOs;
+    }
+
+    private TripWithArrivalAndDepartureDataDTO createTripWithArrivalAndDepartureDataAndSuggestionDTO(
+            TripWithArrivalAndDepartureData trip,
+            List<DiscountSuggestionDTO> suggestionsRelatedToTrip) {
+
+        return TripWithArrivalAndDepartureDataAndSuggestionsDTO.form(trip, suggestionsRelatedToTrip, DATE_PATTERN);
+    }
+
+    private List<TripWithArrivalAndDepartureDataDTO> createTripWithArrivalAndDepartureDataAndTicketClassesDTOs(List<TripWithArrivalAndDepartureData> trips,
+                                                                                                               List<DiscountTicketClassDTO> ticketClassDTOs) {
+        List<TripWithArrivalAndDepartureDataDTO> tripDTOs = new ArrayList<>();
+        for (TripWithArrivalAndDepartureData trip : trips) {
+            tripDTOs.add(createTripWithArrivalAndDepartureDataAndTicketClassesDTO(trip, ticketClassDTOs));
+        }
+
+        return tripDTOs;
+    }
+
+    private TripWithArrivalAndDepartureDataDTO createTripWithArrivalAndDepartureDataAndTicketClassesDTO(
+            TripWithArrivalAndDepartureData trip,
+            List<DiscountTicketClassDTO> ticketClassDTOs) {
+
+        List<DiscountTicketClassDTO> relatedTicketClassDTOs = new ArrayList<>();
+        for (DiscountTicketClassDTO ticketClassDTO : ticketClassDTOs) {
+            if (trip.getTripId()
+                    .equals(ticketClassDTO.getTripId())) {
+                relatedTicketClassDTOs.add(ticketClassDTO);
+            }
+        }
+
+        return TripWithArrivalAndDepartureDataAndTicketClassesDTO.form(trip, relatedTicketClassDTOs, DATE_PATTERN);
     }
 
     private Trip parseTripFromTripCreation(TripCreation tripCreation) {

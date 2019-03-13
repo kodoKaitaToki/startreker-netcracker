@@ -18,5 +18,5 @@ public interface SpaceportDAO {
 
     void delete(Spaceport spaceport);
 
-    List<Spaceport> findPerPeriod(LocalDate from, LocalDate to);
+    List<Spaceport> findPerPeriod(LocalDateTime from, LocalDateTime to);
 }

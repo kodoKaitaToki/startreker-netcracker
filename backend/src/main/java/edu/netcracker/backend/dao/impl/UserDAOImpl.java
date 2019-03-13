@@ -10,6 +10,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -157,7 +158,7 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
     }
 
     @Override
-    public List<User> findPerPeriod(LocalDate from, LocalDate to) {
+    public List<User> findPerPeriod(LocalDateTime from, LocalDateTime to) {
         List<User> users = new ArrayList<>();
         users.addAll(getJdbcTemplate().query(
                 findPerPeriod,
@@ -172,7 +173,7 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
     }
 
     @Override
-    public List<User> findPerPeriodByRole(Number id, LocalDate from, LocalDate to) {
+    public List<User> findPerPeriodByRole(Number id, LocalDateTime from, LocalDateTime to) {
         List<User> users = new ArrayList<>();
 
         users.addAll(getJdbcTemplate().query(
