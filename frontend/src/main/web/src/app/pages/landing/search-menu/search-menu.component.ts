@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { clone } from 'ramda';
 
+import { LandingService } from '../shared/service/landing.service';
+import { Planet } from '../shared/model/planet.model';
 
 declare function setPoint(point): any;
 
@@ -13,12 +16,23 @@ export class SearchMenuComponent implements OnInit {
 
   searchForm: FormGroup;
 
-  constructor() {
+  planets: Planet[] = [];
+
+  constructor(private landingService: LandingService) {
     this.searchForm = new FormGroup({
     });
    }
 
   ngOnInit() {
+    this.getPlanets();
+  }
+
+  getPlanets(){
+    this.landingService.getPlanets()
+        .subscribe((resp: Response) => {
+          //Don't forget to add checkToken
+          this.planets = clone(resp);
+        })
   }
 
   setPoint(point){

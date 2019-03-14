@@ -77,13 +77,21 @@ const service = {
   }
 }
 
+const landing = {
+  planets(){
+    return `${baseUrl}api/v1/planets`;
+  }
+}
+
 export const Api = {
   auth,
   dashboard,
   carrier,
   costDash,
   baseUrl,
-  service
+  service,
+  landing,
+  HttpOptions
 }
 
 export const options = {

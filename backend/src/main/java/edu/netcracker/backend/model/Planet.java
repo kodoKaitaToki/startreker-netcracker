@@ -16,6 +16,6 @@ public class Planet {
     @EqualsAndHashCode.Include
     private Long planetId;
 
-    @Attribute("planetName")
+    @Attribute("planet_name")
     private String planetName;
 }

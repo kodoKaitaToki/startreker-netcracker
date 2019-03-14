@@ -121,7 +121,6 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
 
     private ServiceMapper mapper = new ServiceMapper();
 
-
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override

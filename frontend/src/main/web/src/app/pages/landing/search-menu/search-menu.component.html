@@ -31,15 +31,8 @@
             <div class="col-lg-2">
               <select class="custom-select" onclick='setPoint("start")' id="select_from">
                 <option selected>Choose a planet</option>
-                <option value="mercury">Mercury</option>
-                <option value="venus">Venus</option>
-                <option value="earth">Earth</option>
-                <option value="mars">Mars</option>
-                <option value="jupiter">Jupiter</option>
-                <option value="saturn">Saturn</option>
-                <option value="uranus">Uranus</option>
-                <option value="neptune">Neptune</option>
-                <option value="pluto">Pluto</option>
+                <option *ngFor="let planet of planets"
+                        [value]="planet.planetName.toLowerCase()">{{planet.planetName | titlecase}}</option>
               </select>
             </div>
             <div class="col-lg-2">
@@ -56,15 +49,8 @@
             <div class="col-lg-2">
               <select class="custom-select" onclick='setPoint("finish")'  id="select_to">
                 <option selected>Choose a planet</option>
-                <option value="mercury">Mercury</option>
-                <option value="venus">Venus</option>
-                <option value="earth">Earth</option>
-                <option value="mars">Mars</option>
-                <option value="jupiter">Jupiter</option>
-                <option value="saturn">Saturn</option>
-                <option value="uranus">Uranus</option>
-                <option value="neptune">Neptune</option>
-                <option value="pluto">Pluto</option>
+                <option *ngFor="let planet of planets"
+                        [value]="planet.planetName.toLowerCase()">{{planet.planetName | titlecase}}</option>
               </select>
             </div>
             <div class="col-lg-2">

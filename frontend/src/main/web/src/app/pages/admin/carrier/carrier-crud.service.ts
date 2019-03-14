@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Api } from '../../../modules/api/index';
-import { HttpOptionsAuthorized } from '../../../modules/api/index';
 import { Carrier } from './carrier';
 
 @Injectable({
