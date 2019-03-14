@@ -5,6 +5,8 @@ import {ApproverService} from "../shared/service/approver.service";
 import {MessageService} from "primeng/api";
 import {HttpErrorResponse} from "@angular/common/http";
 import {ShowMessageService} from "../shared/service/show-message.service";
+import { clone } from 'ramda';
+import {checkToken} from "../../../../modules/api/index";
 
 @Component({
              selector: 'app-approver-component',
@@ -67,7 +69,8 @@ export class ApproverComponentComponent implements OnInit {
     delete approver['repeat_password'];
 
     this.approverSrvc.postApprover(approver)
-        .subscribe(() => {
+        .subscribe((resp: Response) => {
+          checkToken(resp.headers);
           this.getAllApprovers();
           this.showMsgSrvc.showMessage(this.messageService, 'success', 'Approver creation', 'The approver was created');
         }, (error: HttpErrorResponse) => {
@@ -81,7 +84,8 @@ export class ApproverComponentComponent implements OnInit {
   getApproverForUpdate(approver) {
 
     this.approverSrvc.putApprover(approver)
-        .subscribe(() => {
+        .subscribe((resp: Response) => {
+          checkToken(resp.headers);
           this.getAllApprovers();
           this.showMsgSrvc.showMessage(this.messageService, 'success', 'Approver editing', 'The approver was edited');
         }, (error: HttpErrorResponse) => {
@@ -93,7 +97,8 @@ export class ApproverComponentComponent implements OnInit {
   getApproverForDelete(approver) {
 
     this.approverSrvc.deleteApprover(approver)
-        .subscribe(() => {
+        .subscribe((resp: Response) => {
+                     checkToken(resp.headers);
                      this.getAllApprovers();
                      this.showMsgSrvc.showMessage(this.messageService, 'success', 'Approver deletion', 'The approver was deleted');
                    }, (error: HttpErrorResponse) => {
@@ -106,9 +111,10 @@ export class ApproverComponentComponent implements OnInit {
   getAllApprovers() {
 
     this.approverSrvc.getAll()
-        .subscribe(data => {
+        .subscribe((resp: Response) => {
+          checkToken(resp.headers);
           this.showMsgSrvc.showMessage(this.messageService, 'success', 'Approvers list', 'The list was updated');
-          this.approvers = data;
+          this.approvers = clone(resp);
         }, (error: HttpErrorResponse) => {
           this.showMsgSrvc.showMessage(this.messageService, 'error', `Error message - ${error.error.status}`,
                                        error.error.error);

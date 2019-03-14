@@ -3,6 +3,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Carrier} from '../carrier';
 import {CarrierCrudService} from '../carrier-crud.service';
 import { clone } from 'ramda';
+import {checkToken} from "../../../../modules/api/index";
 
 @Component({
   selector: 'app-carrier-component',
@@ -73,17 +74,12 @@ export class CarrierComponentComponent implements OnInit {
     this.carCrudService.updateCarrier(event)
                       .subscribe(
                         (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
-                          console.log('carrier is updated');
+                          checkToken(resp.headers);
                           this.butGroup.updateBut = false;
                           this.butGroup.editBut = false;
                           this.getCarriersPagin();
                          },
                         error => {
-                          console.log(error);
                           if(error.error.message = 'Username already exist'){
                             this.updateError = 'The user with this name alredy exists';
                           }else{
@@ -99,18 +95,13 @@ export class CarrierComponentComponent implements OnInit {
     this.carCrudService.deleteCarrier(event)
                       .subscribe(
                         (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
-                          console.log('carrier is deleted');
+                          checkToken(resp.headers);
                           this.butGroup.deleteBut = false;
                           this.butGroup.editBut = false;
                           this.getCarriers();
                           this.getCarriersPagin();
                          },
                         error => {
-                          console.log(error);
                           this.butGroup.deleteBut = false;
                           this.butGroup.editBut = false;
                         }
@@ -127,13 +118,9 @@ export class CarrierComponentComponent implements OnInit {
     this.carCrudService.getAllCarriers()
                       .subscribe(
                         (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                          checkToken(resp.headers);
                           this.allCarriers = clone(resp);
-                        },
-                        error => console.log(error)
+                        }
                       );
   }
 
@@ -142,14 +129,10 @@ export class CarrierComponentComponent implements OnInit {
     this.carCrudService.getCarriersPagin(from, this.carPerPage)
                       .subscribe(
                         (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                          checkToken(resp.headers);
                           this.carriers = clone(resp);
                           this.dataAvailable = true;
-                         },
-                        error => console.log(error)
+                         }
                       );
    }
 
@@ -170,17 +153,12 @@ export class CarrierComponentComponent implements OnInit {
     this.carCrudService.addCarrier(newCar)
                       .subscribe(
                         (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                          checkToken(resp.headers);
                           this.getCarriers();
                           this.getCarriersPagin();
                           this.clearform();
-                          console.log('carrier is added');
                          },
                         error => {
-                          console.log(error);
                           this.addBut = false;
                           if(error.error.message = 'Username already exist'){
                             this.errorText = 'The user with this name alredy exists';

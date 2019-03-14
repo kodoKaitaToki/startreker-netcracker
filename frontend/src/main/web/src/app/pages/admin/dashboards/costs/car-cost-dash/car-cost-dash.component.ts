@@ -5,6 +5,7 @@ import { DatePipe } from '@angular/common';
 import {CarrierCrudService} from '../../../carrier/carrier-crud.service';
 import { clone } from 'ramda'
 import { DashCostService } from '../dashCostService';
+import {checkToken} from "../../../../../modules/api/index";
 
 @Component({
   selector: 'app-car-cost-dash',
@@ -37,7 +38,7 @@ export class CarCostDashComponent implements OnInit {
 
   title: string = '';
 
-  constructor(private datePipe: DatePipe, 
+  constructor(private datePipe: DatePipe,
 				private carCrudService: CarrierCrudService,
 				private dashCostService: DashCostService) { }
 
@@ -60,20 +61,18 @@ export class CarCostDashComponent implements OnInit {
 					dataPoints: costs
 				}]
 			});
-	
+
 			chart.render();
-			
-			console.log('Building chart');
 		}else{
 			this.emptyResp = true;
 		}
-	 	
+
 	}
 
 	getWeakStat(){
 		this.buttons.butWeek = true;
 		this.buttons.butMonth = false;
-					  
+
 		let curDate = new Date();
 		let lastDate = new Date();
 		curDate.setMonth(curDate.getMonth()+1);
@@ -82,8 +81,6 @@ export class CarCostDashComponent implements OnInit {
 		this.setDate(lastDate, curDate);
 
 		this.title = 'per week';
-
-		console.log('Setting week date data');
 	}
 
 	getMonthStat(){
@@ -96,8 +93,6 @@ export class CarCostDashComponent implements OnInit {
 		this.setDate(lastDate, curDate);
 
 		this.title = 'per month';
-
-		console.log('Setting month date data');
 	}
 
 	getInterStat(){
@@ -110,21 +105,19 @@ export class CarCostDashComponent implements OnInit {
 		this.setDate(this.startDate, this.finishDate);
 
 		this.title = firstDateTitle + ' - ' + secondDateTitle;
-
-		console.log('Setting period date data');
 	}
 
 	setDate(dateFrom: Date, dateTo: Date){
-		this.curDateFrom = dateFrom.getFullYear() 
+		this.curDateFrom = dateFrom.getFullYear()
 							+ '-' + (dateFrom.getMonth() < 10 ? '0' : '')
 							+ dateFrom.getMonth()
 							+ '-' + dateFrom.getDate();
-		this.curDateTo = dateTo.getFullYear() 
+		this.curDateTo = dateTo.getFullYear()
 							+ '-' + (dateFrom.getMonth() < 10 ? '0' : '')
 							+ dateTo.getMonth()
 							+ '-' + dateTo.getDate();
 	}
-	  
+
 	parseDate(dateString: string, flag): Date {
 		if (dateString) {
 
@@ -154,32 +147,23 @@ export class CarCostDashComponent implements OnInit {
 		this.carCrudService.getAllCarriers()
                       .subscribe(
                         (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-						  }*/
-						  this.carriers = clone(resp);
-						  console.log('Getting of all carriers for select');
-                        },
-                        error => console.log(error)
+                          checkToken(resp.headers);
+						              this.carriers = clone(resp);
+                        }
                       );
 	}
 
 	getCarCosts(){
 		if(this.curCarrier !== undefined){
-			
+
 			this.dashCostService.getCarCosts(this.curId, this.curDateFrom, this.curDateTo)
 													.subscribe(
 														(resp: Response) => {
-															/*if (resp.headers.get('New-Access-Token')) {
-															localStorage.removeItem('at');
-															localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-															}*/
+                              checkToken(resp.headers);
 															let response = clone(resp);
 															let tickets = this.dashCostService.parseResponse(response);
 															this.getStatistics(tickets);
-														},
-														error => console.log(error)
+														}
 													);
 		}
 	}
@@ -189,15 +173,10 @@ export class CarCostDashComponent implements OnInit {
 		this.carCrudService.getCarrierByUsername(event.value)
                       .subscribe(
                         (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-						  }*/
-						  this.curCarrier = clone(resp);
-						  console.log('Getting carrier by name');
-						  this.getId();
-                        },
-                        error => console.log(error)
+                          checkToken(resp.headers);
+						              this.curCarrier = clone(resp);
+						              this.getId();
+                        }
                       );
 	}
 

@@ -10,16 +10,16 @@ baseUrl = `http://127.0.0.1${apiPort}`
 export const HttpOptions = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
-    // 'Access-Control-Allow-Origin': '*'
+     'Access-Control-Allow-Origin': '*'
   })
 }
 
 export const HttpOptionsAuthorized = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
-    // 'Access-Control-Allow-Origin': '*',
-    // 'Authorization': `Bearer ${localStorage.getItem('at')}`,
-    // 'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
+    'Access-Control-Allow-Origin': '*',
+    'Authorization': `Bearer ${localStorage.getItem('at')}`,
+    'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
   })
 }
 
@@ -78,6 +78,8 @@ const service = {
 }
 
 export const Api = {
+  HttpOptions,
+  HttpOptionsAuthorized,
   auth,
   dashboard,
   carrier,
@@ -88,4 +90,11 @@ export const Api = {
 
 export const options = {
   root: baseUrl
+}
+
+export function checkToken(heads: Headers){
+  if (heads.has('New-Access-Token')) {
+    localStorage.removeItem('at');
+    localStorage.setItem('at', heads.get('New-Access-Token'));
+  }
 }

@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { Approver } from "../model/approver";
 import { Injectable } from "@angular/core";
 
-import { Api } from '../../../../../modules/api/index';
+import {Api, HttpOptionsAuthorized} from '../../../../../modules/api/index';
 
 @Injectable ()
 export class ApproverService {
@@ -25,26 +25,26 @@ export class ApproverService {
 
   public getCount (): Observable<any> {
 
-    return this.http.get ( this.url + '/count' );
+    return this.http.get ( this.url + '/count', HttpOptionsAuthorized );
   }
 
   public getAll (): Observable<any> {
 
-    return this.http.get ( this.url + '/all' );
+    return this.http.get ( this.url + '/all', HttpOptionsAuthorized );
   }
 
   public getApproversInInterval ( limit: number, offset: number ): Observable<any> {
 
-    return this.http.get ( this.url + '/paging?limit=' + limit + '&offset=' + offset );
+    return this.http.get ( this.url + '/paging?limit=' + limit + '&offset=' + offset, HttpOptionsAuthorized );
   }
 
   public postApprover ( approver: Approver ): Observable<any> {
 
-    return this.http.post ( this.url, approver );
+    return this.http.post ( this.url, approver, HttpOptionsAuthorized );
   }
 
   public putApprover ( approver: Approver ): Observable<any> {
-    return this.http.put ( this.url, approver )
+    return this.http.put ( this.url, approver, HttpOptionsAuthorized )
   }
 
   public deleteApprover ( approver: Approver ): Observable<any> {
@@ -52,7 +52,8 @@ export class ApproverService {
     return this.http.request ( 'DELETE',
                                this.url,
                                {
-                                 body: approver
+                                 body: approver,
+                                 headers:  HttpOptionsAuthorized.headers
                                }
     );
   }

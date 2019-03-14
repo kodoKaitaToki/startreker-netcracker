@@ -3,8 +3,10 @@ import * as CanvasJS from '../../canvasjs.min';
 
 import { FormGroup, FormControl } from '@angular/forms';
 import {formatDate} from '@angular/common';
+import { clone } from 'ramda';
 
 import { DashboardDeltaService } from '../dashboard-delta.service';
+import {checkToken} from "../../../../modules/api/index";
 
 @Component({
   selector: 'app-dashboard-delta',
@@ -33,19 +35,31 @@ export class DashboardDeltaComponent implements OnInit {
     let fromDateFormatted: string = formatDate(this.form.value.fromDate, 'yyyy-MM-dd', 'en');
     let toDateFormatted: string = formatDate(this.form.value.toDate, 'yyyy-MM-dd', 'en');
 
-    this.dashboardDeltaService.getUsersIncreasingPerPeriod(fromDateFormatted, toDateFormatted).subscribe(data => {
-      this.userMap = data;
-      this.reloadCharts();
+    this.dashboardDeltaService.getUsersIncreasingPerPeriod(fromDateFormatted, toDateFormatted)
+      //.subscribe((resp: Response) => {
+      .subscribe(data => {
+        //checkToken(resp.headers);
+        //this.userMap = clone(resp);
+        this.userMap = data;
+        this.reloadCharts();
     });
 
-    this.dashboardDeltaService.getCarriersIncreasingPerPeriod(fromDateFormatted, toDateFormatted).subscribe(data => {
-      this.carrierMap = data;
-      this.reloadCharts();
+    this.dashboardDeltaService.getCarriersIncreasingPerPeriod(fromDateFormatted, toDateFormatted)
+      //.subscribe((resp: Response) => {
+      .subscribe(data => {
+        // checkToken(resp.headers);
+        // this.carrierMap = clone(resp);
+        this.carrierMap = data;
+        this.reloadCharts();
     });
 
-    this.dashboardDeltaService.getLocationsIncreasingPerPeriod(fromDateFormatted, toDateFormatted).subscribe(data => {
-      this.locationsMap = data;
-      this.reloadCharts();
+    this.dashboardDeltaService.getLocationsIncreasingPerPeriod(fromDateFormatted, toDateFormatted)
+      //.subscribe((resp: Response) => {
+      .subscribe(data => {
+        // checkToken(resp.headers);
+        // this.locationsMap = clone(resp);
+        this.locationsMap = data;
+        this.reloadCharts();
     });
   }
 
