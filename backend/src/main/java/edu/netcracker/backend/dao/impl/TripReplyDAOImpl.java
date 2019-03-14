@@ -22,8 +22,7 @@ public class TripReplyDAOImpl extends CrudDAOImpl<TripReply> implements TripRepl
                                  reply.getTripId(),
                                  reply.getWriterId(),
                                  reply.getReportText(),
-                                 reply.getCreationDate()
-                                );
+                                 reply.getCreationDate());
     }
 
     @Override

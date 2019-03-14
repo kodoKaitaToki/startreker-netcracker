@@ -16,18 +16,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -65,14 +59,14 @@ public class ServiceServiceTest {
     }
 
     @Before
-    public void setCreateForm(){
+    public void setCreateForm() {
         serviceCreateForm.setServiceName("namenamename");
         serviceCreateForm.setServiceDescription("description");
         serviceCreateForm.setServiceStatus("UNDER_CLARIFICATION");
     }
 
     @Before
-    public void setServiceCRUDDTO(){
+    public void setServiceCRUDDTO() {
         serviceCRUDDTO.setId(2L);
         serviceCRUDDTO.setServiceName("quis turpis eget");
         serviceCRUDDTO.setServiceDescription(
@@ -91,7 +85,7 @@ public class ServiceServiceTest {
     }
 
     @Test
-    public void addServiceException(){
+    public void addServiceException() {
         expectedEx.expect(RequestException.class);
         expectedEx.expectMessage("Status of new service must be draft or open");
 

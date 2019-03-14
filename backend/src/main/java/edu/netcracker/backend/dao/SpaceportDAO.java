@@ -12,6 +12,10 @@ public interface SpaceportDAO {
 
     Optional<Spaceport> find(Number id);
 
+    List<Spaceport> findByPlanet(String planet);
+
+    Long getIdBySpaceportName(String spaceport);
+
     void delete(Spaceport spaceport);
 
     List<Spaceport> findPerPeriod(LocalDateTime from, LocalDateTime to);

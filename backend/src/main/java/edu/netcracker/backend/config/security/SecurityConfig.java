@@ -1,7 +1,6 @@
 package edu.netcracker.backend.config.security;
 
 import edu.netcracker.backend.security.AuthFilter;
-import edu.netcracker.backend.security.JwtAuthFilter;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

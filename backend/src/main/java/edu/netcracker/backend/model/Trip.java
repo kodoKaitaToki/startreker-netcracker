@@ -45,6 +45,12 @@ public class Trip {
 
     private User approver;
 
+    private Planet departurePlanet;
+    private Planet arrivalPlanet;
+
+    private Spaceport departureSpaceport;
+    private Spaceport arrivalSpaceport;
+
     private List<TicketClass> ticketClasses = new ArrayList<>();
 
     public boolean changeStatus(User requestUser, TripState newTripState, TripDTO tripDTO) {

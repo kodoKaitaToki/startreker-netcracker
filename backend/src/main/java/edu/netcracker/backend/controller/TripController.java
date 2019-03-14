@@ -2,18 +2,18 @@ package edu.netcracker.backend.controller;
 
 import edu.netcracker.backend.message.request.MandatoryTimeInterval;
 import edu.netcracker.backend.message.request.OptionalTimeInterval;
+import edu.netcracker.backend.message.request.trips.TripCreation;
 import edu.netcracker.backend.message.response.CarrierRevenueResponse;
 import edu.netcracker.backend.message.response.CarrierViewsResponse;
 import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.message.response.TripDistributionElement;
+import edu.netcracker.backend.message.response.trips.AllCarriersTripsDTO;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.StatisticsService;
 import edu.netcracker.backend.service.TripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.ws.rs.core.MediaType;
@@ -36,14 +36,23 @@ public class TripController {
     }
 
     @PatchMapping(value = "api/v1/trip/{id}", consumes = MediaType.APPLICATION_JSON)
-    @PreAuthorize("hasAuthority('ROLE_CARRIER') or hasAuthority('ROLE_APPROVER')")
+//    @PreAuthorize("hasAuthority('ROLE_CARRIER') or hasAuthority('ROLE_APPROVER')")
     public TripDTO update(@Valid @RequestBody TripDTO tripDTO, @PathVariable("id") Long id) {
         tripDTO.setTripId(id);
         return TripDTO.from(tripService.updateTrip(securityContext.getUser(), tripDTO));
     }
 
+    @GetMapping("api/v1/trips")
+    //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<AllCarriersTripsDTO> getAllTrips() {return tripService.getAllTripsForCarrier();}
+
+    @PostMapping("api/v1/trips")
+    //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public void saveTrip(@RequestBody TripCreation trip) {tripService.saveTrip(trip);}
+
     @GetMapping("api/v1/trip/distribution")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<TripDistributionElement> getTripsStatistics() {
         return statisticsService.getTripsStatistics();
     }

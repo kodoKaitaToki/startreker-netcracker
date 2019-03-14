@@ -10,6 +10,8 @@ import java.util.List;
 @Component
 public class Archived extends TripState {
 
+    private final String stringValue = "Archived";
+
     private final static int databaseValue = 5;
 
     private static List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(4);
@@ -22,5 +24,10 @@ public class Archived extends TripState {
     @Override
     public int getDatabaseValue() {
         return databaseValue;
+    }
+
+    @Override
+    public String getStringValue() {
+        return stringValue;
     }
 }

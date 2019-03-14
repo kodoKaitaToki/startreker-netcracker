@@ -18,17 +18,17 @@ import java.util.Optional;
 @Repository
 public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements TicketClassDAO {
 
-    private static final String SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER = "SELECT " +
-            "tc.class_id, " +
-            "class_name, " +
-            "trip_id, " +
-            "ticket_price, " +
-            "bc.item_number " +
-            "FROM ticket_class tc " +
-            "INNER JOIN bundle_class bc on tc.class_id = bc.class_id " +
-            "WHERE bc.bundle_id = ? AND trip_id = ?;";
+    private static final String SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER = "SELECT "
+                                                                     + "tc.class_id, "
+                                                                     + "class_name, "
+                                                                     + "trip_id, "
+                                                                     + "ticket_price, "
+                                                                     + "bc.item_number "
+                                                                     + "FROM ticket_class tc "
+                                                                     + "INNER JOIN bundle_class bc on tc.class_id = bc.class_id "
+                                                                     + "WHERE bc.bundle_id = ? AND trip_id = ?;";
 
-    private final String SELECT_BY_TRIP_ID = "SELECT class_id, class_name, trip_id, ticket_price " +
+    private final String SELECT_BY_TRIP_ID = "SELECT class_id, class_name, trip_id, ticket_price, discount_id, class_seats " +
             "FROM ticket_class " +
             "WHERE trip_id = ?";
 
@@ -81,6 +81,14 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
             "INNER JOIN ticket_class on trip.trip_id = ticket_class.trip_id " +
             "WHERE user_a.user_id = ? AND ticket_class.class_id = ?";
 
+    private final String INSERT_TICKET_CLASS =
+            "INSERT INTO ticket_class (class_name, trip_id, class_seats, ticket_price) VALUES (?, ?, ?, ?)";
+
+    private final String UPDATE_TICKET_CLASS =
+            "UPDATE ticket_class SET class_seats = ?, ticket_price = ? WHERE class_id = ?";
+
+
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
@@ -104,6 +112,33 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
     @Override
     public List<TicketClass> findByTripId(Number id) {
         return getJdbcTemplate().query(SELECT_BY_TRIP_ID, new Object[]{id}, getGenericMapper());
+    }
+
+    /**
+     * Method for adding new ticket classes to database
+     *
+     * @param ticketClass - ticket class to be added
+     */
+    @Override
+    public void create(TicketClass ticketClass) {
+        getJdbcTemplate().update(INSERT_TICKET_CLASS,
+                                 ticketClass.getClassName(),
+                                 ticketClass.getTripId(),
+                                 ticketClass.getClassSeats(),
+                                 ticketClass.getTicketPrice());
+    }
+
+    /**
+     * Method for updating of ticket classes
+     *
+     * @param ticketClass - ticket class to be updated
+     */
+    @Override
+    public void update(TicketClass ticketClass) {
+        getJdbcTemplate().update(UPDATE_TICKET_CLASS,
+                                 ticketClass.getClassSeats(),
+                                 ticketClass.getTicketPrice(),
+                                 ticketClass.getClassId());
     }
 
     /**

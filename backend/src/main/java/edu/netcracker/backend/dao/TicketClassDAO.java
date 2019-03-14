@@ -23,5 +23,9 @@ public interface TicketClassDAO extends CrudDAO<TicketClass> {
 
     Optional<TicketClass> getTicketClassByDiscount(Number userId, Number discountId);
 
+    void create(TicketClass ticketClass);
+
+    void update(TicketClass ticketClass);
+
     Map<Long, List<TicketClass>> getAllTicketClassesBelongToTrips(List<Number> tripIds);
 }
