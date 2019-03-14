@@ -6,7 +6,7 @@ import edu.netcracker.backend.message.request.*;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.TripWithArrivalAndDepartureData;
 import edu.netcracker.backend.model.User;
-import edu.netcracker.backend.model.state.trip.TripState;
+import edu.netcracker.backend.model.state.trip.*;
 import edu.netcracker.backend.service.SuggestionService;
 import edu.netcracker.backend.service.TicketClassService;
 import edu.netcracker.backend.service.TripService;
@@ -31,18 +31,19 @@ public class TripServiceImpl implements TripService {
     private static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
 
     private final TripDAO tripDAO;
-    private final ApplicationContext applicationContext;
+    private final TripStateRegistry tripStateRegistry;
 
     private final TicketClassService ticketClassService;
 
     private final SuggestionService suggestionService;
 
     @Autowired
-    public TripServiceImpl(TripDAO tripDAO, ApplicationContext applicationContext,
+    public TripServiceImpl(TripDAO tripDAO,
+                           TripStateRegistry tripStateRegistry,
                            TicketClassService ticketClassService,
                            SuggestionService suggestionService) {
         this.tripDAO = tripDAO;
-        this.applicationContext = applicationContext;
+        this.tripStateRegistry = tripStateRegistry;
         this.ticketClassService = ticketClassService;
         this.suggestionService = suggestionService;
     }
@@ -60,7 +61,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<Trip> findCarrierTripsByStatus(User requestUser, Integer status, Long offset, Long limit) {
-        if (status == TripState.REMOVED.getDatabaseValue()) {
+        if (status == Removed.DATABASE_VALUE) {
             return new ArrayList<>();
         }
 
@@ -69,7 +70,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<Trip> findCarrierTrips(User requestUser, Long offset, Long limit) {
-        return tripDAO.findAllByCarrier(requestUser.getUserId(), TripState.REMOVED.getDatabaseValue(), offset, limit);
+        return tripDAO.findAllByCarrier(requestUser.getUserId(), Removed.DATABASE_VALUE, offset, limit);
     }
 
     @Override
@@ -77,8 +78,8 @@ public class TripServiceImpl implements TripService {
         logger.debug("get all trips with related ticket classes and discounts that belong to carrier with id "
                      + carrierId);
 
-        List<TripWithArrivalAndDepartureData> trips = tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(
-                carrierId);
+        List<TripWithArrivalAndDepartureData> trips =
+                tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
         List<DiscountTicketClassDTO> ticketClassDTOs = ticketClassService.getTicketClassesRelatedToCarrier(carrierId);
 
         return createTripWithArrivalAndDepartureDataAndTicketClassesDTOs(trips, ticketClassDTOs);
@@ -88,37 +89,39 @@ public class TripServiceImpl implements TripService {
     public List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithSuggestionAndDiscountsBelongToCarrier(Number carrierId) {
         logger.debug("get all trips with related suggestion and discounts that belong to carrier with id " + carrierId);
 
-        List<TripWithArrivalAndDepartureData> trips = tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(
-                carrierId);
+        List<TripWithArrivalAndDepartureData> trips =
+                tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
 
-        Map<Long, List<DiscountSuggestionDTO>> suggestionsRelatedToTrip
-                = suggestionService.getSuggestionsRelatedToTicketClasses(ticketClassService.getAllTicketClassesBelongToTrips(
-                trips.stream()
-                     .map(TripWithArrivalAndDepartureData::getTripId)
-                     .collect(Collectors.toList())));
+        Map<Long, List<DiscountSuggestionDTO>> suggestionsRelatedToTrip =
+                suggestionService.getSuggestionsRelatedToTicketClasses(ticketClassService.getAllTicketClassesBelongToTrips(
+                        trips.stream()
+                             .map(TripWithArrivalAndDepartureData::getTripId)
+                             .collect(Collectors.toList())));
         return createTripWithArrivalAndDepartureDataAndSuggestionDTOs(trips, suggestionsRelatedToTrip);
     }
 
 
     @Override
     public List<Trip> findApproverTrips(User requestUser, Integer status, Long offset, Long limit) {
-        if (status == TripState.OPEN.getDatabaseValue()) {
+        if (status == Open.DATABASE_VALUE) {
             return tripDAO.findAllByStatus(status, offset, limit);
         }
-        if (status == TripState.ASSIGNED.getDatabaseValue()) {
+        if (status == Assigned.DATABASE_VALUE) {
             return tripDAO.findAllByApproverByStatus(requestUser.getUserId(), status, offset, limit);
         }
         throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
     }
-   private Trip updateTrip(User requestUser, Trip trip, TripRequest tripRequest) {
-        TripState desiredState = TripState.getState(tripRequest.getStatus());
+
+    private Trip updateTrip(User requestUser, Trip trip, TripRequest tripRequest) {
+        TripState desiredState = tripStateRegistry.getState(tripRequest.getStatus());
 
         if (!desiredState.equals(trip.getTripState())) {
             startStatusChange(requestUser, trip, desiredState, tripRequest);
         }
 
         tripDAO.save(trip);
-        return tripDAO.find(trip.getTripId()).orElseThrow(RequestException::new);
+        return tripDAO.find(trip.getTripId())
+                      .orElseThrow(RequestException::new);
     }
 
     private void startStatusChange(User requestUser, Trip trip, TripState tripState, TripRequest tripRequest) {
@@ -135,12 +138,7 @@ public class TripServiceImpl implements TripService {
             return false;
         }
 
-        if (newTripState.apply(applicationContext, trip, tripRequest, requestUser)) {
-            trip.setTripState(newTripState);
-            return true;
-        }
-
-        return false;
+        return newTripState.switchTo(trip, requestUser, tripRequest);
     }
 
     private List<TripWithArrivalAndDepartureDataDTO> createTripWithArrivalAndDepartureDataAndSuggestionDTOs(List<TripWithArrivalAndDepartureData> trips,

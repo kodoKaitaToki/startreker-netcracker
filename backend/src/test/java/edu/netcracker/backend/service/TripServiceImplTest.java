@@ -3,7 +3,6 @@ package edu.netcracker.backend.service;
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.message.request.TripRequest;
-import edu.netcracker.backend.message.response.TripResponse;
 import edu.netcracker.backend.message.response.TripReplyDTO;
 import edu.netcracker.backend.model.Role;
 import edu.netcracker.backend.model.Trip;
@@ -38,7 +37,7 @@ public class TripServiceImplTest {
     private TripDAO tripDAOMock;
 
     @Autowired
-    private ApplicationContext applicationContext;
+    private TripStateRegistry tripStateRegistry;
 
     private TripService tripService;
 
@@ -86,43 +85,43 @@ public class TripServiceImplTest {
         draftTrip.setTripId(1L);
         draftTrip.setApprover(approver);
         draftTrip.setOwner(carrier);
-        draftTrip.setTripState(TripState.DRAFT);
+        draftTrip.setTripState(tripStateRegistry.getState(Draft.DATABASE_VALUE));
 
         openTrip = new Trip();
         openTrip.setTripId(1L);
         openTrip.setApprover(approver);
         openTrip.setOwner(carrier);
-        openTrip.setTripState(TripState.OPEN);
+        openTrip.setTripState(tripStateRegistry.getState(Open.DATABASE_VALUE));
 
         assignedTrip = new Trip();
         assignedTrip.setTripId(1L);
         assignedTrip.setApprover(approver);
         assignedTrip.setOwner(carrier);
-        assignedTrip.setTripState(TripState.ASSIGNED);
+        assignedTrip.setTripState(tripStateRegistry.getState(Assigned.DATABASE_VALUE));
 
         publishedTrip = new Trip();
         publishedTrip.setTripId(1L);
         publishedTrip.setApprover(approver);
         publishedTrip.setOwner(carrier);
-        publishedTrip.setTripState(TripState.PUBLISHED);
+        publishedTrip.setTripState(tripStateRegistry.getState(Published.DATABASE_VALUE));
 
         archivedTrip = new Trip();
         archivedTrip.setTripId(1L);
         archivedTrip.setApprover(approver);
         archivedTrip.setOwner(carrier);
-        archivedTrip.setTripState(TripState.ARCHIVED);
+        archivedTrip.setTripState(tripStateRegistry.getState(Archived.DATABASE_VALUE));
 
         underClarificationTrip = new Trip();
         underClarificationTrip.setTripId(1L);
         underClarificationTrip.setApprover(approver);
         underClarificationTrip.setOwner(carrier);
-        underClarificationTrip.setTripState(TripState.UNDER_CLARIFICATION);
+        underClarificationTrip.setTripState(tripStateRegistry.getState(UnderClarification.DATABASE_VALUE));
 
         removedTrip = new Trip();
         removedTrip.setTripId(1L);
         removedTrip.setApprover(approver);
         removedTrip.setOwner(carrier);
-        removedTrip.setTripState(TripState.REMOVED);
+        removedTrip.setTripState(tripStateRegistry.getState(Removed.DATABASE_VALUE));
 
         draftTripDTO = TripRequest.from(draftTrip);
         openTripDTO = TripRequest.from(openTrip);
@@ -140,7 +139,7 @@ public class TripServiceImplTest {
         underClarificationTripDTO.setReplies(replies);
         removedTripDTO = TripRequest.from(removedTrip);
 
-        tripService = new TripServiceImpl(tripDAOMock, applicationContext, null, null);
+        tripService = new TripServiceImpl(tripDAOMock, tripStateRegistry, null, null);
     }
 
     // Draft tests
