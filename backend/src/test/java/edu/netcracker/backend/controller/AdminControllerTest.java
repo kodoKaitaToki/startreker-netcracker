@@ -17,23 +17,34 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Ignore
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureTestDatabase
 @ActiveProfiles(profiles = "test")
 @AutoConfigureMockMvc
-public class TripControllerTest {
-
+@Ignore("have been made for an old database")
+public class AdminControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
     @Test
+    @Ignore
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void shouldBeCorrectTestDistribution() throws Exception {
-        mockMvc.perform(get("/api/v1/trip/distribution"))
-               .andExpect(status().isOk())
-               .andExpect(content().string(containsString(
-                       "[{\"departure_id\":17,\"arrival_id\":9,\"departure_planet_id\":4,\"arrival_planet_id\":1,\"departure_spaceport_name\":\"libero\",\"arrival_spaceport_name\":\"neque\",\"departure_planet_name\":\"MARS\",\"arrival_planet_name\":\"EARTH\",\"occurrence_count\":1,\"percentage\":14.285714285714285},")));
+    public void shouldBeCorrectTestCostsByCarrier() throws Exception {
+        mockMvc.perform(get("/api/v1/admin/costs/51?from=2017-02-23&to=2020-02-23"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(
+                        "{\"22534\":6,\"10664\":12,\"27469\":9,\"16637\":5,\"13582\":9,\"14015\":7}")));
+    }
+
+
+    @Test
+    @Ignore
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    public void shouldBeCorrectTestCosts() throws Exception {
+        mockMvc.perform(get("/api/v1/admin/costs?from=2017-02-23&to=2020-02-23"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(
+                        "{\"32192\":4,\"24453\":4,\"22534\":6,\"25191\":10,\"10664\":12,\"34666\":6,\"15787\":5,\"32588\":7,\"27469\":9,\"13582\":9,\"39187\":8,\"16637\":5,\"14015\":7,\"17247\":5}")));
     }
 }

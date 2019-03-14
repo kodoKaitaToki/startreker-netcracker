@@ -27,5 +27,8 @@ public class PossibleService {
     @Attribute("service_price")
     private Long servicePrice;
 
+    @Attribute("p_service_status")
+    private Long pServiceStatus;
+
     private ServiceDescr service;
 }

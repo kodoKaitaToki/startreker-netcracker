@@ -20,10 +20,10 @@ public class Ticket {
     private Integer ticketId;
 
     @Attribute("passenger_id")
-    private Long passengerId;
+    private Integer passengerId;
 
     @Attribute("class_id")
-    private Long classId;
+    private Integer classId;
 
     @Attribute("seat")
     private Integer seat;
