@@ -39,7 +39,8 @@ const routes: Routes = [
     // canActivate: [AuthGuard],
     // data: {roles: [Role.Carrier]}
   },
-  { path: '**', redirectTo: '/notFound'}
+  { path: '**', redirectTo: '/notFound'},
+  { path: 'trip-search', loadChildren: './pages/trip-search/trip-search.module#TripSearchModule'}
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
