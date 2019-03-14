@@ -3,8 +3,12 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Bundle} from '../shared/model/bundle';
 import {BundlesService} from "../shared/service/bundles.service";
 import {BundlesTableComponent} from "../bundles-table/bundles-table.component";
+import {MessageService} from "primeng/api";
 import {TreeNode} from 'primeng/api';
 import {MOCK_TREE} from '../shared/model/mock-tree';
+import {Carrier} from '../../carrier/carrier';
+import {CarrierCrudService} from '../../carrier/carrier-crud.service';
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
              selector: 'app-bundles-component',
@@ -15,10 +19,9 @@ import {MOCK_TREE} from '../shared/model/mock-tree';
 export class BundlesComponentComponent implements OnInit {
   @ViewChild(BundlesTableComponent) table:BundlesTableComponent;
 
-  trips: TreeNode[];
+  inputTree: TreeNode[];
 
-  tripSelected: TreeNode[];
-
+  selectedTree: TreeNode[];
 
   filterCriteria = [
     {name: 'id'},
@@ -33,11 +36,14 @@ export class BundlesComponentComponent implements OnInit {
 
   form: FormGroup;
 
-  constructor(private bundlesSrvc: BundlesService) {
+  constructor(
+    private bundlesSrvc: BundlesService,
+    private carrierSrvc: CarrierCrudService,
+    private messageService: MessageService) {
   }
 
   ngOnInit(): void {
-    this.trips = MOCK_TREE;
+    this.populateCarriers();
     this.form = new FormGroup(
       {
         start_date: new FormControl('', Validators.required),
@@ -50,7 +56,7 @@ export class BundlesComponentComponent implements OnInit {
     );
   }
 
-  chooseNewFilter(chosenFilterName) {
+  chooseNewFilter(chosenFilterName: { value: string; }) {
 
     this.currentFilter = chosenFilterName.value;
     this.currentFilterPlaceholder = `Search by ${this.currentFilter}`;
@@ -70,6 +76,35 @@ export class BundlesComponentComponent implements OnInit {
         });
 
     this.form.reset({is_activated: true});
+  }
+
+  populateCarriers() {
+    this.inputTree = [];
+    this.carrierSrvc.getAllCarriers()
+    .subscribe(carriers => {
+      this.inputTree = this.inputTree.concat(
+        carriers.map((carrier: { username: string; }) => {
+          let node: TreeNode = {
+            label: carrier.username,
+            selectable: false
+          }
+          return node;
+      }))
+    }, (error: HttpErrorResponse) => {
+      this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
+    });
+  }
+
+  createMessage(severity: string, summary: string, detail: string): any {
+    return {
+      severity: severity,
+      summary: summary,
+      detail: detail
+    };
+  }
+
+  showMessage(msgObj: any) {
+    this.messageService.add(msgObj);
   }
 
   

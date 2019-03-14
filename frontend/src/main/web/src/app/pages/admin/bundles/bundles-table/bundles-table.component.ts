@@ -4,6 +4,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {BundlesService} from "../shared/service/bundles.service";
 import {MessageService} from "primeng/api";
 import {HttpErrorResponse} from "@angular/common/http";
+import {Carrier} from '../../carrier/carrier';
+import {CarrierCrudService} from '../../carrier/carrier-crud.service';
 
 
 @Component({
@@ -32,15 +34,16 @@ export class BundlesTableComponent implements OnInit {
 
   form: FormGroup;
 
-  entriesAmountOnPage = 10;
-
   @Output() onUpdateDataNotifier = new EventEmitter();
 
   @Output() onDeleteDataNotifier = new EventEmitter();
 
   @Output() update = new EventEmitter<number>();
 
-  constructor(private bundlesSrvc: BundlesService, private messageService: MessageService) {
+  constructor(
+    private bundlesSrvc: BundlesService,
+    private messageService: MessageService,
+    private carrierSrvc: CarrierCrudService) {
 
   }
 
