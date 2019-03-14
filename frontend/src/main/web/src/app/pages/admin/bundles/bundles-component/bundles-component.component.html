@@ -15,6 +15,7 @@
               [value]="inputTree"
               selectionMode="checkbox"
               [(selection)]="selectedTree"
+              (onNodeExpand)="loadNode($event)"
               [propagateSelectionDown]="false"
               [style]="{'width':'100%'}"
               >

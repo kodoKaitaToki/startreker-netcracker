@@ -8,7 +8,10 @@ import {TreeNode} from 'primeng/api';
 import {MOCK_TREE} from '../shared/model/mock-tree';
 import {Carrier} from '../../carrier/carrier';
 import {CarrierCrudService} from '../../carrier/carrier-crud.service';
+import { TripsService } from '../../../../services/trips.service';
 import {HttpErrorResponse} from "@angular/common/http";
+import { Trip } from '../shared/model/trip';
+import { TicketClass } from '../shared/model/ticket-class';
 
 @Component({
              selector: 'app-bundles-component',
@@ -39,6 +42,7 @@ export class BundlesComponentComponent implements OnInit {
   constructor(
     private bundlesSrvc: BundlesService,
     private carrierSrvc: CarrierCrudService,
+    private tripsApi: TripsService,
     private messageService: MessageService) {
   }
 
@@ -83,13 +87,56 @@ export class BundlesComponentComponent implements OnInit {
     this.carrierSrvc.getAllCarriers()
     .subscribe(carriers => {
       this.inputTree = this.inputTree.concat(
-        carriers.map((carrier: { username: string; }) => {
+        carriers.map((carrier: Carrier) => {
           let node: TreeNode = {
             label: carrier.username,
-            selectable: false
+            data: carrier.id,
+            selectable: false,
+            type: "carrier",
+            leaf: false
           }
           return node;
       }))
+    }, (error: HttpErrorResponse) => {
+      this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
+    });
+  }
+
+  loadNode(event: { node: TreeNode; }) {
+    if(event.node && event.node.type == "carrier") {
+      switch(event.node.type) {
+        case "carrier": {
+          this.populateCarrier(event.node);
+          break;
+        }
+      }
+    }
+  }
+
+  populateCarrier(carrier: TreeNode) {
+    this.tripsApi.getTripsForCarrier(carrier.data)
+    .subscribe(trips => {
+      carrier.children = trips.filter((trip: Trip) => {
+        return (trip.trip_status == "Published")
+      })
+      .map((trip: Trip) => {
+          let node: TreeNode = {
+            label: trip.departure_planet + " - " + trip.arrival_planet,
+            data: trip.trip_id,
+            type: "trip",
+            leaf: false,
+            children: trip.ticket_classes.map((ticketClass: TicketClass) => {
+              let node: TreeNode = {
+                label: ticketClass.class_name,
+                data: ticketClass.class_id,
+                type: "ticketClass",
+                leaf: false,
+              }
+              return node;
+            })
+          }
+          return node;
+      })
     }, (error: HttpErrorResponse) => {
       this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
     });

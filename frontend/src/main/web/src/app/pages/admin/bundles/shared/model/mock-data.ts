@@ -10,6 +10,7 @@ export const MOCK_DATA: Bundle[] = [
         "bundle_trips": [
             {
                 "trip_id": 4,
+                "trip_status": "Published",
                 "departure_spaceport_name": "porta",
                 "arrival_spaceport_name": "sem",
                 "departure_planet": "MOON",
@@ -49,6 +50,7 @@ export const MOCK_DATA: Bundle[] = [
         "bundle_trips": [
             {
                 "trip_id": 4,
+                "trip_status": "Published",
                 "departure_spaceport_name": "porta",
                 "arrival_spaceport_name": "sem",
                 "departure_planet": "MOON",
@@ -88,6 +90,7 @@ export const MOCK_DATA: Bundle[] = [
         "bundle_trips": [
             {
                 "trip_id": 4,
+                "trip_status": "Published",
                 "departure_spaceport_name": "porta",
                 "arrival_spaceport_name": "sem",
                 "departure_planet": "MOON",
@@ -120,6 +123,7 @@ export const MOCK_DATA: Bundle[] = [
         "bundle_trips": [
             {
                 "trip_id": 4,
+                "trip_status": "Published",
                 "departure_spaceport_name": "porta",
                 "arrival_spaceport_name": "sem",
                 "departure_planet": "MOON",
@@ -145,6 +149,7 @@ export const MOCK_DATA: Bundle[] = [
         "bundle_trips": [
             {
                 "trip_id": 4,
+                "trip_status": "Published",
                 "departure_spaceport_name": "porta",
                 "arrival_spaceport_name": "sem",
                 "departure_planet": "MOON",

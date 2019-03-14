@@ -24,4 +24,8 @@ export class TripsService {
   getAllTrips(): Observable<any> {
     return this.http.get<any>(Api.trips.getAllTrips(), HttpOptionsAuthorized)
   }
+
+  getTripsForCarrier(carrierId: number): Observable<any> {
+    return this.http.get<any>(Api.trips.getAllTrips() + '?carrierId=' + carrierId, HttpOptionsAuthorized)
+  }
 }
