@@ -1,0 +1,68 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-3">
+      <div class="card historycard" style="width: 14rem; margin-top: 7%">
+        <div class="card-header">
+          Orders History
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">Trips</li>
+          <li class="list-group-item">Services</li>
+        </ul>
+      </div>
+      <div class="card historycard" style="width: 14rem; margin-top: 5%">
+        <div class="card-header">
+          Search parameters
+        </div>
+        <form [formGroup]="searchParams" (ngSubmit)="search(searchParams.value)">
+          <div class="form-group">
+            <label for="testparam" style="padding-left: 5%; padding-top: 2%">Testparam</label>
+            <input formControlName="testparam" type="text" class="form-control center" id="testparam"
+                   style="width: 90%">
+          </div>
+          <button type="submit" class="btn btn-success center" style="margin-bottom: 5%;">Search</button>
+        </form>
+      </div>
+    </div>
+    <div class="col-lg-9" style="margin-top: 2%">
+      <div class="card historycard" style="width: 100%; padding: 12px">
+        <div class="row">
+          <div class="col-6" style="font-size: 21px; font-weight: bold">
+            <span>EARTH - MOON</span>
+          </div>
+          <div class="col-6" style="text-align: right; font-size: 20px">
+            <span>2015-03-05 15:32</span>
+            <br>
+            <span>2015-03-06 04:22</span>
+          </div>
+        </div>
+        <hr>
+
+        <div class="row">
+          <div class="col-6" style="font-size: 16px">
+            <span>Class: <a href="#">className</a></span>
+            <br>
+            <span>Price: <a href="#">123123$</a></span>
+            <br>
+            <span>Departure spaceport: <a href="#">depSpaceName</a></span>
+            <br>
+            <span>Arrival spaceport: <a href="#">arrSpaceName</a></span>
+          </div>
+          <div class="col-6" style="text-align: right; font-size: 18px">
+            <span>Seat: &nbsp;<strong>15</strong></span>
+          </div>
+        </div>
+        <hr>
+
+        <div class="row">
+          <div class="col-6" style="font-size: 18px">
+            <span>Seller: <a href="#">carrierName</a></span>
+          </div>
+          <div class="col-6" style="text-align: right; font-size: 18px">
+            <span>Bought at: &nbsp;2015-03-01 11:52</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
