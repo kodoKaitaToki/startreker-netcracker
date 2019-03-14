@@ -37,7 +37,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     HeaderComponent,
     RegistrationComponent,
     LoginComponent,
-    RecoveryComponent
+    RecoveryComponent,
   ],
   imports: [
     AppRoutingModule,

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-
+import { Router } from "@angular/router";
 
 declare function setPoint(point): any;
 
@@ -13,7 +13,7 @@ export class SearchMenuComponent implements OnInit {
 
   searchForm: FormGroup;
 
-  constructor() {
+  constructor(private router: Router) {
     this.searchForm = new FormGroup({
     });
    }
@@ -33,5 +33,9 @@ export class SearchMenuComponent implements OnInit {
   enableDatepicker(){
     let element = <HTMLInputElement> document.getElementById("returnDate");
     element.disabled = false;
+  }
+
+  onSubmit(){
+    this.router.navigate(['/trip-search'])
   }
 }

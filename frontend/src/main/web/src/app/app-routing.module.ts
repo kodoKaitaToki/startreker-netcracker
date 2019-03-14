@@ -8,6 +8,7 @@ import { RecoveryComponent } from './pages/recovery/recovery.component'
 import { Role } from './guards/role';
 
 import { AuthGuard } from './guards/auth.guard';
+import {TripSearchComponent} from "./pages/trip-search/trip-search/trip-search.component";
 
 const routes: Routes = [
   { path: '', component: LandingComponent},
@@ -39,8 +40,12 @@ const routes: Routes = [
     // canActivate: [AuthGuard],
     // data: {roles: [Role.Carrier]}
   },
+  {path: 'trip-search',
+    loadChildren: './pages/trip-search/trip-search.module#TripSearchModule'
+    // component: TripSearchComponent
+  },
   { path: '**', redirectTo: '/notFound'},
-  { path: 'trip-search', loadChildren: './pages/trip-search/trip-search.module#TripSearchModule'}
+
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
