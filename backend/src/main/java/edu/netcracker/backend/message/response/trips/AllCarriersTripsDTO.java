@@ -19,6 +19,9 @@ public class AllCarriersTripsDTO {
     @JsonProperty("trip_id")
     private Long tripId;
 
+    @JsonProperty("trip_status")
+    private String tripStatus;
+
     @JsonProperty("departure_spaceport_name")
     private String departureSpaceportName;
 
@@ -46,6 +49,7 @@ public class AllCarriersTripsDTO {
     public static AllCarriersTripsDTO from(Trip trip) {
         AllCarriersTripsDTO dto = new AllCarriersTripsDTO();
         dto.tripId = trip.getTripId();
+        dto.tripStatus = trip.getTripState().getStringValue();
         dto.departureSpaceportName = trip.getDepartureSpaceport()
                                          .getSpaceportName();
         dto.arrivalSpaceportName = trip.getArrivalSpaceport()

@@ -10,6 +10,8 @@ import java.util.List;
 @Component
 public class Published extends TripState {
 
+    private final String stringValue = "Published";
+
     private final static int databaseValue = 4;
 
     private static List<Integer> allowedStatesToSwitchFrom = Arrays.asList(3, 6);
@@ -23,5 +25,10 @@ public class Published extends TripState {
     @Override
     public int getDatabaseValue() {
         return databaseValue;
+    }
+
+    @Override
+    public String getStringValue() {
+        return stringValue;
     }
 }

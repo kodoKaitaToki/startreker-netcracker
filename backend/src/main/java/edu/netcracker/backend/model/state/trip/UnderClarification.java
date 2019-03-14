@@ -15,6 +15,8 @@ import java.util.List;
 @Component
 public class UnderClarification extends TripState {
 
+    private final String stringValue = "Under clarification";
+
     private final static int databaseValue = 6;
     private static List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(3);
     private final TripReplyDAO tripReplyDAO;
@@ -36,6 +38,11 @@ public class UnderClarification extends TripState {
     }
 
     @Override
+    public String getStringValue() {
+        return stringValue;
+    }
+
+    @Override
     public boolean apply(Trip trip, User requestUser, TripState tripState, TripDTO tripDTO) {
         if (tripDTO.getReply() == null) {
             return false;
@@ -49,4 +56,6 @@ public class UnderClarification extends TripState {
         tripReplyDAO.save(tripReply);
         return true;
     }
+
+
 }

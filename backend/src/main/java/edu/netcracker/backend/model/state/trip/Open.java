@@ -10,6 +10,8 @@ import java.util.List;
 @Component
 public class Open extends TripState {
 
+    private final String stringValue = "Opened";
+
     private final static int databaseValue = 2;
 
     private static List<Integer> allowedStatesToSwitchFrom = Arrays.asList(1, 5, 6);
@@ -24,4 +26,8 @@ public class Open extends TripState {
         return databaseValue;
     }
 
+    @Override
+    public String getStringValue() {
+        return stringValue;
+    }
 }
