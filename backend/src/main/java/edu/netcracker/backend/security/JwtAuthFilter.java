@@ -29,14 +29,20 @@ public class JwtAuthFilter extends AuthFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
-    @Autowired
-    private JwtProvider jwtProvider;
+    private final JwtProvider jwtProvider;
+
+    private final UserInformationHolderServiceImpl userInformationHolderService;
+
+    private final UserService userService;
 
     @Autowired
-    private UserInformationHolderServiceImpl userInformationHolderService;
-
-    @Autowired
-    private UserService userService;
+    public JwtAuthFilter(JwtProvider jwtProvider,
+                         UserInformationHolderServiceImpl userInformationHolderService,
+                         UserService userService) {
+        this.jwtProvider = jwtProvider;
+        this.userInformationHolderService = userInformationHolderService;
+        this.userService = userService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
