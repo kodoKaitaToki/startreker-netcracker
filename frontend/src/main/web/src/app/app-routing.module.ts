@@ -39,6 +39,14 @@ const routes: Routes = [
     // canActivate: [AuthGuard],
     // data: {roles: [Role.Carrier]}
   },
+  { path: 'user',
+    loadChildren: './pages/user/user.module#UserModule',
+
+    //IMPORTANT! Lines below should be uncommented later to activate Auth guard
+
+    // canActivate: [AuthGuard],
+    // data: {roles: [Role.User]}
+  },
   { path: '**', redirectTo: '/notFound'}
 ];
 @NgModule({
