@@ -80,12 +80,17 @@ public class TripServiceImpl implements TripService {
         logger.debug("Getting all trips for carrier from TripDAO");
         //        TODO: implement getting carrier id from access token
         List<Trip> trips = tripDAO.allCarriersTrips(7L);
-        logger.debug("Converting trips to DTO");
-        List<AllCarriersTripsDTO> tripsDTO = new ArrayList<>();
-        for (Trip trip : trips) {
-            tripsDTO.add(AllCarriersTripsDTO.from(trip));
-        }
-        return tripsDTO;
+
+        return getAllCarriersTripsDTO(trips);
+    }
+
+    @Override
+    public List<AllCarriersTripsDTO> getAllTripsForCarrier(Long carrierId) {
+        logger.debug("Getting all trips for carrier from TripDAO");
+        //        TODO: implement getting carrier id from access token
+        List<Trip> trips = tripDAO.allCarriersTrips(carrierId);
+
+        return getAllCarriersTripsDTO(trips);
     }
 
     @Override
@@ -225,5 +230,15 @@ public class TripServiceImpl implements TripService {
         trip.setCreationDate(LocalDateTime.now());
         trip.setTripPhoto("defaultPhoto.png");
         return trip;
+    }
+
+    private List<AllCarriersTripsDTO> getAllCarriersTripsDTO(List<Trip> trips){
+        logger.debug("Converting trips to DTO");
+        List<AllCarriersTripsDTO> tripsDTO = new ArrayList<>();
+        for (Trip trip : trips) {
+            tripsDTO.add(AllCarriersTripsDTO.from(trip));
+        }
+
+        return tripsDTO;
     }
 }

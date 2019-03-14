@@ -36,16 +36,21 @@ public class TripController {
     }
 
     @PatchMapping(value = "api/v1/trip/{id}", consumes = MediaType.APPLICATION_JSON)
-//    @PreAuthorize("hasAuthority('ROLE_CARRIER') or hasAuthority('ROLE_APPROVER')")
+    //    @PreAuthorize("hasAuthority('ROLE_CARRIER') or hasAuthority('ROLE_APPROVER')")
     public TripDTO update(@Valid @RequestBody TripDTO tripDTO, @PathVariable("id") Long id) {
         tripDTO.setTripId(id);
         return TripDTO.from(tripService.updateTrip(securityContext.getUser(), tripDTO));
     }
 
     @GetMapping("api/v1/trips")
-    //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<AllCarriersTripsDTO> getAllTrips() {return tripService.getAllTripsForCarrier();}
+
+    @GetMapping("api/v1/carrier/trips")
+    //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public List<AllCarriersTripsDTO> getAllTripsForCarrier(@RequestParam("carrier_id") Long carrierId) {
+        return tripService.getAllTripsForCarrier(carrierId);
+    }
 
     @PostMapping("api/v1/trips")
     //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")

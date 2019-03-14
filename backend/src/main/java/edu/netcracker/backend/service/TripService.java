@@ -15,6 +15,8 @@ public interface TripService {
 
     List<AllCarriersTripsDTO> getAllTripsForCarrier();
 
+    List<AllCarriersTripsDTO> getAllTripsForCarrier(Long carrierId);
+
     Trip updateTrip(User requestUser, TripDTO tripDTO);
 
     List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithTicketClassAndDiscountsBelongToCarrier(Number carrierId);
