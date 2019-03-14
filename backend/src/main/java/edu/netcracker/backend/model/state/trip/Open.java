@@ -11,6 +11,7 @@ import java.util.List;
 public class Open implements TripState {
 
     public final static int DATABASE_VALUE = 2;
+    public final static String NAME = "OPEN";
 
     private static List<Integer> allowedStatesToSwitchFrom = Arrays.asList(1, 5, 6);
 
@@ -23,5 +24,10 @@ public class Open implements TripState {
     @Override
     public int getDatabaseValue() {
         return DATABASE_VALUE;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

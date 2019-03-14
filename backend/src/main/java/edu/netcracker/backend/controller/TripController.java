@@ -130,7 +130,7 @@ public class TripController {
 
     @GetMapping(value = "api/v1/carrier/trip", params = {"status"})
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<TripResponse> getCarrierTripsByStatus(@RequestParam("status") Integer status, @Valid Pageable pageable) {
+    public List<TripResponse> getCarrierTripsByStatus(@RequestParam("status") String status, @Valid Pageable pageable) {
         ensureLimit(pageable);
         return toTripDTO(tripService.findCarrierTripsByStatus(securityContext.getUser(),
                                                               status,
@@ -140,7 +140,7 @@ public class TripController {
 
     @GetMapping(value = "api/v1/approver/trip", params = {"status"})
     @PreAuthorize("hasAuthority('ROLE_APPROVER')")
-    public List<TripResponse> getApproverTripsByStatus(@RequestParam("status") Integer status, @Valid Pageable pageable) {
+    public List<TripResponse> getApproverTripsByStatus(@RequestParam("status") String status, @Valid Pageable pageable) {
         ensureLimit(pageable);
         return toTripDTO(tripService.findApproverTrips(securityContext.getUser(),
                                                        status,

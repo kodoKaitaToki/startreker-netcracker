@@ -16,6 +16,7 @@ import java.util.List;
 public class UnderClarification implements TripState {
 
     public final static int DATABASE_VALUE = 6;
+    public final static String NAME = "UNDER_CLARIFICATION";
 
     private final TripReplyDAO tripReplyDAO;
 
@@ -35,6 +36,11 @@ public class UnderClarification implements TripState {
     @Override
     public int getDatabaseValue() {
         return DATABASE_VALUE;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 
     @Override

@@ -11,6 +11,7 @@ import java.util.List;
 public class Published implements TripState {
 
     public final static int DATABASE_VALUE = 4;
+    public final static String NAME = "PUBLISHED";
 
     private static List<Integer> allowedStatesToSwitchFrom = Arrays.asList(3, 6);
 
@@ -23,5 +24,10 @@ public class Published implements TripState {
     @Override
     public int getDatabaseValue() {
         return DATABASE_VALUE;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

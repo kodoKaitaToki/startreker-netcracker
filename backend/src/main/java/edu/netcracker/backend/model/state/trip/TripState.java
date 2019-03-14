@@ -10,6 +10,8 @@ public interface TripState {
 
     int getDatabaseValue();
 
+    String getName();
+
     default boolean switchTo(Trip trip, User requestUser, TripRequest tripRequest) {
         trip.setTripState(this);
         return true;

@@ -60,12 +60,13 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<Trip> findCarrierTripsByStatus(User requestUser, Integer status, Long offset, Long limit) {
-        if (status == Removed.DATABASE_VALUE) {
+    public List<Trip> findCarrierTripsByStatus(User requestUser, String status, Long offset, Long limit) {
+        TripState state = tripStateRegistry.getState(status);
+        if (state.getDatabaseValue() == Removed.DATABASE_VALUE) {
             return new ArrayList<>();
         }
 
-        return tripDAO.findAllByCarrierAndStatus(requestUser.getUserId(), status, offset, limit);
+        return tripDAO.findAllByCarrierAndStatus(requestUser.getUserId(), state.getDatabaseValue(), offset, limit);
     }
 
     @Override
@@ -102,12 +103,13 @@ public class TripServiceImpl implements TripService {
 
 
     @Override
-    public List<Trip> findApproverTrips(User requestUser, Integer status, Long offset, Long limit) {
-        if (status == Open.DATABASE_VALUE) {
-            return tripDAO.findAllByStatus(status, offset, limit);
+    public List<Trip> findApproverTrips(User requestUser, String status, Long offset, Long limit) {
+        TripState state = tripStateRegistry.getState(status);
+        if (state.getDatabaseValue() == Open.DATABASE_VALUE) {
+            return tripDAO.findAllByStatus(state.getDatabaseValue(), offset, limit);
         }
-        if (status == Assigned.DATABASE_VALUE) {
-            return tripDAO.findAllByApproverByStatus(requestUser.getUserId(), status, offset, limit);
+        if (state.getDatabaseValue() == Assigned.DATABASE_VALUE) {
+            return tripDAO.findAllByApproverByStatus(requestUser.getUserId(), state.getDatabaseValue(), offset, limit);
         }
         throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
     }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class Draft implements TripState {
 
     public final static int DATABASE_VALUE = 1;
+    public final static String NAME = "DRAFT";
 
     @Override
     public boolean isStateChangeAllowed(Trip trip, User user) {
@@ -17,5 +18,10 @@ public class Draft implements TripState {
     @Override
     public int getDatabaseValue() {
         return DATABASE_VALUE;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

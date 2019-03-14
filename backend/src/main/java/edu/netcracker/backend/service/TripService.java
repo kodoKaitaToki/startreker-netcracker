@@ -14,7 +14,7 @@ public interface TripService {
     List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithTicketClassAndDiscountsBelongToCarrier(Number carrierId);
 
     List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithSuggestionAndDiscountsBelongToCarrier(Number carrierId);
-    List<Trip> findCarrierTripsByStatus(User requestUser, Integer status, Long offset, Long limit);
+    List<Trip> findCarrierTripsByStatus(User requestUser, String status, Long offset, Long limit);
     List<Trip> findCarrierTrips(User requestUser, Long offset, Long limit);
-    List<Trip> findApproverTrips(User requestUser, Integer status, Long offset, Long limit);
+    List<Trip> findApproverTrips(User requestUser, String status, Long offset, Long limit);
 }

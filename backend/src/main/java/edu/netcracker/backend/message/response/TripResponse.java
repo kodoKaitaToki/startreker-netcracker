@@ -34,7 +34,7 @@ public class TripResponse {
     private SpaceportDTO arrivalSpaceport;
 
     @JsonProperty("trip_status")
-    private Integer status;
+    private String status;
 
     @JsonProperty("departure_date")
     private String departureDate;
@@ -56,7 +56,7 @@ public class TripResponse {
         TripResponse dto = new TripResponse();
         dto.tripId = trip.getTripId();
         dto.status = trip.getTripState()
-                         .getDatabaseValue();
+                         .getName();
         dto.setCarrierId(trip.getOwner() == null
                                  ? null
                                  : trip.getOwner()

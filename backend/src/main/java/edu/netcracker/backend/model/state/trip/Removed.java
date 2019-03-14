@@ -11,6 +11,7 @@ import java.util.List;
 public class Removed implements TripState {
 
     public final static int DATABASE_VALUE = 7;
+    public final static String NAME = "REMOVED";
 
     private final List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(6);
 
@@ -23,5 +24,10 @@ public class Removed implements TripState {
     @Override
     public int getDatabaseValue() {
         return DATABASE_VALUE;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

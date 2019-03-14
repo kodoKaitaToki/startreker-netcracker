@@ -11,6 +11,7 @@ import java.util.List;
 public class Archived implements TripState {
 
     public final static int DATABASE_VALUE = 5;
+    public final static String NAME = "ARCHIVED";
 
     private static List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(4);
 
@@ -23,5 +24,10 @@ public class Archived implements TripState {
     @Override
     public int getDatabaseValue() {
         return DATABASE_VALUE;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

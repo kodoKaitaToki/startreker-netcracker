@@ -33,7 +33,7 @@ public class TripRequest {
     private Long arrivalId;
 
     @JsonProperty("trip_status")
-    private Integer status;
+    private String status;
 
     @JsonProperty("departure_date")
     private String departureDate;
@@ -55,7 +55,7 @@ public class TripRequest {
         TripRequest dto = new TripRequest();
         dto.tripId = trip.getTripId();
         dto.status = trip.getTripState()
-                         .getDatabaseValue();
+                         .getName();
         dto.setCarrierId(trip.getOwner() == null
                                  ? null
                                  : trip.getOwner()
