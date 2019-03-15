@@ -49,6 +49,14 @@ public class Trip {
 
     private List<TicketClass> ticketClasses = new ArrayList<>();
 
+    public List<TicketClass> getTicketClasses() {
+        return ticketClasses;
+    }
+
+    public void setTicketClasses(List<TicketClass> ticketClasses) {
+        this.ticketClasses = ticketClasses;
+    }
+
     public boolean changeStatus(User requestUser, TripState newTripState, TripDTO tripDTO) {
 
         if (requestUser == null || newTripState == null || !newTripState.isStateChangeAllowed(this,

@@ -22,6 +22,14 @@ public interface TripDAO {
 
     List<Trip> findByPlanetsForCarrier(String departurePlanet, String arrivalPlanet, Long carrierId);
 
+    List<Trip> getAllTripsForUser(String departurePlanet,
+                                  String departureSpaceport,
+                                  String departureDate,
+                                  String arrivalPlanet,
+                                  String arrivalSpaceport,
+                                  Integer limit,
+                                  Integer offset);
+
     void add(Trip trip);
 
     void update(Trip trip);

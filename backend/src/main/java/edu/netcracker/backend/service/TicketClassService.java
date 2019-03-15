@@ -17,4 +17,6 @@ public interface TicketClassService {
     DiscountTicketClassDTO deleteDiscountForTicketClass(Number discountId, Number userId);
 
     Map<Long, List<TicketClass>> getAllTicketClassesBelongToTrips(List<Number> tripIds);
+
+    void createNewTicketClass(TicketClass ticketClass);
 }

@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Getter
 @NoArgsConstructor
-public class AllCarriersTripsDTO {
+public class ReadTripsDTO {
 
     @JsonProperty("trip_id")
     private Long tripId;
@@ -22,10 +22,10 @@ public class AllCarriersTripsDTO {
     @JsonProperty("trip_status")
     private String tripStatus;
 
-    @JsonProperty("departure_spaceport_name")
+    @JsonProperty("departure_spaceport")
     private String departureSpaceportName;
 
-    @JsonProperty("arrival_spaceport_name")
+    @JsonProperty("arrival_spaceport")
     private String arrivalSpaceportName;
 
     @JsonProperty("departure_planet")
@@ -46,18 +46,18 @@ public class AllCarriersTripsDTO {
     @JsonProperty("ticket_classes")
     private List<Map<String, Object>> ticketClasses;
 
-    public static AllCarriersTripsDTO from(Trip trip) {
-        AllCarriersTripsDTO dto = new AllCarriersTripsDTO();
+    public static ReadTripsDTO from(Trip trip) {
+        ReadTripsDTO dto = new ReadTripsDTO();
         dto.tripId = trip.getTripId();
         dto.tripStatus = trip.getTripState().getStringValue();
-        dto.departureSpaceportName = trip.getDepartureSpaceport()
-                                         .getSpaceportName();
-        dto.arrivalSpaceportName = trip.getArrivalSpaceport()
-                                       .getSpaceportName();
-        dto.departurePlanet = trip.getDeparturePlanet()
-                                  .getPlanetName();
-        dto.arrivalPlanet = trip.getArrivalPlanet()
-                                .getPlanetName();
+        dto.departureSpaceportName = capitalize(trip.getDepartureSpaceport()
+                                         .getSpaceportName());
+        dto.arrivalSpaceportName = capitalize(trip.getArrivalSpaceport()
+                                       .getSpaceportName());
+        dto.departurePlanet = capitalize(trip.getDeparturePlanet()
+                                  .getPlanetName());
+        dto.arrivalPlanet = capitalize(trip.getArrivalPlanet()
+                                .getPlanetName());
         dto.departureDate = getStringFromDate(trip.getDepartureDate());
         dto.arrivalDate = getStringFromDate(trip.getArrivalDate());
         dto.creationDate = getStringFromDate(trip.getCreationDate());
@@ -69,6 +69,7 @@ public class AllCarriersTripsDTO {
             tcProperties.put("class_name", ticketClass.getClassName());
             tcProperties.put("ticket_price", ticketClass.getTicketPrice());
             tcProperties.put("class_seats", ticketClass.getClassSeats());
+            tcProperties.put("remaining_seats", ticketClass.getRemainingSeats());
             dto.ticketClasses.add(tcProperties);
         }
 
@@ -87,5 +88,11 @@ public class AllCarriersTripsDTO {
                + String.format("%02d", date.getMinute())
                + ":"
                + String.format("%02d", date.getSecond());
+    }
+
+    private static String capitalize(String toCapitalize) {
+        String capitalized = toCapitalize.substring(0, 1).toUpperCase() + toCapitalize.substring(1).toLowerCase();
+
+        return capitalized;
     }
 }
