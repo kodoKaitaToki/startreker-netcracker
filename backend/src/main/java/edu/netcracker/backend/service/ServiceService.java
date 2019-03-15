@@ -12,6 +12,12 @@ public interface ServiceService {
     ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm);
 
     ServiceCRUDDTO updateService(ServiceCRUDDTO serviceDTO);
+    
+    List<ServiceCRUDDTO> getServicesOfCarrier();
+    
+    List<ServiceCRUDDTO> getPaginServicesOfCarrier(Integer from, Integer amount);
+    
+    ServiceCRUDDTO deleteService(Long serviceId);
 
     List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, String status, Integer approverId);
 
