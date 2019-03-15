@@ -54,12 +54,6 @@ public class TripController {
         return tripService.getAllTripsForCarrier(carrierId);
     }
 
-    @GetMapping("api/v1/carrier/trips")
-    //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public List<AllCarriersTripsDTO> getAllTripsForCarrier(@RequestParam("carrier_id") Long carrierId) {
-        return tripService.getAllTripsForCarrier(carrierId);
-    }
-
     @PostMapping("api/v1/trips")
     //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public void saveTrip(@RequestBody TripCreation trip) {

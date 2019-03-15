@@ -94,19 +94,6 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<AllCarriersTripsDTO> getAllTripsForCarrier(Long carrierId) {
-        logger.debug("Getting all trips for carrier from TripDAO");
-        //        TODO: implement getting carrier id from access token
-        List<Trip> trips = tripDAO.allCarriersTrips(carrierId);
-        logger.debug("Converting trips to DTO");
-        List<AllCarriersTripsDTO> tripsDTO = new ArrayList<>();
-        for (Trip trip : trips) {
-            tripsDTO.add(AllCarriersTripsDTO.from(trip));
-        }
-        return tripsDTO;
-    }
-
-    @Override
     public void saveTrip(TripCreation tripCreation) {
         logger.debug("Saving trip from request DTO");
         Trip trip = parseTripFromTripCreation(tripCreation);
