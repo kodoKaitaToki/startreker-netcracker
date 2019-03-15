@@ -19,6 +19,7 @@ import {RegistrationComponent} from './pages/registration/registration.component
 import {LoginComponent} from './pages/login/login.component';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {RecoveryComponent} from './pages/recovery/recovery.component';
+import {MessageService, GrowlModule} from "primeng/primeng";
 
 
 import { Configuration } from './app.constants';
@@ -46,9 +47,10 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     ReactiveFormsModule,
     LoadingBarHttpClientModule,
     BrowserModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    GrowlModule
   ],
-  providers: [Configuration],
+  providers: [Configuration, MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

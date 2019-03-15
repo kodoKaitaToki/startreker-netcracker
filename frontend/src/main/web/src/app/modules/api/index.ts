@@ -9,8 +9,8 @@ baseUrl = `http://127.0.0.1${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
-    'Content-Type':  'application/json',
-     'Access-Control-Allow-Origin': '*'
+    'Content-Type':  'application/json'//,
+     //'Access-Control-Allow-Origin': '*'
   })
 }
 

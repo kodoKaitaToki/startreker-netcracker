@@ -24,7 +24,7 @@ export class ApiUserService {
   constructor(
     private http: HttpClient,
     private router: Router
-    ) { }
+    ) {}
 
 
     get userInfo() {
@@ -32,16 +32,26 @@ export class ApiUserService {
     }
 
     
-    loginUser(userData: LoginFormData) {
-      this.http.post<any>(Api.auth.loginUser(), userData, HttpOptions)
-        .subscribe(
-          (userData: LoginResponse) => {
-            this.userData = clone(userData);
-            localStorage.setItem('at', userData.access_token);
-            localStorage.setItem('rt', userData.refresh_token);
-          },
-          error => console.error(error)
-        );
+    // loginUser(userData: LoginFormData) {
+    //   this.http.post<any>(Api.auth.loginUser(), userData, HttpOptions)
+    //     .subscribe(
+    //       (userData: LoginResponse) => {
+    //         this.userData = clone(userData);
+    //         localStorage.setItem('at', userData.access_token);
+    //         localStorage.setItem('rt', userData.refresh_token);
+    //       },
+    //       error => console.error(error)
+    //     );
+    // }
+
+    loginUser(userData: LoginFormData){
+      return this.http.post<any>(Api.auth.loginUser(), userData, HttpOptions);
+    }
+
+    getLoggedUser(userData: LoginResponse){
+      this.userData = clone(userData);
+      localStorage.setItem('at', userData.access_token);
+      localStorage.setItem('rt', userData.refresh_token);
     }
 
     // async loginUser(userData: LoginFormData) {
@@ -66,7 +76,16 @@ export class ApiUserService {
     //   }
     // }
 
-    registerUser(userData: RegisterFormData) {
+    public registerUser(userData: RegisterFormData){
+      return this.http.post<any>(Api.auth.registerUser(), userData, HttpOptions)
+    }
+
+    public getRegisteredUser(userData){
+      this.userData = userData;
+    }
+
+
+    /*registerUser(userData: RegisterFormData) {
       this.http.post<any>(Api.auth.registerUser(), userData, HttpOptions)
         .subscribe(
           (userData: RegisterResponse) => {
@@ -74,7 +93,7 @@ export class ApiUserService {
           },
           error => console.error(error)
         );
-    }
+    }*/
 
     logoutUser() {
       this.http.post<any>(Api.auth.logoutUser(), {}, HttpOptionsAuthorized);
