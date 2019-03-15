@@ -26,5 +26,7 @@ public class Spaceport {
     private LocalDateTime creationDate;
 
     @Attribute("planet_id")
+    private Long planetId;
+
     private Planet planet;
 }

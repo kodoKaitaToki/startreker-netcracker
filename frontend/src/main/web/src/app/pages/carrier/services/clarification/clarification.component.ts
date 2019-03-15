@@ -1,10 +1,10 @@
-import { Component, OnInit, Output,  EventEmitter } from '@angular/core';
-import { clone } from 'ramda';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {clone} from 'ramda';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MessageService} from 'primeng/components/common/messageservice';
 
-import { Service } from '../shared/model/service.model';
-import { ServiceService } from '../shared/service/service.service';
+import {Service} from '../shared/model/service.model';
+import {ServiceService} from '../shared/service/service.service';
 
 @Component({
   selector: 'app-clarification',
@@ -22,7 +22,8 @@ export class ClarificationComponent implements OnInit {
   page: number = 1;
 
   constructor(private serviceService: ServiceService,
-              private messageService: MessageService) { }
+    private messageService: MessageService) {
+  }
 
   ngOnInit() {
     this.setFormInDefault();
@@ -42,7 +43,7 @@ export class ClarificationComponent implements OnInit {
 
   getClarificationServices(){
     this.serviceService.getServiceByStatus('UNDER_CLARIFICATION')
-                      .subscribe(
+        .subscribe(
                         (resp: Response) => {
                           /*if (resp.headers.get('New-Access-Token')) {
                             localStorage.removeItem('at');
@@ -57,14 +58,16 @@ export class ClarificationComponent implements OnInit {
   updateService(service: Service){
     this.isForUpdateAlertMessage = true;
     let createdMessage = '';
-    if (service.service_status == 'REMOVED'){
+    if (service.service_status == 'REMOVED') {
       createdMessage = this.createMessage('success',
-                                          'The service ' + service.service_name + ' was removed',
-                                          "You won't see it any more");
-    }else{
+        'The service ' + service.service_name + ' was removed',
+        "You won't see it any more"
+      );
+    } else {
       createdMessage = this.createMessage('success',
-                                          'The service ' + service.service_name + ' was edited',
-                                          'It was sent for approvement');
+        'The service ' + service.service_name + ' was edited',
+        'It was sent for approvement'
+      );
     }
     this.serviceService.updateService(service)
                       .subscribe(
@@ -102,7 +105,7 @@ export class ClarificationComponent implements OnInit {
     this.isForUpdateAlertMessage = false;
   }
 
-  showMessage(msgObj: any){
+  showMessage(msgObj: any) {
     this.messageService.add(msgObj);
   }
 
@@ -114,7 +117,7 @@ export class ClarificationComponent implements OnInit {
     };
   }
 
-  onChangePage(event: number){
+  onChangePage(event: number) {
     this.page = event;
   }
 

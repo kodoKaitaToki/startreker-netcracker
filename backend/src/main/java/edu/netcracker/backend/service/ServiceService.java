@@ -15,5 +15,5 @@ public interface ServiceService {
 
     List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, String status, Integer approverId);
 
-    public ServiceCRUDDTO reviewService(ServiceCRUDDTO serviceDTO, Integer approverId);
+    ServiceCRUDDTO reviewService(ServiceCRUDDTO serviceDTO, Integer approverId);
 }

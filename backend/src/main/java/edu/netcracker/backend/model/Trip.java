@@ -40,6 +40,10 @@ public class Trip {
     @Attribute("trip_photo")
     private String tripPhoto;
 
+    private Spaceport departurePort;
+
+    private Spaceport arrivalPort;
+
     private TripState tripState;
 
     private User owner;

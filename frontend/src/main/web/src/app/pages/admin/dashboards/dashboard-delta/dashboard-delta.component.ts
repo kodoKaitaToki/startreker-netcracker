@@ -23,7 +23,7 @@ export class DashboardDeltaComponent implements OnInit {
   locationsChart: CanvasJS.Chart;
 
   form = new FormGroup({
-    fromDate: new FormControl(new Date().setFullYear(new Date().getFullYear() - 1)),
+    fromDate: new FormControl(new Date().setDate(1)),
     toDate: new FormControl(new Date()),
   });
 
