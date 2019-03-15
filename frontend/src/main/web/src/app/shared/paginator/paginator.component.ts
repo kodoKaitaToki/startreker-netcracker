@@ -14,6 +14,10 @@ export class PaginatorComponent {
 
   pageArray = Array;
 
+  count() : number {
+    return Math.floor(this.amount/this.number)
+  }
+
   first() {
     this.from = 0;
     this.update.emit(this.from);

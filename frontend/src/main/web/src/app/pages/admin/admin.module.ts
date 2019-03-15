@@ -45,6 +45,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import {TreeModule} from 'primeng/tree';
 import {TreeNode} from 'primeng/api';
+import {FieldsetModule} from 'primeng/fieldset';
 
 import { SharedModule } from 'src/app/shared/shared.module';
 
@@ -90,6 +91,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ProgressBarModule,
     TreeModule,
     SharedModule,
+    FieldsetModule
   ],
   providers: [
     FilterPipePipe,
