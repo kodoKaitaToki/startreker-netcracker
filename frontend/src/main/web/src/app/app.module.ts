@@ -21,7 +21,6 @@ import {LoginComponent} from './pages/login/login.component';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {RecoveryComponent} from './pages/recovery/recovery.component';
 
-
 import { Configuration } from './app.constants';
 
 @NgModule({

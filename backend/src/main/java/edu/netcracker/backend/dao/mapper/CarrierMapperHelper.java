@@ -19,7 +19,7 @@ public class CarrierMapperHelper {
             cResponse.setFrom(df.format(rs.getDate("mon")));
             cResponse.setTo(df.format(rs.getDate("sun")));
         } catch (SQLException e) {
-            log.warn(e);
+            log.error(e);
         }
     }
 }

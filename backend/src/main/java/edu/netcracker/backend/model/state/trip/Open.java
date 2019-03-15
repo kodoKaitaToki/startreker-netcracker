@@ -8,20 +8,26 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class Open extends TripState {
+public class Open implements TripState {
 
-    private final static int databaseValue = 2;
+    public final static int DATABASE_VALUE = 2;
+    public final static String NAME = "OPEN";
 
     private static List<Integer> allowedStatesToSwitchFrom = Arrays.asList(1, 5, 6);
 
     @Override
-    public boolean isStateChangeAllowed(Trip trip, User requestUser, TripState tripState) {
-        return requestUser.equals(trip.getOwner()) && allowedStatesToSwitchFrom.contains(tripState.getDatabaseValue());
+    public boolean isStateChangeAllowed(Trip trip, User requestUser) {
+        return requestUser.equals(trip.getOwner()) && allowedStatesToSwitchFrom.contains(trip.getTripState()
+                                                                                             .getDatabaseValue());
     }
 
     @Override
     public int getDatabaseValue() {
-        return databaseValue;
+        return DATABASE_VALUE;
     }
 
+    @Override
+    public String getName() {
+        return NAME;
+    }
 }

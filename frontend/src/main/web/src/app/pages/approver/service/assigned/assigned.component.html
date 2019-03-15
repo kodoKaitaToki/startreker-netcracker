@@ -65,9 +65,9 @@
                     rows="3"
                     formControlName="reply_text"
                     [ngClass]="{
-                   'is-invalid':form.get('reply_text').invalid,
-                   'is-valid': form.get('reply_text').valid
-                   }"
+                      'is-invalid':form.get('reply_text').invalid,
+                      'is-valid': form.get('reply_text').valid
+                    }"
           >
           </textarea>
         </div>
@@ -76,6 +76,7 @@
         >
           <button class="btn btn-success col-4"
                   type="submit"
+                  [disabled]="form.get('reply_text').invalid"
           >
             Write a reply
           </button>

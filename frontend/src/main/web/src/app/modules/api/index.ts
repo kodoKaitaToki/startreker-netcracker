@@ -89,13 +89,23 @@ const service = {
   }
 }
 
+const trip = {
+  trips(){
+    return `${baseUrl}api/v1/approver/trip`;
+  },
+  update(){
+    return `${baseUrl}api/v1/trip`;
+  }
+}
+
 export const Api = {
   auth,
   dashboard,
   carrier,
   costDash,
   baseUrl,
-  service
+  service,
+  trip
 }
 
 export const options = {
