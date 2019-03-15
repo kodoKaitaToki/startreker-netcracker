@@ -19,7 +19,8 @@ export class HistoryComponent implements OnInit {
   ngOnInit() {
 
     this.searchParams = new FormGroup({
-      testparam: new FormControl("")
+      beforeDate: new FormControl(""),
+      afterDate: new FormControl(""),
     });
 
     this.data = [
@@ -108,7 +109,7 @@ export class HistoryComponent implements OnInit {
               'departure_spaceport_name': 'JIA',
               'arrival_spaceport_name': 'ALLATR',
               'departure_planet_name': 'MARS',
-              'arrival_planet_name': 'PLUTO',
+              'arrival_planet_name': 'URANUS',
               'departure_date': '2015-03-03  01:32',
               'arrival_date': '2015-03-10  09:22',
               'purchase_date': '2015-02-01  10:11',
@@ -123,7 +124,32 @@ export class HistoryComponent implements OnInit {
                 {
                   'service_name': 'Air'
                 }
-              ]}
+              ]
+            },
+
+            {
+              'id': '6',
+              'departure_spaceport_name': 'JIBRAL',
+              'arrival_spaceport_name': 'EENETA',
+              'departure_planet_name': 'URANUS',
+              'arrival_planet_name': 'NEWTON',
+              'departure_date': '2015-03-03  01:32',
+              'arrival_date': '2015-03-10  09:22',
+              'purchase_date': '2015-02-01  10:11',
+              'class': 'First',
+              'price': '1122 $',
+              'carrier_name': 'DONBOI',
+              'seat': '14',
+              'services': [
+                {
+                  'service_name': 'Food'
+                },
+                {
+                  'service_name': 'Kiki'
+                }
+              ]
+            }
+
           ]
         },
       }

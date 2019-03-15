@@ -8,13 +8,24 @@
 
 .historycard li:hover{
   background-color: rgba(255, 255, 255, 1);
+}
+
+.cursorpointer:hover{
   cursor: pointer;
+}
+
+.inner-history-card{
+  background-color: rgba(240, 248, 255, 0.3);
 }
 
 .center{
   margin-left: auto;
   margin-right: auto;
   display: block !important;
+}
+
+.link-blue-span{
+  color: #116fbf;
 }
 
 .pagination /deep/ .ngx-pagination .current {

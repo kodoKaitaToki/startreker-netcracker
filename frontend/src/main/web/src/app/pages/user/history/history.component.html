@@ -1,26 +1,26 @@
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-lg-3">
+    <div class="col-lg-3 col-xs-12">
 
-      <div class="card historycard" style="width: 14rem; margin-top: 7%">
+      <div class="card historycard" style="margin-top: 7%">
         <div class="card-header">
           Orders History
         </div>
         <ul class="list-group list-group-flush">
-          <li class="list-group-item">Trips</li>
-          <li class="list-group-item">Services</li>
+          <li class="list-group-item cursorpointer">Tickets & Bundles</li>
         </ul>
       </div>
 
-      <div class="card historycard" style="width: 14rem; margin-top: 5%">
+      <div class="card historycard" style="margin-top: 5%">
         <div class="card-header">
           Search parameters
         </div>
         <form [formGroup]="searchParams" (ngSubmit)="search(searchParams.value)">
           <div class="form-group">
-            <label for="testparam" style="padding-left: 6%; padding-top: 5%">Testparam</label>
-            <input formControlName="testparam" type="text" class="form-control center" id="testparam"
-                   style="width: 90%" autocomplete="off">
+            <label for="beforeDate" style="padding-left: 6%; padding-top: 5%">Before:</label>
+            <input formControlName="beforeDate" type="date" name="beforeDate" id="beforeDate" style="width: 90%" class="form-control datepicker center">
+            <label for="afterDate" style="padding-left: 6%; padding-top: 5%">After:</label>
+            <input formControlName="afterDate" type="date" name="afterDate" id="afterDate" style="width: 90%" class="form-control datepicker center">
           </div>
           <button type="submit" class="btn btn-success center" style="margin-bottom: 5%;">Search</button>
         </form>
@@ -49,13 +49,13 @@
 
               <div class="row">
                 <div class="col-6" style="font-size: 16px">
-                  <span>Class: <a href="#">{{element.ticket.class}}</a></span>
+                  <span>Class: <span class="link-blue-span">{{element.ticket.class}}</span></span>
                   <br>
-                  <span>Price: <a href="#">{{element.ticket.price}}</a></span>
+                  <span>Price: <span class="link-blue-span">{{element.ticket.price}}</span></span>
                   <br>
-                  <span>Departure spaceport: <a href="#">{{element.ticket.departure_spaceport_name}}</a></span>
+                  <span>Departure spaceport: <span class="link-blue-span">{{element.ticket.departure_spaceport_name}}</span></span>
                   <br>
-                  <span>Arrival spaceport: <a href="#">{{element.ticket.arrival_spaceport_name}}</a></span>
+                  <span>Arrival spaceport: <span class="link-blue-span">{{element.ticket.arrival_spaceport_name}}</span></span>
                   <br><br>
 
                   <button class="btn btn-primary" type="button" data-toggle="collapse"
@@ -66,9 +66,11 @@
                   </button>
                   <div class="collapse" [attr.id]="'btncollapse' + element.ticket.id" style="width: 90%;">
                     <div class="card" style="background-color: rgba(240, 248, 255, 0.25);">
-                      <div *ngFor="let service of element.ticket.services">
-                        {{service.service_name}}
-                      </div>
+                      <ul type="disc" style="background-color: transparent; margin-top: 1rem;" >
+                        <li *ngFor="let service of element.ticket.services" style="background-color: transparent;">
+                          {{service.service_name}}
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>
@@ -80,7 +82,7 @@
 
               <div class="row">
                 <div class="col-6" style="font-size: 18px">
-                  <span>Seller: &nbsp;<a href="#">{{element.ticket.carrier_name}}</a></span>
+                  <span>Carrier: &nbsp;<span class="link-blue-span">{{element.ticket.carrier_name}}</span></span>
                 </div>
                 <div class="col-6" style="text-align: right; font-size: 18px">
                   <span>Bought at: &nbsp;{{element.ticket.purchase_date}}</span>
@@ -91,6 +93,7 @@
 
           <!-- if element is a bundle !-->
           <ng-container *ngIf="element.bundle">
+
             <div class="card historycard" style="width: 100%; padding: 12px; margin-bottom: 2%">
               <div class="row">
                 <div class="col-12" style="font-size: 21px; font-weight: bold">
@@ -111,7 +114,7 @@
                     <div class="card" style="background-color: rgba(240, 248, 255, 0.25);">
                       <div *ngFor="let ticket of element.bundle.tickets">
 
-                        <div class="card historycard" style="width: 100%; padding: 12px; margin-bottom: 2%; opacity: 0.85">
+                        <div class="card inner-history-card" style="width: 100%; padding: 12px; margin-bottom: 2%">
                           <div class="row">
                             <div class="col-6" style="font-size: 21px; font-weight: bold">
                               <span>{{ticket.departure_planet_name}} - {{ticket.arrival_planet_name}}</span>
@@ -126,11 +129,11 @@
 
                           <div class="row">
                             <div class="col-6" style="font-size: 16px">
-                              <span>Class: <a href="#">{{ticket.class}}</a></span>
+                              <span>Class: <span class="link-blue-span">{{ticket.class}}</span></span>
                               <br>
-                              <span>Departure spaceport: <a href="#">{{ticket.departure_spaceport_name}}</a></span>
+                              <span>Departure spaceport: <span class="link-blue-span">{{ticket.departure_spaceport_name}}</span></span>
                               <br>
-                              <span>Arrival spaceport: <a href="#">{{ticket.arrival_spaceport_name}}</a></span>
+                              <span>Arrival spaceport: <span class="link-blue-span">{{ticket.arrival_spaceport_name}}</span></span>
                               <br><br>
 
                               <button class="btn btn-primary" type="button" data-toggle="collapse"
@@ -141,9 +144,11 @@
                               </button>
                               <div class="collapse" [attr.id]="'btncollapse' + ticket.id" style="width: 90%;">
                                 <div class="card" style="background-color: rgba(240, 248, 255, 0.25);">
-                                  <div *ngFor="let service of ticket.services">
-                                    {{service.service_name}}
-                                  </div>
+                                  <ul type="disc" style="background-color: transparent; margin-top: 1rem;" >
+                                    <li *ngFor="let service of ticket.services" style="background-color: transparent;">
+                                      {{service.service_name}}
+                                    </li>
+                                  </ul>
                                 </div>
                               </div>
                             </div>
@@ -155,7 +160,7 @@
 
                           <div class="row">
                             <div class="col-12" style="font-size: 18px">
-                              <span>Seller: &nbsp;<a href="#">{{ticket.carrier_name}}</a></span>
+                              <span>Carrier: &nbsp;<span class="link-blue-span">{{ticket.carrier_name}}</span></span>
                             </div>
                           </div>
                         </div>
@@ -168,7 +173,7 @@
 
               <div class="row">
                 <div class="col-6" style="font-size: 18px">
-                  <span>Price: {{element.bundle.endprice}}</span>
+                  <span>Price: &nbsp;{{element.bundle.endprice}} $</span>
                 </div>
                 <div class="col-6" style="text-align: right; font-size: 18px">
                   <span>Bought at: &nbsp;{{element.bundle.purchase_date}}</span>
