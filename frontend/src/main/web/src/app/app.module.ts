@@ -22,8 +22,8 @@ import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {RecoveryComponent} from './pages/recovery/recovery.component';
 import {MessageService, GrowlModule} from "primeng/primeng";
 
-
 import { Configuration } from './app.constants';
+import { ConfirmMessageComponent } from './pages/confirm-message/confirm-message.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +38,8 @@ import { Configuration } from './app.constants';
     HeaderComponent,
     RegistrationComponent,
     LoginComponent,
-    RecoveryComponent
+    RecoveryComponent,
+    ConfirmMessageComponent
   ],
   imports: [
     AppRoutingModule,

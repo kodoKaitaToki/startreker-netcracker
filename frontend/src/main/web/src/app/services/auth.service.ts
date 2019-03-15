@@ -80,11 +80,6 @@ export class ApiUserService {
       return this.http.post<any>(Api.auth.registerUser(), userData, HttpOptions)
     }
 
-    public getRegisteredUser(userData){
-      this.userData = userData;
-    }
-
-
     /*registerUser(userData: RegisterFormData) {
       this.http.post<any>(Api.auth.registerUser(), userData, HttpOptions)
         .subscribe(
@@ -103,13 +98,18 @@ export class ApiUserService {
       window.location.href = 'http://127.0.0.1:4200';
     }
 
-    async recoverPassword(userData: any) {
-      try {
-        console.log(userData);
-        const data: any = await this.http.post(Api.auth.recoverPassword(), userData, HttpOptions).toPromise();
-        this.userData = clone(data);
-      } catch (error) {
-          console.error(error);
-        }
+    public recoverPassword(userData: any) {
+      return this.http.post<any>(Api.auth.recoverPassword(), userData, HttpOptions);
+      // this.http.post(Api.auth.recoverPassword(), userData, HttpOptions)
+      //   .subscribe(
+      //     data => {
+      //       this.userData = clone(data);
+      //     },
+      //     error => console.error(error)
+      //   );
+    }
+
+    setUserData(userData){
+      this.userData = userData;
     }
   }

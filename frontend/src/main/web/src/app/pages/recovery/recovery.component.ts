@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { ApiUserService } from '../../services/auth.service';
-
+import { clone } from 'ramda';
 
 @Component({
   selector: 'app-recovery',
@@ -33,8 +33,15 @@ export class RecoveryComponent implements OnInit {
       return;
     }
     this.formData = this.recoveryForm.value;
-    this.apiService.recoverPassword(this.formData);
+    this.apiService.recoverPassword(this.formData)
+                    .subscribe(data => {
+                      this.apiService.setUserData(clone(data));
+                    },
+                    error => {
+                      console.log(error);
+                    })
   }
+
   ngOnInit() {
   }
 

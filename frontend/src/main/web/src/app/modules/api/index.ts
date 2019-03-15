@@ -105,7 +105,9 @@ export const options = {
 }
 
 export function checkToken(heads: Headers){
+  console.log("checking");
   if (heads.has('New-Access-Token')) {
+    console.log("Heads has New Access Token");
     localStorage.removeItem('at');
     localStorage.setItem('at', heads.get('New-Access-Token'));
   }

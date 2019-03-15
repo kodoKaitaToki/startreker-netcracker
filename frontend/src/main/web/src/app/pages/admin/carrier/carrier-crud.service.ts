@@ -1,4 +1,4 @@
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -15,7 +15,17 @@ export class CarrierCrudService {
     }
 
     public getAllCarriers(){
-        return this.http.get<any>(Api.carrier.carriers(), HttpOptionsAuthorized);
+        let headers = new HttpHeaders({
+            'Content-Type':  'application/json',
+    'Access-Control-Allow-Origin': '*',
+    'Authorization': `Bearer ${localStorage.getItem('at')}`,
+    'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
+        });
+    // let headers = new HttpHeaders();
+    // headers = headers.append('Content-Type', 'application/json');
+      //TODO: remove debug backdoor/
+    // headers = headers.append('Authorization', 'debug_login 7');
+        return this.http.get<any>(Api.carrier.carriers(), {headers: headers});
     }
 
     public getCarriersPagin<Carrier>(from: number, to: number): Observable<Carrier>{

@@ -54,7 +54,7 @@ export class CarrierComponentComponent implements OnInit {
   ngOnInit(): void {
 
     this.getCarriers();
-    this.getCarriersPagin();
+    //this.getCarriersPagin();
 
     this.createNewForm();
   }

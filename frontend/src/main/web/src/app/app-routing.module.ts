@@ -20,8 +20,8 @@ const routes: Routes = [
 
     //IMPORTANT! Lines below should be uncommented later to activate Auth guard
 
-    canActivate: [AuthGuard],
-    data: {roles: [Role.Admin]}
+    // canActivate: [AuthGuard],
+    // data: {roles: [Role.Admin]}
   },
   { path: 'carrier',
     loadChildren: './pages/carrier/carrier.module#CarrierModule',
