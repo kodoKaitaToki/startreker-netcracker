@@ -36,7 +36,7 @@ const routes: Routes = [
                     pathMatch: 'full',
                 },
                 {
-                    path: 'open',
+                    path: 'opened',
                     component: OpenComponent
                 },
                 {

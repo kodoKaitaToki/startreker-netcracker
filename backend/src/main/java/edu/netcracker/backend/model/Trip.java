@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +34,10 @@ public class Trip {
 
     @Attribute("trip_photo")
     private String tripPhoto;
+
+    private Spaceport departurePort;
+
+    private Spaceport arrivalPort;
 
     private TripState tripState;
 

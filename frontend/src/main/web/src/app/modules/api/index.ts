@@ -59,6 +59,18 @@ const carrier = {
   }
 }
 
+const bundles = {
+  bundles(){
+    return `${baseUrl}api/v1/admin/carrier`;
+  },
+  getBundlesPagin(){
+    return `${baseUrl}api/v1/admin/pagination`;
+  }
+/*  getCarrierByUsername(){
+    return `${baseUrl}api/v1/admin/carrier-by-username?username=`;
+  } */
+}
+
 const costDash = {
   getCosts(){
     return `${baseUrl}api/v1/admin/costs`;

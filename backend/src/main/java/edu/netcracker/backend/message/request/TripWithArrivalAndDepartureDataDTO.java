@@ -36,11 +36,11 @@ public abstract class TripWithArrivalAndDepartureDataDTO {
                                        String datePattern) {
         this.tripId = tripWithArrivalAndDepartureData.getTripId();
         this.departureDate = tripWithArrivalAndDepartureData.getDepartureDate()
-                .format(DateTimeFormatter.ofPattern(datePattern));
+                                                            .format(DateTimeFormatter.ofPattern(datePattern));
         this.departureSpacePort = tripWithArrivalAndDepartureData.getDepartureSpacePort();
         this.departurePlanet = tripWithArrivalAndDepartureData.getDeparturePlanet();
         this.arrivalDate = tripWithArrivalAndDepartureData.getArrivalDate()
-                .format(DateTimeFormatter.ofPattern(datePattern));
+                                                          .format(DateTimeFormatter.ofPattern(datePattern));
         this.arrivalSpacePort = tripWithArrivalAndDepartureData.getArrivalSpacePort();
         this.arrivalPlanet = tripWithArrivalAndDepartureData.getArrivalPlanet();
     }

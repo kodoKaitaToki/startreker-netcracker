@@ -1,11 +1,9 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
-import edu.netcracker.backend.dao.DiscountDAO;
 import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.message.request.DiscountDTO;
 import edu.netcracker.backend.message.request.DiscountTicketClassDTO;
-import edu.netcracker.backend.model.Discount;
 import edu.netcracker.backend.model.TicketClass;
 import edu.netcracker.backend.service.DiscountService;
 import edu.netcracker.backend.service.TicketClassService;
@@ -16,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

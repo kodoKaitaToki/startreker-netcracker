@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { IndexComponent } from './index/index.component';
 import { CarrierCrudComponent } from './carrier/carrier-crud/carrier-crud.component';
-import { BundlesCrudComponent } from './bundles-crud/bundles-crud.component';
+import { BundlesCrudComponent } from './bundles/bundles-crud/bundles-crud.component';
 
 import { TripsServicesComponent } from './dashboards/trips-services/trips-services.component';
 import { DashboardsComponent } from './dashboards/dashboards.component';
