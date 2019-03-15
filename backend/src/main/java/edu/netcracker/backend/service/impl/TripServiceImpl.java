@@ -6,6 +6,7 @@ import edu.netcracker.backend.dao.SpaceportDAO;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.message.request.*;
 import edu.netcracker.backend.message.request.trips.TripCreation;
+import edu.netcracker.backend.message.request.trips.TripUpdate;
 import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.message.response.trips.ReadTripsDTO;
 import edu.netcracker.backend.model.*;
@@ -113,6 +114,14 @@ public class TripServiceImpl implements TripService {
         logger.debug("Saving trip from request DTO");
         Trip trip = parseTripFromTripCreation(tripCreation);
         tripDAO.add(trip);
+    }
+
+    @Override
+    public void updateTripForCarrier(TripCreation tripToUpdate, Long tripId) {
+        Trip trip = parseTripFromTripCreation(tripToUpdate);
+        trip.setTripId(tripId);
+        logger.debug("Updating trip info");
+        tripDAO.updateTripInfo(trip);
     }
 
     @Override

@@ -107,6 +107,9 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     private String INSERT_TRIP = "INSERT INTO TRIP (carrier_id, trip_status, trip_photo, departure_id, departure_date, "
                                  + "arrival_id, arrival_date, creation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
+    private String UPDATE_TRIP_INFO =
+            "UPDATE trip SET departure_id = ?, arrival_id = ?, departure_date = ?, arrival_date = ? WHERE trip_id = ?";
+
 
     @Autowired
     public TripDAOImpl(TicketClassDAO ticketClassDAO,
@@ -240,8 +243,9 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
                                                      departureSpaceport.toLowerCase(),
                                                      arrivalPlanet.toLowerCase(),
                                                      arrivalSpaceport.toLowerCase(),
-                                                     departureDate, limit, offset
-                                        },
+                                                     departureDate,
+                                                     limit,
+                                                     offset},
                                         new TripCRUDMapper(this.tripStateRegistry));
 
         logger.debug("Attaching ticket classes to trip");
@@ -270,6 +274,24 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
                                      .getSpaceportId(),
                                  trip.getArrivalDate(),
                                  trip.getCreationDate());
+    }
+
+    /**
+     * Method for updating trips in database
+     *
+     * @param trip - trip to be updated
+     */
+    @Override
+    public void updateTripInfo(Trip trip) {
+        logger.debug("Updating info about trip with id {}", trip.getTripId());
+        getJdbcTemplate().update(UPDATE_TRIP_INFO,
+                                 trip.getDepartureSpaceport()
+                                     .getSpaceportId(),
+                                 trip.getArrivalSpaceport()
+                                     .getSpaceportId(),
+                                 trip.getDepartureDate(),
+                                 trip.getArrivalDate(),
+                                 trip.getTripId());
     }
 
     @Override

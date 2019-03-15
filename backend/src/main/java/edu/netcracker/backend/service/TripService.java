@@ -2,6 +2,7 @@ package edu.netcracker.backend.service;
 
 import edu.netcracker.backend.message.request.TripWithArrivalAndDepartureDataDTO;
 import edu.netcracker.backend.message.request.trips.TripCreation;
+import edu.netcracker.backend.message.request.trips.TripUpdate;
 import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.message.response.trips.ReadTripsDTO;
 import edu.netcracker.backend.model.Trip;
@@ -30,4 +31,6 @@ public interface TripService {
     List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithTicketClassAndDiscountsBelongToCarrier(Number carrierId);
 
     List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithSuggestionAndDiscountsBelongToCarrier(Number carrierId);
+
+    void updateTripForCarrier(TripCreation trip, Long tripId);
 }

@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
@@ -71,7 +72,12 @@ public class TripController {
 
     @PostMapping("api/v1/trips")
     //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public void saveTrip(@RequestBody TripCreation trip) {tripService.saveTrip(trip);}
+    public void saveTrip(@RequestBody TripCreation trip) { tripService.saveTrip(trip); }
+
+    @PutMapping("api/v1/trips/{tripId}")
+    //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public void updateTrip(@NotNull @PathVariable("tripId") Long tripId,
+                           @RequestBody TripCreation trip) { tripService.updateTripForCarrier(trip, tripId); }
 
     @GetMapping("api/v1/trip/distribution")
     //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
