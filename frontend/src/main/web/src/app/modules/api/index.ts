@@ -79,12 +79,21 @@ const trips = {
   },
   getAllTrips() {
     return `${baseUrl}api/v1/trips`;
+  },
+  getCarrierTrips() {
+    return `${baseUrl}api/v1/carrier/trips`;
   }
  }
 
 const costDash = {
   getCosts(){
     return `${baseUrl}api/v1/admin/costs`;
+  }
+}
+
+const possibleServices = {
+  possibleServices(){
+    return `${baseUrl}api/v1/possible-services`;
   }
 }
 
@@ -107,6 +116,7 @@ export const Api = {
   costDash,
   baseUrl,
   service, 
+  possibleServices,
   trips
 }
 

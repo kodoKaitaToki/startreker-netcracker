@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild } from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, FormArray, Validators} from '@angular/forms';
 import {Bundle} from '../shared/model/bundle';
 import {BundlesService} from "../shared/service/bundles.service";
 import {BundlesTableComponent} from "../bundles-table/bundles-table.component";
@@ -9,9 +9,11 @@ import {MOCK_TREE} from '../shared/model/mock-tree';
 import {Carrier} from '../../carrier/carrier';
 import {CarrierCrudService} from '../../carrier/carrier-crud.service';
 import { TripsService } from '../../../../services/trips.service';
+import { PossibleServiceService } from '../../../../services/possible-service.service';
 import {HttpErrorResponse} from "@angular/common/http";
 import { Trip } from '../shared/model/trip';
 import { TicketClass } from '../shared/model/ticket-class';
+import { Service } from '../shared/model/service';
 
 @Component({
              selector: 'app-bundles-component',
@@ -25,6 +27,8 @@ export class BundlesComponentComponent implements OnInit {
   inputTree: TreeNode[];
 
   selectedTree: TreeNode[];
+
+  selectedTrips: Trip[];
 
   filterCriteria = [
     {name: 'id'},
@@ -43,19 +47,18 @@ export class BundlesComponentComponent implements OnInit {
     private bundlesSrvc: BundlesService,
     private carrierSrvc: CarrierCrudService,
     private tripsApi: TripsService,
+    private possibleServiceApi: PossibleServiceService,
     private messageService: MessageService) {
   }
 
   ngOnInit(): void {
-    this.populateCarriers();
+    this.selectedTrips = [];
     this.form = new FormGroup(
       {
         start_date: new FormControl('', Validators.required),
         finish_date: new FormControl('', Validators.required),
         price: new FormControl('', [Validators.required, Validators.min(0)]),
         description: new FormControl(''),
-        trips: new FormControl(''),
-        services: new FormControl('')
       }
     );
   }
@@ -82,64 +85,8 @@ export class BundlesComponentComponent implements OnInit {
     this.form.reset({is_activated: true});
   }
 
-  populateCarriers() {
-    this.inputTree = [];
-    this.carrierSrvc.getAllCarriers()
-    .subscribe(carriers => {
-      this.inputTree = this.inputTree.concat(
-        carriers.map((carrier: Carrier) => {
-          let node: TreeNode = {
-            label: carrier.username,
-            data: carrier.id,
-            selectable: false,
-            type: "carrier",
-            leaf: false
-          }
-          return node;
-      }))
-    }, (error: HttpErrorResponse) => {
-      this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
-    });
-  }
-
-  loadNode(event: { node: TreeNode; }) {
-    if(event.node && event.node.type == "carrier") {
-      switch(event.node.type) {
-        case "carrier": {
-          this.populateCarrier(event.node);
-          break;
-        }
-      }
-    }
-  }
-
-  populateCarrier(carrier: TreeNode) {
-    this.tripsApi.getTripsForCarrier(carrier.data)
-    .subscribe(trips => {
-      carrier.children = trips.filter((trip: Trip) => {
-        return (trip.trip_status == "Published")
-      })
-      .map((trip: Trip) => {
-          let node: TreeNode = {
-            label: trip.departure_planet + " - " + trip.arrival_planet,
-            data: trip.trip_id,
-            type: "trip",
-            leaf: false,
-            children: trip.ticket_classes.map((ticketClass: TicketClass) => {
-              let node: TreeNode = {
-                label: ticketClass.class_name,
-                data: ticketClass.class_id,
-                type: "ticketClass",
-                leaf: false,
-              }
-              return node;
-            })
-          }
-          return node;
-      })
-    }, (error: HttpErrorResponse) => {
-      this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
-    });
+  tripsUpdate(trips: Trip[]) {
+    this.selectedTrips = trips;
   }
 
   createMessage(severity: string, summary: string, detail: string): any {

@@ -39,6 +39,8 @@ import {TroubleStatisticsService} from './dashboards/trouble-statistics.service'
 import {ApproverService} from "./approver/shared/service/approver.service";
 import {BundlesService} from "./bundles/shared/service/bundles.service";
 import {ApproverFilterPipe} from './approver/shared/pipes/approver-filter.pipe';
+import {ScrollPanelModule} from 'primeng/scrollpanel';
+import {ToggleButtonModule} from 'primeng/togglebutton';
 import {GrowlModule, MessageService, ProgressBarModule} from "primeng/primeng";
 import {ToastModule} from "primeng/toast";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -48,6 +50,7 @@ import {TreeNode} from 'primeng/api';
 import {FieldsetModule} from 'primeng/fieldset';
 
 import { SharedModule } from 'src/app/shared/shared.module';
+import { BundlesTreeComponent } from './bundles/bundles-tree/bundles-tree.component';
 
 
 @NgModule({
@@ -79,7 +82,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonChartComponent,
     CarCostDashComponent,
     CostsComponent,
-    ApproverFilterPipe
+    ApproverFilterPipe,
+    BundlesTreeComponent
   ],
   imports: [
     CommonModule,
@@ -91,6 +95,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     ProgressBarModule,
     TreeModule,
     SharedModule,
+    ScrollPanelModule,
+    ToggleButtonModule,
     FieldsetModule
   ],
   providers: [

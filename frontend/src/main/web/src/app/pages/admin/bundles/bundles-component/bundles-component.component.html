@@ -10,19 +10,14 @@
           (ngSubmit)="onPost()">
   
           <div class="row">
-            <div class="col-md-3">
-              <p-tree
-              [value]="inputTree"
-              selectionMode="checkbox"
-              [(selection)]="selectedTree"
-              (onNodeExpand)="loadNode($event)"
-              [propagateSelectionDown]="false"
-              [style]="{'width':'100%'}"
+            <div class="col-md-4">
+              <app-bundles-tree
+              (selectedTrips)="tripsUpdate($event)"
               >
-              </p-tree>
+              </app-bundles-tree>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-8">
               <div class="form-group">
                 <input type="Date" class="form-control"
                       [ngClass]="{
@@ -62,14 +57,72 @@
                   Price cant be < 0 and null
                 </span>
               </div>
-            </div>
-    
-            <div class="col-md-6">
+
               <div class="form-group">
                 <textarea class="form-control"
                       placeholder="Description"
                       formControlName="description">
                 </textarea>
+              </div>
+
+              <hr>
+        
+              <div class="row">
+                <div class="col-12">
+                  <h5>Trips:</h5>
+                  <div class="list-group">
+                    <ul>
+                      <li class="list-group-item"
+                        *ngFor="let trip of selectedTrips"
+                      >
+                        <div class="row">
+                          <h5 class="col-12">
+                            {{trip.departure_spaceport_name}}({{trip.departure_planet}}) - 
+                            {{trip.arrival_spaceport_name}}({{trip.arrival_planet}})
+                          </h5>
+                        </div>
+                        <h5>Classes:</h5>
+                        <ul>
+                          <li class="list-group-item"
+                            *ngFor="let ticket_class of trip.ticket_classes"
+                          >
+                            <div class="row align-items-end">
+                              <h3 class="col-md-1">{{ticket_class.item_number}}</h3>
+                              <h5 class="col-md-4 mr-auto">
+                                {{ticket_class.class_name}}
+                              </h5>
+                              <h5 class="col-md-1">For:</h5>
+                              <span class="col-md-4" style="margin-bottom: 0.5rem">
+                                {{ticket_class.ticket_price}}
+                              </span>
+                            </div>
+                            <ng-container *ngIf="ticket_class.services !== undefined && ticket_class.services.length > 0">
+                              <h5>Services:</h5>
+                              <div class="list-group">
+                                <ul>
+                                  <li class="list-group-item"
+                                    *ngFor="let service of ticket_class.services"
+                                  >
+                                    <div class="row align-items-end">
+                                      <h3 class="col-md-1">{{service.item_number}}</h3>
+                                      <h5 class="col-md-4 mr-auto">
+                                        {{service.service_name}}
+                                      </h5>
+                                      <h5 class="col-md-1">For:</h5>
+                                      <span class="col-md-4" style="margin-bottom: 0.5rem">
+                                        {{service.service_price}}
+                                      </span>
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                            </ng-container>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
