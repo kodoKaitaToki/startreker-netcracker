@@ -7,10 +7,10 @@
         <div class="col-sm-12">
 
           <div class="row">
-            <h3 class="col-6">
+            <h3 class="col-md-6">
               Service name:
             </h3>
-            <h3 class="col-6">
+            <h3 class="col-md-6">
               {{service.service_name}}
             </h3>
           </div>
@@ -88,4 +88,11 @@
       </form>
     </li>
   </ul>
+  <app-paginator
+    [page]="services"
+    [from]="pageFrom"
+    [number]="pageNumber"
+    (update)="onPageUpdate($event)"
+  >
+  </app-paginator>
 </div>

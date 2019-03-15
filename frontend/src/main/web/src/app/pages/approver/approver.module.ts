@@ -11,6 +11,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { OpenComponent } from './service/open/open.component';
 import { AssignedComponent } from './service/assigned/assigned.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [ServiceComponent, ApproverComponent, NavbarComponent, TripComponent, DashboardComponent, NotificationsComponent, OpenComponent, AssignedComponent],
@@ -18,7 +19,8 @@ import { AssignedComponent } from './service/assigned/assigned.component';
     CommonModule,
     ApproverRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule,
   ]
 })
 export class ApproverModule { }

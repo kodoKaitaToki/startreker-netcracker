@@ -104,7 +104,8 @@ public class DiscountServiceImpl implements DiscountService {
     private Discount getDiscount(DiscountDTO discountDTO) {
         Discount discount = Discount.toDiscount(discountDTO);
 
-        if (discount.getStartDate().isBefore(LocalDateTime.now())) {
+        if (discount.getStartDate()
+                    .isBefore(LocalDateTime.now())) {
             logger.error("Start date of discount is less than current date");
             throw new RequestException("Start date of discount is less than current date", HttpStatus.BAD_REQUEST);
         }
@@ -117,7 +118,7 @@ public class DiscountServiceImpl implements DiscountService {
         if (discount.getFinishDate().isBefore(discount.getStartDate())) {
             logger.error("Finish date of discount is less than start date of discount");
             throw new RequestException("Finish date of discount is less than start date of discount",
-                    HttpStatus.BAD_REQUEST);
+                                       HttpStatus.BAD_REQUEST);
         }
 
         if (discount.getDiscountRate() <= 0) {
@@ -126,7 +127,7 @@ public class DiscountServiceImpl implements DiscountService {
         }
 
         if (discount.getIsPercent() && discount.getDiscountRate() > 100) {
-            logger.error("Discount rate in percents must be less than 100. Found " +  discount.getDiscountRate());
+            logger.error("Discount rate in percents must be less than 100. Found " + discount.getDiscountRate());
             throw new RequestException("Discount rate in percents must be less than 100", HttpStatus.BAD_REQUEST);
         }
 

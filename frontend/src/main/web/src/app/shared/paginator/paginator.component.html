@@ -1,0 +1,49 @@
+<nav aria-label="Page navigation example">
+  <ul class="pagination pagination-lg justify-content-center">
+    <li class="page-item" *ngIf="amount != 0">
+        <button 
+        (click)="first()"
+        class="page-link"
+        >
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">First</span>
+        </button>
+      </li>
+    <li class="page-item" *ngIf="amount != 0">
+      <button 
+      (click)="previous()"
+      class="page-link"
+      >
+        <span aria-hidden="true">&lsaquo;</span>
+        <span class="sr-only">Previous</span>
+      </button>
+    </li>
+    <ng-container *ngIf="amount > 0">
+      <li
+      *ngFor="let i of pageArray(amount).fill(1); index as j"
+      class="page-item"
+      >
+        <button 
+        (click)="goToPage(j)"
+        class="page-link"
+        >
+          <span aria-hidden="true">{{j+1}}</span>
+        </button>
+      </li>
+    </ng-container>
+    <li class="page-item disabled" *ngIf="amount < 0">
+      <span class="page-link">
+        page {{(from+number)/number| number:0}}
+      </span>
+    </li>
+    <li class="page-item" *ngIf="amount != 0">
+      <button 
+      (click)="next()"
+      class="page-link"
+      >
+        <span aria-hidden="true">&rsaquo;</span>
+        <span class="sr-only">Next</span>
+      </button>
+    </li>
+  </ul>
+</nav>

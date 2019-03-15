@@ -1,13 +1,8 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
-import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.dao.TripDAO;
-import edu.netcracker.backend.message.request.DiscountSuggestionDTO;
-import edu.netcracker.backend.message.request.DiscountTicketClassDTO;
-import edu.netcracker.backend.message.request.TripWithArrivalAndDepartureDataAndSuggestionsDTO;
-import edu.netcracker.backend.message.request.TripWithArrivalAndDepartureDataAndTicketClassesDTO;
-import edu.netcracker.backend.message.request.TripWithArrivalAndDepartureDataDTO;
+import edu.netcracker.backend.message.request.*;
 import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.TripWithArrivalAndDepartureData;
