@@ -19,10 +19,10 @@ export class OpenTripComponent implements OnInit {
               private messageService: MessageService) { }
 
   ngOnInit() {
-    this.getTrips(2);
+    this.getTrips("OPEN");
   }
 
-  getTrips(status: Number){
+  getTrips(status: String){
     this.tripService.getTrips(status, 0, 10)
                       .subscribe(
                         (resp: Response) => {
@@ -41,7 +41,7 @@ export class OpenTripComponent implements OnInit {
   }
 
   onAssign(trip: Trip) {
-    trip.trip_status = 3;
+    trip.trip_status = "ASSIGNED";
     //trip.trip_reply.writer_id = 3;
 
     this.loadingTrip = trip;
@@ -56,11 +56,10 @@ export class OpenTripComponent implements OnInit {
                         this.showMessage(this.createMessage('success',
                                                             'The trip was assigned by you',
                                                             'You can find it in "Assigned to me"'));
-                        this.getTrips(2);
+                        this.getTrips("ASSIGNED");
                         this.loadingTrip = null;
                       }, 
                       error => {
-                        console.log(error);
                         this.loadingTrip = null;
                       }
                     );

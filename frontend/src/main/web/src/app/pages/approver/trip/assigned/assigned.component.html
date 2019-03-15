@@ -73,7 +73,7 @@
                 <ul class="col-10 offset-1" *ngIf="moreFlag">
                   <li *ngFor="let reply of trip.trip_reply">
                     <p style="font-weight: bold">{{reply.creation_date | date}}</p>
-                    <div class="offset-1">carrier name:</div>
+                    <div class="offset-1">{{reply.writer_name}}:</div>
                     <div class="offset-2">{{reply.reply_text}}</div>
                   </li>
                 </ul>

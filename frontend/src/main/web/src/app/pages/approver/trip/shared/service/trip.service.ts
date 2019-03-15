@@ -11,7 +11,7 @@ export class TripService{
 
     constructor(private http: HttpClient){}
 
-    public getTrips(status: Number, offset: Number, limit: Number){
+    public getTrips(status: String, offset: Number, limit: Number){
         let uri = Api.trip.trips() + '?status=' + status + '&offset=' + offset + '&limit=' + limit;
         return this.http.get(uri, {headers: this.createHeaders()});
     }

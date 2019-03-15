@@ -8,7 +8,7 @@ export class Trip{
     approver_id: Number;
     departure_spaceport: Spaceport;
     arival_spaceport: Spaceport;
-    trip_status: Number;
+    trip_status: String;
     departure_date: Date;
     arrival_date: Date;
     creation_date: Date;

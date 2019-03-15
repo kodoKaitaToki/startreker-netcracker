@@ -31,7 +31,7 @@ export class AssignedTripComponent implements OnInit {
 
   ngOnInit() {
     this.pageFrom = 0;
-    this.getTrips(3);
+    this.getTrips("ASSIGNED");
     this.setFormInDefault();
   }
 
@@ -48,7 +48,7 @@ export class AssignedTripComponent implements OnInit {
     this.form.reset();
   }
 
-  getTrips(status: Number){
+  getTrips(status: String){
     this.tripService.getTrips(status, 0, 10)
                       .subscribe(
                         (resp: Response) => {
@@ -58,19 +58,19 @@ export class AssignedTripComponent implements OnInit {
                           }*/
                           this.loadingTrip = null;
                           this.trips = clone(resp);
-                        },
-                        error => console.log(error)
+                        }
                       );
   }
 
   onReview(trip: Trip) {
     this.moreFlag = false;
-    trip.trip_status = 6;
+    trip.trip_status = "UNDER_CLARIFICATION";
 
     trip.trip_reply.push({
       trip_id: trip.trip_id,
       reply_text: this.form.get('reply_text').value,
       writer_id: 0,
+      writer_name: "",
       creation_date: new Date()
     });
 
@@ -86,18 +86,17 @@ export class AssignedTripComponent implements OnInit {
                           this.showMessage(this.createMessage('success',
                                                               'The trip is succeesfully reviewed',
                                                               'The carrier of the trip will see your reply'));
-                          this.getTrips(3);
+                          this.getTrips("ASSIGNED");
                       }, 
                       error => {
                         this.loadingTrip = null;
-                        console.log(error);
                       }
                     );
   }
 
   onPublish(trip: Trip){
     this.moreFlag = false;
-    trip.trip_status = 4;
+    trip.trip_status = "PUBLISHED";
     this.loadingTrip = trip;
 
     this.tripService.updateTripStatus(trip)
@@ -110,11 +109,10 @@ export class AssignedTripComponent implements OnInit {
                         this.showMessage(this.createMessage('success',
                                                             'The trip was published',
                                                             'Users can buy tickets of this trip'));
-                        this.getTrips(3);
+                        this.getTrips("ASSIGNED");
                         this.loadingTrip = null;
                       }, 
                       error => {
-                        console.log(error);
                         this.loadingTrip = null;
                       }
                     );
@@ -122,7 +120,7 @@ export class AssignedTripComponent implements OnInit {
 
   onPageUpdate(from: number) {
     this.pageFrom = from;
-    this.getTrips(3);
+    this.getTrips("ASSIGNED");
   }
 
   showMessage(msgObj: any){
