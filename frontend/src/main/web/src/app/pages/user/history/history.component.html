@@ -1,6 +1,7 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-lg-3">
+
       <div class="card historycard" style="width: 14rem; margin-top: 7%">
         <div class="card-header">
           Orders History
@@ -10,56 +11,189 @@
           <li class="list-group-item">Services</li>
         </ul>
       </div>
+
       <div class="card historycard" style="width: 14rem; margin-top: 5%">
         <div class="card-header">
           Search parameters
         </div>
         <form [formGroup]="searchParams" (ngSubmit)="search(searchParams.value)">
           <div class="form-group">
-            <label for="testparam" style="padding-left: 5%; padding-top: 2%">Testparam</label>
+            <label for="testparam" style="padding-left: 6%; padding-top: 5%">Testparam</label>
             <input formControlName="testparam" type="text" class="form-control center" id="testparam"
-                   style="width: 90%">
+                   style="width: 90%" autocomplete="off">
           </div>
           <button type="submit" class="btn btn-success center" style="margin-bottom: 5%;">Search</button>
         </form>
       </div>
     </div>
+
     <div class="col-lg-9" style="margin-top: 2%">
-      <div class="card historycard" style="width: 100%; padding: 12px">
-        <div class="row">
-          <div class="col-6" style="font-size: 21px; font-weight: bold">
-            <span>EARTH - MOON</span>
-          </div>
-          <div class="col-6" style="text-align: right; font-size: 20px">
-            <span>2015-03-05 15:32</span>
-            <br>
-            <span>2015-03-06 04:22</span>
+      <ng-container *ngIf="data.length > 0">
+        <ng-container
+          *ngFor="let element of data | paginate: {id: 'tickets-pagination', itemsPerPage: 2, currentPage: page}">
+
+          <!-- if element is a ticket !-->
+          <ng-container *ngIf="element.ticket">
+            <div class="card historycard" style="width: 100%; padding: 12px; margin-bottom: 2%">
+              <div class="row">
+                <div class="col-6" style="font-size: 21px; font-weight: bold">
+                  <span>{{element.ticket.departure_planet_name}} - {{element.ticket.arrival_planet_name}}</span>
+                </div>
+                <div class="col-6" style="text-align: right; font-size: 20px">
+                  <span>{{element.ticket.departure_date}}</span>
+                  <br>
+                  <span>{{element.ticket.arrival_date}}</span>
+                </div>
+              </div>
+              <hr>
+
+              <div class="row">
+                <div class="col-6" style="font-size: 16px">
+                  <span>Class: <a href="#">{{element.ticket.class}}</a></span>
+                  <br>
+                  <span>Price: <a href="#">{{element.ticket.price}}</a></span>
+                  <br>
+                  <span>Departure spaceport: <a href="#">{{element.ticket.departure_spaceport_name}}</a></span>
+                  <br>
+                  <span>Arrival spaceport: <a href="#">{{element.ticket.arrival_spaceport_name}}</a></span>
+                  <br><br>
+
+                  <button class="btn btn-primary" type="button" data-toggle="collapse"
+                          [attr.data-target]="'#btncollapse' + element.ticket.id"
+                          aria-expanded="false" aria-controls="Collapse"
+                          style="width: 90%; height: 24px; font-size: 15px; text-align: center; line-height: 11px; opacity: 0.6">
+                    Show services
+                  </button>
+                  <div class="collapse" [attr.id]="'btncollapse' + element.ticket.id" style="width: 90%;">
+                    <div class="card" style="background-color: rgba(240, 248, 255, 0.25);">
+                      <div *ngFor="let service of element.ticket.services">
+                        {{service.service_name}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6" style="text-align: right; font-size: 18px">
+                  <span>SEAT: &nbsp;<strong>{{element.ticket.seat}}</strong></span>
+                </div>
+              </div>
+              <hr>
+
+              <div class="row">
+                <div class="col-6" style="font-size: 18px">
+                  <span>Seller: &nbsp;<a href="#">{{element.ticket.carrier_name}}</a></span>
+                </div>
+                <div class="col-6" style="text-align: right; font-size: 18px">
+                  <span>Bought at: &nbsp;{{element.ticket.purchase_date}}</span>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- if element is a bundle !-->
+          <ng-container *ngIf="element.bundle">
+            <div class="card historycard" style="width: 100%; padding: 12px; margin-bottom: 2%">
+              <div class="row">
+                <div class="col-12" style="font-size: 21px; font-weight: bold">
+                  <span>BUNDLE №{{element.bundle.id}}</span>
+                </div>
+              </div>
+              <hr>
+
+              <div class="row">
+                <div class="col-12">
+                  <button class="btn btn-primary" type="button" data-toggle="collapse"
+                          [attr.data-target]="'#btncollapsebundle' + element.bundle.id"
+                          aria-expanded="false" aria-controls="Collapse"
+                          style="width: 100%; height: 24px; font-size: 15px; text-align: center; line-height: 11px; opacity: 0.6">
+                    Show trips
+                  </button>
+                  <div class="collapse" [attr.id]="'btncollapsebundle' + element.bundle.id" style="width: 100%;">
+                    <div class="card" style="background-color: rgba(240, 248, 255, 0.25);">
+                      <div *ngFor="let ticket of element.bundle.tickets">
+
+                        <div class="card historycard" style="width: 100%; padding: 12px; margin-bottom: 2%; opacity: 0.85">
+                          <div class="row">
+                            <div class="col-6" style="font-size: 21px; font-weight: bold">
+                              <span>{{ticket.departure_planet_name}} - {{ticket.arrival_planet_name}}</span>
+                            </div>
+                            <div class="col-6" style="text-align: right; font-size: 20px">
+                              <span>{{ticket.departure_date}}</span>
+                              <br>
+                              <span>{{ticket.arrival_date}}</span>
+                            </div>
+                          </div>
+                          <hr>
+
+                          <div class="row">
+                            <div class="col-6" style="font-size: 16px">
+                              <span>Class: <a href="#">{{ticket.class}}</a></span>
+                              <br>
+                              <span>Departure spaceport: <a href="#">{{ticket.departure_spaceport_name}}</a></span>
+                              <br>
+                              <span>Arrival spaceport: <a href="#">{{ticket.arrival_spaceport_name}}</a></span>
+                              <br><br>
+
+                              <button class="btn btn-primary" type="button" data-toggle="collapse"
+                                      [attr.data-target]="'#btncollapse' + ticket.id"
+                                      aria-expanded="false" aria-controls="Collapse"
+                                      style="width: 90%; height: 24px; font-size: 15px; text-align: center; line-height: 11px; opacity: 0.6">
+                                Show services
+                              </button>
+                              <div class="collapse" [attr.id]="'btncollapse' + ticket.id" style="width: 90%;">
+                                <div class="card" style="background-color: rgba(240, 248, 255, 0.25);">
+                                  <div *ngFor="let service of ticket.services">
+                                    {{service.service_name}}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-6" style="text-align: right; font-size: 18px">
+                              <span>SEAT: &nbsp;<strong>{{ticket.seat}}</strong></span>
+                            </div>
+                          </div>
+                          <hr>
+
+                          <div class="row">
+                            <div class="col-12" style="font-size: 18px">
+                              <span>Seller: &nbsp;<a href="#">{{ticket.carrier_name}}</a></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+
+              <div class="row">
+                <div class="col-6" style="font-size: 18px">
+                  <span>Price: {{element.bundle.endprice}}</span>
+                </div>
+                <div class="col-6" style="text-align: right; font-size: 18px">
+                  <span>Bought at: &nbsp;{{element.bundle.purchase_date}}</span>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="data.length == 0">
+        <div class="card historycard" style="width: 100%; padding: 12px; margin-bottom: 2%">
+          <div class="row">
+            <div class="center">Nothing found</div>
           </div>
         </div>
-        <hr>
+      </ng-container>
 
-        <div class="row">
-          <div class="col-6" style="font-size: 16px">
-            <span>Class: <a href="#">className</a></span>
-            <br>
-            <span>Price: <a href="#">123123$</a></span>
-            <br>
-            <span>Departure spaceport: <a href="#">depSpaceName</a></span>
-            <br>
-            <span>Arrival spaceport: <a href="#">arrSpaceName</a></span>
-          </div>
-          <div class="col-6" style="text-align: right; font-size: 18px">
-            <span>Seat: &nbsp;<strong>15</strong></span>
-          </div>
-        </div>
-        <hr>
-
-        <div class="row">
-          <div class="col-6" style="font-size: 18px">
-            <span>Seller: <a href="#">carrierName</a></span>
-          </div>
-          <div class="col-6" style="text-align: right; font-size: 18px">
-            <span>Bought at: &nbsp;2015-03-01 11:52</span>
+      <div class="row">
+        <div class="col-md-6 offset-md-6 col-sm-9 offset-sm-3 col-xs-11 offset-xs-1">
+          <div class="historycard text-center">
+            <pagination-controls class="pagination center" id="tickets-pagination"
+                                 (pageChange)="onPageChange($event)">
+            </pagination-controls>
           </div>
         </div>
       </div>

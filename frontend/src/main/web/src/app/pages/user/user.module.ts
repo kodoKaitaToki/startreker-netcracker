@@ -5,6 +5,7 @@ import {NavbarComponent} from "./navbar/navbar.component";
 import {UserRoutingModule} from "./user-routing.module";
 import {HistoryComponent} from './history/history.component';
 import {ReactiveFormsModule} from "@angular/forms";
+import {NgxPaginationModule} from "ngx-pagination";
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import {ReactiveFormsModule} from "@angular/forms";
     CommonModule,
     UserRoutingModule,
     ReactiveFormsModule,
+    NgxPaginationModule
   ]
 })
 export class UserModule {

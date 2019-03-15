@@ -16,3 +16,7 @@
   margin-right: auto;
   display: block !important;
 }
+
+.pagination /deep/ .ngx-pagination .current {
+    padding: 10px;
+}
