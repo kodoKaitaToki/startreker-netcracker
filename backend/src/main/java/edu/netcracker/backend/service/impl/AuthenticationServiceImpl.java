@@ -85,6 +85,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         User user = userService.findByUsername(signInForm.getUsername());
+
+        if (user.getUserRefreshToken() != null) {
+            refreshToken = user.getUserRefreshToken();
+        }
+
         user.setUserRefreshToken(refreshToken);
         userService.save(user);
 
