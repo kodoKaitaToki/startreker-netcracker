@@ -2,6 +2,7 @@ package edu.netcracker.backend.service;
 
 import edu.netcracker.backend.message.request.SignUpForm;
 import edu.netcracker.backend.message.request.UserCreateForm;
+import edu.netcracker.backend.message.response.BoughtTicketDTO;
 import edu.netcracker.backend.model.Role;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.security.UserInformationHolder;
@@ -45,4 +46,6 @@ public interface UserService extends UserDetailsService {
     List<User> findAllWithRole(Role role);
 
     List<User> paginationWithRole(Integer from, Integer number, Role role);
+
+    BoughtTicketDTO buyTicket(BoughtTicketDTO boughtTicketDTO);
 }
