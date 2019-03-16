@@ -1,11 +1,8 @@
 package edu.netcracker.backend.config.security;
 
-import edu.netcracker.backend.security.AuthFilter;
 import edu.netcracker.backend.security.JwtAuthFilter;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.service.impl.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,8 +26,6 @@ import org.springframework.web.filter.CorsFilter;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private AuthFilter authFilter;
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf()
@@ -41,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(setAuthFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
@@ -99,8 +94,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //        return registrationBean;
 //    }
 
-    @Autowired
-    public void setAuthFilter(AuthFilter authFilter) {
-        this.authFilter = authFilter;
+    @Bean
+    public JwtAuthFilter setAuthFilter() {
+        return new JwtAuthFilter();
     }
 }
