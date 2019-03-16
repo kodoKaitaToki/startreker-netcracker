@@ -264,7 +264,7 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
 
     @Override
     public List<String> getServiceNamesByTicket(Number id) {
-        logger.info(String.format("Querying purchased services for ticket %d", id));
+        logger.info("Querying purchased services for ticket {}", id);
         return getJdbcTemplate().query(GET_SERVICE_NAMES_BY_TICKET, new Object[]{id}, new HistoryServiceMapper());
     }
 
