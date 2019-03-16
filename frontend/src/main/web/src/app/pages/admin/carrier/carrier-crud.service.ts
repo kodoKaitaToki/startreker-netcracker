@@ -16,16 +16,25 @@ export class CarrierCrudService {
 
     public getAllCarriers(){
         let headers = new HttpHeaders({
-            'Content-Type':  'application/json',
-    'Access-Control-Allow-Origin': '*',
-    'Authorization': `Bearer ${localStorage.getItem('at')}`,
-    'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
+            //'Content-Type':  'application/json',
+    //'Access-Control-Allow-Origin': '*',
+          'Authorization': `Bearer ${localStorage.getItem('at')}`,
+          'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
+          //'Access-Control-Allow-Methods': '*'
+          //'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
+          //'Access-Control-Allow-Headers': '*',
+          //  'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, '
+          //                                  + 'Accept, X-Auth-Token, X-Csrf-Token, Authorization, Authorization-Refresh',
+          // 'Access-Control-Allow-Credentials': 'false',
+          // 'Access-Control-Max-Age': '3600'
+
         });
     // let headers = new HttpHeaders();
     // headers = headers.append('Content-Type', 'application/json');
       //TODO: remove debug backdoor/
     // headers = headers.append('Authorization', 'debug_login 7');
-        return this.http.get<any>(Api.carrier.carriers(), {headers: headers});
+        //return this.http.get<any>(Api.carrier.carriers(), {headers: headers});
+      return this.http.get<any>(Api.carrier.carriers(), {headers: headers});
     }
 
     public getCarriersPagin<Carrier>(from: number, to: number): Observable<Carrier>{

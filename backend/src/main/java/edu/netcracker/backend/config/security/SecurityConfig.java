@@ -3,6 +3,7 @@ package edu.netcracker.backend.config.security;
 import edu.netcracker.backend.security.JwtAuthFilter;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.service.impl.UserServiceImpl;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,8 +19,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -28,8 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf()
-            .disable()
+        http.csrf().disable()
+            .cors()
+            .and()
             .authorizeRequests()
             .antMatchers("/api/auth/**").permitAll()
             .anyRequest().authenticated()
@@ -69,20 +75,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public CorsFilter corsFilter() {
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Collections.singletonList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "DELETE", "PUT", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("X-Requested-With", "Origin", "Content-Type", "Accept", "Authorization", "Authorization-Refresh", "New-Access-Token"));
+        configuration.setAllowCredentials(false);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowCredentials(true);
-        config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("OPTIONS");
-        config.addAllowedMethod("GET");
-        config.addAllowedMethod("POST");
-        config.addAllowedMethod("PUT");
-        config.addAllowedMethod("DELETE");
-        config.addAllowedMethod("PATCH");
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
 //    @Bean
