@@ -23,4 +23,6 @@ public class TripReply {
     private String reportText;
     @Attribute("creation_date")
     private LocalDateTime creationDate;
+
+    private User writer;
 }

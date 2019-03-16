@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -16,8 +15,8 @@ import java.util.List;
 @Service
 public class ApproverCrudService {
 
-    private ApproverDAO approverDAO;
-    private UserDAO userDAO;
+    private final ApproverDAO approverDAO;
+    private final UserDAO userDAO;
 
     @Autowired
     public ApproverCrudService(ApproverDAO approverDAO, UserDAO userDAO) {

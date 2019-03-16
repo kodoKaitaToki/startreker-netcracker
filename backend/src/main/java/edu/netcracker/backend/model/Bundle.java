@@ -37,7 +37,4 @@ public class Bundle {
     private String bundlePhotoUri;
 
     private List<Trip> bundleTrips = new ArrayList<>();
-
-    private List<Service> bundleServices = new ArrayList<>();
-
 }

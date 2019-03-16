@@ -2,7 +2,7 @@ package edu.netcracker.backend.dao;
 
 import edu.netcracker.backend.model.TripReply;
 
-public interface TripReplyDAO {
+public interface TripReplyDAO extends CrudDAO<TripReply>{
 
     void save(TripReply reply);
 

@@ -8,19 +8,26 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
-public class Archived extends TripState {
+public class Archived implements TripState {
 
-    private final static int databaseValue = 5;
+    public final static int DATABASE_VALUE = 5;
+    public final static String NAME = "ARCHIVED";
 
     private static List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(4);
 
     @Override
-    public boolean isStateChangeAllowed(Trip trip, User requestUser, TripState tripState) {
-        return requestUser.equals(trip.getOwner()) && allowedStatesToSwitchFrom.contains(tripState.getDatabaseValue());
+    public boolean isStateChangeAllowed(Trip trip, User requestUser) {
+        return requestUser.equals(trip.getOwner()) && allowedStatesToSwitchFrom.contains(trip.getTripState()
+                                                                                             .getDatabaseValue());
     }
 
     @Override
     public int getDatabaseValue() {
-        return databaseValue;
+        return DATABASE_VALUE;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }
