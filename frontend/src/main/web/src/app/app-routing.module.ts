@@ -6,6 +6,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegistrationComponent } from './pages/registration/registration.component';
 import { RecoveryComponent } from './pages/recovery/recovery.component'
 import { Role } from './guards/role';
+import { ConfirmMessageComponent } from './pages/confirm-message/confirm-message.component';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'sign-up', component: RegistrationComponent},
   { path: 'password-recovery', component: RecoveryComponent},
+  { path: 'confirm', component: ConfirmMessageComponent},
   { path: 'admin',
     loadChildren: './pages/admin/admin.module#AdminModule',
 
@@ -28,8 +30,8 @@ const routes: Routes = [
 
     //IMPORTANT! Lines below should be uncommented later to activate Auth guard
 
-    canActivate: [AuthGuard],
-    data: {roles: [Role.Carrier]}
+    // canActivate: [AuthGuard],
+    // data: {roles: [Role.Carrier]}
   },
   { path: 'approver',
     loadChildren: './pages/approver/approver.module#ApproverModule',

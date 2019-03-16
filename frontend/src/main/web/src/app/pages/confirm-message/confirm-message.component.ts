@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+import { ApiUserService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-confirm-message',
@@ -7,9 +10,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ConfirmMessageComponent implements OnInit {
 
-  constructor() { }
+  constructor(private apiUserService: ApiUserService) {}
 
   ngOnInit() {
+    this.apiUserService.sendConfirmToken();
   }
 
+  getUrl()
+  {
+    return "url('assets/images/bg.jpg')";
+  }
 }

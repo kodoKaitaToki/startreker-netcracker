@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Router, ActivatedRoute } from '@angular/router';
 import { clone } from 'ramda';
 
 import { Api, HttpOptions, HttpOptionsAuthorized } from '../modules/api';
@@ -23,7 +23,8 @@ export class ApiUserService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
     ) {}
 
 
@@ -31,64 +32,35 @@ export class ApiUserService {
       return this.userData;
     }
 
-    
-    // loginUser(userData: LoginFormData) {
-    //   this.http.post<any>(Api.auth.loginUser(), userData, HttpOptions)
-    //     .subscribe(
-    //       (userData: LoginResponse) => {
-    //         this.userData = clone(userData);
-    //         localStorage.setItem('at', userData.access_token);
-    //         localStorage.setItem('rt', userData.refresh_token);
-    //       },
-    //       error => console.error(error)
-    //     );
-    // }
-
     loginUser(userData: LoginFormData){
       return this.http.post<any>(Api.auth.loginUser(), userData, HttpOptions);
     }
 
     getLoggedUser(userData: LoginResponse){
       this.userData = clone(userData);
+      console.log("The data of logged user is " + this.userData);
       localStorage.setItem('at', userData.access_token);
       localStorage.setItem('rt', userData.refresh_token);
     }
-
-    // async loginUser(userData: LoginFormData) {
-    //   try {
-    //     console.log(userData);
-    //     const data: any = await this.http.post(Api.auth.loginUser(), userData, HttpOptions).toPromise();
-    //     this.userData = clone(data);
-    //     localStorage.setItem('at', data.access_token);
-    //     localStorage.setItem('rt', data.refresh_token);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }
-
-    // async registerUser(userData: LoginFormData) {
-    //   try {
-    //     console.log(userData);
-    //     const data: any = await this.http.post(Api.auth.loginUser(), userData, HttpOptions).toPromise();
-    //     this.userData = clone(data);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // }
 
     public registerUser(userData: RegisterFormData){
       return this.http.post<any>(Api.auth.registerUser(), userData, HttpOptions)
     }
 
-    /*registerUser(userData: RegisterFormData) {
-      this.http.post<any>(Api.auth.registerUser(), userData, HttpOptions)
-        .subscribe(
-          (userData: RegisterResponse) => {
-            this.userData = clone(userData);
-          },
-          error => console.error(error)
-        );
-    }*/
+    public sendConfirmToken(){
+      let token: string;
+
+      this.activatedRoute.queryParams.subscribe(data => {
+        token = data['token'];
+        let params = new HttpParams().set("token", token);
+
+        this.http.get(Api.auth.confirmPassword(), {
+          headers: HttpOptions.headers,
+          params: params
+        });
+        
+      })
+    }
 
     logoutUser() {
       this.http.post<any>(Api.auth.logoutUser(), {}, HttpOptionsAuthorized);
@@ -100,13 +72,6 @@ export class ApiUserService {
 
     public recoverPassword(userData: any) {
       return this.http.post<any>(Api.auth.recoverPassword(), userData, HttpOptions);
-      // this.http.post(Api.auth.recoverPassword(), userData, HttpOptions)
-      //   .subscribe(
-      //     data => {
-      //       this.userData = clone(data);
-      //     },
-      //     error => console.error(error)
-      //   );
     }
 
     setUserData(userData){
