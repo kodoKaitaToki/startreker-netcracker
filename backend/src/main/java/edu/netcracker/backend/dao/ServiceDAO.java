@@ -1,15 +1,16 @@
 package edu.netcracker.backend.dao;
 
 
+import edu.netcracker.backend.message.response.ServiceCRUDDTO;
+import edu.netcracker.backend.model.ServiceDescr;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import edu.netcracker.backend.message.response.ServiceCRUDDTO;
-import edu.netcracker.backend.model.ServiceDescr;
-
 
 public interface ServiceDAO {
+
     void save(ServiceDescr service);
 
     void delete(Long id);
@@ -31,4 +32,6 @@ public interface ServiceDAO {
     List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId);
 
     Map<Long, List<ServiceDescr>> getAllServicesBelongToSuggestions(List<Number> suggestionIds);
+
+    List<String> getServiceNamesByTicket(Number id);
 }

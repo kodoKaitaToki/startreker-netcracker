@@ -12,16 +12,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -36,7 +33,7 @@ public class ServiceDAOTest {
     List<ServiceCRUDDTO> ret;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         ServiceDescr serviceDescr = new ServiceDescr();
         serviceDescr.setServiceId(2L);
         serviceDescr.setServiceName("quis turpis eget");
@@ -53,7 +50,7 @@ public class ServiceDAOTest {
     }
 
     @Test
-    public void getServicesForApprover() throws Exception {
+    public void getServicesForApprover() {
 
         when(jdbcTemplate.query(anyString(), (Object[]) any(), any(ServiceMapper.class)))
                 .thenReturn(ret);
@@ -62,7 +59,7 @@ public class ServiceDAOTest {
     }
 
     @Test
-    public void getServicesForApproverId() throws Exception {
+    public void getServicesForApproverId() {
 
         when(jdbcTemplate.query(anyString(), (Object[]) any(), any(ServiceMapper.class)))
                 .thenReturn(ret);
