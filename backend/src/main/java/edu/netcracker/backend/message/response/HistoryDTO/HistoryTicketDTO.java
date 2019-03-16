@@ -28,6 +28,9 @@ public class HistoryTicketDTO {
     @JsonProperty("trip")
     private HistoryTripDTO trip;
 
+    @JsonProperty("bundle_id")
+    private Integer bundleId;
+
     public static HistoryTicketDTO from(HistoryTicket historyTicket) {
         HistoryTicketDTO htd = new HistoryTicketDTO();
         htd.ticketId = historyTicket.getTicketId();
@@ -36,6 +39,7 @@ public class HistoryTicketDTO {
         htd.purchaseDate = historyTicket.getPurchaseDate()
                                         .format(DateTimeFormatter.ofPattern(datePattern));
         htd.className = historyTicket.getClassName();
+        htd.bundleId = historyTicket.getBundleId();
         htd.trip = HistoryTripDTO.from(historyTicket.getTrip());
         return htd;
     }

@@ -15,4 +15,6 @@ public class HistoryTicket extends Ticket {
     private String className;
 
     private HistoryTrip trip;
+
+    private Integer bundleId;
 }

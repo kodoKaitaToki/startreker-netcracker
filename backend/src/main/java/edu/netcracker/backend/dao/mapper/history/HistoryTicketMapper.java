@@ -28,6 +28,7 @@ public class HistoryTicketMapper implements RowMapper<HistoryTicket> {
         trip.setDeparturePlanetName(resultSet.getString(10));
         trip.setArrivalPlanetName(resultSet.getString(11));
         trip.setCarrierName(resultSet.getString(12));
+        ticket.setBundleId(resultSet.getInt(13));
         ticket.setTrip(trip);
         return ticket;
     }

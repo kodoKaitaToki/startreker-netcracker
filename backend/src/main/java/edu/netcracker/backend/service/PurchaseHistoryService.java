@@ -1,12 +1,17 @@
 package edu.netcracker.backend.service;
 
-import edu.netcracker.backend.model.history.HistoryTicket;
+import edu.netcracker.backend.message.response.HistoryDTO.HistoryServiceDTO;
+import edu.netcracker.backend.message.response.HistoryDTO.HistoryTicketDTO;
 
 import java.util.List;
 
 public interface PurchaseHistoryService {
 
-    List<HistoryTicket> getPurchaseHistory(Number user_id, Number limit, Number offset);
+    List<HistoryTicketDTO> getPurchaseHistory(Number user_id,
+                                              Number limit,
+                                              Number offset,
+                                              String startDate,
+                                              String endDate);
 
-    List<String> getServiceNamesByTicket(Number id);
+    List<HistoryServiceDTO> getServiceNamesByTicket(Number id);
 }
