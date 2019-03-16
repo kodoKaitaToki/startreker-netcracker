@@ -16,10 +16,20 @@ export class CarrierCrudService {
 
     public getAllCarriers(){
         let headers = new HttpHeaders({
+            //'Content-Type':  'application/json',
+    //'Access-Control-Allow-Origin': '*',
+          'Authorization': `Bearer ${localStorage.getItem('at')}`,
+          'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`,
+          //'Access-Control-Allow-Methods': '*'
+          //'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
+          //'Access-Control-Allow-Headers': '*',
+          //  'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, '
+          //                                  + 'Accept, X-Auth-Token, X-Csrf-Token, Authorization, Authorization-Refresh',
+          // 'Access-Control-Allow-Credentials': 'false',
+          // 'Access-Control-Max-Age': '3600'
+
             'Content-Type':  'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Authorization': `Bearer ${localStorage.getItem('at')}`,
-            'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
+            'Access-Control-Allow-Origin': '*'
         });
     // let headers = new HttpHeaders();
     // headers = headers.append('Content-Type', 'application/json');
