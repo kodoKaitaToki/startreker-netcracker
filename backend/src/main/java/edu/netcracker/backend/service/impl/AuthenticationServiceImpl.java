@@ -53,8 +53,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         User user = userService.createUser(signUpForm, false, Collections.singletonList(AuthorityUtils.ROLE_USER));
         emailService.sendRegistrationMessage(signUpForm.getEmail(),
-                getContextPath(request),
-                jwtProvider.generateMailRegistrationToken(user.getUsername()));
+                                             jwtProvider.generateMailRegistrationToken(user.getUsername()));
 
         return user;
     }
@@ -69,37 +68,41 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         String newUserPassword = userService.changePasswordForUser(user);
 
-        emailService.sendPasswordRecoveryMessage(emailFrom.getEmail(),
-                user.getUsername(),
-                newUserPassword);
+        emailService.sendPasswordRecoveryMessage(emailFrom.getEmail(), user.getUsername(), newUserPassword);
     }
 
     @Override
     public JwtResponse signIn(SignInForm signInForm) {
-        Authentication authentication = authenticationManager.
-                authenticate(new UsernamePasswordAuthenticationToken(
-                        signInForm.getUsername(),
-                        signInForm.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                signInForm.getUsername(),
+                signInForm.getPassword()));
 
         String accessToken = jwtProvider.generateAccessToken((UserDetails) authentication.getPrincipal());
         String refreshToken = jwtProvider.generateRefreshToken(signInForm.getUsername());
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext()
+                             .setAuthentication(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         User user = userService.findByUsername(signInForm.getUsername());
         user.setUserRefreshToken(refreshToken);
         userService.save(user);
 
-        return new JwtResponse(accessToken, refreshToken, "Bearer", userDetails.getUsername(),
-                userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors
-                        .toList()));
+        return new JwtResponse(accessToken,
+                               refreshToken,
+                               "Bearer",
+                               userDetails.getUsername(),
+                               userDetails.getAuthorities()
+                                          .stream()
+                                          .map(GrantedAuthority::getAuthority)
+                                          .collect(Collectors.toList()));
     }
 
     @Override
     public Message confirmPassword(String token) {
-        if (!jwtProvider.validateToken(token) && !jwtProvider.isRegistrationToken(token))
+        if (!jwtProvider.validateToken(token) && !jwtProvider.isRegistrationToken(token)) {
             throw new RequestException("Invalid token", HttpStatus.BAD_REQUEST);
+        }
 
         User user = userService.findByUsername(jwtProvider.retrieveSubject(token));
 
@@ -115,7 +118,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public Message logOut() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext()
+                                                             .getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         User user = userService.findByUsername(userDetails.getUsername());
 
@@ -127,10 +131,5 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userService.save(user);
 
         return new Message(HttpStatus.OK, "You are logged out");
-    }
-
-    private String getContextPath(HttpServletRequest request) {
-        // This code is work, but if you use header Origin it will break
-        return request.getRequestURL().toString().replace(request.getRequestURI(), "");
     }
 }
