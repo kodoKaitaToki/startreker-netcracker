@@ -16,16 +16,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -51,7 +48,7 @@ public class ServiceServiceTest {
     private ServiceCRUDDTO serviceCRUDDTO = new ServiceCRUDDTO();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         serviceDescr.setServiceId(2L);
         serviceDescr.setServiceName("quis turpis eget");
         serviceDescr.setServiceDescription(
@@ -62,17 +59,19 @@ public class ServiceServiceTest {
         ServiceCRUDDTO testService = ServiceCRUDDTO.form(serviceDescr, null);
         ret = new ArrayList<>();
         ret.add(testService);
+
+        serviceCRUDDTO = ServiceCRUDDTO.form(serviceDescr, "");
     }
 
     @Before
-    public void setCreateForm(){
+    public void setCreateForm() {
         serviceCreateForm.setServiceName("namenamename");
         serviceCreateForm.setServiceDescription("description");
         serviceCreateForm.setServiceStatus("UNDER_CLARIFICATION");
     }
 
     @Before
-    public void setServiceCRUDDTO(){
+    public void setServiceCRUDDTO() {
         serviceCRUDDTO.setId(2L);
         serviceCRUDDTO.setServiceName("quis turpis eget");
         serviceCRUDDTO.setServiceDescription(
@@ -84,18 +83,39 @@ public class ServiceServiceTest {
     }
 
     @Test
-    public void getServicesForApprover() throws Exception {
+    public void getServicesForApprover() {
         when(serviceDAO.getServicesForApprover(0, 10, 2)).thenReturn(ret);
 
         Assert.assertEquals(serviceService.getServicesForApprover(0, 10, ServiceStatus.OPEN.toString(), 3), ret);
     }
 
     @Test
-    public void addServiceException(){
+    public void addServiceException() {
         expectedEx.expect(RequestException.class);
         expectedEx.expectMessage("Status of new service must be draft or open");
 
         serviceService.addService(serviceCreateForm);
+    }
+
+    @Test
+    public void updateServiceExceptionTest(){
+        expectedEx.expect(RequestException.class);
+        expectedEx.expectMessage("Service " + serviceCRUDDTO.getId() + " not found ");
+
+        when(serviceDAO.find(serviceCRUDDTO.getId())).thenReturn(Optional.empty());
+
+        serviceService.updateService(serviceCRUDDTO);
+    }
+
+    @Test
+    public void FindByStatusTest(){
+        String expectedStatus = ServiceStatus.OPEN.toString();
+
+        when(serviceDAO.findByStatus(any(), eq(2))).thenReturn(ret);
+
+        String actualStatus = serviceService.findByStatus(ServiceStatus.OPEN.toString()).get(0).getServiceStatus();
+
+        Assert.assertEquals(expectedStatus, actualStatus);
     }
 
     @Test

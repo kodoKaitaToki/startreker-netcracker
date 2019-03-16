@@ -14,20 +14,18 @@ public class TripWithArrivalAndDepartureDataAndTicketClassesDTO extends TripWith
     @JsonProperty("ticket_classes")
     private List<DiscountTicketClassDTO> ticketClassDTOs;
 
-    private TripWithArrivalAndDepartureDataAndTicketClassesDTO(
-            TripWithArrivalAndDepartureData tripWithArrivalAndDepartureData,
-            List<DiscountTicketClassDTO> ticketClassDTOs,
-            String datePattern) {
+    private TripWithArrivalAndDepartureDataAndTicketClassesDTO(TripWithArrivalAndDepartureData tripWithArrivalAndDepartureData,
+                                                               List<DiscountTicketClassDTO> ticketClassDTOs,
+                                                               String datePattern) {
         super(tripWithArrivalAndDepartureData, datePattern);
         this.ticketClassDTOs = ticketClassDTOs;
     }
 
-    public static TripWithArrivalAndDepartureDataDTO form(
-            TripWithArrivalAndDepartureData tripWithArrivalAndDepartureData,
-            List<DiscountTicketClassDTO> ticketClassDTOs,
-            String datePattern) {
+    public static TripWithArrivalAndDepartureDataDTO form(TripWithArrivalAndDepartureData tripWithArrivalAndDepartureData,
+                                                          List<DiscountTicketClassDTO> ticketClassDTOs,
+                                                          String datePattern) {
         return new TripWithArrivalAndDepartureDataAndTicketClassesDTO(tripWithArrivalAndDepartureData,
-                ticketClassDTOs,
-                datePattern);
+                                                                      ticketClassDTOs,
+                                                                      datePattern);
     }
 }

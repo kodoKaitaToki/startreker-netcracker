@@ -3,13 +3,11 @@ package edu.netcracker.backend.model;
 import edu.netcracker.backend.dao.annotations.Attribute;
 import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.dao.annotations.Table;
-import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.model.state.trip.TripState;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +28,21 @@ public class Trip {
     @Attribute("departure_date")
     private LocalDateTime departureDate;
 
+    @Attribute("departure_id")
+    private Long departureId;
+
     @Attribute("arrival_date")
     private LocalDateTime arrivalDate;
 
+    @Attribute("arrival_id")
+    private Long arrivalId;
+
     @Attribute("trip_photo")
     private String tripPhoto;
+
+    private Spaceport departurePort;
+
+    private Spaceport arrivalPort;
 
     private TripState tripState;
 
@@ -42,22 +50,12 @@ public class Trip {
 
     private User approver;
 
+    private Spaceport departureSpaceport;
+
+    private Spaceport arrivalSpaceport;
+
+
+    private List<TripReply> replies;
+
     private List<TicketClass> ticketClasses = new ArrayList<>();
-
-    public boolean changeStatus(User requestUser, TripState newTripState, TripDTO tripDTO) {
-
-        if (requestUser == null || newTripState == null || !newTripState.isStateChangeAllowed(this,
-                                                                                              requestUser,
-                                                                                              this.tripState)) {
-
-            return false;
-        }
-
-        if (newTripState.apply(this, requestUser, this.tripState, tripDTO)) {
-            this.tripState = newTripState;
-            return true;
-        }
-
-        return false;
-    }
 }

@@ -2,21 +2,14 @@ package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.DiscountDAO;
 import edu.netcracker.backend.dao.SuggestionDAO;
-import edu.netcracker.backend.dao.annotations.PrimaryKey;
-import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.Suggestion;
-import edu.netcracker.backend.model.TicketClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Repository
@@ -51,23 +44,23 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
             "SET discount_id = null " +
             "WHERE suggestion_id = ?";
 
-    private static final String GET_ALL_SUGGESTIONS_BELONG_TO_TICKET_CLASSES = "SELECT " +
-            "  suggestion_id, " +
-            "  class_id, " +
-            "  discount_id " +
-            "FROM suggestion " +
-            "WHERE class_id IN (:ticketClassIds) "+
-            "ORDER BY suggestion_id DESC";
+    private static final String GET_ALL_SUGGESTIONS_BELONG_TO_TICKET_CLASSES = "SELECT "
+                                                                               + "  suggestion_id, "
+                                                                               + "  class_id, "
+                                                                               + "  discount_id "
+                                                                               + "FROM suggestion "
+                                                                               + "WHERE class_id IN (:ticketClassIds) "
+                                                                               + "ORDER BY suggestion_id DESC";
 
-    private static final String GET_SUGGESTION_BELONG_TO_CARRIER = "SELECT " +
-            "  suggestion.suggestion_id, " +
-            "  suggestion.class_id, " +
-            "  suggestion.discount_id " +
-            "FROM user_a " +
-            "INNER JOIN trip ON user_a.user_id = trip.carrier_id " +
-            "INNER JOIN ticket_class ON trip.trip_id = ticket_class.trip_id " +
-            "INNER JOIN suggestion ON ticket_class.class_id = suggestion.class_id " +
-            "WHERE user_a.user_id = ? AND suggestion.suggestion_id = ?";
+    private static final String GET_SUGGESTION_BELONG_TO_CARRIER = "SELECT "
+                                                                   + "  suggestion.suggestion_id, "
+                                                                   + "  suggestion.class_id, "
+                                                                   + "  suggestion.discount_id "
+                                                                   + "FROM user_a "
+                                                                   + "INNER JOIN trip ON user_a.user_id = trip.carrier_id "
+                                                                   + "INNER JOIN ticket_class ON trip.trip_id = ticket_class.trip_id "
+                                                                   + "INNER JOIN suggestion ON ticket_class.class_id = suggestion.class_id "
+                                                                   + "WHERE user_a.user_id = ? AND suggestion.suggestion_id = ?";
 
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -80,10 +73,9 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
     @Override
     public Optional<Suggestion> findSuggestionBelongToCarrier(Number suggestionId, Number carrierId) {
         try {
-            Suggestion suggestion = getJdbcTemplate().queryForObject(
-                    GET_SUGGESTION_BELONG_TO_CARRIER,
-                    new Object[]{carrierId, suggestionId},
-                    getGenericMapper());
+            Suggestion suggestion = getJdbcTemplate().queryForObject(GET_SUGGESTION_BELONG_TO_CARRIER,
+                                                                     new Object[]{carrierId, suggestionId},
+                                                                     getGenericMapper());
             return Optional.of(suggestion);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -152,9 +144,9 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
                 GET_ALL_SUGGESTIONS_BELONG_TO_TICKET_CLASSES,
                 new MapSqlParameterSource("ticketClassIds", ticketClassIds));
         for (Map<String, Object> row : rows) {
-            List<Suggestion> ticketClasses = relatedSuggestion
-                    .computeIfAbsent(((Number) row.get("class_id")).longValue(),
-                            aLong -> new ArrayList<>());
+            List<Suggestion> ticketClasses
+                    = relatedSuggestion.computeIfAbsent(((Number) row.get("class_id")).longValue(),
+                                                        aLong -> new ArrayList<>());
 
             ticketClasses.add(createSuggestion(row));
         }
@@ -164,9 +156,9 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
 
     private Suggestion createSuggestion(Map<String, Object> row) {
         return Suggestion.builder()
-                .suggestionId(((Number) row.get("suggestion_id")).longValue())
-                .classId(((Number) row.get("class_id")).longValue())
-                .discountId(DiscountDAO.getDiscountId(row.get("discount_id")))
-                .build();
+                         .suggestionId(((Number) row.get("suggestion_id")).longValue())
+                         .classId(((Number) row.get("class_id")).longValue())
+                         .discountId(DiscountDAO.getDiscountId(row.get("discount_id")))
+                         .build();
     }
 }

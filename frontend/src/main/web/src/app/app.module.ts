@@ -1,4 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
 import {HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from '@angular/forms';
@@ -20,9 +21,7 @@ import {LoginComponent} from './pages/login/login.component';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {RecoveryComponent} from './pages/recovery/recovery.component';
 
-
 import { Configuration } from './app.constants';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [

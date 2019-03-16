@@ -7,6 +7,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { OpenComponent } from './service/open/open.component';
 import { AssignedComponent } from './service/assigned/assigned.component';
+import { AssignedTripComponent } from './trip/assigned/assigned.component';
+import { OpenTripComponent } from './trip/open/open.component';
 
 const routes: Routes = [
     {
@@ -24,7 +26,22 @@ const routes: Routes = [
           },
           {
               path: 'trip',
-              component: TripComponent
+              component: TripComponent,
+              children: [
+                {
+                    path: '',
+                    redirectTo: 'open',
+                    pathMatch: 'full',
+                },
+                {
+                    path: 'open',
+                    component: OpenTripComponent
+                },
+                {
+                    path: 'assigned',
+                    component: AssignedTripComponent
+                },                 
+              ]
           },
           {
               path: 'service',
@@ -36,7 +53,7 @@ const routes: Routes = [
                     pathMatch: 'full',
                 },
                 {
-                    path: 'open',
+                    path: 'opened',
                     component: OpenComponent
                 },
                 {

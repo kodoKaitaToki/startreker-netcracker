@@ -17,7 +17,6 @@ export class CarrierComponentComponent implements OnInit {
   usernameMaxLength = 24;
 
   carriers;
-  allCarriers;
   currentCarrierForUpdate: Carrier;
   addBut: boolean = false;
   curPage: number = 1;
@@ -53,8 +52,6 @@ export class CarrierComponentComponent implements OnInit {
   ngOnInit(): void {
 
     this.getCarriers();
-    this.getCarriersPagin();
-
     this.createNewForm();
   }
 
@@ -77,10 +74,8 @@ export class CarrierComponentComponent implements OnInit {
                             localStorage.removeItem('at');
                             localStorage.setItem('at', resp.headers.get('New-Access-Token'));
                           }*/
-                          console.log('carrier is updated');
                           this.butGroup.updateBut = false;
                           this.butGroup.editBut = false;
-                          this.getCarriersPagin();
                          },
                         error => {
                           console.log(error);
@@ -103,11 +98,9 @@ export class CarrierComponentComponent implements OnInit {
                             localStorage.removeItem('at');
                             localStorage.setItem('at', resp.headers.get('New-Access-Token'));
                           }*/
-                          console.log('carrier is deleted');
                           this.butGroup.deleteBut = false;
                           this.butGroup.editBut = false;
                           this.getCarriers();
-                          this.getCarriersPagin();
                          },
                         error => {
                           console.log(error);
@@ -120,7 +113,6 @@ export class CarrierComponentComponent implements OnInit {
 
   processChangePage(event){
     this.curPage = event;
-    this.getCarriersPagin();
   }
 
   getCarriers(){
@@ -131,27 +123,12 @@ export class CarrierComponentComponent implements OnInit {
                             localStorage.removeItem('at');
                             localStorage.setItem('at', resp.headers.get('New-Access-Token'));
                           }*/
-                          this.allCarriers = clone(resp);
+                          this.carriers = clone(resp);
+                          this.dataAvailable = true;
                         },
                         error => console.log(error)
                       );
   }
-
-  getCarriersPagin(){
-    let from = (this.curPage*this.carPerPage)-(this.carPerPage-1);
-    this.carCrudService.getCarriersPagin(from, this.carPerPage)
-                      .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
-                          this.carriers = clone(resp);
-                          this.dataAvailable = true;
-                         },
-                        error => console.log(error)
-                      );
-   }
 
    getAddingUser(){
      let status: boolean;
@@ -175,7 +152,6 @@ export class CarrierComponentComponent implements OnInit {
                             localStorage.setItem('at', resp.headers.get('New-Access-Token'));
                           }*/
                           this.getCarriers();
-                          this.getCarriersPagin();
                           this.clearform();
                           console.log('carrier is added');
                          },
@@ -196,7 +172,7 @@ export class CarrierComponentComponent implements OnInit {
       {
         email: new FormControl('', [Validators.required, Validators.email]),
         username: new FormControl('', [Validators.required, Validators.minLength(this.usernameMinLength), Validators.maxLength(this.usernameMaxLength)]),
-        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        telephone_number: new FormControl('', Validators.required),
         password: new FormControl('', [Validators.required, Validators.minLength(this.passwordMinLength)]),
         is_activated: new FormControl(true, Validators.required)
       }
