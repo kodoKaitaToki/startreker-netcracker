@@ -6,6 +6,7 @@ import {CarrierCrudService} from '../../../carrier/carrier-crud.service';
 import { clone } from 'ramda'
 import { DashCostService } from '../dashCostService';
 import {checkToken} from "../../../../../modules/api/index";
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-car-cost-dash',
@@ -146,9 +147,9 @@ export class CarCostDashComponent implements OnInit {
 	getCarriers(){
 		this.carCrudService.getAllCarriers()
                       .subscribe(
-                        (resp: Response) => {
+                        (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
-						              this.carriers = clone(resp);
+						    this.carriers = clone(resp.body);
                         }
                       );
 	}
@@ -158,9 +159,9 @@ export class CarCostDashComponent implements OnInit {
 
 			this.dashCostService.getCarCosts(this.curId, this.curDateFrom, this.curDateTo)
 													.subscribe(
-														(resp: Response) => {
-                              checkToken(resp.headers);
-															let response = clone(resp);
+														(resp: HttpResponse<any>) => {
+                              								checkToken(resp.headers);
+															let response = clone(resp.body);
 															let tickets = this.dashCostService.parseResponse(response);
 															this.getStatistics(tickets);
 														}
@@ -172,9 +173,9 @@ export class CarCostDashComponent implements OnInit {
 		this.curName = event.value;
 		this.carCrudService.getCarrierByUsername(event.value)
                       .subscribe(
-                        (resp: Response) => {
+                        (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
-						              this.curCarrier = clone(resp);
+						              this.curCarrier = clone(resp.body);
 						              this.getId();
                         }
                       );

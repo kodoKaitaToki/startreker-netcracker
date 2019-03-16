@@ -5,6 +5,7 @@ import { DatePipe } from '@angular/common';
 import { DashCostService } from '../dashCostService';
 import { clone } from 'ramda'
 import {checkToken} from "../../../../../modules/api/index";
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-common-chart',
@@ -136,9 +137,9 @@ export class CommonChartComponent implements OnInit{
 	private getCosts(from, to){
     	this.dashCostService.getCosts(from, to)
                         .subscribe(
-                          (resp: Response) => {
+                          (resp: HttpResponse<any>) => {
                             checkToken(resp.headers);
-							let response = clone(resp);
+							let response = clone(resp.body);
 							let tickets = this.dashCostService.parseResponse(response);
 							this.getStatistics(tickets);
                           }

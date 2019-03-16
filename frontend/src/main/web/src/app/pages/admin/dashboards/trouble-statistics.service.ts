@@ -25,7 +25,7 @@ export class TroubleStatisticsService {
 
       return this.http.get<any>(this.actionUrl, HttpOptionsAuthorized)
         .pipe(map(res => {
-          return res.amount;
+          return res.body.amount;
         }))
   }
 
@@ -35,7 +35,7 @@ export class TroubleStatisticsService {
 
       return this.http.get<any>(this.actionUrl + "/" + id, HttpOptionsAuthorized)
         .pipe(map(res => {
-          return res.amount;
+          return res.body.amount;
         }))
   }
 }

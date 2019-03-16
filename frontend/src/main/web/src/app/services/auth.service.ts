@@ -38,7 +38,6 @@ export class ApiUserService {
 
     getLoggedUser(userData: LoginResponse){
       this.userData = clone(userData);
-      console.log("The data of logged user is " + this.userData);
       localStorage.setItem('at', userData.access_token);
       localStorage.setItem('rt', userData.refresh_token);
     }
@@ -62,7 +61,7 @@ export class ApiUserService {
       })
     }
 
-    logoutUser() {
+    public logoutUser() {
       this.http.post<any>(Api.auth.logoutUser(), {}, HttpOptionsAuthorized);
       localStorage.removeItem('at');
       localStorage.removeItem('rt');

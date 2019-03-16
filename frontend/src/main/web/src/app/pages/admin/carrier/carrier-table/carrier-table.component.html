@@ -1,9 +1,8 @@
 <div class="list-group">
 
-  <li class="list-group-item" *ngFor="let carrier of carriers 
+  <li class="list-group-item" *ngFor="let carrier of allCarriers 
                               | filter: filterCriteria: filterContent
                               | paginate: {id: 'listing_pagination', itemsPerPage: 10, currentPage: page ,totalItems: totalRec}">
-      <!--<li class="list-group-item" *ngFor="let carrier of carriers">-->
 
     <div class="row">
 
@@ -201,10 +200,6 @@
 
 <div class="clearfix"></div>
 <div style="text-align: center">
-  
-  <ul class="pagination" style="justify-content: center" [innerHTML]="pageshtml">
-    <li *ngFor="let carrier of allCarriers | paginate: { itemsPerPage: 10, currentPage: page }"> ... </li>
-  </ul>
   <pagination-controls id='listing_pagination'
                         (pageChange)="onChange($event)"
                         previousLabel=""

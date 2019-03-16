@@ -15,9 +15,4 @@ export class ConfirmMessageComponent implements OnInit {
   ngOnInit() {
     this.apiUserService.sendConfirmToken();
   }
-
-  getUrl()
-  {
-    return "url('assets/images/bg.jpg')";
-  }
 }

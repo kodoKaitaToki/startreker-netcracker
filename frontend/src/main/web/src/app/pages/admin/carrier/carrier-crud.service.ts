@@ -15,50 +15,29 @@ export class CarrierCrudService {
     }
 
     public getAllCarriers(){
-        let headers = new HttpHeaders({
-            //'Content-Type':  'application/json',
-    //'Access-Control-Allow-Origin': '*',
-          'Authorization': `Bearer ${localStorage.getItem('at')}`,
-          'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`,
-          //'Access-Control-Allow-Methods': '*'
-          //'Access-Control-Allow-Methods': 'POST, GET, PUT, OPTIONS, DELETE',
-          //'Access-Control-Allow-Headers': '*',
-          //  'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, '
-          //                                  + 'Accept, X-Auth-Token, X-Csrf-Token, Authorization, Authorization-Refresh',
-          // 'Access-Control-Allow-Credentials': 'false',
-          // 'Access-Control-Max-Age': '3600'
-
-            'Content-Type':  'application/json',
-            'Access-Control-Allow-Origin': '*'
-        });
-    // let headers = new HttpHeaders();
-    // headers = headers.append('Content-Type', 'application/json');
-      //TODO: remove debug backdoor/
-    // headers = headers.append('Authorization', 'debug_login 7');
-    console.log(headers);
-        return this.http.get<any>(Api.carrier.carriers(), {headers: headers});
+        return this.http.get<any>(Api.carrier.carriers(), HttpOptionsAuthorized);
     }
 
-    public getCarriersPagin<Carrier>(from: number, to: number): Observable<Carrier>{
+    public getCarriersPagin(from: number, to: number){
         let url = Api.carrier.getCarriersPagin() + '?from=' + from + '&number=' + to;
         return this.http.get<any>(url, HttpOptionsAuthorized);
     }
 
-    public getCarrierByUsername<Carrier>(name: String): Observable<Carrier>{
+    public getCarrierByUsername(name: String){
         let url = Api.carrier.getCarrierByUsername() + name;
         return this.http.get<Carrier>(url, HttpOptionsAuthorized);
     }
 
-    public addCarrier<T>(carrier: Carrier): Observable<T>{
-        return this.http.post<T>(Api.carrier.carriers(), carrier, HttpOptionsAuthorized);
+    public addCarrier(carrier: Carrier){
+        return this.http.post(Api.carrier.carriers(), carrier, HttpOptionsAuthorized);
     }
 
-    public deleteCarrier<T>(id: number): Observable<T>{
+    public deleteCarrier(id: number){
         let url = Api.carrier.carriers() + '/' + id;
-        return this.http.delete<T>(url, HttpOptionsAuthorized);
+        return this.http.delete(url, HttpOptionsAuthorized);
     }
 
-    public updateCarrier<T>(carrier: Carrier): Observable<T>{
-        return this.http.put<T>(Api.carrier.carriers(), carrier, HttpOptionsAuthorized);
+    public updateCarrier(carrier: Carrier){
+        return this.http.put(Api.carrier.carriers(), carrier, HttpOptionsAuthorized);
     }
 }

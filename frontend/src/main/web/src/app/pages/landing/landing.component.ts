@@ -10,8 +10,6 @@ export class LandingComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(localStorage.getItem('at'));
-    console.log(localStorage.getItem('rt'));
   }
   
   getUrl()

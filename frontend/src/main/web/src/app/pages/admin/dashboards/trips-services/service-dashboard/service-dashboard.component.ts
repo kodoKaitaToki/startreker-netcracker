@@ -4,6 +4,7 @@ import { ServiceList, Service } from '../../../../../services/interfaces/service
 import { clone } from 'ramda';
 import * as CanvasJS from '../../../../../../assets/js/canvasjs.min';
 import {checkToken} from "../../../../../modules/api/index";
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-service-dashboard',
@@ -45,9 +46,9 @@ export class ServiceDashboardComponent implements OnInit {
   ngOnInit() {
     this.serviceService.setServiceDistribution()
     .subscribe(
-      (resp: Response) => {
+      (resp: HttpResponse<any>) => {
           checkToken(resp.headers);
-          this.serviceData.services = clone(resp);
+          this.serviceData.services = clone(resp.body);
           this.buildChart(this.serviceData);
       },
       error => console.log(error)

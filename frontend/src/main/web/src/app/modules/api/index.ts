@@ -9,19 +9,20 @@ baseUrl = `http://127.0.0.1${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
-    'Content-Type':  'application/json'//,
-     //'Access-Control-Allow-Origin': '*'
+    'Content-Type':  'application/json'
   })
 }
 
 export const HttpOptionsAuthorized = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
-    'Access-Control-Allow-Origin': '*',
     'Authorization': `Bearer ${localStorage.getItem('at')}`,
     'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
-  })
+  }),
+  observe: 'response' as 'response'
 }
+
+export
 
 const auth = {
   loginUser() {
@@ -35,6 +36,9 @@ const auth = {
   },
   recoverPassword() {
     return `${baseUrl}api/auth/password-recovery`;
+  },
+  confirmPassword(){
+    return `${baseUrl}api/auth/confirm-password`;
   }
 }
 
@@ -104,10 +108,8 @@ export const options = {
   root: baseUrl
 }
 
-export function checkToken(heads: Headers){
-  console.log("checking");
+export function checkToken(heads: HttpHeaders){
   if (heads.has('New-Access-Token')) {
-    console.log("Heads has New Access Token");
     localStorage.removeItem('at');
     localStorage.setItem('at', heads.get('New-Access-Token'));
   }

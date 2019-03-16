@@ -4,6 +4,7 @@ import {Carrier} from '../carrier';
 import {CarrierCrudService} from '../carrier-crud.service';
 import { clone } from 'ramda';
 import {checkToken} from "../../../../modules/api/index";
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-carrier-component',
@@ -73,11 +74,11 @@ export class CarrierComponentComponent implements OnInit {
     this.currentCarrierForUpdate = event;
     this.carCrudService.updateCarrier(event)
                       .subscribe(
-                        (resp: Response) => {
+                        (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
                           this.butGroup.updateBut = false;
                           this.butGroup.editBut = false;
-                          this.getCarriersPagin();
+                          //this.getCarriersPagin();
                          },
                         error => {
                           if(error.error.message = 'Username already exist'){
@@ -94,12 +95,12 @@ export class CarrierComponentComponent implements OnInit {
     this.butGroup.editBut = true;
     this.carCrudService.deleteCarrier(event)
                       .subscribe(
-                        (resp: Response) => {
+                        (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
                           this.butGroup.deleteBut = false;
                           this.butGroup.editBut = false;
                           this.getCarriers();
-                          this.getCarriersPagin();
+                          //this.getCarriersPagin();
                          },
                         error => {
                           this.butGroup.deleteBut = false;
@@ -111,15 +112,16 @@ export class CarrierComponentComponent implements OnInit {
 
   processChangePage(event){
     this.curPage = event;
-    this.getCarriersPagin();
+    //this.getCarriersPagin();
   }
 
   getCarriers(){
     this.carCrudService.getAllCarriers()
                       .subscribe(
-                        (resp: Response) => {
+                        (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
-                          this.allCarriers = clone(resp);
+                          this.allCarriers = clone(resp.body);
+                          this.dataAvailable = true;
                         }
                       );
   }
@@ -128,9 +130,9 @@ export class CarrierComponentComponent implements OnInit {
     let from = (this.curPage*this.carPerPage)-(this.carPerPage-1);
     this.carCrudService.getCarriersPagin(from, this.carPerPage)
                       .subscribe(
-                        (resp: Response) => {
+                        (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
-                          this.carriers = clone(resp);
+                          this.carriers = clone(resp.body);
                           this.dataAvailable = true;
                          }
                       );
@@ -152,10 +154,10 @@ export class CarrierComponentComponent implements OnInit {
     let newCar = this.form.value;
     this.carCrudService.addCarrier(newCar)
                       .subscribe(
-                        (resp: Response) => {
+                        (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
                           this.getCarriers();
-                          this.getCarriersPagin();
+                          //this.getCarriersPagin();
                           this.clearform();
                          },
                         error => {
