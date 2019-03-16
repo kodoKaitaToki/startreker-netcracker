@@ -28,46 +28,47 @@
     </div>
 
     <div class="col-lg-9" style="margin-top: 2%">
-      <ng-container *ngIf="data.length > 0">
+      <ng-container *ngIf="ticketData.length > 0">
         <ng-container
-          *ngFor="let element of data | paginate: {id: 'tickets-pagination', itemsPerPage: 2, currentPage: page}">
-
-          <!-- if element is a ticket !-->
-          <ng-container *ngIf="element.ticket">
+          *ngFor="let ticket of ticketData | paginate: {id: 'tickets-pagination', itemsPerPage: 2, currentPage: page}">
+          
             <div class="card historycard" style="width: 100%; padding: 12px; margin-bottom: 2%">
               <div class="row">
                 <div class="col-6" style="font-size: 21px; font-weight: bold">
-                  <span>{{element.ticket.departure_planet_name}} - {{element.ticket.arrival_planet_name}}</span>
+                  <span>{{ticket.departure_planet_name}} - {{ticket.arrival_planet_name}}</span>
+                  <div *ngIf="ticket.bundle_id">
+                    <span style="font-size: 16px; font-weight: normal">Part of Bundle №{{ticket.bundle_id}}</span>
+                  </div>
                 </div>
                 <div class="col-6" style="text-align: right; font-size: 20px">
-                  <span>{{element.ticket.departure_date}}</span>
+                  <span>{{ticket.departure_date}}</span>
                   <br>
-                  <span>{{element.ticket.arrival_date}}</span>
+                  <span>{{ticket.arrival_date}}</span>
                 </div>
               </div>
               <hr>
 
               <div class="row">
                 <div class="col-6" style="font-size: 16px">
-                  <span>Class: <span class="link-blue-span">{{element.ticket.class}}</span></span>
+                  <span>Class: <span class="link-blue-span">{{ticket.class}}</span></span>
                   <br>
-                  <span>Price: <span class="link-blue-span">{{element.ticket.price}}</span></span>
+                  <span>{{ticket.bundle_id ? 'Bundle Price' : 'Price'}}: <span class="link-blue-span">{{ticket.price}} $</span></span>
                   <br>
-                  <span>Departure spaceport: <span class="link-blue-span">{{element.ticket.departure_spaceport_name}}</span></span>
+                  <span>Departure spaceport: <span class="link-blue-span">{{ticket.departure_spaceport_name}}</span></span>
                   <br>
-                  <span>Arrival spaceport: <span class="link-blue-span">{{element.ticket.arrival_spaceport_name}}</span></span>
+                  <span>Arrival spaceport: <span class="link-blue-span">{{ticket.arrival_spaceport_name}}</span></span>
                   <br><br>
 
                   <button class="btn btn-primary" type="button" data-toggle="collapse"
-                          [attr.data-target]="'#btncollapse' + element.ticket.id"
+                          [attr.data-target]="'#btncollapse' + ticket.id"
                           aria-expanded="false" aria-controls="Collapse"
                           style="width: 90%; height: 24px; font-size: 15px; text-align: center; line-height: 11px; opacity: 0.6">
                     Show services
                   </button>
-                  <div class="collapse" [attr.id]="'btncollapse' + element.ticket.id" style="width: 90%;">
+                  <div class="collapse" [attr.id]="'btncollapse' + ticket.id" style="width: 90%;">
                     <div class="card" style="background-color: rgba(240, 248, 255, 0.25);">
                       <ul type="disc" style="background-color: transparent; margin-top: 1rem;" >
-                        <li *ngFor="let service of element.ticket.services" style="background-color: transparent;">
+                        <li *ngFor="let service of ticket.services" style="background-color: transparent;">
                           {{service.service_name}}
                         </li>
                       </ul>
@@ -75,117 +76,25 @@
                   </div>
                 </div>
                 <div class="col-6" style="text-align: right; font-size: 18px">
-                  <span>SEAT: &nbsp;<strong>{{element.ticket.seat}}</strong></span>
+                  <span>SEAT: &nbsp;<strong>{{ticket.seat}}</strong></span>
                 </div>
               </div>
               <hr>
 
               <div class="row">
                 <div class="col-6" style="font-size: 18px">
-                  <span>Carrier: &nbsp;<span class="link-blue-span">{{element.ticket.carrier_name}}</span></span>
+                  <span>Carrier: &nbsp;<span class="link-blue-span">{{ticket.carrier_name}}</span></span>
                 </div>
                 <div class="col-6" style="text-align: right; font-size: 18px">
-                  <span>Bought at: &nbsp;{{element.ticket.purchase_date}}</span>
+                  <span>Bought at: &nbsp;{{ticket.purchase_date}}</span>
                 </div>
               </div>
             </div>
-          </ng-container>
-
-          <!-- if element is a bundle !-->
-          <ng-container *ngIf="element.bundle">
-
-            <div class="card historycard" style="width: 100%; padding: 12px; margin-bottom: 2%">
-              <div class="row">
-                <div class="col-12" style="font-size: 21px; font-weight: bold">
-                  <span>BUNDLE №{{element.bundle.id}}</span>
-                </div>
-              </div>
-              <hr>
-
-              <div class="row">
-                <div class="col-12">
-                  <button class="btn btn-primary" type="button" data-toggle="collapse"
-                          [attr.data-target]="'#btncollapsebundle' + element.bundle.id"
-                          aria-expanded="false" aria-controls="Collapse"
-                          style="width: 100%; height: 24px; font-size: 15px; text-align: center; line-height: 11px; opacity: 0.6">
-                    Show trips
-                  </button>
-                  <div class="collapse" [attr.id]="'btncollapsebundle' + element.bundle.id" style="width: 100%;">
-                    <div class="card" style="background-color: rgba(240, 248, 255, 0.25);">
-                      <div *ngFor="let ticket of element.bundle.tickets">
-
-                        <div class="card inner-history-card" style="width: 100%; padding: 12px; margin-bottom: 2%">
-                          <div class="row">
-                            <div class="col-6" style="font-size: 21px; font-weight: bold">
-                              <span>{{ticket.departure_planet_name}} - {{ticket.arrival_planet_name}}</span>
-                            </div>
-                            <div class="col-6" style="text-align: right; font-size: 20px">
-                              <span>{{ticket.departure_date}}</span>
-                              <br>
-                              <span>{{ticket.arrival_date}}</span>
-                            </div>
-                          </div>
-                          <hr>
-
-                          <div class="row">
-                            <div class="col-6" style="font-size: 16px">
-                              <span>Class: <span class="link-blue-span">{{ticket.class}}</span></span>
-                              <br>
-                              <span>Departure spaceport: <span class="link-blue-span">{{ticket.departure_spaceport_name}}</span></span>
-                              <br>
-                              <span>Arrival spaceport: <span class="link-blue-span">{{ticket.arrival_spaceport_name}}</span></span>
-                              <br><br>
-
-                              <button class="btn btn-primary" type="button" data-toggle="collapse"
-                                      [attr.data-target]="'#btncollapse' + ticket.id"
-                                      aria-expanded="false" aria-controls="Collapse"
-                                      style="width: 90%; height: 24px; font-size: 15px; text-align: center; line-height: 11px; opacity: 0.6">
-                                Show services
-                              </button>
-                              <div class="collapse" [attr.id]="'btncollapse' + ticket.id" style="width: 90%;">
-                                <div class="card" style="background-color: rgba(240, 248, 255, 0.25);">
-                                  <ul type="disc" style="background-color: transparent; margin-top: 1rem;" >
-                                    <li *ngFor="let service of ticket.services" style="background-color: transparent;">
-                                      {{service.service_name}}
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="col-6" style="text-align: right; font-size: 18px">
-                              <span>SEAT: &nbsp;<strong>{{ticket.seat}}</strong></span>
-                            </div>
-                          </div>
-                          <hr>
-
-                          <div class="row">
-                            <div class="col-12" style="font-size: 18px">
-                              <span>Carrier: &nbsp;<span class="link-blue-span">{{ticket.carrier_name}}</span></span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <hr>
-
-              <div class="row">
-                <div class="col-6" style="font-size: 18px">
-                  <span>Price: &nbsp;{{element.bundle.endprice}} $</span>
-                </div>
-                <div class="col-6" style="text-align: right; font-size: 18px">
-                  <span>Bought at: &nbsp;{{element.bundle.purchase_date}}</span>
-                </div>
-              </div>
-            </div>
-          </ng-container>
 
         </ng-container>
       </ng-container>
 
-      <ng-container *ngIf="data.length == 0">
+      <ng-container *ngIf="ticketData.length == 0">
         <div class="card historycard" style="width: 100%; padding: 12px; margin-bottom: 2%">
           <div class="row">
             <div class="center">Nothing found</div>
