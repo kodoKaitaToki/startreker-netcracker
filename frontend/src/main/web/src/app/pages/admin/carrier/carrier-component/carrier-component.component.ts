@@ -176,7 +176,7 @@ export class CarrierComponentComponent implements OnInit {
       {
         email: new FormControl('', [Validators.required, Validators.email]),
         username: new FormControl('', [Validators.required, Validators.minLength(this.usernameMinLength), Validators.maxLength(this.usernameMaxLength)]),
-        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        telephone_number: new FormControl('', Validators.required),
         password: new FormControl('', [Validators.required, Validators.minLength(this.passwordMinLength)]),
         is_activated: new FormControl(true, Validators.required)
       }
