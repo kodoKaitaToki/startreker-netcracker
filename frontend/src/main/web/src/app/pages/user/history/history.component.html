@@ -15,7 +15,7 @@
         <div class="card-header">
           Search parameters
         </div>
-        <form [formGroup]="searchParams" (ngSubmit)="search(searchParams.value)">
+        <form [formGroup]="searchParams" (ngSubmit)="search(searchParams?.value)">
           <div class="form-group">
             <label class="date-padding" for="beforeDate">After:</label>
             <input class="date-width form-control datepicker center" formControlName="beforeDate" type="date" id="beforeDate">
@@ -28,7 +28,7 @@
     </div>
 
     <div class="col-lg-9" style="margin-top: 2%">
-      <ng-container *ngIf="ticketData.length > 0">
+      <ng-container *ngIf="ticketData?.length > 0">
         <ng-container
           *ngFor="let ticket of ticketData | paginate: {id: 'tickets-pagination', itemsPerPage: ticketsPerPage, currentPage: page, totalItems: 10000}">
           
@@ -94,7 +94,7 @@
         </ng-container>
       </ng-container>
 
-      <ng-container *ngIf="ticketData.length == 0">
+      <ng-container *ngIf="ticketData?.length == 0">
         <div class="card historycard empty-card">
           <div class="row">
             <div class="center">Nothing found</div>
@@ -104,7 +104,7 @@
 
       <div class="row">
         <div class="col-md-6 offset-md-6 col-sm-9 offset-sm-3 col-xs-11 offset-xs-1">
-          <div class="historycard text-center">
+          <div class="historycard text-center" *ngIf="ticketData != undefined">
             <pagination-controls class="pagination center hide-page-numbers" id="tickets-pagination"
                                  (pageChange)="onPageChange($event)" maxSize='1' >
             </pagination-controls>

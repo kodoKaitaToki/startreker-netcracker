@@ -17,27 +17,21 @@ export class HistoryService {
     this.actionUrl = Api.baseUrl + 'api/v1';
   }
 
-  public getUserTicketHistory(id: number, offset: number, limit: number, from: string, to: string) {
+  public getUserTicketHistory(offset: number, limit: number, from: string, to: string) {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
     //TODO: remove debug backdoor
-    headers = headers.append('Authorization', 'debug_login 21');
+    headers = headers.append('Authorization', 'debug_login 20');
 
     let params;
+    params = new HttpParams()
+      .set("limit", limit.toString())
+      .set("offset", offset.toString());
 
-    if (from && to) {
-      params = new HttpParams()
-        .set("limit", limit.toString())
-        .set("offset", offset.toString())
-        .set("start-date", from)
-        .set("end-date", from);
-    } else {
-      params = new HttpParams()
-        .set("limit", limit.toString())
-        .set("offset", offset.toString());
-    }
+    if(from) params = params.set("start-date", from);
+    if(to) params = params.set("end-date", to);
 
-    return this.http.get<any>(this.actionUrl + "/history/user/" + id + "/ticket", {headers: headers, params: params})
+    return this.http.get<any>(this.actionUrl + "/history/user/ticket", {headers: headers, params: params})
                .pipe(map(res => {
 
                  return res.map(item => {

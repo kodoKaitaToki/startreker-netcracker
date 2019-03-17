@@ -28,7 +28,7 @@ export class HistoryComponent implements OnInit {
 
   ngOnInit() {
 
-    this.historyService.getUserTicketHistory(20, 0, this.ticketsPerPage, undefined, undefined)
+    this.historyService.getUserTicketHistory(0, this.ticketsPerPage, undefined, undefined)
         .subscribe(data => {
           this.ticketData = data;
         });
@@ -37,7 +37,7 @@ export class HistoryComponent implements OnInit {
   search(data) {
     this.beforeDate = data.beforeDate;
     this.afterDate = data.afterDate;
-    this.historyService.getUserTicketHistory(20, 0, this.ticketsPerPage, data.beforeDate, data.afterDate)
+    this.historyService.getUserTicketHistory(0, this.ticketsPerPage, data.beforeDate, data.afterDate)
         .subscribe(data => {
           this.ticketData = data;
         });
@@ -48,7 +48,7 @@ export class HistoryComponent implements OnInit {
 
     let requestPage = page == 1 ? 0 : page - 1;
 
-    this.historyService.getUserTicketHistory(20,
+    this.historyService.getUserTicketHistory(
       requestPage * this.ticketsPerPage,
       this.ticketsPerPage,
       this.beforeDate,
