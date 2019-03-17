@@ -44,4 +44,5 @@ public class TicketClass {
     private Integer itemNumber;
 
     private List<Service> services = new ArrayList<>();
+    private Integer remainingSeats;
 }

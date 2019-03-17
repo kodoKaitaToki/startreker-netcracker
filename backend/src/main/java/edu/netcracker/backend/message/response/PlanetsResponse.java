@@ -15,20 +15,5 @@ public class PlanetsResponse {
     List<String> planets;
     @JsonProperty
     Map<String, List<String>> spaceports;
-//
-//    public List<String> getPlanets() {
-//        return planets;
-//    }
-//
-//    public void setPlanets(List<String> planets) {
-//        this.planets = planets;
-//    }
-//
-//    public Map<String, List<String>> getSpaceports() {
-//        return spaceports;
-//    }
-//
-//    public void setSpaceports(Map<String, List<String>> spaceports) {
-//        this.spaceports = spaceports;
-//    }
+
 }

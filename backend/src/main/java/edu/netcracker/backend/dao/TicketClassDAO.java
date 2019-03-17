@@ -28,4 +28,6 @@ public interface TicketClassDAO extends CrudDAO<TicketClass> {
     void update(TicketClass ticketClass);
 
     Map<Long, List<TicketClass>> getAllTicketClassesBelongToTrips(List<Number> tripIds);
+
+    Long getTicketClassId(String className, Long tripId);
 }

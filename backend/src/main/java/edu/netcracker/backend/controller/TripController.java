@@ -7,7 +7,7 @@ import edu.netcracker.backend.message.response.CarrierRevenueResponse;
 import edu.netcracker.backend.message.response.CarrierViewsResponse;
 import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.message.response.TripDistributionElement;
-import edu.netcracker.backend.message.response.trips.AllCarriersTripsDTO;
+import edu.netcracker.backend.message.response.trips.ReadTripsDTO;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.StatisticsService;
 import edu.netcracker.backend.service.TripService;
@@ -44,14 +44,29 @@ public class TripController {
 
     @GetMapping("api/v1/trips")
     //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<AllCarriersTripsDTO> getAllTrips() {
-        return tripService.getAllTripsForCarrier();
-    }
+    public List<ReadTripsDTO> getAllTrips() {return tripService.getAllTripsForCarrier();}
 
     @GetMapping("api/v1/carrier/trips")
     //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public List<AllCarriersTripsDTO> getCarrierTrips(@RequestParam("carrierId") Long carrierId) {
+    public List<ReadTripsDTO> getAllTripsForCarrier(@RequestParam("carrier_id") Long carrierId) {
         return tripService.getAllTripsForCarrier(carrierId);
+    }
+
+    @GetMapping("api/v1/user/trips")
+    public List<ReadTripsDTO> getTripsForUser(@RequestParam("departure_planet") String departurePlanet,
+                                              @RequestParam("departure_spaceport") String departureSpaceport,
+                                              @RequestParam("departure_date") String departureDate,
+                                              @RequestParam("arrival_planet") String arrivalPlanet,
+                                              @RequestParam("arrival_spaceport") String arrivalSpaceport,
+                                              @RequestParam("limit") Integer limit,
+                                              @RequestParam("offset") Integer offset) {
+        return tripService.getAllTripsForUser(departurePlanet,
+                                              departureSpaceport,
+                                              departureDate,
+                                              arrivalPlanet,
+                                              arrivalSpaceport,
+                                              limit,
+                                              offset);
     }
 
     @PostMapping("api/v1/trips")
