@@ -1,10 +1,7 @@
 package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.RoleDAO;
-import edu.netcracker.backend.dao.mapper.ServiceMapper;
 import edu.netcracker.backend.model.Role;
-import edu.netcracker.backend.model.ServiceDescr;
-import edu.netcracker.backend.model.TicketClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
