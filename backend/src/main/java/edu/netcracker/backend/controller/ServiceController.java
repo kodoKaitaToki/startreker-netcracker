@@ -157,7 +157,7 @@ public class ServiceController {
     }
 
     @GetMapping("api/v1/approver/service")
-    //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
+    @PreAuthorize("hasAuthority('ROLE_APPROVER')")
     public List<ServiceCRUDDTO> getServicesForApprover(@RequestParam("from") int from,
                                                        @RequestParam("number") int number,
                                                        @RequestParam("status") String status) {
@@ -171,7 +171,7 @@ public class ServiceController {
     }
 
     @PutMapping("api/v1/approver/service")
-    //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
+    @PreAuthorize("hasAuthority('ROLE_APPROVER')")
     public ServiceCRUDDTO updateServiceReview(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO) {
         boolean reviewOnAssigned = (serviceCRUDDTO.getServiceStatus() != ServiceStatus.UNDER_CLARIFICATION.toString()
                                     && serviceCRUDDTO.getReplyText() != null
