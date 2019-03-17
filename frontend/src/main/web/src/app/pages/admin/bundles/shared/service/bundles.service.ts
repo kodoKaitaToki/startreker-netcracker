@@ -4,6 +4,7 @@ import {Bundle} from "../model/bundle";
 import {Injectable} from "@angular/core";
 
 import { Api } from '../../../../../modules/api/index';
+import { BundleForm } from '../model/bundle-form';
 
 @Injectable()
 export class BundlesService {
@@ -36,9 +37,9 @@ export class BundlesService {
     return this.http.get(this.url + '?limit=' + limit + '&offset=' + offset);
   }
 
-  public postBundles(bundles: Bundle): Observable<any> {
+  public postBundles(bundle: BundleForm): Observable<any> {
 
-    return this.http.post(this.url, bundles);
+    return this.http.post(this.url, bundle);
   }
 
   public putBundles(bundles: Bundle): Observable<any> {

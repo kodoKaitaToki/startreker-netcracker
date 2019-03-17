@@ -6,6 +6,9 @@ import {MessageService} from "primeng/api";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Carrier} from '../../carrier/carrier';
 import {CarrierCrudService} from '../../carrier/carrier-crud.service';
+import { Trip } from '../shared/model/trip';
+import { TicketClass } from '../shared/model/ticket-class';
+import { Service } from '../shared/model/service';
 
 
 @Component({
@@ -14,9 +17,6 @@ import {CarrierCrudService} from '../../carrier/carrier-crud.service';
              styleUrls: ['./bundles-table.component.scss']
            })
 export class BundlesTableComponent implements OnInit {
-  @Input() filterCriteria: string;
-
-  @Input() filterContent: string;
 
   readonly pageNumber: number = 10;
 
@@ -28,22 +28,9 @@ export class BundlesTableComponent implements OnInit {
 
   currentBundlesForUpdate: Bundle;
 
-  isForUpdateAlertMessage = false;
-
-  isEditButtonBlockedAfterSubmit = true;
-
-  form: FormGroup;
-
-  @Output() onUpdateDataNotifier = new EventEmitter();
-
-  @Output() onDeleteDataNotifier = new EventEmitter();
-
-  @Output() update = new EventEmitter<number>();
-
   constructor(
     private bundlesSrvc: BundlesService,
-    private messageService: MessageService,
-    private carrierSrvc: CarrierCrudService) {
+    private messageService: MessageService,) {
 
   }
 
@@ -51,64 +38,13 @@ export class BundlesTableComponent implements OnInit {
     this.pageFrom = 0;
 
     this.getAllBundles();
-
-    this.setFormInDefault();
-  }
-
-  setFormInDefault() {
-
-    this.form = new FormGroup(
-      {
-        start_date: new FormControl('', Validators.required),
-        finish_date: new FormControl('', Validators.required),
-        price: new FormControl('', [Validators.required, Validators.min(0)]),
-        description: new FormControl(''),
-        trips: new FormControl(''),
-      }
-    );
   }
 
   onBundlesUpdate(onClickedBundlesForUpdate) {
-
-    this.isEditButtonBlockedAfterSubmit = true;
-
-    this.currentBundlesForUpdate = onClickedBundlesForUpdate;
-
-    this.form.patchValue({
-                           start_date: this.currentBundlesForUpdate.start_date,
-                           finish_date: this.currentBundlesForUpdate.finish_date,
-                           price: this.currentBundlesForUpdate.bundle_price,
-                           description: this.currentBundlesForUpdate.bundle_description,
-                           trips : this.currentBundlesForUpdate.bundle_trips,
-                         });
   }
 
   onBundlesDelete(onClickedBundlesForDelete) {
 
-    this.onDeleteDataNotifier.emit((BundlesTableComponent.deleteUnnecessaryFieldAfterClick(onClickedBundlesForDelete)));
-  }
-
-  onSubmitUpdate() {
-
-    this.isEditButtonBlockedAfterSubmit = false;
-    this.isForUpdateAlertMessage = true;
-
-    this.form.value.id = this.currentBundlesForUpdate.id;
-
-    this.onUpdateDataNotifier.emit(this.form.value);
-    this.closeUpdateForm();
-  }
-
-  static deleteUnnecessaryFieldAfterClick(bundles): Bundle {
-    delete bundles['id'];
-    delete bundles['start_date'];
-
-    return bundles;
-  }
-
-  closeUpdateForm() {
-    this.currentBundlesForUpdate = null;
-    this.isForUpdateAlertMessage = false;
   }
 
   getBundlesForUpdate(bundles) {
@@ -162,6 +98,31 @@ export class BundlesTableComponent implements OnInit {
       summary: summary,
       detail: detail
     };
+  }
+
+  getBundlePrice(bundle: Bundle) {
+    let tripsPrice: number = bundle.bundle_trips
+    .map(trip => this.getTripPrice(trip))
+    .reduce(( acc, cur ) => acc + cur, 0);
+    return (tripsPrice);
+  }
+
+  getTripPrice(trip: Trip) {
+    let classesPrice: number = trip.ticket_classes
+    .map(ticketClass => this.getTicketPrice(ticketClass))
+    .reduce(( acc, cur ) => acc + cur, 0);
+    return (classesPrice);
+  }
+
+  getTicketPrice(ticketClass: TicketClass) {
+    let servicesPrice: number = ticketClass.services
+    .map(service => this.getServicePrice(service))
+    .reduce(( acc, cur ) => acc + cur, 0);
+    return ((ticketClass.ticket_price || 0) * (ticketClass.item_number || 0) + servicesPrice);
+  }
+
+  getServicePrice(service: Service) {
+    return ((service.service_price || 0) * (service.item_number || 0));
   }
 
   showMessage(msgObj: any) {

@@ -62,11 +62,20 @@
           </div>
 
           <div class="row">
-            <h5 class="col-12">Price:</h5>
+            <h5 class="col-12">Discount price:</h5>
           </div>
           <div class="row">
             <p class="col-12">
               {{bundle.bundle_price}}
+            </p>
+          </div>
+
+          <div class="row">
+            <h5 class="col-12">Total price:</h5>
+          </div>
+          <div class="row">
+            <p class="col-12">
+              {{getBundlePrice(bundle)}}
             </p>
           </div>
 
@@ -82,63 +91,74 @@
         </div>
       </div>
 
-      <hr>
-
       <div class="row">
         <div class="col-12">
           <h5>Trips:</h5>
-          <div class="list-group">
-            <ul>
-              <li class="list-group-item"
-                *ngFor="let trip of bundle.bundle_trips"
-              >
-                <div class="row">
-                  <h5 class="col-12">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Total Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container
+              *ngFor="let trip of bundle.bundle_trips; let i=index">
+                <tr>
+                  <td scope="row">
+                    <i class="fa fa-rocket" aria-hidden="true"></i>
                     {{trip.departure_spaceport_name}}({{trip.departure_planet}}) - 
                     {{trip.arrival_spaceport_name}}({{trip.arrival_planet}})
-                  </h5>
-                </div>
-                <h5>Classes:</h5>
-                <ul>
-                  <li class="list-group-item"
-                    *ngFor="let ticket_class of trip.ticket_classes"
-                  >
-                    <div class="row align-items-end">
-                      <h3 class="col-md-1">{{ticket_class.item_number}}</h3>
-                      <h5 class="col-md-4 mr-auto">
-                        {{ticket_class.class_name}}
-                      </h5>
-                      <h5 class="col-md-1">For:</h5>
-                      <span class="col-md-4" style="margin-bottom: 0.5rem">
-                        {{ticket_class.ticket_price}}
-                      </span>
-                    </div>
-                    <ng-container *ngIf="ticket_class.services.length > 0">
-                      <h5>Services:</h5>
-                      <div class="list-group">
-                        <ul>
-                          <li class="list-group-item"
-                            *ngFor="let service of ticket_class.services"
-                          >
-                            <div class="row align-items-end">
-                              <h3 class="col-md-1">{{service.item_number}}</h3>
-                              <h5 class="col-md-4 mr-auto">
-                                {{service.service_name}}
-                              </h5>
-                              <h5 class="col-md-1">For:</h5>
-                              <span class="col-md-4" style="margin-bottom: 0.5rem">
-                                {{service.service_price}}
-                              </span>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </ng-container>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                    {{getTripPrice(trip)}}
+                  </td>
+                </tr>
+                <ng-container
+                *ngFor="let ticket_class of trip.ticket_classes; let i=index">
+                  <tr>
+                    <td scope="row" style="padding-left: 1.25rem;">
+                      <i class="fa fa-ticket" aria-hidden="true"></i>
+                      {{ticket_class.class_name}}
+                    </td>
+                    <td>
+                      {{ticket_class.ticket_price}}
+                    </td>
+                    <td>
+                      {{ticket_class.item_number}}
+                    </td>
+                    <td>
+                      {{getTicketPrice(ticket_class)}}
+                    </td>
+                  </tr>
+                  <ng-container
+                  *ngFor="let service of ticket_class.services; let i=index">
+                    <tr>
+                      <td scope="row" style="padding-left: 1.75rem;">
+                        <i class="fa fa-list-alt" aria-hidden="true"></i>
+                        {{service.service_name}}
+                      </td>
+                      <td>
+                        {{service.service_price}}
+                      </td>
+                      <td>
+                        {{service.item_number}}
+                      </td>
+                      <td>
+                        {{getServicePrice(service)}}
+                      </td>
+                    </tr>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </tbody>
+          </table>
         </div>
       </div>
       

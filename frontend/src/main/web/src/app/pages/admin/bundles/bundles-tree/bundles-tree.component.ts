@@ -20,6 +20,8 @@ export class BundlesTreeComponent implements OnInit {
 
   selectedTree: TreeNode[];
 
+  loading: boolean;
+
   @Output() selectedTrips = new EventEmitter<Trip[]>();
 
   constructor(
@@ -34,6 +36,7 @@ export class BundlesTreeComponent implements OnInit {
   }
 
   getCarriers() {
+    this.loading = true;
     this.inputTree = [];
     this.carrierSrvc.getAllCarriers()
     .subscribe(carriers => {
@@ -48,7 +51,8 @@ export class BundlesTreeComponent implements OnInit {
             leaf: false
           }
           return node;
-      }))
+      }));
+      this.loading = false;
     }, (error: HttpErrorResponse) => {
       this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
     });
@@ -161,7 +165,6 @@ export class BundlesTreeComponent implements OnInit {
 
     if (this.selectedTree === undefined) return;
     this.selectedTree = this.clearDublicates(this.selectedTree);
-    console.log(this.selectedTree);
     trips = this.selectedTree.filter((node: TreeNode) => {
       return (node.type == "trip")
     })
