@@ -25,7 +25,7 @@ export class OpenComponent implements OnInit {
   }
 
   onAssign(service) {
-    service.service_status = 3;
+    service.service_status = "ASSIGNED";
 
     this.loadingService = service;
 
@@ -40,7 +40,7 @@ export class OpenComponent implements OnInit {
   }
 
   getServices() {
-    this.serviceService.getServicesForApprover(this.pageFrom, this.pageNumber, 2)
+    this.serviceService.getServicesForApprover(this.pageFrom, this.pageNumber, "OPEN")
     .subscribe(data => {
       this.resetLoading();
       this.services = data;

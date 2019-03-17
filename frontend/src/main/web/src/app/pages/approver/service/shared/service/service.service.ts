@@ -17,7 +17,7 @@ export class ServiceService {
     this.actionUrl = Api.baseUrl + 'api/v1';
   }
 
-  public getServicesForApprover(from: number, number: number, status: number): Observable<Service[]>{
+  public getServicesForApprover(from: number, number: number, status: string): Observable<Service[]>{
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
     //TODO: remove debug backdoor
