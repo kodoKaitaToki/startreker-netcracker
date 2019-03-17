@@ -37,21 +37,21 @@ export class BundlesService {
     return this.http.get(this.url + '?limit=' + limit + '&offset=' + offset);
   }
 
-  public postBundles(bundle: BundleForm): Observable<any> {
+  public postBundle(bundle: BundleForm): Observable<any> {
 
     return this.http.post(this.url, bundle);
   }
 
-  public putBundles(bundles: Bundle): Observable<any> {
-    return this.http.put(this.url, bundles)
+  public putBundle(bundle: BundleForm): Observable<any> {
+    return this.http.put(this.url + `/${bundle.id}`, bundle)
   }
 
-  public deleteBundles(bundles: Bundle): Observable<any> {
+  public deleteBundle(bundle: Bundle): Observable<any> {
 
     return this.http.request('DELETE',
-                             this.url,
+                             this.url + `/${bundle.id}`,
                              {
-                               body: bundles
+                               body: bundle
                              });
   }
 }

@@ -144,7 +144,7 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
     private void updateBundleTrip(Bundle bundle) {
         //Not the best but quick and easy solution.
         getJdbcTemplate().update(BundleQueries.DELETE_BUNDLE_CLASSES_BY_ID.toString(), bundle.getBundleId());
-        saveBundleServices(bundle);
+        saveBundleTrips(bundle);
     }
 
     private void updateBundleServices(Bundle bundle) {

@@ -86,12 +86,21 @@ export class BundlesTreeComponent implements OnInit {
   populateCarrier(carrier: TreeNode) {
     this.tripsApi.getTripsForCarrier(carrier.data.id)
     .subscribe(trips => {
-      carrier.children = trips.filter((trip: Trip) => {
+      let properTrips = trips.map(trip => {
+        let properTrip = trip;
+        properTrip.departure_spaceport_name = properTrip.departure_spaceport;
+        delete properTrip.departure_spaceport;
+        properTrip.arrival_spaceport_name = properTrip.arrival_spaceport;
+        delete properTrip.arrival_spaceport;
+        return properTrip;
+      });
+      console.log(properTrips);
+      carrier.children = properTrips.filter(trip => {
         return (trip.trip_status == "Published")
       })
-      .map((trip: Trip) => {
+      .map(trip => {
           let node: TreeNode = {
-            label: trip.departure_planet + " - " + trip.arrival_planet,
+            label: `${trip.departure_spaceport_name}(${trip.departure_planet}) -  ${trip.arrival_spaceport_name}(${trip.arrival_planet})`,
             data: trip,
             icon: "fa fa-rocket",
             type: "trip",

@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
 
 import {AdminRoutingModule} from './admin-routing.module';
 import {NavbarComponent} from './navbar/navbar.component';
@@ -33,16 +33,19 @@ import {CarCostDashComponent} from './dashboards/costs/car-cost-dash/car-cost-da
 
 import {CarrierComponentComponent} from './carrier/carrier-component/carrier-component.component';
 import {CarrierTableComponent} from './carrier/carrier-table/carrier-table.component';
-import {NgxPaginationModule} from 'ngx-pagination';
 
 import {TroubleStatisticsService} from './dashboards/trouble-statistics.service';
 import {ApproverService} from "./approver/shared/service/approver.service";
 import {BundlesService} from "./bundles/shared/service/bundles.service";
 import {ApproverFilterPipe} from './approver/shared/pipes/approver-filter.pipe';
+
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {ToggleButtonModule} from 'primeng/togglebutton';
 import {GrowlModule, MessageService, ProgressBarModule} from "primeng/primeng";
 import {ToastModule} from "primeng/toast";
+import {CalendarModule} from 'primeng/calendar';
+import {NgxPaginationModule} from 'ngx-pagination';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import {TreeModule} from 'primeng/tree';
@@ -51,6 +54,7 @@ import {FieldsetModule} from 'primeng/fieldset';
 
 import { SharedModule } from 'src/app/shared/shared.module';
 import { BundlesTreeComponent } from './bundles/bundles-tree/bundles-tree.component';
+import { BundlesFormComponent } from './bundles/bundles-form/bundles-form.component';
 
 
 @NgModule({
@@ -83,7 +87,8 @@ import { BundlesTreeComponent } from './bundles/bundles-tree/bundles-tree.compon
     CarCostDashComponent,
     CostsComponent,
     ApproverFilterPipe,
-    BundlesTreeComponent
+    BundlesTreeComponent,
+    BundlesFormComponent
   ],
   imports: [
     CommonModule,
@@ -97,7 +102,9 @@ import { BundlesTreeComponent } from './bundles/bundles-tree/bundles-tree.compon
     SharedModule,
     ScrollPanelModule,
     ToggleButtonModule,
-    FieldsetModule
+    FieldsetModule,
+    CalendarModule,
+    ProgressSpinnerModule
   ],
   providers: [
     FilterPipePipe,
@@ -105,6 +112,7 @@ import { BundlesTreeComponent } from './bundles/bundles-tree/bundles-tree.compon
     TroubleStatisticsService,
     ApproverService,
     ApproverFilterPipe,
+    DatePipe,
     MessageService,
     BundlesService
   ]

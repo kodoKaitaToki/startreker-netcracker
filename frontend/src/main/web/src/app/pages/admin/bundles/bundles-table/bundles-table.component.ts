@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChildren, QueryList} from '@angular/core';
 import {Bundle} from '../shared/model/bundle';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {BundlesService} from "../shared/service/bundles.service";
@@ -9,6 +9,7 @@ import {CarrierCrudService} from '../../carrier/carrier-crud.service';
 import { Trip } from '../shared/model/trip';
 import { TicketClass } from '../shared/model/ticket-class';
 import { Service } from '../shared/model/service';
+import { BundlesFormComponent } from '../bundles-form/bundles-form.component';
 
 
 @Component({
@@ -17,6 +18,7 @@ import { Service } from '../shared/model/service';
              styleUrls: ['./bundles-table.component.scss']
            })
 export class BundlesTableComponent implements OnInit {
+  @ViewChildren(BundlesFormComponent) forms !: QueryList<BundlesFormComponent>;
 
   readonly pageNumber: number = 10;
 
@@ -26,7 +28,9 @@ export class BundlesTableComponent implements OnInit {
 
   bundles: Bundle[];
 
-  currentBundlesForUpdate: Bundle;
+  currentBundleForUpdate: Bundle;
+
+  currentBundleToHideId: number;
 
   constructor(
     private bundlesSrvc: BundlesService,
@@ -40,37 +44,47 @@ export class BundlesTableComponent implements OnInit {
     this.getAllBundles();
   }
 
-  onBundlesUpdate(onClickedBundlesForUpdate) {
+  onBundleUpdate(onClickedBundleForUpdate) {
+    this.currentBundleForUpdate = onClickedBundleForUpdate;
+    let bundleFormComponent: BundlesFormComponent;
+    bundleFormComponent =  this.forms.find(b => {
+      return b.bundleId == this.currentBundleForUpdate.id;
+    });
+    bundleFormComponent.onBundleUpdate(this.currentBundleForUpdate);
+    //bundleFormComponent.onBundleUpdate(this.currentBundleForUpdate);
   }
 
-  onBundlesDelete(onClickedBundlesForDelete) {
-
+  cancelUpdate() {
+    this.currentBundleForUpdate = undefined;
   }
 
-  getBundlesForUpdate(bundles) {
-
-    this.bundlesSrvc.putBundles(bundles)
+  onPut(bundle) {
+    this.currentBundleToHideId = bundle.id;
+    console.log("Putting bundle");
+    console.log(bundle);
+    this.bundlesSrvc.putBundle(bundle)
     .subscribe(() => {
       this.showMessage(this.createMessage('success', 'Bundle editing', 'The bundle was updated'));
       this.getAllBundles();
     }, (error: HttpErrorResponse) => {
       this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
+      this.currentBundleToHideId = undefined;
     });
   }
 
-  getBundlesForDelete(bundles) {
-
-    this.bundlesSrvc.deleteBundles(bundles)
+  onDelete(bundle) {
+    this.currentBundleToHideId = bundle.id;
+    this.bundlesSrvc.deleteBundle(bundle)
     .subscribe(() => {
       this.showMessage(this.createMessage('success', 'Bundle deletion', 'The bundle was deleted'));
       this.getAllBundles();
     }, (error: HttpErrorResponse) => {
       this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
+      this.currentBundleToHideId = undefined;
     });
   }
 
   getAllBundles() {
-
     this.bundlesSrvc.getCount()
         .subscribe(data => this.pageAmount = data);
 
@@ -78,6 +92,8 @@ export class BundlesTableComponent implements OnInit {
         .subscribe(data => {
           this.showMessage(this.createMessage('success', 'Bundle list', 'The list was updated'));
           this.bundles = data;
+          this.currentBundleToHideId = undefined;
+          this.currentBundleForUpdate = undefined;
         }, (error: HttpErrorResponse) => {
           this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
         })
