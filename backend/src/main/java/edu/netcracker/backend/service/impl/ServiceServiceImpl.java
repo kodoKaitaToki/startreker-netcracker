@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ServiceServiceImpl implements ServiceService {
@@ -87,11 +88,13 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public ServiceCRUDDTO updateService(ServiceCRUDDTO serviceCRUDDTO){
-        ServiceDescr serviceDescr = serviceDAO.find(serviceCRUDDTO.getId()).orElse(null);
+        Optional<ServiceDescr> serviceOpt = serviceDAO.find(serviceCRUDDTO.getId());
 
-        if(serviceDescr == null){
+        if(!serviceOpt.isPresent()){
             throw new RequestException("Service " + serviceCRUDDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
         }
+
+        ServiceDescr serviceDescr = serviceOpt.get();
 
         if((ifServiceExists(serviceCRUDDTO.getServiceName(), setCurUser()))&&
                 (!Objects.equals(serviceCRUDDTO.getServiceName(),serviceDescr.getServiceName()))){

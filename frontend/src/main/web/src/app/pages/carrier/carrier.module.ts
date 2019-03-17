@@ -1,9 +1,9 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {GrowlModule} from "primeng/primeng";
-import {MessageService} from 'primeng/components/common/messageservice';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {GrowlModule, MessageService, ProgressBarModule} from "primeng/primeng";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import {CarrierRoutingModule} from './carrier-routing.module';
 import {NavbarComponent} from './navbar/navbar.component';
@@ -26,7 +26,6 @@ import {DiscountMainPageComponent} from "./discounts/discount-main-page/discount
 import {CarrierDiscountsService} from "./discounts/shared/service/carrier-discount.service";
 import {SuggestionComponent} from "./discounts/suggestion/suggestion.component";
 import {TicketClassComponent} from "./discounts/ticket-class/ticket-class.component";
-import {ToastModule} from "primeng/toast";
 
 @NgModule({
             declarations:
@@ -55,8 +54,7 @@ import {ToastModule} from "primeng/toast";
               ReactiveFormsModule,
               CarrierRoutingModule,
               GrowlModule,
-              NgxPaginationModule,
-              ToastModule
+              NgxPaginationModule
             ],
             providers: [
               MessageService,

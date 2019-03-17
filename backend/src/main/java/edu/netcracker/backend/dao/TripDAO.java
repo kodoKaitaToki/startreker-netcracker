@@ -19,4 +19,12 @@ public interface TripDAO {
     List<Trip> findAll();
 
     List<TripWithArrivalAndDepartureData> getAllTripsWitArrivalAndDepatureDataBelongToCarrier(Number carrierId);
+
+    List<Trip> findAllByCarrierAndStatus(Integer userId, Integer status, Long offset, Long limit);
+
+    List<Trip> findAllByCarrier(Integer userId, Integer ignoredStatus, Long offset, Long limit);
+
+    List<Trip> findAllByApproverByStatus(Integer userId, Integer status, Long offset, Long limit);
+
+    List<Trip> findAllByStatus(Integer status, Long offset, Long limit);
 }
