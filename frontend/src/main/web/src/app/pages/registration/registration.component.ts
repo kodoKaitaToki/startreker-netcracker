@@ -60,7 +60,7 @@ export class RegistrationComponent implements OnInit {
                   .subscribe((userData: RegisterResponse) => {
                   this.showMsgSrvc.showMessage(this.messageService, 
                                               'success', 
-                                              'The password was sent', 
+                                              'The confirmation was sent', 
                                               'You can find it in your e-mail account');
                    this.apiService.setUserData(clone(userData));
                    this.submitBut = false;

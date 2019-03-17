@@ -7,6 +7,7 @@ import { RegistrationComponent } from './pages/registration/registration.compone
 import { RecoveryComponent } from './pages/recovery/recovery.component'
 import { Role } from './guards/role';
 import { ConfirmMessageComponent } from './pages/confirm-message/confirm-message.component';
+import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -17,6 +18,7 @@ const routes: Routes = [
   { path: 'sign-up', component: RegistrationComponent},
   { path: 'password-recovery', component: RecoveryComponent},
   { path: 'confirm', component: ConfirmMessageComponent},
+  { path: 'in-design', component: ComingSoonComponent },
   { path: 'admin',
     loadChildren: './pages/admin/admin.module#AdminModule',
 

@@ -24,6 +24,7 @@ import {MessageService, GrowlModule} from "primeng/primeng";
 
 import { Configuration } from './app.constants';
 import { ConfirmMessageComponent } from './pages/confirm-message/confirm-message.component';
+import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { ConfirmMessageComponent } from './pages/confirm-message/confirm-message
     RegistrationComponent,
     LoginComponent,
     RecoveryComponent,
-    ConfirmMessageComponent
+    ConfirmMessageComponent,
+    ComingSoonComponent
   ],
   imports: [
     AppRoutingModule,

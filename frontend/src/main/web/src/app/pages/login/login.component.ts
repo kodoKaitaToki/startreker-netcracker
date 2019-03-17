@@ -5,6 +5,7 @@ import { LoginFormData } from '../../services/interfaces/login-form.interface';
 import { LoginResponse } from '../../services/interfaces/login-response.interface';
 import { MessageService } from "primeng/api";
 import { ShowMessageService} from '../admin/approver/shared/service/show-message.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,8 @@ export class LoginComponent implements OnInit {
     private apiService: ApiUserService,
     private formBuilder: FormBuilder,
     private messageService: MessageService,
-    private showMsgSrvc: ShowMessageService
+    private showMsgSrvc: ShowMessageService,
+    private router: Router
   ) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(this.usernameMinLength), Validators.maxLength(this.usernameMaxLength)]],
@@ -51,6 +53,7 @@ export class LoginComponent implements OnInit {
                     .subscribe((userData: LoginResponse) => {
                       this.apiService.getLoggedUser(userData);
                       this.submitBut = false;
+                      this.router.navigateByUrl('/in-design');
                     },
                     error => {
                       if(error.error.error == 'UNAUTHORIZED'){

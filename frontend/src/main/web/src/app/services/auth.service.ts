@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { clone } from 'ramda';
+import { Location } from '@angular/common';
 
 import { Api, HttpOptions, HttpOptionsAuthorized } from '../modules/api';
 import { LoginFormData } from './interfaces/login-form.interface';
@@ -24,7 +25,8 @@ export class ApiUserService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private location: Location
     ) {}
 
 
@@ -52,12 +54,10 @@ export class ApiUserService {
       this.activatedRoute.queryParams.subscribe(data => {
         token = data['token'];
         let params = new HttpParams().set("token", token);
-
         this.http.get(Api.auth.confirmPassword(), {
           headers: HttpOptions.headers,
           params: params
         });
-        
       })
     }
 
@@ -66,7 +66,11 @@ export class ApiUserService {
       localStorage.removeItem('at');
       localStorage.removeItem('rt');
       this.userData = clone({});
-      window.location.href = 'http://127.0.0.1:4200';
+      if(this.location.isCurrentPathEqualTo('/')){
+        location.reload();
+      }else{
+        this.router.navigateByUrl('/');
+      }
     }
 
     public recoverPassword(userData: any) {
