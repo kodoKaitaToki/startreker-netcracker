@@ -26,6 +26,7 @@ import {DiscountMainPageComponent} from "./discounts/discount-main-page/discount
 import {CarrierDiscountsService} from "./discounts/shared/service/carrier-discount.service";
 import {SuggestionComponent} from "./discounts/suggestion/suggestion.component";
 import {TicketClassComponent} from "./discounts/ticket-class/ticket-class.component";
+import {ToastModule} from "primeng/toast";
 
 @NgModule({
             declarations:
@@ -54,7 +55,8 @@ import {TicketClassComponent} from "./discounts/ticket-class/ticket-class.compon
               ReactiveFormsModule,
               CarrierRoutingModule,
               GrowlModule,
-              NgxPaginationModule
+              NgxPaginationModule,
+              ToastModule
             ],
             providers: [
               MessageService,

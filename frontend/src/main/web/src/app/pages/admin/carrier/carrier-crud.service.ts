@@ -1,4 +1,4 @@
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -15,29 +15,29 @@ export class CarrierCrudService {
     }
 
     public getAllCarriers(){
-        return this.http.get<any>(Api.carrier.carriers());
+        return this.http.get<any>(Api.carrier.carriers(), HttpOptionsAuthorized);
     }
 
-    public getCarriersPagin<Carrier>(from: number, to: number): Observable<Carrier>{
+    public getCarriersPagin(from: number, to: number){
         let url = Api.carrier.getCarriersPagin() + '?from=' + from + '&number=' + to;
-        return this.http.get<any>(url);
+        return this.http.get<any>(url, HttpOptionsAuthorized);
     }
 
-    public getCarrierByUsername<Carrier>(name: String): Observable<Carrier>{
+    public getCarrierByUsername(name: String){
         let url = Api.carrier.getCarrierByUsername() + name;
-        return this.http.get<Carrier>(url);
+        return this.http.get<Carrier>(url, HttpOptionsAuthorized);
     }
 
-    public addCarrier<T>(carrier: Carrier): Observable<T>{
-        return this.http.post<T>(Api.carrier.carriers(), carrier);
+    public addCarrier(carrier: Carrier){
+        return this.http.post(Api.carrier.carriers(), carrier, HttpOptionsAuthorized);
     }
 
-    public deleteCarrier<T>(id: Number): Observable<T>{
+    public deleteCarrier(id: number){
         let url = Api.carrier.carriers() + '/' + id;
-        return this.http.delete<T>(url);
+        return this.http.delete(url, HttpOptionsAuthorized);
     }
 
-    public updateCarrier<T>(carrier: Carrier): Observable<T>{
-        return this.http.put<T>(Api.carrier.carriers(), carrier);
+    public updateCarrier(carrier: Carrier){
+        return this.http.put(Api.carrier.carriers(), carrier, HttpOptionsAuthorized);
     }
 }
