@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j(topic = "log")
@@ -20,7 +21,14 @@ public class TripPendingSrvc implements IPendingSrvc<PendingActivationTrip> {
 
         log.debug("TripPendingSrvc.getPendingEntries() was invoked");
 
-        return iPendingDao.getPendingEntries();
+        return iPendingDao.getPendingEntries().stream().map(obj -> {
+            if (obj.getApproverName() == null) {
+                obj.setApproverEmail("");
+                obj.setApproverName("");
+                obj.setApproverTel("");
+            }
+            return obj;
+        }).collect(Collectors.toList());
     }
 
     @Override

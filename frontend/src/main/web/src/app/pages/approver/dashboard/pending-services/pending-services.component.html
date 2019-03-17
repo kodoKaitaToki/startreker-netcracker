@@ -1,0 +1,156 @@
+<div class="container-fluid">
+  <div class="row col-12">
+    <div class="col-md-8 col-sm-12">
+      <select class="custom-select custom-select-md mb-3"
+              (click)="getFilterCriteria($event.target)"
+      >
+        <option [value]="filterCriteria"
+                *ngFor="let filterCriteria of filterCriterias;"
+
+        >
+          Filter by {{filterCriteria | selectServiceInfo: filterCriteria}}
+        </option>
+      </select>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <input type="text"
+             placeholder="Input the information here"
+             class="form-control"
+             [(ngModel)]="currentFilterContent"
+      >
+    </div>
+  </div>
+
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-3"
+         *ngFor="let currentService of pendingServcies | itemsFilter: currentFilterCriteria: currentFilterContent"
+    >
+      <div class="card text-center">
+        <div class="card-header"
+             [ngSwitch]="currentService.serviceStatus"
+        >
+          <h4
+            *ngSwitchCase="1"
+          >
+            In draft
+          </h4>
+          <h4
+            *ngSwitchCase="2"
+          >
+            Opened
+          </h4>
+          <h4
+            *ngSwitchCase="3"
+          >
+            Assigned
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="container-fluid">
+            <h5 class="card-title text-center">
+              Name
+            </h5>
+          </div>
+
+          <div class="container-fluid">
+            <h5 class="card-title text-center">
+              {{currentService.serviceName}}
+            </h5>
+          </div>
+
+          <hr>
+
+          <div class="container-fluid">
+            <h5 class="card-title text-center">
+              Description
+            </h5>
+          </div>
+
+          <div class="container-fluid">
+            <h6 class="card-title text-center">
+              {{currentService.serviceDescr}}
+            </h6>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div class="card-body"
+                   *ngIf="currentPendingService === currentService && currentService.approverName !== ''"
+              >
+                <hr>
+                <h5>Approver</h5>
+                <h6>
+                  Name: {{currentService.approverName}}
+                  <br>
+                  Email: {{currentService.approverEmail}}
+                  <br>
+                  Telephone: {{currentService.approverTel}}
+                </h6>
+              </div>
+              <div class="card-body"
+                   *ngIf="currentPendingService === currentService && currentService.approverName === ''"
+              >
+                <hr>
+                <h5>Approver</h5>
+                <h6>
+                  Not assigned
+                </h6>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card-body"
+                   *ngIf="currentPendingService === currentService && currentService.carrierName !== ''"
+              >
+                <hr>
+                <h5>Carrier</h5>
+                <h6>
+                  Name: {{currentService.carrierName}}
+                  <br>
+                  Email: {{currentService.carrierEmail}}
+                  <br>
+                  Telephone: {{currentService.carrierTel}}
+                </h6>
+              </div>
+
+              <div class="card-body"
+                   *ngIf="currentPendingService === currentService && currentService.carrierName === ''"
+              >
+                <hr>
+                <h5>Carrier</h5>
+                <h6>
+                  Not assigned
+                </h6>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <button class="btn btn-primary"
+                  *ngIf="currentService !== currentPendingService"
+                  (click)="onDetailClick(currentService)"
+          >
+            Details
+          </button>
+
+          <button class="btn btn-primary"
+                  *ngIf="currentService === currentPendingService"
+                  (click)="onCloseDetailClick(currentService)"
+          >
+            Close details
+          </button>
+        </div>
+
+        <div class="card-footer text-muted">
+          Created
+          <br>
+          {{currentService.creationDate | date}}
+        </div>
+        <br>
+      </div>
+    </div>
+  </div>
+</div>
