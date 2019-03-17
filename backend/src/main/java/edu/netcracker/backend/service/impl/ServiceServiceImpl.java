@@ -8,6 +8,7 @@ import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.ServiceReply;
 import edu.netcracker.backend.model.User;
+import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.ServiceService;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.utils.AuthorityUtils;
@@ -31,32 +32,36 @@ public class ServiceServiceImpl implements ServiceService {
 
     private UserService userService;
 
-    private Integer carrierId = 7;
+    private final SecurityContext securityContext;
 
     @Autowired
-    public ServiceServiceImpl(ServiceDAO serviceDAO, ServiceReplyDAO serviceReplyDAO, UserService userService){
+    public ServiceServiceImpl(ServiceDAO serviceDAO,
+                              ServiceReplyDAO serviceReplyDAO,
+                              UserService userService,
+                              SecurityContext securityContext){
         this.serviceDAO = serviceDAO;
         this.serviceReplyDAO = serviceReplyDAO;
         this.userService = userService;
+        this.securityContext = securityContext;
     }
 
     @Override
-    public List<ServiceCRUDDTO> getServicesOfCarrier(){ return serviceDAO.findAllByCarrierId(carrierId);}
+    public List<ServiceCRUDDTO> getServicesOfCarrier(){ return serviceDAO.findAllByCarrierId(setCurUser());}
 
     @Override
     public List<ServiceCRUDDTO> getPaginServicesOfCarrier(Integer from, Integer amount){
-        return serviceDAO.findPaginByCarrierId(carrierId, from, amount);
+        return serviceDAO.findPaginByCarrierId(setCurUser(), from, amount);
     }
 
     @Override
     public List<ServiceCRUDDTO> findByStatus(String status) {
-        return serviceDAO.findByStatus(carrierId, getStatusValue(status));
+        return serviceDAO.findByStatus(setCurUser(), getStatusValue(status));
     }
 
     @Override
     public ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm){
         String serviceName = serviceCreateForm.getServiceName();
-        if(ifServiceExists(serviceName, carrierId)){
+        if(ifServiceExists(serviceName, setCurUser())){
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
@@ -66,7 +71,7 @@ public class ServiceServiceImpl implements ServiceService {
         }
 
         ServiceDescr serviceDescr = new ServiceDescr();
-        serviceDescr.setCarrierId(carrierId);
+        serviceDescr.setCarrierId(setCurUser());
         serviceDescr.setServiceName(serviceCreateForm.getServiceName());
         serviceDescr.setServiceDescription(serviceCreateForm.getServiceDescription());
 
@@ -75,7 +80,7 @@ public class ServiceServiceImpl implements ServiceService {
 
         serviceDAO.save(serviceDescr);
 
-        ServiceDescr result = serviceDAO.findByName(serviceDescr.getServiceName(), carrierId).orElse(null);
+        ServiceDescr result = serviceDAO.findByName(serviceDescr.getServiceName(), setCurUser()).orElse(null);
 
         return ServiceCRUDDTO.form(result, "");
     }
@@ -88,7 +93,7 @@ public class ServiceServiceImpl implements ServiceService {
             throw new RequestException("Service " + serviceCRUDDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
         }
 
-        if((ifServiceExists(serviceCRUDDTO.getServiceName(), carrierId))&&
+        if((ifServiceExists(serviceCRUDDTO.getServiceName(), setCurUser()))&&
                 (!Objects.equals(serviceCRUDDTO.getServiceName(),serviceDescr.getServiceName()))){
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
@@ -176,11 +181,8 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceDAO.findByName(name, id).isPresent();
     }
 
-    private void setCurCarrier(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String carrierName = authentication.getName();
-        User user = userService.findByUsernameWithRole(carrierName, AuthorityUtils.ROLE_CARRIER);
-        this.carrierId = user.getUserId();
+    private Integer setCurUser(){
+        return securityContext.getUser().getUserId();
     }
 
 

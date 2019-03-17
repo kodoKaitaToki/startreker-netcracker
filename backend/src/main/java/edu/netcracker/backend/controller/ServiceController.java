@@ -112,38 +112,46 @@ public class ServiceController {
     }
 
     @GetMapping("api/v1/carrier/service")
-    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<ServiceCRUDDTO> getAllServices() {
+        int carrierId = securityContext.getUser()
+                .getUserId();
         return serviceService.getServicesOfCarrier();
     }
 
     @GetMapping("api/v1/carrier/service/pagin")
-    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<ServiceCRUDDTO> getPaginServices(@RequestParam("from") Integer from,
                                                  @RequestParam("number") Integer number) {
+        int carrierId = securityContext.getUser()
+                .getUserId();
         return serviceService.getPaginServicesOfCarrier(from, number);
     }
 
     @GetMapping("api/v1/carrier/service/by-status")
-    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<ServiceCRUDDTO> getByStatus(@RequestParam("status") String status) {
+        int carrierId = securityContext.getUser()
+                .getUserId();
         return serviceService.findByStatus(status);
     }
 
     @DeleteMapping("api/v1/carrier/service/{servId}")
-    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public ServiceCRUDDTO deleteService(@PathVariable Long servId) {
+        int carrierId = securityContext.getUser()
+                .getUserId();
         return serviceService.deleteService(servId);
     }
 
     @PutMapping("api/v1/carrier/service")
-    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public ServiceCRUDDTO updateService(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO) {
         return serviceService.updateService(serviceCRUDDTO);
     }
 
     @PostMapping("api/v1/carrier/service")
-    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public ServiceCRUDDTO addService(@Valid @RequestBody ServiceCreateForm serviceCreateForm) {
         return serviceService.addService(serviceCreateForm);
     }
