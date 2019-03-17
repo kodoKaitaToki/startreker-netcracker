@@ -7,6 +7,7 @@ import edu.netcracker.backend.dao.mapper.ServiceMapper;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.TicketClass;
+import edu.netcracker.backend.model.history.HistoryService;
 import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,12 +118,13 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
                                                                          + "INNER JOIN suggested_service s_service ON s_service.p_service_id = p_service.p_service_id "
                                                                          + "WHERE s_service.suggestion_id IN (:suggestionIds)";
 
-    private final static String GET_SERVICE_NAMES_BY_TICKET = "SELECT s.service_name "
+    private final static String GET_SERVICE_NAMES_BY_TICKET = "SELECT s.service_name, count(s.service_id) "
                                                               + "FROM ticket t "
                                                               + "JOIN bought_service bs ON t.ticket_id=bs.ticket_id "
                                                               + "AND t.ticket_id = ? "
                                                               + "JOIN possible_service ps ON bs.p_service_id=ps.p_service_id "
                                                               + "JOIN service s ON ps.service_id = s.service_id "
+                                                              + "GROUP BY s.service_id "
                                                               + "ORDER BY s.service_id";
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceDAOImpl.class);
@@ -263,7 +265,7 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     }
 
     @Override
-    public List<String> getServiceNamesByTicket(Number id) {
+    public List<HistoryService> getServiceNamesByTicket(Number id) {
         logger.info("Querying purchased services for ticket {}", id);
         return getJdbcTemplate().query(GET_SERVICE_NAMES_BY_TICKET, new Object[]{id}, new HistoryServiceMapper());
     }
