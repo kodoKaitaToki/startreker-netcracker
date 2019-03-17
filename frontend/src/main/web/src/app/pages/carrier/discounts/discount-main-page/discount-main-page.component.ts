@@ -5,6 +5,8 @@ import {Trip} from "../shared/model/trip.model";
 import {MessageService} from "primeng/api";
 import {ShowMessageService} from "../../../admin/approver/shared/service/show-message.service";
 import {HttpErrorResponse} from "@angular/common/http";
+import { clone } from 'ramda';
+import { HttpResponse } from '@angular/common/http';
 import {
   suggestion_add_discount_success_msg,
   suggestion_delete_discount_success_msg,
@@ -15,6 +17,7 @@ import {
   ticket_class_info_msg,
   ticket_class_success_list_msg,
 } from "../shared/message-consts";
+import { checkToken } from '../../../../modules/api';
 
 @Component({
   selector: 'app-discount-main-page',
@@ -75,8 +78,9 @@ export class DiscountMainPageComponent implements OnInit {
     this.showMsgSrvc.showMessage(this.msgSrv, 'info', ticket_class_info_msg.summary, ticket_class_info_msg.detail);
 
     this.ticketClassDiscountSrvc.getAll()
-        .subscribe((data) => {
-          this.tripsWithTicketClasses = data;
+        .subscribe((resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          this.tripsWithTicketClasses = clone(resp.body);
           this.showMsgSrvc.showMessage(this.msgSrv, 'success', ticket_class_success_list_msg.summary,
             ticket_class_success_list_msg.detail);
         }, (error: HttpErrorResponse) => {
@@ -92,8 +96,9 @@ export class DiscountMainPageComponent implements OnInit {
     this.showMsgSrvc.showMessage(this.msgSrv, 'info', suggestion_info_msg.summary, suggestion_info_msg.detail);
 
     this.ticketClassDiscountSrvc.getAll()
-        .subscribe((data) => {
-          this.tripsWithSuggestions = data;
+        .subscribe((resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          this.tripsWithSuggestions = clone(resp.body);
           this.showMsgSrvc.showMessage(this.msgSrv, 'success', suggestion_sucess_list_msg.summary,
             suggestion_sucess_list_msg.detail);
         }, (error: HttpErrorResponse) => {
@@ -107,7 +112,8 @@ export class DiscountMainPageComponent implements OnInit {
     this.ticketClassDiscountSrvc.buildApiForGetAndPost();
 
     this.ticketClassDiscountSrvc.post($event)
-        .subscribe(() => {
+        .subscribe((resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
           this.showMsgSrvc.showMessage(this.msgSrv, 'success', ticket_class_add_discount_success_msg.summary,
             ticket_class_add_discount_success_msg.detail);
           this.getTicketClasses();
@@ -122,7 +128,8 @@ export class DiscountMainPageComponent implements OnInit {
     this.ticketClassDiscountSrvc.buildApiForGetAndPost();
 
     this.ticketClassDiscountSrvc.post($event)
-        .subscribe(() => {
+        .subscribe((resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
           this.showMsgSrvc.showMessage(this.msgSrv, 'success', suggestion_add_discount_success_msg.summary,
             suggestion_add_discount_success_msg.detail);
           this.getSuggestions();
@@ -137,7 +144,8 @@ export class DiscountMainPageComponent implements OnInit {
     this.ticketClassDiscountSrvc.buildApiForDelete($event.discount.discount_id);
 
     this.ticketClassDiscountSrvc.delete()
-        .subscribe(() => {
+        .subscribe((resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
           this.showMsgSrvc.showMessage(this.msgSrv, 'success', ticket_class_delete_discount_success_msg.summary,
             ticket_class_delete_discount_success_msg.detail);
           this.getTicketClasses();
@@ -152,7 +160,8 @@ export class DiscountMainPageComponent implements OnInit {
     this.ticketClassDiscountSrvc.buildApiForDelete($event.discount.discount_id);
 
     this.ticketClassDiscountSrvc.delete()
-        .subscribe(() => {
+        .subscribe((resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
           this.showMsgSrvc.showMessage(this.msgSrv, 'success', suggestion_delete_discount_success_msg.summary,
             suggestion_delete_discount_success_msg.detail);
           this.getSuggestions();

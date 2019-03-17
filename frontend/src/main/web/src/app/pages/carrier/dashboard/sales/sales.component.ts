@@ -5,8 +5,11 @@ import {formatDate} from '@angular/common';
 import { TRIP_SALES } from './mock_data';
 import { SERVICE_SALES } from './mock_data';
 import { SalesModel } from './sales.model';
+import { clone } from 'ramda';
 
 import { SalesService } from '../sales.service';
+import { HttpResponse } from '@angular/common/http';
+import { checkToken } from '../../../../modules/api';
 
 @Component({
   selector: 'app-sales',
@@ -60,24 +63,32 @@ export class SalesComponent implements OnInit {
 
     if(this.form.value.dataPeriod != "perMonth")
     {
-      this.salesService.getServicesSalesStatisticsByWeek(fromDateFormatted, toDateFormatted).subscribe(data => {
-        this.serviceSales = data;
-        this.reloadCharts();
+      this.salesService.getServicesSalesStatisticsByWeek(fromDateFormatted, toDateFormatted).subscribe(
+        (resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          this.serviceSales = clone(resp.body);
+          this.reloadCharts();
       });
-      this.salesService.getTripsSalesStatisticsByWeek(fromDateFormatted, toDateFormatted).subscribe(data => {
-        this.tripSales = data;
-        this.reloadCharts();
+      this.salesService.getTripsSalesStatisticsByWeek(fromDateFormatted, toDateFormatted).subscribe(
+        (resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          this.tripSales = clone(resp.body);
+          this.reloadCharts();
       });
     }
     else
     {
-      this.salesService.getServicesSalesStatisticsByMonth(fromDateFormatted, toDateFormatted).subscribe(data => {
-        this.serviceSales = data;
-        this.reloadCharts();
+      this.salesService.getServicesSalesStatisticsByMonth(fromDateFormatted, toDateFormatted).subscribe(
+        (resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          this.serviceSales = clone(resp.body);
+          this.reloadCharts();
       });
-      this.salesService.getTripsSalesStatisticsByMonth(fromDateFormatted, toDateFormatted).subscribe(data => {
-        this.tripSales = data;
-        this.reloadCharts();
+      this.salesService.getTripsSalesStatisticsByMonth(fromDateFormatted, toDateFormatted).subscribe(
+        (resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          this.tripSales = clone(resp.body);
+          this.reloadCharts();
       });
     }
   }
