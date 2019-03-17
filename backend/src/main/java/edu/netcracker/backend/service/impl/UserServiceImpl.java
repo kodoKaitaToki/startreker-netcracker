@@ -14,6 +14,7 @@ import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.security.UserInformationHolder;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.utils.PasswordGeneratorUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
@@ -32,6 +33,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private UserDAO userDAO;
@@ -165,25 +167,33 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BoughtTicketDTO buyTicket(BoughtTicketDTO boughtTicketDTO) {
+        log.debug("Getting ticket with id from TicketDAO");
         Optional<Ticket> optTicket = ticketDAO.find(boughtTicketDTO.getTicketId());
+
+        log.debug("Getting user with id from UserDAO");
         Optional<User> optUser = userDAO.find(boughtTicketDTO.getPassengerId());
+
         List<PossibleService> possibleServices = new ArrayList<>();
 
         if (!optTicket.isPresent()) {
+            log.error("Ticket with id {} not found", boughtTicketDTO.getTicketId());
             throw new RequestException(String.format("Ticket with id %s not found", boughtTicketDTO.getTicketId()),
                                        HttpStatus.NOT_FOUND);
         }
 
         if (!optUser.isPresent()) {
+            log.error("User with id {} not found", boughtTicketDTO.getTicketId());
             throw new RequestException(String.format("User with id %s not found", boughtTicketDTO.getPassengerId()),
                                        HttpStatus.NOT_FOUND);
         }
 
+        log.debug("Getting services by id");
         boughtTicketDTO.getPServicesId()
                        .forEach(id -> {
                            Optional<PossibleService> optPossibleService = possibleServiceDAO.find(id);
 
                            if (!optPossibleService.isPresent()) {
+                               log.error("User with id {} not found", boughtTicketDTO.getTicketId());
                                throw new RequestException(String.format("Possible service with id %s not found",
                                                                         boughtTicketDTO.getPassengerId()),
                                                           HttpStatus.NOT_FOUND);
