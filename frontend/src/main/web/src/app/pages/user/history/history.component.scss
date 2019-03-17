@@ -1,4 +1,4 @@
-.historycard{
+.historycard {
   background-color: rgba(240, 248, 255, 0.9);
 }
 
@@ -6,28 +6,67 @@
   background-color: rgba(240, 248, 255, 0.9);
 }
 
-.historycard li:hover{
+.historycard li:hover {
   background-color: rgba(255, 255, 255, 1);
 }
 
-.cursorpointer:hover{
+.cursorpointer:hover {
   cursor: pointer;
 }
 
-.inner-history-card{
+.inner-history-card {
   background-color: rgba(240, 248, 255, 0.3);
 }
 
-.center{
+.hide-page-numbers /deep/ .ngx-pagination li:not(.pagination-previous):not(.pagination-next) {
+  display: none;
+}
+
+.center {
   margin-left: auto;
   margin-right: auto;
   display: block !important;
 }
 
-.link-blue-span{
+.link-blue-span {
   color: #116fbf;
 }
 
 .pagination /deep/ .ngx-pagination .current {
-    padding: 10px;
+  padding: 10px;
+}
+
+.date-padding {
+  padding-left: 6%;
+  padding-top: 5%;
+  width: 90%;
+}
+
+.date-width {
+  width: 90%;
+}
+
+.ticketcard-padding {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 2%;
+}
+
+.service-btn {
+  width: 90%;
+  height: 24px;
+  font-size: 15px;
+  text-align: center;
+  line-height: 11px;
+  opacity: 0.6;
+}
+
+.empty-card {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 2%;
+}
+
+.font-18{
+  font-size: 18px;
 }
