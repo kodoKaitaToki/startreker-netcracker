@@ -1,9 +1,9 @@
-import { HttpClient} from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Api } from '../../../../../modules/api';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {Api} from '../../../../../modules/api';
 
-import { Service } from '../model/service.model';
+import {Service} from '../model/service.model';
 
 @Injectable({
     providedIn: 'root'
@@ -22,7 +22,7 @@ export class ServiceService{
         return this.http.get<any>(url);
     }
 
-    public getServiceByStatus<Service>(status: String): Observable<Service>{
+  public getServiceByStatus<Service>(status: String): Observable<Service> {
         let url = Api.service.servicesByStatus() + '?status=' + status;
         return this.http.get<any>(url);
     }

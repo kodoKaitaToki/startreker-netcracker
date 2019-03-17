@@ -1,9 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
-import { Service } from '../shared/model/service';
-import { MOCK_DATA } from '../shared/model/mock-data';
-import { ServiceService } from '../shared/service/service.service';
+import {Service} from '../shared/model/service';
+import {ServiceService} from '../shared/service/service.service';
 
 @Component({
   selector: 'app-assigned',

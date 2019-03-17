@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class Removed extends TripState {
 
+    private final String stringValue = "Removed";
+
     private final static int databaseValue = 7;
 
     @Override
@@ -18,5 +20,10 @@ public class Removed extends TripState {
     @Override
     public int getDatabaseValue() {
         return databaseValue;
+    }
+
+    @Override
+    public String getStringValue() {
+        return stringValue;
     }
 }

@@ -10,6 +10,8 @@ public abstract class TripState {
 
     public abstract int getDatabaseValue();
 
+    public abstract String getStringValue();
+
     public boolean apply(Trip trip, User requestUser, TripState tripState, TripDTO tripDTO) {
         return true;
     }

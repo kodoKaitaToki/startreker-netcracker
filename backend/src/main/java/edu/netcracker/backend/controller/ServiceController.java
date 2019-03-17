@@ -3,15 +3,14 @@ package edu.netcracker.backend.controller;
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.message.request.MandatoryTimeInterval;
 import edu.netcracker.backend.message.request.OptionalTimeInterval;
-import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
 import edu.netcracker.backend.message.response.CarrierRevenueResponse;
 import edu.netcracker.backend.message.response.CarrierViewsResponse;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.message.response.ServiceDistributionElement;
 import edu.netcracker.backend.security.SecurityContext;
-import edu.netcracker.backend.service.StatisticsService;
 import edu.netcracker.backend.service.ServiceService;
+import edu.netcracker.backend.service.StatisticsService;
 import edu.netcracker.backend.utils.ServiceStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -127,7 +126,7 @@ public class ServiceController {
 
     @GetMapping("api/v1/carrier/service/by-status")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceCRUDDTO> getByStatus(@RequestParam("status") String status){
+    public List<ServiceCRUDDTO> getByStatus(@RequestParam("status") String status) {
         return serviceService.findByStatus(status);
     }
 
@@ -152,10 +151,9 @@ public class ServiceController {
     @GetMapping("api/v1/approver/service")
     //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
     public List<ServiceCRUDDTO> getServicesForApprover(@RequestParam("from") int from,
-                                             @RequestParam("number") int number,
-                                             @RequestParam("status") String status){
-        if((!status.equals(ServiceStatus.OPEN.toString())) &&
-                (!status.equals(ServiceStatus.ASSIGNED.toString()))){
+                                                       @RequestParam("number") int number,
+                                                       @RequestParam("status") String status) {
+        if ((!status.equals(ServiceStatus.OPEN.toString())) && (!status.equals(ServiceStatus.ASSIGNED.toString()))) {
             throw new RequestException("Approver may only read open or assigned services", HttpStatus.BAD_REQUEST);
         }
 
@@ -166,22 +164,22 @@ public class ServiceController {
 
     @PutMapping("api/v1/approver/service")
     //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
-    public ServiceCRUDDTO updateServiceReview(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO){
-        boolean reviewOnAssigned = (
-                serviceCRUDDTO.getServiceStatus() != ServiceStatus.UNDER_CLARIFICATION.toString()
-                        && serviceCRUDDTO.getReplyText() != null
-                        && serviceCRUDDTO.getReplyText().length() > 0);
-        if (reviewOnAssigned){
+    public ServiceCRUDDTO updateServiceReview(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO) {
+        boolean reviewOnAssigned = (serviceCRUDDTO.getServiceStatus() != ServiceStatus.UNDER_CLARIFICATION.toString()
+                                    && serviceCRUDDTO.getReplyText() != null
+                                    && serviceCRUDDTO.getReplyText()
+                                                     .length() > 0);
+        if (reviewOnAssigned) {
             throw new RequestException("Reviews can only be on under clarification services", HttpStatus.BAD_REQUEST);
         }
 
         String state = serviceCRUDDTO.getServiceStatus();
 
-        boolean illegalState = (state.equals(ServiceStatus.DRAFT.toString()) ||
-                                state.equals(ServiceStatus.OPEN.toString()) ||
-                                state.equals(ServiceStatus.ARCHIVED.toString()));
+        boolean illegalState = (state.equals(ServiceStatus.DRAFT.toString())
+                                || state.equals(ServiceStatus.OPEN.toString())
+                                || state.equals(ServiceStatus.ARCHIVED.toString()));
 
-        if (illegalState){
+        if (illegalState) {
             throw new RequestException("Approver may only assign, publish or review services", HttpStatus.BAD_REQUEST);
         }
 

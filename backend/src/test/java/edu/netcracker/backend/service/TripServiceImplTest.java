@@ -1,6 +1,8 @@
 package edu.netcracker.backend.service;
 
 import edu.netcracker.backend.controller.exception.RequestException;
+import edu.netcracker.backend.dao.PlanetDAO;
+import edu.netcracker.backend.dao.SpaceportDAO;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.dao.TripReplyDAO;
 import edu.netcracker.backend.message.response.TripDTO;
@@ -40,6 +42,12 @@ public class TripServiceImplTest {
 
     @Autowired
     private TripReplyDAO tripReplyDAO;
+
+    @Autowired
+    private PlanetDAO planetDAO;
+
+    @Autowired
+    private SpaceportDAO spaceportDAO;
 
     private TripService tripService;
 
@@ -134,7 +142,7 @@ public class TripServiceImplTest {
         underClarificationTripDTO.setReply("test reply");
         removedTripDTO = TripDTO.from(removedTrip);
 
-        tripService = new TripServiceImpl(tripDAOMock, tripStateRegistry, null, null);
+        tripService = new TripServiceImpl(tripDAOMock, planetDAO, spaceportDAO, tripStateRegistry, null, null);
     }
 
     // Draft tests

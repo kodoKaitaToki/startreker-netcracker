@@ -2,10 +2,10 @@ import { HttpHeaders } from '@angular/common/http';
 
 let baseUrl;
 const apiPort = ':80/'
-//const apiPort = '/'
+// const apiPort = '/'
 
-//baseUrl = `https://startreker-netcracker.herokuapp.com${apiPort}`
-baseUrl = `http://127.0.0.1${apiPort}`
+// baseUrl = `http://startreker-netcracker.herokuapp.com${apiPort}`
+baseUrl = `http://192.168.0.104${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
@@ -59,6 +59,27 @@ const carrier = {
   }
 }
 
+const trips = {
+  getExistingPlanets() {
+    return `${baseUrl}api/v1/planets`;
+  },
+  addTrip() {
+    return `${baseUrl}api/v1/trips`;
+  },
+  updateTrip(id) {
+    return `${baseUrl}api/v1/trips/${id}`
+  },
+  getAllTrips() {
+    return `${baseUrl}api/v1/trips`;
+  },
+  addTicketClass() {
+    return `${baseUrl}api/v1/ticket-class`;
+  },
+  deleteTicketClass(id) {
+    return `${baseUrl}api/v1/ticket-class/${id}`;
+  }
+ }
+
 const costDash = {
   getCosts(){
     return `${baseUrl}api/v1/admin/costs`;
@@ -83,7 +104,8 @@ export const Api = {
   carrier,
   costDash,
   baseUrl,
-  service
+  service,
+  trips
 }
 
 export const options = {

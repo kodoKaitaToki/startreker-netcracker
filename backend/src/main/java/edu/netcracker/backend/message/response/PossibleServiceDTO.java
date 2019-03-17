@@ -3,9 +3,10 @@ package edu.netcracker.backend.message.response;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.model.PossibleService;
-import edu.netcracker.backend.model.Service;
 import edu.netcracker.backend.model.ServiceDescr;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 @Setter
 @NoArgsConstructor
 public class PossibleServiceDTO {
+
     private Long id;
 
     @JsonProperty("service_id")
@@ -48,17 +50,18 @@ public class PossibleServiceDTO {
     public static PossibleServiceDTO from(PossibleService possibleService) {
         ServiceDescr service = possibleService.getService();
 
-        if (service != null)
-            return new PossibleServiceDTO(
-                possibleService.getPServiceId(),
-                possibleService.getServiceId(),
-                possibleService.getService().getServiceName(),
-                possibleService.getService().getServiceDescription(),
-                possibleService.getClassId(),
-                possibleService.getServicePrice());
-        else
-            throw new  RequestException("Attached service with it " + possibleService.getServiceId() + " not found",
-                    HttpStatus.NOT_FOUND);
+        if (service != null) {
+            return new PossibleServiceDTO(possibleService.getPServiceId(),
+                                          possibleService.getServiceId(),
+                                          possibleService.getService()
+                                                         .getServiceName(),
+                                          possibleService.getService()
+                                                         .getServiceDescription(),
+                                          possibleService.getClassId(),
+                                          possibleService.getServicePrice());
+        } else {
+            throw new RequestException("Attached service with it " + possibleService.getServiceId() + " not found",
+                                       HttpStatus.NOT_FOUND);
+        }
     }
-
 }

@@ -39,4 +39,6 @@ public class TicketClass {
     private Integer classSeats;
   
     private Integer itemNumber;
+
+    private Integer remainingSeats;
 }

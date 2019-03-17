@@ -12,6 +12,28 @@ public interface TripDAO {
 
     Optional<Trip> find(Number id);
 
+    List<Trip> allCarriersTrips(Long carrierId);
+
+    List<Trip> paginationForCarrier(Integer limit, Integer offset, Long carrierId);
+
+    List<Trip> findByStatusForCarrier(Integer status, Long carrierId);
+
+    List<Trip> findByStatusForCarrierPagination(Integer status, Long carrierId, Integer limit, Integer offset);
+
+    List<Trip> findByPlanetsForCarrier(String departurePlanet, String arrivalPlanet, Long carrierId);
+
+    List<Trip> getAllTripsForUser(String departurePlanet,
+                                  String departureSpaceport,
+                                  String departureDate,
+                                  String arrivalPlanet,
+                                  String arrivalSpaceport,
+                                  Integer limit,
+                                  Integer offset);
+
+    void add(Trip trip);
+
+    void update(Trip trip);
+
     void delete(Trip trip);
 
     List<Trip> findByCarrierId(Number id);
@@ -19,4 +41,6 @@ public interface TripDAO {
     List<Trip> findAll();
 
     List<TripWithArrivalAndDepartureData> getAllTripsWitArrivalAndDepatureDataBelongToCarrier(Number carrierId);
+
+    void updateTripInfo(Trip trip);
 }

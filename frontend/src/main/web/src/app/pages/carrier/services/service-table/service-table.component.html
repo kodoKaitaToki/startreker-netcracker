@@ -1,8 +1,8 @@
 <div class="row">
-  <input type="text" class="form-control col-3 ml-auto"
+  <input [(ngModel)]="filterContent" class="form-control col-3 ml-auto"
          placeholder="Filter by name"
-         [(ngModel)]="filterContent"
          style="margin-top: 1.5%; margin-right: 1.5%;"
+         type="text"
   />
 </div>
 <div class="list-group">
@@ -23,9 +23,9 @@
 
           <div class="col-1 offset-4 offset-lg-8">
             <p data-placement="top"
-              data-toggle="tooltip"
-              title="Archive"
-              (click)="service.service_status = 'ARCHIVED';
+               data-toggle="tooltip"
+               title="Archive"
+               (click)="service.service_status = 'ARCHIVED';
                         updateService(service);"
             >
               <button class="btn btn-warning btn-md">
@@ -127,8 +127,8 @@
 <div class="row justify-content-center">
   <div class="col-8">
     <pagination-controls class="listing-pagination"
-                        maxSize=5
-                       (pageChange)="onChangePage($event)">
+                         maxSize=5
+                         (pageChange)="onChangePage($event)">
     </pagination-controls>
   </div>
 </div>

@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,21 @@ public class Trip {
 
     private User approver;
 
+    private Planet departurePlanet;
+    private Planet arrivalPlanet;
+
+    private Spaceport departureSpaceport;
+    private Spaceport arrivalSpaceport;
+
     private List<TicketClass> ticketClasses = new ArrayList<>();
+
+    public List<TicketClass> getTicketClasses() {
+        return ticketClasses;
+    }
+
+    public void setTicketClasses(List<TicketClass> ticketClasses) {
+        this.ticketClasses = ticketClasses;
+    }
 
     public boolean changeStatus(User requestUser, TripState newTripState, TripDTO tripDTO) {
 

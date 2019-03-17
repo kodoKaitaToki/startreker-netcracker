@@ -13,7 +13,13 @@ public interface TicketDAO {
 
     void delete(Ticket ticket);
 
+    void createEmptyTicketForTicketClass(Long classId, Long seat);
+
+    Integer getRemainingSeatsForClass(Long classId);
+
     List<Ticket> findAllByClass(Number id);
+
+    void deleteAllTicketsOfTicketClass(Long id);
 
     void buyTicket(Ticket ticket, User user);
 }

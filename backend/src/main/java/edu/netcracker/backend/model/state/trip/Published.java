@@ -5,11 +5,12 @@ import edu.netcracker.backend.model.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Component
 public class Published extends TripState {
+
+    private final String stringValue = "Published";
 
     private final static int databaseValue = 4;
 
@@ -24,5 +25,10 @@ public class Published extends TripState {
     @Override
     public int getDatabaseValue() {
         return databaseValue;
+    }
+
+    @Override
+    public String getStringValue() {
+        return stringValue;
     }
 }

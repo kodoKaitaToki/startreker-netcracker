@@ -11,6 +11,8 @@ import java.util.List;
 @Component
 public class Assigned extends TripState {
 
+    private final String stringValue = "Assigned";
+
     private final static int databaseValue = 3;
 
     private static List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(2);
@@ -29,5 +31,10 @@ public class Assigned extends TripState {
     @Override
     public int getDatabaseValue() {
         return databaseValue;
+    }
+
+    @Override
+    public String getStringValue() {
+        return stringValue;
     }
 }

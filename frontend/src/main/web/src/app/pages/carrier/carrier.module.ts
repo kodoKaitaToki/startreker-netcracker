@@ -27,6 +27,13 @@ import {CarrierDiscountsService} from "./discounts/shared/service/carrier-discou
 import {SuggestionComponent} from "./discounts/suggestion/suggestion.component";
 import {TicketClassComponent} from "./discounts/ticket-class/ticket-class.component";
 import {ToastModule} from "primeng/toast";
+import {TripsTableComponent} from './trips/trips-table/trips-table.component';
+import {TripsCrudComponent} from './trips/trips-crud/trips-crud.component';
+import {TripFilterPipe} from './trips/shared/pipes/filter-pipe.pipe';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
+import { TripsTicketClassComponent } from './trips/trips-ticket-class/trips-ticket-class.component';
+import {DialogModule} from 'primeng/dialog';
 
 @NgModule({
             declarations:
@@ -47,7 +54,11 @@ import {ToastModule} from "primeng/toast";
                DiscountFormComponent,
                DiscountMainPageComponent,
                SuggestionComponent,
-               TicketClassComponent
+               TicketClassComponent,
+               TripsTableComponent,
+               TripsCrudComponent,
+               TripFilterPipe,
+               TripsTicketClassComponent
               ],
             imports: [
               CommonModule,
@@ -56,7 +67,10 @@ import {ToastModule} from "primeng/toast";
               CarrierRoutingModule,
               GrowlModule,
               NgxPaginationModule,
-              ToastModule
+              ToastModule,
+              MessageModule,
+              MessagesModule,
+              DialogModule
             ],
             providers: [
               MessageService,

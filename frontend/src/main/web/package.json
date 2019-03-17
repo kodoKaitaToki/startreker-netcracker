@@ -11,11 +11,11 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~7.2.8",
-    "@angular/cdk": "^7.3.3",
-    "@angular/common": "~7.2.0",
+    "@angular/animations": "^7.2.8",
+    "@angular/cdk": "^7.3.4",
+    "@angular/common": "^7.2.8",
     "@angular/compiler": "~7.2.0",
-    "@angular/core": "^7.2.5",
+    "@angular/core": "^7.2.8",
     "@angular/forms": "~7.2.0",
     "@angular/platform-browser": "~7.2.0",
     "@angular/platform-browser-dynamic": "~7.2.0",
@@ -33,7 +33,7 @@
     "ngx-pagination": "^3.2.1",
     "popper.js": "^1.14.7",
     "primeicons": "^1.0.0",
-    "primeng": "^7.1.0-rc.1",
+    "primeng": "^7.1.0",
     "ramda": "^0.26.1",
     "rxjs": "~6.3.3",
     "three": "^0.101.1",
@@ -41,7 +41,7 @@
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.13.0",
+    "@angular-devkit/build-angular": "^0.13.5",
     "@angular/cli": "~7.3.1",
     "@angular/compiler-cli": "~7.2.0",
     "@angular/language-service": "~7.2.0",
