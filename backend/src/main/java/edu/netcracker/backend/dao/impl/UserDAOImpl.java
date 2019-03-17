@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,38 +28,37 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
     private final String addRoleSql = "INSERT INTO assigned_role (user_id, role_id) VALUES (?, ?)";
     private final String removeRoleSql = "DELETE FROM assigned_role WHERE user_id = ? AND role_id = ?";
 
-    private final String findByUsernameWithRoleSql = "SELECT DISTINCT * FROM USER_A\n" +
-            "  INNER JOIN assigned_role ON assigned_role.user_id = USER_A.user_id\n" +
-            "  INNER JOIN ROLE_A ON assigned_role.role_id = ROLE_A.role_id WHERE role_name = ? and user_name = ?;";
+    private final String findByUsernameWithRoleSql = "SELECT DISTINCT * FROM USER_A "
+                                                     + "  INNER JOIN assigned_role ON assigned_role.user_id = USER_A.user_id "
+                                                     + "  INNER JOIN ROLE_A ON assigned_role.role_id = ROLE_A.role_id WHERE role_name = ? and user_name = ?;";
 
-    private final String findByEmailWithRoleSql = "SELECT DISTINCT * FROM USER_A\n" +
-            "  INNER JOIN assigned_role ON assigned_role.user_id = USER_A.user_id\n" +
-            "  INNER JOIN ROLE_A ON assigned_role.role_id = ROLE_A.role_id WHERE role_name = ? and user_email = ?;";
+    private final String findByEmailWithRoleSql = "SELECT DISTINCT * FROM USER_A "
+                                                  + "  INNER JOIN assigned_role ON assigned_role.user_id = USER_A.user_id "
+                                                  + "  INNER JOIN ROLE_A ON assigned_role.role_id = ROLE_A.role_id WHERE role_name = ? and user_email = ?;";
 
-    private final String findAllByRoleSql = "SELECT DISTINCT * FROM USER_A\n" +
-            "  INNER JOIN assigned_role ON assigned_role.user_id = USER_A.user_id\n" +
-            "  INNER JOIN ROLE_A ON assigned_role.role_id = ROLE_A.role_id WHERE role_name = ?";
+    private final String findAllByRoleSql = "SELECT DISTINCT * FROM USER_A "
+                                            + "  INNER JOIN assigned_role ON assigned_role.user_id = USER_A.user_id "
+                                            + "  INNER JOIN ROLE_A ON assigned_role.role_id = ROLE_A.role_id WHERE role_name = ?";
 
-    private final String findAllByRoleInRangeSql = "SELECT DISTINCT * FROM USER_A\n" +
-            "  INNER JOIN assigned_role ON assigned_role.user_id = USER_A.user_id\n" +
-            "  INNER JOIN ROLE_A ON assigned_role.role_id = ROLE_A.role_id WHERE role_name = ? AND USER_A.user_id BETWEEN ? AND ?";
+    private final String findAllByRoleInRangeSql = "SELECT DISTINCT * FROM USER_A "
+                                                   + "  INNER JOIN assigned_role ON assigned_role.user_id = USER_A.user_id "
+                                                   + "  INNER JOIN ROLE_A ON assigned_role.role_id = ROLE_A.role_id WHERE role_name = ? AND USER_A.user_id BETWEEN ? AND ?";
 
-    private final String findByRoleWithIdSql = "SELECT DISTINCT * FROM USER_A\n" +
-            "  INNER JOIN assigned_role ON assigned_role.user_id = USER_A.user_id\n" +
-            "  INNER JOIN ROLE_A ON assigned_role.role_id = ROLE_A.role_id WHERE role_name = ? AND USER_A.user_id = ?";
+    private final String findByRoleWithIdSql = "SELECT DISTINCT * FROM USER_A "
+                                               + "  INNER JOIN assigned_role ON assigned_role.user_id = USER_A.user_id "
+                                               + "  INNER JOIN ROLE_A ON assigned_role.role_id = ROLE_A.role_id WHERE role_name = ? AND USER_A.user_id = ?";
 
-    private final String paginationSql = "SELECT * FROM USER_A\n" +
-            "  INNER JOIN assigned_role ON assigned_role.user_id = USER_A.user_id\n" +
-            "  INNER JOIN ROLE_A ON assigned_role.role_id = ROLE_A.role_id WHERE role_name = ?" +
-            "ORDER BY USER_A.user_id ASC LIMIT ? OFFSET ?";
+    private final String paginationSql = "SELECT * FROM USER_A "
+                                         + "  INNER JOIN assigned_role ON assigned_role.user_id = USER_A.user_id "
+                                         + "  INNER JOIN ROLE_A ON assigned_role.role_id = ROLE_A.role_id WHERE role_name = ?"
+                                         + "ORDER BY USER_A.user_id ASC LIMIT ? OFFSET ?";
 
-    private final String findPerPeriod = "SELECT * FROM user_a " +
-            "WHERE user_created BETWEEN ? AND ?";
+    private final String findPerPeriod = "SELECT * FROM user_a " + "WHERE user_created BETWEEN ? AND ?";
 
-    private final String findPerPeriodByRole = "SELECT * FROM user_a " +
-            "INNER JOIN assigned_role ON assigned_role.user_id = user_a.user_id " +
-            "INNER JOIN role_a ON assigned_role.role_id = role_a.role_id " +
-            "WHERE role_a.role_id = ? AND user_created BETWEEN ? AND ?";
+    private final String findPerPeriodByRole = "SELECT * FROM user_a "
+                                               + "INNER JOIN assigned_role ON assigned_role.user_id = user_a.user_id "
+                                               + "INNER JOIN role_a ON assigned_role.role_id = role_a.role_id "
+                                               + "WHERE role_a.role_id = ? AND user_created BETWEEN ? AND ?";
 
     @Autowired
     public UserDAOImpl(RoleDAO roleDAO) {
@@ -78,10 +77,7 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
 
     public Optional<User> findByUsername(String userName) {
         try {
-            User user = getJdbcTemplate().queryForObject(
-                    findByUsernameSql,
-                    new Object[]{userName},
-                    getGenericMapper());
+            User user = getJdbcTemplate().queryForObject(findByUsernameSql, new Object[]{userName}, getGenericMapper());
             return user != null ? attachRoles(user) : Optional.empty();
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -90,10 +86,7 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
 
     public Optional<User> findByEmail(String email) {
         try {
-            User user = getJdbcTemplate().queryForObject(
-                    findByEmailSql,
-                    new Object[]{email},
-                    getGenericMapper());
+            User user = getJdbcTemplate().queryForObject(findByEmailSql, new Object[]{email}, getGenericMapper());
             return user != null ? attachRoles(user) : Optional.empty();
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -119,12 +112,11 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
     public List<User> findByRangeIdWithRole(Number startId, Number endId, Role role) {
         List<User> users = new ArrayList<>();
 
-        users.addAll(getJdbcTemplate().query(
-                findAllByRoleInRangeSql,
-                new Object[]{role.getRoleName(), startId, endId},
-                getGenericMapper()));
+        users.addAll(getJdbcTemplate().query(findAllByRoleInRangeSql,
+                                             new Object[]{role.getRoleName(), startId, endId},
+                                             getGenericMapper()));
 
-        users.forEach(this::attachRoles);
+        attachRolesToUsers(users);
 
         return users;
     }
@@ -133,12 +125,9 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
     public List<User> findAllWithRole(Role role) {
         List<User> users = new ArrayList<>();
 
-        users.addAll(getJdbcTemplate().query(
-                findAllByRoleSql,
-                new Object[]{role.getRoleName()},
-                getGenericMapper()));
+        users.addAll(getJdbcTemplate().query(findAllByRoleSql, new Object[]{role.getRoleName()}, getGenericMapper()));
 
-        users.forEach(this::attachRoles);
+        attachRolesToUsers(users);
 
         return users;
     }
@@ -147,12 +136,11 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
     public List<User> paginationWithRole(Integer from, Integer number, Role role) {
         List<User> users = new ArrayList<>();
 
-        users.addAll(getJdbcTemplate().query(
-                paginationSql,
-                new Object[]{role.getRoleName(), number, from},
-                getGenericMapper()));
+        users.addAll(getJdbcTemplate().query(paginationSql,
+                                             new Object[]{role.getRoleName(), number, from},
+                                             getGenericMapper()));
 
-        users.forEach(this::attachRoles);
+        attachRolesToUsers(users);
 
         return users;
     }
@@ -160,14 +148,9 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
     @Override
     public List<User> findPerPeriod(LocalDateTime from, LocalDateTime to) {
         List<User> users = new ArrayList<>();
-        users.addAll(getJdbcTemplate().query(
-                findPerPeriod,
-                new Object[]{from, to},
-                getGenericMapper()));
+        users.addAll(getJdbcTemplate().query(findPerPeriod, new Object[]{from, to}, getGenericMapper()));
 
-        for (User user : users) {
-            attachRoles(user);
-        }
+        attachRolesToUsers(users);
 
         return users;
     }
@@ -176,14 +159,9 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
     public List<User> findPerPeriodByRole(Number id, LocalDateTime from, LocalDateTime to) {
         List<User> users = new ArrayList<>();
 
-        users.addAll(getJdbcTemplate().query(
-                findPerPeriodByRole,
-                new Object[]{id, from, to},
-                getGenericMapper()));
+        users.addAll(getJdbcTemplate().query(findPerPeriodByRole, new Object[]{id, from, to}, getGenericMapper()));
 
-        for (User user : users) {
-            attachRoles(user);
-        }
+        attachRolesToUsers(users);
 
         return users;
     }
@@ -202,10 +180,7 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
 
     private Optional<User> executeSqlWithParam(String sql, Object[] params) {
         try {
-            User user = getJdbcTemplate().queryForObject(
-                    sql,
-                    params,
-                    getGenericMapper());
+            User user = getJdbcTemplate().queryForObject(sql, params, getGenericMapper());
             return user != null ? attachRoles(user) : Optional.empty();
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
@@ -218,12 +193,21 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
         return Optional.of(user);
     }
 
+    public void attachRolesToUsers(List<User> users) {
+        Map<Integer, List<Role>> relatedRoles = roleDAO.findAllRolesForUsers(users.stream()
+                                                                                  .map(User::getUserId)
+                                                                                  .collect(Collectors.toList()));
+        for (User user : users) {
+            user.setUserRoles(relatedRoles.get(user.getUserId()));
+        }
+    }
+
     private void updateRoles(User user) {
         List<Integer> dbRoleIds = getJdbcTemplate().queryForList(findAllRolesSql, Integer.class, user.getUserId());
         List<Integer> userRoleIds = user.getUserRoles()
-                .stream()
-                .map(Role::getRoleId)
-                .collect(Collectors.toList());
+                                        .stream()
+                                        .map(Role::getRoleId)
+                                        .collect(Collectors.toList());
         for (Integer role_id : userRoleIds) {
             if (!dbRoleIds.contains(role_id)) {
                 getJdbcTemplate().update(addRoleSql, user.getUserId(), role_id);
