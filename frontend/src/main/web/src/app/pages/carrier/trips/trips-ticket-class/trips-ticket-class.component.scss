@@ -1,0 +1,25 @@
+.ticketClasses {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  &__buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+
+  &__class {
+    margin-right: 30px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+.ticketClass {
+  &__label h4 {
+    font-size: 18px;
+  }
+}

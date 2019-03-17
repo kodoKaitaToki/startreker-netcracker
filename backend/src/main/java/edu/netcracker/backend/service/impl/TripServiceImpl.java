@@ -6,7 +6,6 @@ import edu.netcracker.backend.dao.SpaceportDAO;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.message.request.*;
 import edu.netcracker.backend.message.request.trips.TripCreation;
-import edu.netcracker.backend.message.request.trips.TripUpdate;
 import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.message.response.trips.ReadTripsDTO;
 import edu.netcracker.backend.model.*;
@@ -75,8 +74,16 @@ public class TripServiceImpl implements TripService {
     @Override
     public List<ReadTripsDTO> getAllTripsForCarrier(Long carrierId) {
         logger.debug("Getting all trips for carrier from TripDAO");
-        //        TODO: implement getting carrier id from access token
         List<Trip> trips = tripDAO.allCarriersTrips(carrierId);
+
+        return getAllTripsDTO(trips);
+    }
+
+    @Override
+    public List<ReadTripsDTO> getAllTripsForCarrierWithPagination(Integer limit, Integer offset) {
+        logger.debug("Getting {} trips for carrier from TripDAO with pagination starting from {}", limit, offset);
+        //        TODO: implement getting carrier id from access token
+        List<Trip> trips = tripDAO.paginationForCarrier(limit, offset, 7L);
 
         return getAllTripsDTO(trips);
     }
@@ -91,20 +98,22 @@ public class TripServiceImpl implements TripService {
                                                  Integer offset) {
         logger.debug("Getting all trips for user from TripDAO");
         List<Trip> trips = tripDAO.getAllTripsForUser(departurePlanet,
-                                                   departureSpaceport,
-                                                   departureDate,
-                                                   arrivalPlanet,
-                                                   arrivalSpaceport,
-                                                   limit,
-                                                   offset);
+                                                      departureSpaceport,
+                                                      departureDate,
+                                                      arrivalPlanet,
+                                                      arrivalSpaceport,
+                                                      limit,
+                                                      offset);
 
         logger.debug("Remove ticket classes where all tickets are sold");
-        for (Trip trip: trips) {
-            trip.getTicketClasses().removeIf(ticketClass -> ticketClass.getRemainingSeats() == 0);
+        for (Trip trip : trips) {
+            trip.getTicketClasses()
+                .removeIf(ticketClass -> ticketClass.getRemainingSeats() == 0);
         }
 
         logger.debug("Remove trip where all tickets are sold");
-        trips.removeIf(trip -> trip.getTicketClasses().isEmpty());
+        trips.removeIf(trip -> trip.getTicketClasses()
+                                   .isEmpty());
 
         return getAllTripsDTO(trips);
     }
@@ -242,14 +251,18 @@ public class TripServiceImpl implements TripService {
                                            tripCreation.getDeparturePlanet()));
         trip.setArrivalPlanet(new Planet(planetDAO.getIdByPlanetName(tripCreation.getArrivalPlanet()),
                                          tripCreation.getArrivalPlanet()));
-        trip.setDepartureSpaceport(new Spaceport(spaceportDAO.getIdBySpaceportName(tripCreation.getDepartureSpaceport()),
+        trip.setDepartureSpaceport(new Spaceport(spaceportDAO.getIdBySpaceportName(tripCreation.getDepartureSpaceport(),
+                                                                                   trip.getDeparturePlanet()
+                                                                                       .getPlanetId()),
                                                  tripCreation.getDepartureSpaceport(),
                                                  trip.getDeparturePlanet()
                                                      .getPlanetId()));
-        trip.setArrivalSpaceport(new Spaceport(spaceportDAO.getIdBySpaceportName(tripCreation.getArrivalSpaceport()),
-                                               tripCreation.getArrivalSpaceport(),
-                                               trip.getArrivalPlanet()
-                                                   .getPlanetId()));
+        trip.setArrivalSpaceport(new Spaceport(spaceportDAO.getIdBySpaceportName(tripCreation.getArrivalSpaceport(),
+                                                                                 trip.getArrivalPlanet()
+                                                                                     .getPlanetId()),
+                                 tripCreation.getArrivalSpaceport(),
+                                 trip.getArrivalPlanet()
+                                     .getPlanetId()));
         trip.setTripState(draft);
         trip.setCreationDate(LocalDateTime.now());
         trip.setTripPhoto("defaultPhoto.png");

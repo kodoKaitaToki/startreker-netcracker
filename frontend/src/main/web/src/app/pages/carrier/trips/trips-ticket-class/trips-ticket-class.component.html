@@ -1,0 +1,134 @@
+<div class="ticketClasses">
+  <form
+    class="ticketClasses__class ticketClass"
+    [formGroup]="formEconomy"
+    (ngSubmit)="submitEconomy()">
+      <span class="ticketClass__label">
+        <h4>Class name</h4>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="class_name" />
+      </span>
+      <span class="ticketClass__label">
+        <h4>Number of seats</h4>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="class_seats"
+        />
+      </span>
+      <span class="ticketClass__label">
+          <h4>Number of remaining seats</h4>
+          <input
+          type="number"
+          class="form-control"
+          formControlName="remaining_seats" />
+      </span>
+      <span class="ticketClass__label">
+        <h4>Ticket price</h4>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="ticket_price" />
+      </span>
+      <span *ngIf="!uneditTicketClasses" class="ticketClasses__buttons">
+        <button
+          class="btn btn-success"
+          type="submit"
+          [disabled]="formEconomy.invalid">
+          Save
+        </button>
+        <button
+          class="btn btn-danger"
+          type="button"
+          (click)="clearEconomyForm()"
+          [disabled]="formEconomy.invalid"
+        >
+          Delete
+        </button>
+      </span>
+  </form>
+  <form class="ticketClasses__class" [formGroup]="formFirst" (ngSubmit)="submitFirst()">
+      <span class="ticketClass__label">
+          <h4>Class name</h4>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="class_name" />
+        </span>
+        <span class="ticketClass__label">
+          <h4>Number of seats</h4>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="class_seats" />
+        </span>
+        <span class="ticketClass__label">
+            <h4>Number of remaining seats</h4>
+            <input
+            type="number"
+            class="form-control"
+            formControlName="remaining_seats" />
+        </span>
+        <span class="ticketClass__label">
+          <h4>Ticket price</h4>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="ticket_price" />
+        </span>
+        <span *ngIf="!uneditTicketClasses" class="ticketClasses__buttons">
+          <button class="btn btn-success" type="submit" [disabled]="formFirst.invalid">
+            Save
+          </button>
+          <button class="btn btn-danger" type="button" (click)="clearFirstForm()" [disabled]="formFirst.invalid">
+            Delete
+          </button>
+        </span>
+  </form>
+  <form class="ticketClasses__class" [formGroup]="formBusiness" (ngSubmit)="submitBusiness()">
+      <span class="ticketClass__label">
+          <h4>Class name</h4>
+          <input
+            type="text"
+            class="form-control"
+            formControlName="class_name" />
+        </span>
+        <span class="ticketClass__label">
+          <h4>Number of seats</h4>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="class_seats" />
+        </span>
+        <span class="ticketClass__label">
+            <h4>Number of remaining seats</h4>
+            <input
+            type="number"
+            class="form-control"
+            formControlName="remaining_seats" />
+        </span>
+        <span class="ticketClass__label">
+          <h4>Ticket price</h4>
+          <input
+            type="number"
+            class="form-control"
+            formControlName="ticket_price" />
+        </span>
+        <span *ngIf="!uneditTicketClasses" class="ticketClasses__buttons">
+          <button class="btn btn-success" type="submit"
+          [disabled]="formBusiness.invalid">
+            Save
+          </button>
+          <button
+            class="btn btn-danger"
+            type="button"
+            (click)="clearBusinessForm()"
+            [disabled]="formBusiness.invalid"
+          >
+            Delete
+          </button>
+        </span>
+  </form>
+</div>

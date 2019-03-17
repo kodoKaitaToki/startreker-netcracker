@@ -53,6 +53,14 @@ public class TripController {
         return tripService.getAllTripsForCarrier(carrierId);
     }
 
+
+    @GetMapping("api/v1/trips/paging")
+    //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<ReadTripsDTO> getAllTripsForCarrierWithPagination(@RequestParam("limit") Integer limit,
+                                                                @RequestParam("offset") Integer offset) {
+        return tripService.getAllTripsForCarrierWithPagination(limit, offset);
+    }
+
     @GetMapping("api/v1/user/trips")
     public List<ReadTripsDTO> getTripsForUser(@RequestParam("departure_planet") String departurePlanet,
                                               @RequestParam("departure_spaceport") String departureSpaceport,

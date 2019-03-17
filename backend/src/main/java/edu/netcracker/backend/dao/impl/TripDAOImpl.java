@@ -82,7 +82,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
 
     private String FIND_ALL_TRIPS_FOR_CARRIER = FIND_ALL_TRIPS + "WHERE carrier_id = ? AND trip_status != 7 ";
 
-    private String ORDERED = "ORDER BY t.creation_date DESC ";
+    private String ORDERED = "ORDER BY trip_status, t.creation_date DESC ";
 
     private String PAGINATION = "LIMIT ? OFFSET ?";
 

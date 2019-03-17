@@ -5,7 +5,7 @@ const apiPort = ':80/'
 // const apiPort = '/'
 
 // baseUrl = `http://startreker-netcracker.herokuapp.com${apiPort}`
-baseUrl = `http://localhost${apiPort}`
+baseUrl = `http://192.168.0.104${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
@@ -66,8 +66,17 @@ const trips = {
   addTrip() {
     return `${baseUrl}api/v1/trips`;
   },
+  updateTrip(id) {
+    return `${baseUrl}api/v1/trips/${id}`
+  },
   getAllTrips() {
     return `${baseUrl}api/v1/trips`;
+  },
+  addTicketClass() {
+    return `${baseUrl}api/v1/ticket-class`;
+  },
+  deleteTicketClass(id) {
+    return `${baseUrl}api/v1/ticket-class/${id}`;
   }
  }
 
@@ -95,7 +104,7 @@ export const Api = {
   carrier,
   costDash,
   baseUrl,
-  service, 
+  service,
   trips
 }
 

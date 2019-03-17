@@ -138,10 +138,18 @@
     </div>
 
     <div class="col-md-9">
-      <app-trips-table [trips]="defaultTrips" (notifyAboutUpdate)="processUpdateEvent($event)"
-        (notifyAboutDelete)="processDeleteNotification()" [filterCriteria]="currentFilter"
-        [filterContent]="filterContent">
+      <app-trips-table
+        [trips]="defaultTrips"
+        (onUpdateDataNotifier)="getTripForUpdate($event)"
+        (notifyAboutDelete)="processDeleteNotification()"
+        [filterCriteria]="currentFilter"
+        [filterContent]="filterContent"
+        [exisitngDirections]="general"
+        (onSubmitTicketClassEmitter$)="ticketClassSubmitHandler($event)"
+        (deleteTicketClassEmitter$)="ticketClassDelete($event)"
+      >
       </app-trips-table>
     </div>
   </div>
 </div>
+<p-toast></p-toast>

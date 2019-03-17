@@ -14,7 +14,7 @@ public interface SpaceportDAO {
 
     List<Spaceport> findByPlanet(String planet);
 
-    Long getIdBySpaceportName(String spaceport);
+    Long getIdBySpaceportName(String spaceport, Long planetId);
 
     void delete(Spaceport spaceport);
 

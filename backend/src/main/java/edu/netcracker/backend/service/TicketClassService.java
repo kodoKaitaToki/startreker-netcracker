@@ -18,5 +18,7 @@ public interface TicketClassService {
 
     Map<Long, List<TicketClass>> getAllTicketClassesBelongToTrips(List<Number> tripIds);
 
-    void createNewTicketClass(TicketClass ticketClass);
+    void deleteTicketClass(Long id);
+
+    void createOrUpdate(TicketClass ticketClass);
 }
