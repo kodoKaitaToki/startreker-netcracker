@@ -574,11 +574,15 @@ public class CarrierRESTTest {
         roleDAO.save(role);
 
         role = new Role();
-        role.setRoleName("ROLE_USER");
+        role.setRoleName("ROLE_APPROVER");
         roleDAO.save(role);
 
         role = new Role();
         role.setRoleName("ROLE_CARRIER");
+        roleDAO.save(role);
+
+        role = new Role();
+        role.setRoleName("ROLE_USER");
         roleDAO.save(role);
 
         userService.save(createUser("vitya",
