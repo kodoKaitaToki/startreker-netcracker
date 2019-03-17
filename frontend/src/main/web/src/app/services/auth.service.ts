@@ -15,11 +15,15 @@ import { LoginResponse } from './interfaces/login-response.interface';
 })
 
 export class ApiUserService {
+  // userData = {
+  //   username: '',
+  //   email: '',
+  //   phone: '',
+  //   authorities: []
+  // }
   userData = {
     username: '',
-    email: '',
-    phone: '',
-    authorities: []
+    roles: []
   }
 
   constructor(
@@ -38,8 +42,8 @@ export class ApiUserService {
       return this.http.post<any>(Api.auth.loginUser(), userData, HttpOptions);
     }
 
-    getLoggedUser(userData: LoginResponse){
-      this.userData = clone(userData);
+    getLoggedUser(userData){
+      this.setUserData(userData);
       localStorage.setItem('at', userData.access_token);
       localStorage.setItem('rt', userData.refresh_token);
     }
@@ -57,6 +61,7 @@ export class ApiUserService {
       this.http.post<any>(Api.auth.logoutUser(), {}, HttpOptionsAuthorized);
       localStorage.removeItem('at');
       localStorage.removeItem('rt');
+      localStorage.removeItem('userdata');
       this.userData = clone({});
       if(this.location.isCurrentPathEqualTo('/')){
         location.reload();
@@ -70,6 +75,8 @@ export class ApiUserService {
     }
 
     setUserData(userData){
-      this.userData = userData;
+      this.userData = {username: userData.username,
+                      roles: userData.roles}
+      localStorage.setItem('userdata',JSON.stringify(this.userData));
     }
   }
