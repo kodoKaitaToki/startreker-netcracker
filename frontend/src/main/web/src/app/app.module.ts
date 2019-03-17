@@ -36,7 +36,7 @@ import { Configuration } from './app.constants';
     HeaderComponent,
     RegistrationComponent,
     LoginComponent,
-    RecoveryComponent
+    RecoveryComponent,
   ],
   imports: [
     AppRoutingModule,
