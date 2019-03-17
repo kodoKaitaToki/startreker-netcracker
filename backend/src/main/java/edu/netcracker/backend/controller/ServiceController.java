@@ -112,25 +112,25 @@ public class ServiceController {
     }
 
     @GetMapping("api/v1/carrier/service/by-status")
-    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<ServiceCRUDDTO> getByStatus(@RequestParam("status") String status) {
         return serviceService.findByStatus(status);
     }
 
     @PutMapping("api/v1/carrier/service")
-    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public ServiceCRUDDTO updateService(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO) {
         return serviceService.updateService(serviceCRUDDTO);
     }
 
     @PostMapping("api/v1/carrier/service")
-    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public ServiceCRUDDTO addService(@Valid @RequestBody ServiceCreateForm serviceCreateForm) {
         return serviceService.addService(serviceCreateForm);
     }
 
     @GetMapping("api/v1/approver/service")
-    //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
+    @PreAuthorize("hasAuthority('ROLE_APPROVER')")
     public List<ServiceCRUDDTO> getServicesForApprover(@RequestParam("from") int from,
                                                        @RequestParam("number") int number,
                                                        @RequestParam("status") String status) {
@@ -144,7 +144,7 @@ public class ServiceController {
     }
 
     @PutMapping("api/v1/approver/service")
-    //@PreAuthorize("hasAuthority('ROLE_APPROVER')")
+    @PreAuthorize("hasAuthority('ROLE_APPROVER')")
     public ServiceCRUDDTO updateServiceReview(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO) {
         boolean reviewOnAssigned = (serviceCRUDDTO.getServiceStatus() != ServiceStatus.UNDER_CLARIFICATION.toString()
                                     && serviceCRUDDTO.getReplyText() != null
