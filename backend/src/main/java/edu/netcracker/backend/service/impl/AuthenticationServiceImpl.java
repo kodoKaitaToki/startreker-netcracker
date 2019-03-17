@@ -1,6 +1,7 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
+import edu.netcracker.backend.message.request.ChangePasswordForm;
 import edu.netcracker.backend.message.request.EmailFrom;
 import edu.netcracker.backend.message.request.SignInForm;
 import edu.netcracker.backend.message.request.SignUpForm;
@@ -123,6 +124,26 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public Message logOut() {
+        User user = getCurrentUser();
+
+        user.setUserRefreshToken(null);
+        userService.save(user);
+
+        return new Message(HttpStatus.OK, "You are logged out");
+    }
+
+    @Override
+    public Message changePassword(ChangePasswordForm changePasswordForm) {
+        User user = getCurrentUser();
+
+        userService.changePasswordForUser(user, changePasswordForm);
+        user.setUserRefreshToken(null);
+        userService.save(user);
+
+        return new Message(HttpStatus.OK, "Password changed");
+    }
+
+    private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext()
                                                              .getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -131,10 +152,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (user == null) {
             throw new RequestException("User not found", HttpStatus.NOT_FOUND);
         }
-
-        user.setUserRefreshToken(null);
-        userService.save(user);
-
-        return new Message(HttpStatus.OK, "You are logged out");
+        return user;
     }
 }
