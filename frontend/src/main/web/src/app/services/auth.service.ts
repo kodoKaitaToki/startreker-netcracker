@@ -48,17 +48,9 @@ export class ApiUserService {
       return this.http.post<any>(Api.auth.registerUser(), userData, HttpOptions)
     }
 
-    public sendConfirmToken(){
-      let token: string;
-
-      this.activatedRoute.queryParams.subscribe(data => {
-        token = data['token'];
-        let params = new HttpParams().set("token", token);
-        this.http.get(Api.auth.confirmPassword(), {
-          headers: HttpOptions.headers,
-          params: params
-        });
-      })
+    public sendConfirmToken(params: HttpParams){
+        return this.http.get(Api.auth.confirmPassword(), {headers: HttpOptions.headers,
+                                                          params: params});
     }
 
     public logoutUser() {

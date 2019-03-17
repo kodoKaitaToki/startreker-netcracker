@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { HttpParams } from '@angular/common/http';
 
 import { ApiUserService } from '../../services/auth.service';
 
@@ -9,9 +11,17 @@ import { ApiUserService } from '../../services/auth.service';
 })
 export class ConfirmMessageComponent implements OnInit {
 
-  constructor(private apiUserService: ApiUserService) {}
+  checkBtn: boolean = true;
+
+  constructor(private apiUserService: ApiUserService,
+              private activatedRoute: ActivatedRoute) {}
 
   ngOnInit() {
-    this.apiUserService.sendConfirmToken();
+    let token: string;
+    this.activatedRoute.queryParams.subscribe(data => {
+      token = data['token'];
+      let params = new HttpParams().set("token", token);
+      this.apiUserService.sendConfirmToken(params).subscribe(() => this.checkBtn = false);
+    })
   }
 }
