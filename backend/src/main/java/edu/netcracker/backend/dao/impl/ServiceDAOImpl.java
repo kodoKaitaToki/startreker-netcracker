@@ -1,6 +1,8 @@
 package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.ServiceDAO;
+import edu.netcracker.backend.dao.ServiceReplyDAO;
+import edu.netcracker.backend.model.Service;
 import edu.netcracker.backend.dao.mapper.ServiceMapper;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
@@ -107,12 +109,14 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
 
     @Override
     public Optional<ServiceDescr> find(Number id) {
-        logger.debug("Getting a service with id = " + id);
+        logger.debug("Querying a service by id = {}", id);
         Optional<ServiceDescr> serviceOpt = super.find(id);
 
         if (serviceOpt.isPresent()) {
             return serviceOpt;
         }
+
+        logger.debug("There is no service with id = {}", id);
         return Optional.empty();
     }
 
@@ -124,25 +128,26 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
 
     @Override
     public void delete(Long id) {
-        logger.debug("Deleting service with id = " + id);
+        logger.debug("Deleting a service with id = {}", id);
         getJdbcTemplate().update(DELETE_SERVICE, id);
     }
 
     @Override
     public void update(ServiceDescr service) {
-        logger.debug("Updating service with id = " + service.getServiceId());
+        logger.debug("Updating service with id = {}", service.getServiceId());
         super.update(service);
     }
 
     @Override
-    public Optional<ServiceDescr> findByName(String name, Number id) {
-        logger.debug("Getting a service with name = " + name);
-
-        try {
-            ServiceDescr serviceOpt =
-                    getJdbcTemplate().queryForObject(FIND_SERVICE_BY_NAME, new Object[]{id, name}, getGenericMapper());
-            return serviceOpt != null ? Optional.of(serviceOpt) : Optional.empty();
-        } catch (EmptyResultDataAccessException e) {
+    public Optional<ServiceDescr> findByName(String name, Number id){
+        logger.debug("Querying a service by name = {} of carrier  = {}", name, id);
+        try{
+            Optional<ServiceDescr> serviceOpt =
+                    Optional.of(
+                            getJdbcTemplate().queryForObject(FIND_SERVICE_BY_NAME, new Object[]{id, name}, getGenericMapper()));
+            return serviceOpt;
+        }catch(EmptyResultDataAccessException e){
+            logger.debug("Carrier {} doesn't have service with name = {}", id, name);
             return Optional.empty();
         }
 
@@ -169,12 +174,19 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     }
 
     @Override
-    public List<ServiceCRUDDTO> findByStatus(Number id, Integer status) {
-        logger.debug("Getting services where status = " + status);
+    public List<ServiceCRUDDTO> findByStatus(Number id, Integer status){
+        logger.debug("Querying services with status = {} of carrier = {}", status, id);
 
         List<ServiceCRUDDTO> result = new ArrayList<>();
         result.addAll(getJdbcTemplate().query(FIND_BY_STATUS, new Object[]{id, status}, mapper));
-        result.forEach(this::attachReply);
+
+        ServiceReplyDAO serviceReplyDAO = new ServiceReplyDAOImpl();
+
+        result.forEach(service -> {
+            Long serviceId = service.getId();
+            String replyText = serviceReplyDAO.getLastReply(serviceId).orElse(null);
+            service.setReplyText(replyText);
+        });
 
         return result;
     }

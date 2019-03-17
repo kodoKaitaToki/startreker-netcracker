@@ -21,7 +21,10 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -56,6 +59,8 @@ public class ServiceServiceTest {
         ServiceCRUDDTO testService = ServiceCRUDDTO.form(serviceDescr, null);
         ret = new ArrayList<>();
         ret.add(testService);
+
+        serviceCRUDDTO = ServiceCRUDDTO.form(serviceDescr, "");
     }
 
     @Before
@@ -93,7 +98,28 @@ public class ServiceServiceTest {
     }
 
     @Test
-    public void reviewService() {
+    public void updateServiceExceptionTest(){
+        expectedEx.expect(RequestException.class);
+        expectedEx.expectMessage("Service " + serviceCRUDDTO.getId() + " not found ");
+
+        when(serviceDAO.find(serviceCRUDDTO.getId())).thenReturn(Optional.empty());
+
+        serviceService.updateService(serviceCRUDDTO);
+    }
+
+    @Test
+    public void FindByStatusTest(){
+        String expectedStatus = ServiceStatus.OPEN.toString();
+
+        when(serviceDAO.findByStatus(any(), eq(2))).thenReturn(ret);
+
+        String actualStatus = serviceService.findByStatus(ServiceStatus.OPEN.toString()).get(0).getServiceStatus();
+
+        Assert.assertEquals(expectedStatus, actualStatus);
+    }
+
+    @Test
+    public void reviewService() throws Exception {
         //TODO: add actual tests
         Assert.assertNull(null);
     }

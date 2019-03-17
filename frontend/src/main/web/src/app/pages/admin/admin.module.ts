@@ -3,7 +3,6 @@ import {CommonModule} from '@angular/common';
 
 import {AdminRoutingModule} from './admin-routing.module';
 import {NavbarComponent} from './navbar/navbar.component';
-import {IndexComponent} from './index/index.component';
 import {ApproverCrudComponent} from './approver/approver-crud/approver-crud.component';
 import {CarrierCrudComponent} from './carrier/carrier-crud/carrier-crud.component';
 import {DashboardsComponent} from './dashboards/dashboards.component';
@@ -54,7 +53,6 @@ import { SharedModule } from 'src/app/shared/shared.module';
   declarations: [
     NavbarComponent,
     ApproverCrudComponent,
-    IndexComponent,
     CarrierCrudComponent,
     BundlesCrudComponent,
     BundlesComponentComponent,
