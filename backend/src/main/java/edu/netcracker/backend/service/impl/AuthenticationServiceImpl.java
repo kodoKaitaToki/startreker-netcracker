@@ -106,7 +106,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public Message confirmPassword(String token) {
-        if (!jwtProvider.validateToken(token) && !jwtProvider.isRegistrationToken(token)) {
+        if (!jwtProvider.validateToken(token) || !jwtProvider.isRegistrationToken(token)) {
             throw new RequestException("Invalid token", HttpStatus.BAD_REQUEST);
         }
 
