@@ -1,0 +1,14 @@
+<div  class="main" [ngStyle]="{'background-image': getUrl()}">
+
+<app-header></app-header>
+<main>
+  <app-search-panel></app-search-panel>
+  <div class="trip-list">
+    <app-trip-info></app-trip-info>
+    <app-trip-info></app-trip-info>
+    <app-trip-info></app-trip-info>
+  </div>
+</main>
+<app-footer></app-footer>
+<router-outlet></router-outlet>
+</div>

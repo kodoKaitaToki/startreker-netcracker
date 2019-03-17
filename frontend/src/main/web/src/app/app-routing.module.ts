@@ -4,11 +4,10 @@ import { LandingComponent } from './pages/landing/landing.component';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegistrationComponent } from './pages/registration/registration.component';
-import { RecoveryComponent } from './pages/recovery/recovery.component'
+import { RecoveryComponent } from './pages/recovery/recovery.component';
 import { Role } from './guards/role';
 
 import { AuthGuard } from './guards/auth.guard';
-import {TripSearchComponent} from "./pages/trip-search/trip-search/trip-search.component";
 
 const routes: Routes = [
   { path: '', component: LandingComponent},
@@ -24,6 +23,9 @@ const routes: Routes = [
     // canActivate: [AuthGuard],
     // data: {roles: [Role.Admin]}
   },
+
+
+
   { path: 'carrier',
     loadChildren: './pages/carrier/carrier.module#CarrierModule',
 
@@ -40,12 +42,12 @@ const routes: Routes = [
     // canActivate: [AuthGuard],
     // data: {roles: [Role.Carrier]}
   },
-  {path: 'trip-search',
-    loadChildren: './pages/trip-search/trip-search.module#TripSearchModule'
-    // component: TripSearchComponent
-  },
-  { path: '**', redirectTo: '/notFound'},
 
+  { path: 'flights',
+    loadChildren: './pages/flights/flights.module#FlightsModule'
+  },
+
+  { path: '**', redirectTo: '/notFound'},
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
