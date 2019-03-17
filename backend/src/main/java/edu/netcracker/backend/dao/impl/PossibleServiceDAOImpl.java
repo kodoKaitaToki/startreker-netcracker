@@ -5,6 +5,7 @@ import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.model.PossibleService;
 import edu.netcracker.backend.model.Service;
 import edu.netcracker.backend.model.ServiceDescr;
+import edu.netcracker.backend.model.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,20 +18,25 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
 
     private ServiceDAO serviceDAO;
 
-    private String FIND_ALL_WITH_CLASS_ID = "SELECT p_service_id, "
-                                            + "service_id, "
-                                            + "class_id, "
-                                            + "service_price, "
-                                            + "p_service_status "
-                                            + "FROM possible_service WHERE class_id = ? AND p_service_status = 1";
+    private static final String FIND_ALL_WITH_CLASS_ID = "SELECT p_service_id, "
+                                                         + "service_id, "
+                                                         + "class_id, "
+                                                         + "service_price, "
+                                                         + "p_service_status "
+                                                         + "FROM possible_service WHERE class_id = ? AND p_service_status = 1";
 
-    private String FIND_ALL_P_SERVICES_BY_SUGGESTION_ID = "SELECT possible_service.p_service_id, "
-                                                          + "service_id, "
-                                                          + "class_id, "
-                                                          + "service_price, "
-                                                          + "p_service_status FROM possible_service "
-                                                          + "INNER JOIN suggested_service ON possible_service.p_service_id = suggested_service.p_service_id "
-                                                          + "WHERE suggestion_id = ? AND p_service_status = 1";
+    private static final String FIND_ALL_P_SERVICES_BY_SUGGESTION_ID = "SELECT possible_service.p_service_id, "
+                                                                       + "service_id, "
+                                                                       + "class_id, "
+                                                                       + "service_price, "
+                                                                       + "p_service_status FROM possible_service "
+                                                                       + "INNER JOIN suggested_service ON possible_service.p_service_id = suggested_service.p_service_id "
+                                                                       + "WHERE suggestion_id = ? AND p_service_status = 1";
+
+    private static final String BUY_P_SERVICE = "INSERT INTO bought_service ("
+                                                + "p_service_id, "
+                                                + "ticket_id) "
+                                                + "VALUES (?, ?)";
 
     @Autowired
     public PossibleServiceDAOImpl(ServiceDAO serviceDAO) {
@@ -84,4 +90,10 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
 
         return possibleServices;
     }
+
+    @Override
+    public void buyService(Ticket ticket, PossibleService possibleService) {
+        getJdbcTemplate().update(BUY_P_SERVICE);
+    }
+
 }

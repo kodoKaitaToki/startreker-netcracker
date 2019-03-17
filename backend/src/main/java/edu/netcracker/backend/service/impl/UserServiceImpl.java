@@ -1,14 +1,21 @@
 package edu.netcracker.backend.service.impl;
 
+import edu.netcracker.backend.controller.exception.RequestException;
+import edu.netcracker.backend.dao.PossibleServiceDAO;
+import edu.netcracker.backend.dao.TicketDAO;
 import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.message.request.SignUpForm;
 import edu.netcracker.backend.message.request.UserCreateForm;
+import edu.netcracker.backend.message.response.BoughtTicketDTO;
+import edu.netcracker.backend.model.PossibleService;
 import edu.netcracker.backend.model.Role;
+import edu.netcracker.backend.model.Ticket;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.security.UserInformationHolder;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.utils.PasswordGeneratorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,18 +25,33 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private UserDAO userDAO;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    private TicketDAO ticketDAO;
+
+    private PossibleServiceDAO possibleServiceDAO;
+
+    @Autowired
+    public UserServiceImpl(UserDAO userDAO,
+                           PasswordEncoder passwordEncoder,
+                           TicketDAO ticketDAO,
+                           PossibleServiceDAO possibleServiceDAO) {
+        this.userDAO = userDAO;
+        this.passwordEncoder = passwordEncoder;
+        this.ticketDAO = ticketDAO;
+        this.possibleServiceDAO = possibleServiceDAO;
+    }
 
     @Override
     public void save(User user) {
@@ -38,7 +60,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User find(Number id) {
-        return userDAO.find(id).orElse(null);
+        return userDAO.find(id)
+                      .orElse(null);
     }
 
     @Override
@@ -48,22 +71,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean ifUsernameExist(String username) {
-        return userDAO.findByUsername(username).isPresent();
+        return userDAO.findByUsername(username)
+                      .isPresent();
     }
 
     @Override
     public boolean ifEmailExist(String email) {
-        return userDAO.findByEmail(email).isPresent();
+        return userDAO.findByEmail(email)
+                      .isPresent();
     }
 
     @Override
     public User findByUsername(String userName) {
-        return userDAO.findByUsername(userName).orElse(null);
+        return userDAO.findByUsername(userName)
+                      .orElse(null);
     }
 
     @Override
     public User findByEmail(String email) {
-        return userDAO.findByEmail(email).orElse(null);
+        return userDAO.findByEmail(email)
+                      .orElse(null);
     }
 
     @Override
@@ -79,8 +106,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(SignUpForm signUpForm, boolean isActivated, List<Role> roles) {
         User user = new User(signUpForm.getUsername(),
-                passwordEncoder.encode(signUpForm.getPassword()),
-                signUpForm.getEmail());
+                             passwordEncoder.encode(signUpForm.getPassword()),
+                             signUpForm.getEmail());
         user.setUserIsActivated(isActivated);
         user.setUserRoles(roles);
         user.setUserTelephone(signUpForm.getTelephoneNumber());
@@ -92,8 +119,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(UserCreateForm userCreateForm, List<Role> roles) {
         User user = new User(userCreateForm.getUsername(),
-                passwordEncoder.encode(userCreateForm.getPassword()),
-                userCreateForm.getEmail());
+                             passwordEncoder.encode(userCreateForm.getPassword()),
+                             userCreateForm.getEmail());
         user.setUserIsActivated(userCreateForm.getIsActivated());
         user.setUserRoles(roles);
         user.setUserTelephone(userCreateForm.getTelephoneNumber());
@@ -105,17 +132,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUsernameWithRole(String userName, Role role) {
-        return userDAO.findByUsernameWithRole(userName, role).orElse(null);
+        return userDAO.findByUsernameWithRole(userName, role)
+                      .orElse(null);
     }
 
     @Override
     public User findByEmailWithRole(String email, Role role) {
-        return userDAO.findByEmailWithRole(email, role).orElse(null);
+        return userDAO.findByEmailWithRole(email, role)
+                      .orElse(null);
     }
 
     @Override
     public User findByIdWithRole(Number id, Role role) {
-        return userDAO.findByIdWithRole(id, role).orElse(null);
+        return userDAO.findByIdWithRole(id, role)
+                      .orElse(null);
     }
 
     @Override
@@ -134,23 +164,63 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public BoughtTicketDTO buyTicket(BoughtTicketDTO boughtTicketDTO) {
+        Optional<Ticket> optTicket = ticketDAO.find(boughtTicketDTO.getTicketId());
+        Optional<User> optUser = userDAO.find(boughtTicketDTO.getPassengerId());
+        List<PossibleService> possibleServices = new ArrayList<>();
+
+        if (!optTicket.isPresent()) {
+            throw new RequestException(String.format("Ticket with id %s not found", boughtTicketDTO.getTicketId()),
+                                       HttpStatus.NOT_FOUND);
+        }
+
+        if (!optUser.isPresent()) {
+            throw new RequestException(String.format("User with id %s not found", boughtTicketDTO.getPassengerId()),
+                                       HttpStatus.NOT_FOUND);
+        }
+
+        boughtTicketDTO.getPServicesId()
+                       .forEach(id -> {
+                           Optional<PossibleService> optPossibleService = possibleServiceDAO.find(id);
+
+                           if (!optPossibleService.isPresent()) {
+                               throw new RequestException(String.format("Possible service with id %s not found",
+                                                                        boughtTicketDTO.getPassengerId()),
+                                                          HttpStatus.NOT_FOUND);
+                           }
+
+                           possibleServices.add(optPossibleService.get());
+                       });
+
+        Ticket ticket = optTicket.get();
+        User user = optUser.get();
+
+        ticketDAO.buyTicket(ticket, user);
+        possibleServices.forEach(possibleService -> possibleServiceDAO.buyService(ticket, possibleService));
+
+        return boughtTicketDTO;
+    }
+
+    @Override
     public UserDetails createUserDetails(UserInformationHolder userInformationHolder) {
         if (userInformationHolder == null) {
             return null;
         }
 
         return new org.springframework.security.core.userdetails.User(userInformationHolder.getUsername(),
-                userInformationHolder.getPassword(),
-                mapRolesToAuthorities(userInformationHolder.getRoles()));
+                                                                      userInformationHolder.getPassword(),
+                                                                      mapRolesToAuthorities(userInformationHolder.getRoles()));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userDAO.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException(username + " not found"));
+        return userDAO.findByUsername(username)
+                      .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<String> roles) {
-        return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return roles.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
     }
 }

@@ -2,6 +2,7 @@ package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.TicketDAO;
 import edu.netcracker.backend.model.Ticket;
+import edu.netcracker.backend.model.User;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -33,5 +34,11 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
         }
 
         return tickets;
+    }
+
+    @Override
+    public void buyTicket(Ticket ticket, User user) {
+        ticket.setPassengerId(user.getUserId());
+        update(ticket);
     }
 }
