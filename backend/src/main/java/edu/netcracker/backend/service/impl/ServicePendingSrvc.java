@@ -28,6 +28,15 @@ public class ServicePendingSrvc implements IPendingSrvc<PendingActivationService
                         obj.setApproverName("");
                         obj.setApproverEmail("");
                     }
+
+                    if ("1".equals(obj.getServiceStatus())) {
+                        obj.setServiceStatus("Draft");
+                    } else if ("2".equals(obj.getServiceStatus())) {
+                        obj.setServiceStatus("Opened");
+                    } else if ("3".equals(obj.getServiceStatus())) {
+                        obj.setServiceStatus("Assigned");
+                    }
+
                     return obj;
                 }
         ).collect(Collectors.toList());

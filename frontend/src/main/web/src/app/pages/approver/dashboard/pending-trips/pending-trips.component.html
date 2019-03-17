@@ -29,24 +29,10 @@
          *ngFor="let currentTrip of pendingTrips | itemsFilter: currentFilterCriteria: currentFilterContent"
     >
       <div class="card text-center">
-        <div class="card-header"
-             [ngSwitch]="currentTrip.tripStatus"
-        >
-          <h4
-            *ngSwitchCase="1"
-          >
-            In draft
-          </h4>
-          <h4
-            *ngSwitchCase="2"
-          >
-            Opened
-          </h4>
-          <h4
-            *ngSwitchCase="3"
-          >
-            Assigned
-          </h4>
+        <div class="card-header">
+          <h5 class="text-center">
+            {{currentTrip.tripStatus}}
+          </h5>
         </div>
         <div class="card-body">
           <div class="row col-12 align-items-center justify-content-center">

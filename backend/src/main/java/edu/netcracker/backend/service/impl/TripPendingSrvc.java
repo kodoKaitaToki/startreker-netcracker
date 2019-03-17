@@ -27,6 +27,15 @@ public class TripPendingSrvc implements IPendingSrvc<PendingActivationTrip> {
                 obj.setApproverName("");
                 obj.setApproverTel("");
             }
+
+            if ("1".equals(obj.getTripStatus())) {
+                obj.setTripStatus("Draft");
+            } else if ("2".equals(obj.getTripStatus())) {
+                obj.setTripStatus("Opened");
+            } else if ("3".equals(obj.getTripStatus())) {
+                obj.setTripStatus("Assigned");
+            }
+
             return obj;
         }).collect(Collectors.toList());
     }

@@ -8,18 +8,6 @@ export class ItemsFilter implements PipeTransform {
 
   transform(trip: PendingTrip[], currentFilterCriteria: string, currentFilterContent: string): PendingTrip[] {
 
-    if (currentFilterContent === 'In draft'.toLowerCase()) {
-      currentFilterContent = '1';
-    }
-
-    if (currentFilterContent === 'Opened'.toLowerCase()) {
-      currentFilterContent = '2';
-    }
-
-    if (currentFilterContent === 'Assigned'.toLowerCase()) {
-      currentFilterContent = '3';
-    }
-
     if (!currentFilterContent || !currentFilterCriteria) {
       return trip;
     }

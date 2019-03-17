@@ -29,24 +29,10 @@
          *ngFor="let currentService of pendingServcies | itemsFilter: currentFilterCriteria: currentFilterContent"
     >
       <div class="card text-center">
-        <div class="card-header"
-             [ngSwitch]="currentService.serviceStatus"
-        >
-          <h4
-            *ngSwitchCase="1"
-          >
-            In draft
-          </h4>
-          <h4
-            *ngSwitchCase="2"
-          >
-            Opened
-          </h4>
-          <h4
-            *ngSwitchCase="3"
-          >
-            Assigned
-          </h4>
+        <div class="card-header">
+          <h5 class="text-center">
+            {{currentService.serviceStatus}}
+          </h5>
         </div>
         <div class="card-body">
           <div class="container-fluid">
