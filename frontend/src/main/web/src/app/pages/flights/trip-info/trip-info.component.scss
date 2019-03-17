@@ -1,0 +1,36 @@
+.container {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 5px;
+  font-family: "bahnschrift", sans-serif;
+  padding: 1rem 1rem 0;
+  margin: 16px auto;
+  box-shadow: 0 2px 50px rgba(0,0,0,.25);
+  -webkit-box-shadow: 0 2px 50px rgba(0,0,0,.25);
+}
+
+button{
+  display: inline-block;
+  border: none;
+  border-top: 1px solid #007bff;
+  padding: 0 8px;
+  margin: 0 -15px;
+  text-decoration: none;
+  background: #f5f5f5;
+  color: #007bff;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: left;
+  transition: background 250ms ease-in-out,
+  transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+button:focus {
+  outline: 1px solid #fff;
+  outline-offset: -4px;
+}
+
+button:active {
+  transform: scale(0.99);
+}

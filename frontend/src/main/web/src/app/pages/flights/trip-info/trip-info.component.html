@@ -1,0 +1,26 @@
+<div class="container card">
+  <div class="row flight">
+    <div class="col">
+      <p class="date">{{"22.03.2020"}}</p>
+      <p class="spaceport">{{"Departure Spaceport"}}, {{"MOON"}}</p>
+    </div>
+    <div class="col">
+      <p class="date">{{"22.04.2020"}}</p>
+      <p class="spaceport">{{"Arrival Spaceport"}}, {{"EARTH"}}</p>
+    </div>
+    <div class="col">
+      <p>Carrier:</p>
+      <p>{{"CARRIER_NAME"}}</p>
+    </div>
+  </div>
+    <button class="row details" *ngIf="!isCollapsed" (click)="toggleCollapse()">Show tickets</button>
+    <button class="row details" *ngIf="isCollapsed" (click)="toggleCollapse()">Hide tickets</button>
+  <div *ngIf="isCollapsed">
+    <app-ticket-class></app-ticket-class>
+    <app-ticket-class></app-ticket-class>
+    <app-ticket-class></app-ticket-class>
+  </div>
+</div>
+
+
+
