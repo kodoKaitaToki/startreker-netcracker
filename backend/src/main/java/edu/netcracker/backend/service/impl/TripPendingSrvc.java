@@ -3,6 +3,7 @@ package edu.netcracker.backend.service.impl;
 import edu.netcracker.backend.dao.IPendingDao;
 import edu.netcracker.backend.message.request.PendingActivationTrip;
 import edu.netcracker.backend.service.IPendingSrvc;
+import edu.netcracker.backend.utils.ServiceStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,11 +29,11 @@ public class TripPendingSrvc implements IPendingSrvc<PendingActivationTrip> {
                 obj.setApproverTel("");
             }
 
-            if ("1".equals(obj.getTripStatus())) {
+            if (((Integer)ServiceStatus.DRAFT.getValue()).toString().equals(obj.getTripStatus())) {
                 obj.setTripStatus("Draft");
-            } else if ("2".equals(obj.getTripStatus())) {
+            } else if (((Integer)ServiceStatus.OPEN.getValue()).toString().equals(obj.getTripStatus())) {
                 obj.setTripStatus("Opened");
-            } else if ("3".equals(obj.getTripStatus())) {
+            } else if (((Integer)ServiceStatus.ASSIGNED.getValue()).toString().equals(obj.getTripStatus())) {
                 obj.setTripStatus("Assigned");
             }
 

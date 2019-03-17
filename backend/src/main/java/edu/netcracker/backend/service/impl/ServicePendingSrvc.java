@@ -3,6 +3,7 @@ package edu.netcracker.backend.service.impl;
 import edu.netcracker.backend.dao.IPendingDao;
 import edu.netcracker.backend.message.request.PendingActivationService;
 import edu.netcracker.backend.service.IPendingSrvc;
+import edu.netcracker.backend.utils.ServiceStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,11 +30,11 @@ public class ServicePendingSrvc implements IPendingSrvc<PendingActivationService
                         obj.setApproverEmail("");
                     }
 
-                    if ("1".equals(obj.getServiceStatus())) {
+                    if (((Integer)ServiceStatus.DRAFT.getValue()).toString().equals(obj.getServiceStatus())) {
                         obj.setServiceStatus("Draft");
-                    } else if ("2".equals(obj.getServiceStatus())) {
+                    } else if (((Integer)ServiceStatus.OPEN.getValue()).toString().equals(obj.getServiceStatus())) {
                         obj.setServiceStatus("Opened");
-                    } else if ("3".equals(obj.getServiceStatus())) {
+                    } else if (((Integer)ServiceStatus.ASSIGNED.getValue()).toString().equals(obj.getServiceStatus())) {
                         obj.setServiceStatus("Assigned");
                     }
 
