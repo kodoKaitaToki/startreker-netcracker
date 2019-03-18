@@ -24,7 +24,7 @@ import java.io.IOException;
 
 @Service
 @Qualifier("ProductionAuthFilter")
-public class JwtAuthFilter extends OncePerRequestFilter {
+public class JwtAuthFilter extends AuthFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
@@ -33,7 +33,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private UserInformationHolderServiceImpl userInformationHolderService;
 
     private UserService userService;
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
