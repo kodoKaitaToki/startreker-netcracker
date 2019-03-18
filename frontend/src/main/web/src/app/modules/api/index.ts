@@ -116,8 +116,7 @@ export const Api = {
   baseUrl,
   service,
   trip,
-  landing,
-  HttpOptions
+  landing
 }
 
 export const options = {

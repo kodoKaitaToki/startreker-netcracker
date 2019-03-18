@@ -18,8 +18,16 @@ export class SearchMenuComponent implements OnInit {
 
   planets: Planet[] = [];
 
+  field = '';
+
   constructor(private landingService: LandingService) {
     this.searchForm = new FormGroup({
+      startPlanet: new FormControl(''),
+      finishPlanet: new FormControl(''),
+      startSpaceport: new FormControl(''),
+      finishSpaceport: new FormControl(''),
+      startDate: new FormControl(''),
+      finishDate: new FormControl('')
     });
    }
 
@@ -30,7 +38,6 @@ export class SearchMenuComponent implements OnInit {
   getPlanets(){
     this.landingService.getPlanets()
         .subscribe((resp: Response) => {
-          //Don't forget to add checkToken
           this.planets = clone(resp);
         })
   }
@@ -47,5 +54,10 @@ export class SearchMenuComponent implements OnInit {
   enableDatepicker(){
     let element = <HTMLInputElement> document.getElementById("returnDate");
     element.disabled = false;
+  }
+
+  onSubmit(){
+    console.log(this.field);
+    localStorage.setItem('formData', JSON.stringify(this.searchForm.value));
   }
 }
