@@ -1,6 +1,7 @@
 package edu.netcracker.backend.config.security;
 
 import edu.netcracker.backend.security.AuthFilter;
+import edu.netcracker.backend.security.DebugJwtAuthFilter;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ import java.util.Collections;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private AuthFilter authFilter;
+    //private AuthFilter authFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -44,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(setAuthFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
@@ -104,8 +105,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //        return registrationBean;
     //    }
 
-    @Autowired
-    public void setAuthFilter(AuthFilter authFilter) {
-        this.authFilter = authFilter;
+    @Bean
+    public AuthFilter setAuthFilter() {
+        return new DebugJwtAuthFilter();
     }
 }
