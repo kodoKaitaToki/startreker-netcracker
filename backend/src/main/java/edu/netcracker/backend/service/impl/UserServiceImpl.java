@@ -1,6 +1,8 @@
 package edu.netcracker.backend.service.impl;
 
+import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.UserDAO;
+import edu.netcracker.backend.message.request.ChangePasswordForm;
 import edu.netcracker.backend.message.request.SignUpForm;
 import edu.netcracker.backend.message.request.UserCreateForm;
 import edu.netcracker.backend.model.Role;
@@ -9,6 +11,7 @@ import edu.netcracker.backend.security.UserInformationHolder;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.utils.PasswordGeneratorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -74,6 +77,15 @@ public class UserServiceImpl implements UserService {
         userDAO.save(user);
 
         return newPassword;
+    }
+
+    @Override
+    public void changePasswordForUser(User user, ChangePasswordForm changePasswordForm) {
+        if (oldPasswordNotMatched(user.getUserPassword(), changePasswordForm.getOldPassword())) {
+            throw new RequestException("invalid password", HttpStatus.BAD_REQUEST);
+        }
+
+        user.setUserPassword(passwordEncoder.encode(changePasswordForm.getNewPassword()));
     }
 
     @Override
@@ -152,5 +164,9 @@ public class UserServiceImpl implements UserService {
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<String> roles) {
         return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+    }
+
+    private boolean oldPasswordNotMatched(String userPassword, String oldPassword) {
+        return !passwordEncoder.matches(oldPassword, userPassword);
     }
 }

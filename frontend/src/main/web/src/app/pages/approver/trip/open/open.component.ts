@@ -4,6 +4,8 @@ import {MessageService} from 'primeng/components/common/messageservice';
 
 import { TripService } from '../shared/service/trip.service'; 
 import { Trip } from '../shared/model/trip.model';
+import { HttpResponse } from '@angular/common/http';
+import { checkToken } from '../../../../modules/api';
 
 @Component({
   selector: 'app-open',
@@ -24,14 +26,10 @@ export class OpenTripComponent implements OnInit {
 
   getTrips(status: String){
     this.tripService.getTrips(status, 0, 10)
-                      .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                      .subscribe((resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
                           this.loadingTrip = null;
-                          this.trips = clone(resp);
+                          this.trips = clone(resp.body);
                         },
                         error => {
                           console.log(error);
@@ -48,11 +46,8 @@ export class OpenTripComponent implements OnInit {
 
     this.tripService.updateTripStatus(trip)
                     .subscribe(
-                      (resp: Response) => {
-                        /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                      (resp: HttpResponse<any>) => {
+                        checkToken(resp.headers);
                         this.showMessage(this.createMessage('success',
                                                             'The trip was assigned by you',
                                                             'You can find it in "Assigned to me"'));

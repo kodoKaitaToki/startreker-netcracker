@@ -13,7 +13,7 @@ public class PendingActivationScripts {
             "  APPROVER.USER_TELEPHONE            AS APPROVER_TEL,\n" +
             "  CARRIER.USER_NAME                  AS CARRIER_NAME,\n" +
             "  CARRIER.USER_EMAIL                 AS CARRIER_EMAIL,\n" +
-            "  CARRIER.USER_TELEPHONE             AS CARRIER__TEL,\n" +
+            "  CARRIER.USER_TELEPHONE             AS CARRIER_TEL,\n" +
             "  SPACEPORT_DEPARTURE.SPACEPORT_NAME AS SPACEPORT_DEPARTURE,\n" +
             "  SPECEPORT_ARRIVAL.SPACEPORT_NAME   AS SPACEPORT_ARRIVAL,\n" +
             "  PLANET_DEPARTURE.PLANET_NAME       AS PLANET_DEPARTURE,\n" +

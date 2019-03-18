@@ -9,6 +9,7 @@ import {MOCK_TREE} from '../shared/model/mock-tree';
 import {Carrier} from '../../carrier/carrier';
 import {CarrierCrudService} from '../../carrier/carrier-crud.service';
 import {HttpErrorResponse} from "@angular/common/http";
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
              selector: 'app-bundles-component',
@@ -81,9 +82,9 @@ export class BundlesComponentComponent implements OnInit {
   populateCarriers() {
     this.inputTree = [];
     this.carrierSrvc.getAllCarriers()
-    .subscribe(carriers => {
+    .subscribe((resp: HttpResponse<any>) => {
       this.inputTree = this.inputTree.concat(
-        carriers.map((carrier: { username: string; }) => {
+        resp.body.map((carrier: { username: string; }) => {
           let node: TreeNode = {
             label: carrier.username,
             selectable: false
