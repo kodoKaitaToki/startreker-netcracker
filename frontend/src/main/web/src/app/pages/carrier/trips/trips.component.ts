@@ -21,11 +21,11 @@ export class TripsComponent implements OnInit {
   currentTripForUpdate: Trip;
 
   filterCriteria = [
-    { name: 'status'},
-    { name: 'departure planet' },
-    { name: 'arrival planet' },
-    { name: 'departure date'},
-    { name: 'arrival date'}
+    { name: 'trip_status'},
+    { name: 'departure_planet' },
+    { name: 'arrival_planet' },
+    { name: 'departure_date'},
+    { name: 'arrival_date'}
   ];
 
   departureSpaceports: any = [];
@@ -92,7 +92,7 @@ export class TripsComponent implements OnInit {
         (resp: Trip) => {
           this.defaultTrips = clone(resp);
         },
-        error => console.log(error)
+        // error => console.log(error)
       );
   }
 

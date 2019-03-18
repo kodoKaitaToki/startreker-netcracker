@@ -50,7 +50,6 @@ public class Trip {
 
     private Spaceport arrivalSpaceport;
 
-
     private List<TripReply> replies;
 
     private List<TicketClass> ticketClasses = new ArrayList<>();

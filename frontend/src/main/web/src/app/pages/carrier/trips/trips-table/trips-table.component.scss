@@ -9,7 +9,15 @@ $tableContent: center;
   margin-top: 10px;
 }
 
+.top-button {
+  margin-right: 5px;
+}
+
 .disabled {
   pointer-events: none;
   opacity: 0.7;
+}
+
+.modal-buttons {
+  margin-top: 10px;
 }
