@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {map} from "rxjs/operators";
-import {Api} from "../../../modules/api";
+import {Api, checkToken, HttpOptionsAuthorized} from "../../../modules/api";
 import {HistoryElement} from "./historyelement.model";
 import {Triphistorymodel} from "./triphistorymodel.model";
 import {Servicehistorymodel} from "./servicehistorymodel.model";
@@ -18,23 +18,27 @@ export class HistoryService {
   }
 
   public getUserTicketHistory(offset: number, limit: number, from: string, to: string) {
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-    //TODO: remove debug backdoor
-    headers = headers.append('Authorization', 'debug_login 20');
 
     let params;
     params = new HttpParams()
       .set("limit", limit.toString())
       .set("offset", offset.toString());
 
-    if(from) params = params.set("start-date", from);
-    if(to) params = params.set("end-date", to);
+    if (from) {
+      params = params.set("start-date", from);
+    }
+    if (to) {
+      params = params.set("end-date", to);
+    }
 
-    return this.http.get<any>(this.actionUrl + "/history/user/ticket", {headers: headers, params: params})
+    return this.http.get<any>(this.actionUrl + "/history/user/ticket",
+      {headers: HttpOptionsAuthorized.headers, params: params, observe: HttpOptionsAuthorized.observe}
+    )
                .pipe(map(res => {
 
-                 return res.map(item => {
+                 checkToken(res.headers);
+
+                 return res.body.map(item => {
                    return new HistoryElement(
                      item.id,
                      item.purchase_date,
@@ -58,16 +62,16 @@ export class HistoryService {
   }
 
   public getTicketServices(ticketId: number) {
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-    //TODO: remove debug backdoor
-    headers = headers.append('Authorization', 'debug_login 21');
 
-    return this.http.get<any>(this.actionUrl + "/history/ticket/" + ticketId + "/service", {headers: headers})
+    return this.http.get<any>(this.actionUrl + "/history/ticket/" + ticketId + "/service",
+      {headers: HttpOptionsAuthorized.headers, observe: HttpOptionsAuthorized.observe}
+    )
                .pipe(map(res => {
 
-                 return res.map(item => {
-                   return new Servicehistorymodel(item.bought_services_name);
+                 checkToken(res.headers);
+
+                 return res.body.map(item => {
+                   return new Servicehistorymodel(item.bought_services_name, item.bought_services_count);
                  });
                }))
   }

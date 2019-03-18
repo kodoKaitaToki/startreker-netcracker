@@ -67,7 +67,7 @@ export class HistoryComponent implements OnInit {
         .subscribe(services => {
           ticket.services = services;
           if (ticket.services.length == 0) {
-            ticket.services[0] = new Servicehistorymodel("No services");
+            ticket.services[0] = new Servicehistorymodel("No services", 0);
           }
         });
   }
