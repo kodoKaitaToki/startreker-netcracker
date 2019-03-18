@@ -10,6 +10,7 @@ import {AngularFontAwesomeModule} from "angular-font-awesome";
 import { TripInfoComponent } from './trip-info/trip-info.component';
 import { TicketClassComponent } from './trip-info/ticket-class/ticket-class.component';
 import { FooterComponent } from './footer/footer.component';
+import {SearchService} from "./shared/services/search.service";
 
 @NgModule({
   declarations: [
@@ -26,6 +27,9 @@ import { FooterComponent } from './footer/footer.component';
     AngularFontAwesomeModule,
     ReactiveFormsModule,
     LoadingBarHttpClientModule
+  ],
+  providers: [
+    SearchService
   ]
 })
 export class FlightsModule {

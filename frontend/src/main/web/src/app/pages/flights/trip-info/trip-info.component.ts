@@ -7,14 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TripInfoComponent implements OnInit {
 
-  isCollapsed: boolean = false;
-
   constructor() { }
 
   ngOnInit() {
   }
 
-  toggleCollapse() {
-    this.isCollapsed = !this.isCollapsed;
-  }
 }
