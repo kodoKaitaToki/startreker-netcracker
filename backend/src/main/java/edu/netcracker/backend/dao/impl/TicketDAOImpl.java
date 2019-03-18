@@ -77,7 +77,10 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
                                                       Number offset,
                                                       LocalDate startDate,
                                                       LocalDate endDate) {
-        logger.debug("Querying {} purchased tickets from {} for user {} after {} and before {}", limit, offset, user_id);
+        logger.debug("Querying {} purchased tickets from {} for user {} after {} and before {}",
+                     limit,
+                     offset,
+                     user_id);
 
 
         SqlParameterSource params = new MapSqlParameterSource().addValue("id", user_id)

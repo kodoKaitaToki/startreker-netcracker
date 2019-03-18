@@ -2,9 +2,11 @@ package edu.netcracker.backend.message.response.HistoryDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.netcracker.backend.model.history.HistoryTrip;
+import lombok.Data;
 
 import java.time.format.DateTimeFormatter;
 
+@Data
 public class HistoryTripDTO {
 
     private static final String datePattern = "yyyy-MM-dd HH:mm";
