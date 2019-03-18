@@ -1,5 +1,6 @@
 package edu.netcracker.backend.service;
 
+import edu.netcracker.backend.message.request.ChangePasswordForm;
 import edu.netcracker.backend.message.request.SignUpForm;
 import edu.netcracker.backend.message.request.UserCreateForm;
 import edu.netcracker.backend.model.Role;
@@ -30,6 +31,8 @@ public interface UserService extends UserDetailsService {
 
     String changePasswordForUser(User user);
 
+    void changePasswordForUser(User user, ChangePasswordForm changePasswordForm);
+
     User createUser(SignUpForm signUpForm, boolean isActivated, List<Role> roles);
 
     User createUser(UserCreateForm userCreateForm, List<Role> roles);
@@ -45,4 +48,6 @@ public interface UserService extends UserDetailsService {
     List<User> findAllWithRole(Role role);
 
     List<User> paginationWithRole(Integer from, Integer number, Role role);
+
+
 }

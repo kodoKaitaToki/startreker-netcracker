@@ -29,7 +29,7 @@ public class TripPendingDaoTest {
 
         PendingActivationTrip pendingActivationTrip = PendingActivationTrip.builder()
                 .tripID(14)
-                .tripStatus(1)
+                .tripStatus("1")
                 .arrivalDate("2019-03-13 00:12:00.000000")
                 .departureDate("2019-03-14 23:04:00.000000")
                 .creationDate("2019-03-12 12:03:38.853000")

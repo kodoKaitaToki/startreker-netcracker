@@ -9,19 +9,20 @@ baseUrl = `http://localhost${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
-    'Content-Type':  'application/json',
-    // 'Access-Control-Allow-Origin': '*'
+    'Content-Type':  'application/json'
   })
 }
 
 export const HttpOptionsAuthorized = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
-    // 'Access-Control-Allow-Origin': '*',
-    // 'Authorization': `Bearer ${localStorage.getItem('at')}`,
-    // 'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
-  })
+    'Authorization': `Bearer ${localStorage.getItem('at')}`,
+    'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
+  }),
+  observe: 'response' as 'response'
 }
+
+export
 
 const auth = {
   loginUser() {
@@ -35,6 +36,9 @@ const auth = {
   },
   recoverPassword() {
     return `${baseUrl}api/auth/password-recovery`;
+  },
+  confirmPassword(){
+    return `${baseUrl}api/auth/confirm-password`;
   }
 }
 
@@ -128,6 +132,8 @@ const trip = {
 }
 
 export const Api = {
+  HttpOptions,
+  HttpOptionsAuthorized,
   auth,
   dashboard,
   carrier,
@@ -141,4 +147,11 @@ export const Api = {
 
 export const options = {
   root: baseUrl
+}
+
+export function checkToken(heads: HttpHeaders){
+  if (heads.has('New-Access-Token')) {
+    localStorage.removeItem('at');
+    localStorage.setItem('at', heads.get('New-Access-Token'));
+  }
 }
