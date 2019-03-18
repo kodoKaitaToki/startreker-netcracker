@@ -1,34 +1,35 @@
 package edu.netcracker.backend.dao.sql;
 
-public class PendingActivationScripts {
+public enum PendingActivationScripts {
 
-    public static final String GET_TRIPS_PENDING_ACTIVATION = "SELECT\n" +
-            "  T.TRIP_ID,\n" +
-            "  T.TRIP_STATUS,\n" +
-            "  T.ARRIVAL_DATE,\n" +
-            "  T.DEPARTURE_DATE,\n" +
-            "  T.CREATION_DATE,\n" +
-            "  APPROVER.USER_NAME                 AS APPROVER_NAME,\n" +
-            "  APPROVER.USER_EMAIL                AS APPROVER_EMAIL,\n" +
-            "  APPROVER.USER_TELEPHONE            AS APPROVER_TEL,\n" +
-            "  CARRIER.USER_NAME                  AS CARRIER_NAME,\n" +
-            "  CARRIER.USER_EMAIL                 AS CARRIER_EMAIL,\n" +
-            "  CARRIER.USER_TELEPHONE             AS CARRIER_TEL,\n" +
-            "  SPACEPORT_DEPARTURE.SPACEPORT_NAME AS SPACEPORT_DEPARTURE,\n" +
-            "  SPECEPORT_ARRIVAL.SPACEPORT_NAME   AS SPACEPORT_ARRIVAL,\n" +
-            "  PLANET_DEPARTURE.PLANET_NAME       AS PLANET_DEPARTURE,\n" +
-            "  PLANET_ARRIVAL.PLANET_NAME         AS PLANET_ARRIVAL\n" +
-            "FROM TRIP T\n" +
-            "  INNER JOIN USER_A CARRIER ON T.CARRIER_ID = CARRIER.USER_ID\n" +
-            "  LEFT JOIN USER_A APPROVER ON T.APPROVER_ID = APPROVER.USER_ID\n" +
-            "  INNER JOIN SPACEPORT SPACEPORT_DEPARTURE ON T.DEPARTURE_ID = SPACEPORT_DEPARTURE.SPACEPORT_ID\n" +
-            "  INNER JOIN SPACEPORT SPECEPORT_ARRIVAL ON T.ARRIVAL_ID = SPECEPORT_ARRIVAL.SPACEPORT_ID\n" +
-            "  INNER JOIN PLANET PLANET_DEPARTURE ON SPACEPORT_DEPARTURE.PLANET_ID = PLANET_DEPARTURE.PLANET_ID\n" +
-            "  INNER JOIN PLANET PLANET_ARRIVAL ON SPECEPORT_ARRIVAL.PLANET_ID = PLANET_ARRIVAL.PLANET_ID\n" +
-            "WHERE TRIP_STATUS < 4\n" +
-            "order by t.trip_status asc";
+    GET_TRIPS_PENDING_ACTIVATION("SELECT\n" +
+            "  t.trip_id,\n" +
+            "  t.trip_status,\n" +
+            "  t.arrival_date,\n" +
+            "  t.departure_date,\n" +
+            "  t.creation_date,\n" +
+            "  approver.user_name                 AS approver_name,\n" +
+            "  approver.user_email                AS approver_email,\n" +
+            "  approver.user_telephone            AS approver_tel,\n" +
+            "  carrier.user_name                  AS carrier_name,\n" +
+            "  carrier.user_email                 AS carrier_email,\n" +
+            "  carrier.user_telephone             AS carrier_tel,\n" +
+            "  spaceport_departure.spaceport_name AS spaceport_departure,\n" +
+            "  speceport_arrival.spaceport_name   AS spaceport_arrival,\n" +
+            "  planet_departure.planet_name       AS planet_departure,\n" +
+            "  planet_arrival.planet_name         AS planet_arrival\n" +
+            "FROM trip t\n" +
+            "  INNER JOIN user_a carrier ON t.carrier_id = carrier.user_id\n" +
+            "  LEFT JOIN user_a approver ON t.approver_id = approver.user_id\n" +
+            "  INNER JOIN spaceport spaceport_departure ON t.departure_id = spaceport_departure.spaceport_id\n" +
+            "  INNER JOIN spaceport speceport_arrival ON t.arrival_id = speceport_arrival.spaceport_id\n" +
+            "  INNER JOIN planet planet_departure ON spaceport_departure.planet_id = planet_departure.planet_id\n" +
+            "  INNER JOIN planet planet_arrival ON speceport_arrival.planet_id = planet_arrival.planet_id\n" +
+            "WHERE trip_status < 4\n" +
+            "ORDER BY t.trip_status ASC;"),
 
-    public static final String GET_SERVICES_PENDING_ACTIVATION = "select\n" +
+    GET_SERVICES_PENDING_ACTIVATION("\n" +
+            "SELECT\n" +
             "  srvc.service_id          as srvc_id,\n" +
             "  srvc.service_name        as srvc_name,\n" +
             "  srvc.service_description as srvc_descr,\n" +
@@ -39,12 +40,18 @@ public class PendingActivationScripts {
             "  approver.user_telephone  as approver_tel,\n" +
             "  carrier.user_name        as carrier_name,\n" +
             "  carrier.user_email       as carrier_email,\n" +
-            "  carrier.user_telephone   as carrier_tel\n" +
-            "from service srvc\n" +
-            "  left join user_a approver on srvc.approver_id = approver.user_id\n" +
-            "  inner join user_a carrier on srvc.carrier_id = carrier.user_id\n" +
-            "where srvc.service_status < 4\n" +
-            "order by srvc.service_status asc";
+            "  carrier.user_telephone   AS carrier_tel\n" +
+            "FROM service srvc\n" +
+            "  LEFT JOIN user_a approver ON srvc.approver_id = approver.user_id\n" +
+            "  INNER JOIN user_a carrier ON srvc.carrier_id = carrier.user_id\n" +
+            "WHERE srvc.service_status < 4\n" +
+            "ORDER BY srvc.service_status ASC"),
 
-    public static final String LIMIT_AND_OFFSET = " limit ? offset ?";
+    LIMIT_AND_OFFSET(" limit ? offset ?");
+
+    public final String script;
+
+    PendingActivationScripts(String script) {
+        this.script = script;
+    }
 }
