@@ -13,13 +13,20 @@
       <p>{{"CARRIER_NAME"}}</p>
     </div>
   </div>
-    <button class="row details" *ngIf="!isCollapsed" (click)="toggleCollapse()">Show tickets</button>
-    <button class="row details" *ngIf="isCollapsed" (click)="toggleCollapse()">Hide tickets</button>
-  <div *ngIf="isCollapsed">
+    <div class="row class-header">
+      <div class="col-6">
+        Ticket class name
+      </div>
+      <div class="col-1">
+        Amount
+      </div>
+      <div class="col-1">
+        Tickets left
+      </div>
+    </div>
     <app-ticket-class></app-ticket-class>
     <app-ticket-class></app-ticket-class>
     <app-ticket-class></app-ticket-class>
-  </div>
 </div>
 
 
