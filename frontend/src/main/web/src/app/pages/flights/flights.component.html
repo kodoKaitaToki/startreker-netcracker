@@ -4,9 +4,8 @@
 <main>
   <app-search-panel></app-search-panel>
   <div class="trip-list">
-    <app-trip-info></app-trip-info>
-    <app-trip-info></app-trip-info>
-    <app-trip-info></app-trip-info>
+    <app-trip-info *ngFor="let trip of trips" [trip]="trip"></app-trip-info>
+    <div class="row not-found"></div>
   </div>
 </main>
 <app-footer></app-footer>

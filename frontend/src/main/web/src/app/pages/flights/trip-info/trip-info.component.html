@@ -1,12 +1,12 @@
 <div class="container card">
   <div class="row flight">
-    <div class="col">
-      <p class="date">{{"22.03.2020"}}</p>
-      <p class="spaceport">{{"Departure Spaceport"}}, {{"MOON"}}</p>
+    <div class="col departure">
+      <p class="date">{{trip.departure_date}}</p>
+      <p class="spaceport">{{trip.departure_spaceport_name}}, {{trip.departure_planet_name}}</p>
     </div>
-    <div class="col">
-      <p class="date">{{"22.04.2020"}}</p>
-      <p class="spaceport">{{"Arrival Spaceport"}}, {{"EARTH"}}</p>
+    <div class="col arrival">
+      <p class="date">{{trip.arrival_date}}</p>
+      <p class="spaceport">{{trip.arrival_spaceport_name}}, {{trip.arrival_planet_name}}</p>
     </div>
     <div class="col">
       <p>Carrier:</p>
@@ -24,9 +24,7 @@
         Tickets left
       </div>
     </div>
-    <app-ticket-class></app-ticket-class>
-    <app-ticket-class></app-ticket-class>
-    <app-ticket-class></app-ticket-class>
+  <app-ticket-class *ngFor="let ticket_class of trip.ticket_classes" [ticket_class]="ticket_class"></app-ticket-class>
 </div>
 
 
