@@ -2,7 +2,7 @@ import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
 import {Injectable} from "@angular/core";
 
-import {Api} from '../../../../../modules/api/index';
+import {Api, HttpOptionsAuthorized} from '../../../../../modules/api/index';
 
 @Injectable()
 export class CarrierDiscountsService {
@@ -21,15 +21,15 @@ export class CarrierDiscountsService {
   }
 
   public getAll(): Observable<any> {
-    return this.http.get(this.getPostOutletApi);
+    return this.http.get(this.getPostOutletApi, HttpOptionsAuthorized);
   }
 
   public post(obj: any): Observable<any> {
-    return this.http.post(this.getPostOutletApi, obj);
+    return this.http.post(this.getPostOutletApi, obj, HttpOptionsAuthorized);
   }
 
   public delete() {
-    return this.http.delete(this.deleteOutletApi);
+    return this.http.delete(this.deleteOutletApi, HttpOptionsAuthorized);
   }
 
   setServiceTypeForDiscount(value: string) {

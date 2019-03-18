@@ -1,5 +1,6 @@
 package edu.netcracker.backend.controller;
 
+import edu.netcracker.backend.message.request.ChangePasswordForm;
 import edu.netcracker.backend.message.request.EmailFrom;
 import edu.netcracker.backend.message.request.SignInForm;
 import edu.netcracker.backend.message.request.SignUpForm;
@@ -10,11 +11,7 @@ import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -46,6 +43,11 @@ public class AuthController {
     @PostMapping(path = "/api/log-out")
     public ResponseEntity<Message> logOut() {
         return ResponseEntity.ok().body(authenticationService.logOut());
+    }
+
+    @PatchMapping(path = "/api/change-password")
+    public ResponseEntity<Message> changePassword(@Valid @RequestBody ChangePasswordForm changePasswordForm) {
+        return ResponseEntity.ok().body(authenticationService.changePassword(changePasswordForm));
     }
 
     @GetMapping(path = "api/auth/confirm-password")

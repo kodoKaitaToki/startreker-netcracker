@@ -3,6 +3,8 @@ import { ApiDashboardService } from '../../../../../services/dashboards.service'
 import { ServiceList, Service } from '../../../../../services/interfaces/service-dashboard.interface'
 import { clone } from 'ramda';
 import * as CanvasJS from '../../../../../../assets/js/canvasjs.min';
+import {checkToken} from "../../../../../modules/api/index";
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-service-dashboard',
@@ -44,12 +46,9 @@ export class ServiceDashboardComponent implements OnInit {
   ngOnInit() {
     this.serviceService.setServiceDistribution()
     .subscribe(
-      (resp: Response) => {
-          // if (resp.headers.get('New-Access-Token')) {
-          //     localStorage.removeItem('at');
-          //     localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-          // }
-          this.serviceData.services = clone(resp);
+      (resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          this.serviceData.services = clone(resp.body);
           this.buildChart(this.serviceData);
       },
       error => console.log(error)
