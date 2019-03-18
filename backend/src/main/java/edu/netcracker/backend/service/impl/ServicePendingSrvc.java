@@ -3,11 +3,13 @@ package edu.netcracker.backend.service.impl;
 import edu.netcracker.backend.dao.IPendingDao;
 import edu.netcracker.backend.message.request.PendingActivationService;
 import edu.netcracker.backend.service.IPendingSrvc;
+import edu.netcracker.backend.utils.ServiceStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j(topic = "log")
@@ -20,7 +22,25 @@ public class ServicePendingSrvc implements IPendingSrvc<PendingActivationService
 
         log.debug("ServicePendingSrvc.getPendingEntries() was invoked");
 
-        return iPendingDao.getPendingEntries();
+        return iPendingDao.getPendingEntries().stream().map(obj -> {
+
+                    if (obj.getApproverName() == null) {
+                        obj.setApproverTel("");
+                        obj.setApproverName("");
+                        obj.setApproverEmail("");
+                    }
+
+                    if (((Integer)ServiceStatus.DRAFT.getValue()).toString().equals(obj.getServiceStatus())) {
+                        obj.setServiceStatus("Draft");
+                    } else if (((Integer)ServiceStatus.OPEN.getValue()).toString().equals(obj.getServiceStatus())) {
+                        obj.setServiceStatus("Opened");
+                    } else if (((Integer)ServiceStatus.ASSIGNED.getValue()).toString().equals(obj.getServiceStatus())) {
+                        obj.setServiceStatus("Assigned");
+                    }
+
+                    return obj;
+                }
+        ).collect(Collectors.toList());
     }
 
     @Override

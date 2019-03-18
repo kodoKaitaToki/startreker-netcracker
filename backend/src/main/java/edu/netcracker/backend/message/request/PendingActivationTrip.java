@@ -24,7 +24,7 @@ public class PendingActivationTrip {
 
     private Integer tripID;
 
-    private Integer tripStatus;
+    private String tripStatus;
 
     private String arrivalDate;
 

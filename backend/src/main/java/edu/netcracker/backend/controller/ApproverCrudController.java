@@ -7,6 +7,7 @@ import edu.netcracker.backend.message.response.UserDTO;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.ApproverCrudService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -25,7 +26,7 @@ public class ApproverCrudController {
     }
 
     @GetMapping("v1/api/admin/approvers/all")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<UserDTO> getAllApprovers() {
 
         List<User> users = acs.getAllApprovers();
@@ -33,42 +34,42 @@ public class ApproverCrudController {
     }
 
     @GetMapping("v1/api/admin/approvers/paging")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<UserDTO> getApprovers(@RequestParam("limit") Number limit, @RequestParam("offset") Number offset) {
 
         return convertIntoDTO(acs.getApprovers(limit, offset));
     }
 
     @GetMapping("v1/api/admin/approvers")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public UserDTO getApprover(@RequestParam("id") Number id) {
 
         return UserDTO.from(acs.getById(id));
     }
 
     @PostMapping("v1/api/admin/approvers")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void addApprover(@RequestBody UserCreateForm approver) {
 
         acs.add(fromUserCreateForm(approver));
     }
 
     @PutMapping("v1/api/admin/approvers")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void updateApprover(@RequestBody UserUpdateForm approver) {
 
         acs.update(fromUserUpdateForm(approver));
     }
 
     @DeleteMapping("v1/api/admin/approvers")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void deleteApprover(@RequestBody UserUpdateForm approver) {
 
         acs.delete(fromUserUpdateForm(approver));
     }
 
     @GetMapping("v1/api/admin/approvers/count")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public BigInteger getRecordsCount() {
 
         return acs.getRecordsCount();

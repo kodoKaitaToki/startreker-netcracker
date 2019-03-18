@@ -4,6 +4,8 @@ import { Data } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { DashCostService } from '../dashCostService';
 import { clone } from 'ramda'
+import {checkToken} from "../../../../../modules/api/index";
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-common-chart',
@@ -47,8 +49,6 @@ export class CommonChartComponent implements OnInit{
 				dataPoints: costs
 			}]
 		});
-
-		console.log(chart);
 
 		chart.render();
 	}
@@ -137,16 +137,12 @@ export class CommonChartComponent implements OnInit{
 	private getCosts(from, to){
     	this.dashCostService.getCosts(from, to)
                         .subscribe(
-                          (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-													}*/
-							let response = clone(resp);
+                          (resp: HttpResponse<any>) => {
+                            checkToken(resp.headers);
+							let response = clone(resp.body);
 							let tickets = this.dashCostService.parseResponse(response);
 							this.getStatistics(tickets);
-                          },
-                          error => console.log(error)
+                          }
                         );
   }
 }

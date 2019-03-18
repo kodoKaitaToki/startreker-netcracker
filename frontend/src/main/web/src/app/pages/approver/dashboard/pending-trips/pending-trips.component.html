@@ -1,0 +1,146 @@
+<div class="container-fluid">
+  <div class="row col-12">
+    <div class="col-md-8 col-sm-12">
+    <select class="custom-select custom-select-md mb-3"
+            (click)="getFilterCriteria($event.target)"
+    >
+      <option [value]="filterCriteria"
+              *ngFor="let filterCriteria of filterCriterias;"
+
+      >
+        Filter by {{filterCriteria | selectTripInfo: filterCriteria}}
+      </option>
+    </select>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <input type="text"
+             placeholder="Input information here"
+             class="form-control"
+             [(ngModel)]="currentFilterContent"
+      >
+    </div>
+  </div>
+
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-3"
+         *ngFor="let currentTrip of pendingTrips | itemsFilter: currentFilterCriteria: currentFilterContent"
+    >
+      <div class="card text-center">
+        <div class="card-header">
+          <h5 class="text-center">
+            {{currentTrip.tripStatus}}
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class="row col-12 align-items-center justify-content-center">
+            <div class="col-4">
+              <h5 class="card-title">
+                From
+              </h5>
+              <h6 class="card-text">
+                {{currentTrip.departmentPlanetName | titlecase}},
+                spaceport: {{currentTrip.departmentPlanetName | titlecase}}
+                <br>
+                at {{currentTrip.departureDate | date: 'medium'}}
+              </h6>
+            </div>
+
+            <div class="col-4">
+              <h6>-></h6>
+            </div>
+
+            <div class="col-4">
+              <h5>
+                To
+              </h5>
+              <h6 class="card-title">
+                {{currentTrip.arrivalPlanetName | titlecase}},
+                spaceport: {{currentTrip.arrivalSpaceportName | titlecase}}
+                <br>
+                at {{currentTrip.arrivalDate | date:'medium'}}
+              </h6>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div class="card-body"
+                   *ngIf="currentPendingTrip === currentTrip && currentTrip.approverName !== ''"
+              >
+                <hr>
+                <h5>Approver</h5>
+                <h6>
+                  Name: {{currentTrip.approverName}}
+                  <br>
+                  Email: {{currentTrip.approverEmail}}
+                  <br>
+                  Telephone: {{currentTrip.approverTel}}
+                </h6>
+              </div>
+              <div class="card-body"
+                   *ngIf="currentPendingTrip === currentTrip && currentTrip.approverName === ''"
+              >
+                <hr>
+                <h5>Approver</h5>
+                <h6>
+                  Not assigned
+                </h6>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card-body"
+                   *ngIf="currentPendingTrip === currentTrip && currentTrip.carrierName !== ''"
+              >
+                <hr>
+                <h5>Carrier</h5>
+                <h6>
+                  Name: {{currentTrip.carrierName}}
+                  <br>
+                  Email: {{currentTrip.carrierEmail}}
+                  <br>
+                  Telephone: {{currentTrip.carrierTel}}
+                </h6>
+              </div>
+
+              <div class="card-body"
+                   *ngIf="currentPendingTrip === currentTrip && currentTrip.carrierName === ''"
+              >
+                <hr>
+                <h5>Carrier</h5>
+                <h6>
+                  Not assigned
+                </h6>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <button class="btn btn-primary"
+                  *ngIf="currentTrip !== currentPendingTrip"
+                  (click)="onDetailClick(currentTrip)"
+          >
+            Details
+          </button>
+
+          <button class="btn btn-primary"
+                  *ngIf="currentTrip === currentPendingTrip"
+                  (click)="onCloseDetailClick(currentTrip)"
+          >
+            Close details
+          </button>
+        </div>
+
+        <div class="card-footer text-muted">
+          Created
+          <br>
+          {{currentTrip.creationDate | date}}
+        </div>
+        <br>
+      </div>
+    </div>
+  </div>
+</div>

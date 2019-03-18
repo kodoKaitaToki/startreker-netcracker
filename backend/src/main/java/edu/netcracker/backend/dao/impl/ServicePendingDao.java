@@ -49,7 +49,7 @@ public class ServicePendingDao implements IPendingDao<PendingActivationService> 
                 .serviceId((Integer) obj.get("srvc_id"))
                 .serviceName((String) obj.get("srvc_name"))
                 .serviceDescr((String) obj.get("srvc_descr"))
-                .serviceStatus((Integer) obj.get("srvc_status"))
+                .serviceStatus(((Integer) obj.get("srvc_status")).toString())
                 .creationDate(((Timestamp) obj.get("srvc_creation_date")).toLocalDateTime().toString())
                 .approverName((String) obj.get("approver_name"))
                 .approverEmail((String) obj.get("approver_email"))

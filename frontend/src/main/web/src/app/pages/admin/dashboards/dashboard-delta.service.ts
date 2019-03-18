@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { Api } from '../../../modules/api/index';
+import {Api, HttpOptionsAuthorized} from '../../../modules/api/index';
 
 @Injectable({
   providedIn: 'root'
@@ -28,12 +28,12 @@ export class DashboardDeltaService {
   }
 
   public getIncreasingPerPeriod(from: string, to: string, type: string): Observable<Map<Date, number>>{
-      let headers = new HttpHeaders();
-      headers = headers.append('Content-Type', 'application/json');
+      /*let headers = new HttpHeaders();
+      headers = headers.append('Content-Type', 'application/json');*/
 
       let params = new HttpParams().set("from", from).set("to", to);
 
-      return this.http.get<any>(this.actionUrl + "/" + type, {headers: headers, params: params})
+      return this.http.get<any>(this.actionUrl + "/" + type, {headers: HttpOptionsAuthorized.headers, params: params})
         .pipe(map(res => {
           let map = new Map();
           for (let key of Object.keys(res)) {
