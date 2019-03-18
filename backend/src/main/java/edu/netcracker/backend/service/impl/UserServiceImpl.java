@@ -202,7 +202,7 @@ public class UserServiceImpl implements UserService {
 
         if (ticket.getPassengerId() != null) {
             log.error("Ticket with id {} has already been purchased.", ticket.getTicketId());
-            throw new RequestException(String.format("Ticket with id {} has already been purchased.", ticket.getTicketId()),
+            throw new RequestException(String.format("Ticket with id %s has already been purchased.", ticket.getTicketId()),
                                        HttpStatus.BAD_REQUEST);
         }
 
