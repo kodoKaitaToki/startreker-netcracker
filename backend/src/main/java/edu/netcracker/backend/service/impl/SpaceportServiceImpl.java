@@ -25,7 +25,7 @@ public class SpaceportServiceImpl implements SpaceportService {
     @Override
     public List<SpaceportDTO> findSpaceportsOfPlanet(Integer planetId) {
         List<SpaceportDTO> spaceports = spaceportDAO.findSpaceportsOfPlanet(planetId).stream()
-                .map(spaceport -> new SpaceportDTO(spaceport.getSpaceportId(),spaceport.getSpaceportName()))
+                .map(spaceport -> SpaceportDTO.from(spaceport))
                 .collect(Collectors.toList());
         return spaceports;
     }
