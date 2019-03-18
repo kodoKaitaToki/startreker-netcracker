@@ -12,6 +12,7 @@ import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.utils.AuthorityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -40,6 +41,7 @@ public class DiscountController {
     }
 
     @GetMapping("/api/v1/class-ticket/discount")
+    @PreAuthorize("hasRole('CARRIER')")
     public List<TripWithArrivalAndDepartureDataDTO> getClassTickets(@RequestParam("username") String username) {
         User user = userService.findByUsernameWithRole(username, AuthorityUtils.ROLE_CARRIER);
 
@@ -51,6 +53,7 @@ public class DiscountController {
     }
 
     @PostMapping("/api/v1/class-ticket/discount")
+    @PreAuthorize("hasRole('CARRIER')")
     public DiscountTicketClassDTO createDiscountForClassTicket(@RequestParam("username") String username,
                                                                @Valid @RequestBody DiscountTicketClassDTO ticketClassDTO) {
         User user = userService.findByUsernameWithRole(username, AuthorityUtils.ROLE_CARRIER);
@@ -63,6 +66,7 @@ public class DiscountController {
     }
 
     @DeleteMapping("/api/v1/class-ticket/discount/{discountId}")
+    @PreAuthorize("hasRole('CARRIER')")
     public DiscountTicketClassDTO deleteDiscountForClassTicket(@RequestParam("username") String username,
                                                                @PathVariable("discountId") Number discountId) {
         User user = userService.findByUsernameWithRole(username, AuthorityUtils.ROLE_CARRIER);
@@ -75,6 +79,7 @@ public class DiscountController {
     }
 
     @GetMapping("/api/v1/suggestion/discount")
+    @PreAuthorize("hasRole('CARRIER')")
     public List<TripWithArrivalAndDepartureDataDTO> getSuggestions(@RequestParam("username") String username) {
         User user = userService.findByUsernameWithRole(username, AuthorityUtils.ROLE_CARRIER);
 
@@ -86,6 +91,7 @@ public class DiscountController {
     }
 
     @PostMapping("/api/v1/suggestion/discount")
+    @PreAuthorize("hasRole('CARRIER')")
     public DiscountSuggestionDTO createDiscountForSuggestion(@RequestParam("username") String username,
                                                              @Valid @RequestBody DiscountSuggestionDTO simpleSuggestionDTO) {
         User user = userService.findByUsernameWithRole(username, AuthorityUtils.ROLE_CARRIER);
@@ -98,6 +104,7 @@ public class DiscountController {
     }
 
     @DeleteMapping("/api/v1/suggestion/discount/{discountId}")
+    @PreAuthorize("hasRole('CARRIER')")
     public DiscountSuggestionDTO deleteDiscountForSuggestion(@RequestParam("username") String username,
                                                              @PathVariable("discountId") Number discountId) {
         User user = userService.findByUsernameWithRole(username, AuthorityUtils.ROLE_CARRIER);

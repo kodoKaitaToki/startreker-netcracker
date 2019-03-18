@@ -32,55 +32,55 @@ public class    CarrierController {
     }
 
     @GetMapping(path = "/api/v1/admin/carrier-by-username")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public UserDTO getCarrierByUsername(@RequestParam("username") String username) {
         return carrierService.getCarrierByUsername(username);
     }
 
     @GetMapping(path = "/api/v1/admin/carrier-by-email")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public UserDTO getCarrierByEmail(@Valid @Email @RequestParam("email") String email) {
         return carrierService.getCarrierByEmail(email);
     }
 
     @GetMapping(path = "/api/v1/admin/carrier/{userId}")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public UserDTO getCarrierById(@PathVariable Integer userId) {
         return carrierService.getCarrierById(userId);
     }
 
     @GetMapping(path = "/api/v1/admin/carrier")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserDTO> getAllCarrier() {
         return carrierService.getAllCarrier();
     }
 
     @GetMapping(path = "/api/v1/admin/carrier-in-range-id")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserDTO> getAllCarrier(@RequestParam("startId") Integer startId, @RequestParam("endId") Integer endId) {
         return carrierService.getAllCarrier(startId, endId);
     }
 
     @GetMapping(path = "/api/v1/admin/pagination")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<UserDTO> getPagination(@RequestParam("from") Integer from, @RequestParam("number") Integer number) {
         return carrierService.getPagination(from, number);
     }
 
     @PostMapping(path = "/api/v1/admin/carrier")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public UserDTO createCarrier(@Valid @RequestBody UserCreateForm createForm) {
         return carrierService.createCarrier(createForm);
     }
 
     @DeleteMapping(path = "/api/v1/admin/carrier/{userId}")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public UserDTO deleteCarrier(@PathVariable Integer userId) {
         return carrierService.deleteCarrier(userId);
     }
 
     @PutMapping(path = "/api/v1/admin/carrier")
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public UserDTO updateCarrier(@Valid @RequestBody UserUpdateForm carrierForm) {
         return carrierService.updateCarrier(carrierForm);
     }

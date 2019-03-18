@@ -1,6 +1,7 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
+import edu.netcracker.backend.message.request.ChangePasswordForm;
 import edu.netcracker.backend.message.request.EmailFrom;
 import edu.netcracker.backend.message.request.SignInForm;
 import edu.netcracker.backend.message.request.SignUpForm;
@@ -53,8 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         User user = userService.createUser(signUpForm, false, Collections.singletonList(AuthorityUtils.ROLE_USER));
         emailService.sendRegistrationMessage(signUpForm.getEmail(),
-                getContextPath(request),
-                jwtProvider.generateMailRegistrationToken(user.getUsername()));
+                                             jwtProvider.generateMailRegistrationToken(user.getUsername()));
 
         return user;
     }
@@ -69,37 +69,46 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         String newUserPassword = userService.changePasswordForUser(user);
 
-        emailService.sendPasswordRecoveryMessage(emailFrom.getEmail(),
-                user.getUsername(),
-                newUserPassword);
+        emailService.sendPasswordRecoveryMessage(emailFrom.getEmail(), user.getUsername(), newUserPassword);
     }
 
     @Override
     public JwtResponse signIn(SignInForm signInForm) {
-        Authentication authentication = authenticationManager.
-                authenticate(new UsernamePasswordAuthenticationToken(
-                        signInForm.getUsername(),
-                        signInForm.getPassword()));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                signInForm.getUsername(),
+                signInForm.getPassword()));
 
         String accessToken = jwtProvider.generateAccessToken((UserDetails) authentication.getPrincipal());
         String refreshToken = jwtProvider.generateRefreshToken(signInForm.getUsername());
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        SecurityContextHolder.getContext()
+                             .setAuthentication(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         User user = userService.findByUsername(signInForm.getUsername());
+
+        if (user.getUserRefreshToken() != null) {
+            refreshToken = user.getUserRefreshToken();
+        }
+
         user.setUserRefreshToken(refreshToken);
         userService.save(user);
 
-        return new JwtResponse(accessToken, refreshToken, "Bearer", userDetails.getUsername(),
-                userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors
-                        .toList()));
+        return new JwtResponse(accessToken,
+                               refreshToken,
+                               "Bearer",
+                               userDetails.getUsername(),
+                               userDetails.getAuthorities()
+                                          .stream()
+                                          .map(GrantedAuthority::getAuthority)
+                                          .collect(Collectors.toList()));
     }
 
     @Override
     public Message confirmPassword(String token) {
-        if (!jwtProvider.validateToken(token) && !jwtProvider.isRegistrationToken(token))
+        if (!jwtProvider.validateToken(token) || !jwtProvider.isRegistrationToken(token)) {
             throw new RequestException("Invalid token", HttpStatus.BAD_REQUEST);
+        }
 
         User user = userService.findByUsername(jwtProvider.retrieveSubject(token));
 
@@ -115,13 +124,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public Message logOut() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userService.findByUsername(userDetails.getUsername());
-
-        if (user == null) {
-            throw new RequestException("User not found", HttpStatus.NOT_FOUND);
-        }
+        User user = getCurrentUser();
 
         user.setUserRefreshToken(null);
         userService.save(user);
@@ -129,8 +132,26 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return new Message(HttpStatus.OK, "You are logged out");
     }
 
-    private String getContextPath(HttpServletRequest request) {
-        // This code is work, but if you use header Origin it will break
-        return request.getRequestURL().toString().replace(request.getRequestURI(), "");
+    @Override
+    public Message changePassword(ChangePasswordForm changePasswordForm) {
+        User user = getCurrentUser();
+
+        userService.changePasswordForUser(user, changePasswordForm);
+        user.setUserRefreshToken(null);
+        userService.save(user);
+
+        return new Message(HttpStatus.OK, "Password changed");
+    }
+
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext()
+                                                             .getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userService.findByUsername(userDetails.getUsername());
+
+        if (user == null) {
+            throw new RequestException("User not found", HttpStatus.NOT_FOUND);
+        }
+        return user;
     }
 }

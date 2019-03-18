@@ -31,7 +31,7 @@ public class PendingActivationService {
 
     private String serviceDescr;
 
-    private Integer serviceStatus;
+    private String serviceStatus;
 
     private String creationDate;
 }

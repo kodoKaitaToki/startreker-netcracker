@@ -29,17 +29,23 @@ public class EmailServiceImpl implements EmailService {
     @Value("${mail.registration.endPointUri}")
     private String registrationEndPointUri;
 
+    @Value("${mail.password-recovery.endPointUri}")
+    private String passwordRecoveryUri;
+
     @Value("${mail.password-recovery.subject}")
     private String passwordRecoverySubject;
 
     @Value("${mail.password-recovery.text}")
     private String passwordRecoveryText;
 
+    @Value("${mail.source.url}")
+    private String sourceUrl;
+
     @Override
-    public void sendRegistrationMessage(String to, String contextPath, String token) {
+    public void sendRegistrationMessage(String to, String token) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setSubject(getSubject(registrationSubject, contextPath));
-        message.setText(registrationText + " : " + contextPath + registrationEndPointUri + "?token=" + token);
+        message.setSubject(getSubject(registrationSubject, sourceUrl));
+        message.setText(registrationText + " : " + sourceUrl + registrationEndPointUri + "?token=" + token);
 
         sendSimpleMessage(message, to);
     }
