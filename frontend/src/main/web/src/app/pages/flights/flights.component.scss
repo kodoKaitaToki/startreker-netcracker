@@ -1,5 +1,8 @@
-main {
-  padding-bottom: 120px;
+//I don't know why but if optimize properties the background won't stretch correctly
+.main {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
 .trip-list {
@@ -8,7 +11,7 @@ main {
   padding: 1rem;
 }
 
-a{
+a {
   color: #D5DBe6;
   font-family: "bahnschrift", fantasy;
 }

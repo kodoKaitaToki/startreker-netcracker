@@ -3,7 +3,7 @@
   padding: 0.5rem 0.3rem;
 }
 
-.tickets-amount {
+.col-1, .col-6, .col-4 {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -17,27 +17,22 @@
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
-  min-width: 135px;
   margin-left: auto;
+}
+
+.col-1 {
+  min-width: 50px;
+  font-size: 14pt;
+}
+
+.col-6 {
+  justify-content: start;
 }
 
 .tickets-amount-input {
   width: 50px;
   height: 32px;
-  font-size: 14pt;
   text-align: center;
-}
-
-.tickets-left {
-  font-size: 14pt;
-}
-
-
-
-
-.price {
-  text-align: center;
-  display: inline-block;
 }
 
 span.price {
@@ -62,11 +57,20 @@ button {
   -moz-appearance: none;
 }
 
+button:hover {
+  transform: translateY(-2px);
+  -webkit-box-shadow: 0 15px 25px rgba(0,0,0,.12);
+  box-shadow: 0 15px 25px rgba(0,0,0,.12);
+}
+
 button:focus {
-  outline: 1px solid #fff;
-  outline-offset: -4px;
+  outline: none;
 }
 
 button:active {
-  transform: scale(0.99);
+  box-shadow: none;
+  -webkit-transition: all .14s cubic-bezier(.55,0,.1,1);
+  transition: all .14s cubic-bezier(.55,0,.1,1);
+  will-change: transform;
+  transform: translateY(0);
 }
