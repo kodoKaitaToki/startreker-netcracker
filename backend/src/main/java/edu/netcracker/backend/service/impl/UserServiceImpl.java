@@ -14,6 +14,7 @@ import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.security.UserInformationHolder;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.utils.PasswordGeneratorUtils;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,26 +35,20 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@NoArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    @Autowired
     private UserDAO userDAO;
 
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
     private TicketDAO ticketDAO;
 
-    private PossibleServiceDAO possibleServiceDAO;
-
     @Autowired
-    public UserServiceImpl(UserDAO userDAO,
-                           PasswordEncoder passwordEncoder,
-                           TicketDAO ticketDAO,
-                           PossibleServiceDAO possibleServiceDAO) {
-        this.userDAO = userDAO;
-        this.passwordEncoder = passwordEncoder;
-        this.ticketDAO = ticketDAO;
-        this.possibleServiceDAO = possibleServiceDAO;
-    }
+    private PossibleServiceDAO possibleServiceDAO;
 
     @Override
     public void save(User user) {
@@ -167,10 +162,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BoughtTicketDTO buyTicket(BoughtTicketDTO boughtTicketDTO) {
-        log.debug("Getting ticket with id from TicketDAO");
+        log.debug("Getting ticket with id {} from TicketDAO", boughtTicketDTO.getTicketId());
         Optional<Ticket> optTicket = ticketDAO.find(boughtTicketDTO.getTicketId());
 
-        log.debug("Getting user with id from UserDAO");
+        log.debug("Getting user with id {} from UserDAO");
         Optional<User> optUser = userDAO.find(boughtTicketDTO.getPassengerId());
 
         List<PossibleService> possibleServices = new ArrayList<>();
@@ -188,7 +183,7 @@ public class UserServiceImpl implements UserService {
         }
 
         log.debug("Getting services by id");
-        boughtTicketDTO.getPServicesId()
+        boughtTicketDTO.getPServicesIds()
                        .forEach(id -> {
                            Optional<PossibleService> optPossibleService = possibleServiceDAO.find(id);
 
@@ -204,6 +199,13 @@ public class UserServiceImpl implements UserService {
 
         Ticket ticket = optTicket.get();
         User user = optUser.get();
+
+        if (ticket.getPassengerId() != null) {
+            log.error("Ticket with id {} has already been purchased.", ticket.getTicketId());
+            throw new RequestException(String.format("Ticket with id {} has already been purchased.", ticket.getTicketId()),
+                                       HttpStatus.BAD_REQUEST);
+        }
+
 
         ticketDAO.buyTicket(ticket, user);
         possibleServices.forEach(possibleService -> possibleServiceDAO.buyService(ticket, possibleService));

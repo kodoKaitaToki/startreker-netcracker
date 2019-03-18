@@ -93,7 +93,7 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
 
     @Override
     public void buyService(Ticket ticket, PossibleService possibleService) {
-        getJdbcTemplate().update(BUY_P_SERVICE);
+        getJdbcTemplate().update(BUY_P_SERVICE, possibleService.getPServiceId(), ticket.getTicketId());
     }
 
 }

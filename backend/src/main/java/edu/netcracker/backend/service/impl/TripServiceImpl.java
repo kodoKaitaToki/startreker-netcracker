@@ -104,17 +104,14 @@ public class TripServiceImpl implements TripService {
                                                       arrivalSpaceport,
                                                       limit,
                                                       offset);
-
         logger.debug("Remove ticket classes where all tickets are sold");
         for (Trip trip : trips) {
             trip.getTicketClasses()
                 .removeIf(ticketClass -> ticketClass.getRemainingSeats() == 0);
         }
-
         logger.debug("Remove trip where all tickets are sold");
         trips.removeIf(trip -> trip.getTicketClasses()
                                    .isEmpty());
-
         return getAllTripsDTO(trips);
     }
 
