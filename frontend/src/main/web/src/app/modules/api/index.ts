@@ -2,7 +2,7 @@ import { HttpHeaders } from '@angular/common/http';
 
 let baseUrl;
 const apiPort = ':80/'
-// const apiPort = '/'
+//const apiPort = '/'
 
 // baseUrl = `http://startreker-netcracker.herokuapp.com${apiPort}`
 baseUrl = `http://localhost${apiPort}`
@@ -118,6 +118,15 @@ const service = {
   }
 }
 
+const trip = {
+  trips(){
+    return `${baseUrl}api/v1/approver/trip`;
+  },
+  update(){
+    return `${baseUrl}api/v1/trip`;
+  }
+}
+
 export const Api = {
   auth,
   dashboard,
@@ -126,6 +135,7 @@ export const Api = {
   baseUrl,
   service, 
   possibleServices,
+  trip,
   trips
 }
 

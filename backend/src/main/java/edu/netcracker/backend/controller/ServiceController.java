@@ -111,29 +111,10 @@ public class ServiceController {
                                                                            timeInterval.getTo());
     }
 
-    @GetMapping("api/v1/carrier/service")
-    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceCRUDDTO> getAllServices() {
-        return serviceService.getServicesOfCarrier();
-    }
-
-    @GetMapping("api/v1/carrier/service/pagin")
-    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceCRUDDTO> getPaginServices(@RequestParam("from") Integer from,
-                                                 @RequestParam("number") Integer number) {
-        return serviceService.getPaginServicesOfCarrier(from, number);
-    }
-
     @GetMapping("api/v1/carrier/service/by-status")
     //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<ServiceCRUDDTO> getByStatus(@RequestParam("status") String status) {
         return serviceService.findByStatus(status);
-    }
-
-    @DeleteMapping("api/v1/carrier/service/{servId}")
-    //@PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public ServiceCRUDDTO deleteService(@PathVariable Long servId) {
-        return serviceService.deleteService(servId);
     }
 
     @PutMapping("api/v1/carrier/service")
