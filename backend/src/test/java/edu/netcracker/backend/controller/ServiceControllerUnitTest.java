@@ -56,7 +56,7 @@ public class ServiceControllerUnitTest {
 
 
     @Test
-    public void shouldPassServices() throws Exception {
+    public void shouldPassServices() {
         when(serviceService.getServicesForApprover(1, 10, ServiceStatus.OPEN.toString(), 3))
                 .thenReturn(ret);
 
@@ -70,7 +70,7 @@ public class ServiceControllerUnitTest {
     }
 
     @Test(expected = RequestException.class)
-    public void shouldRejectIllegalStatus() throws Exception {
+    public void shouldRejectIllegalStatus() {
         String illegalStatus = ServiceStatus.DRAFT.toString();
 
         ServiceController controller = new ServiceController(statisticsService, securityContext, serviceService);

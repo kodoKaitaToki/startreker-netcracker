@@ -17,17 +17,6 @@ import java.util.*;
 @Repository
 public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements TicketClassDAO {
 
-    private final TicketDAO ticketDAO;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-    @Autowired
-    public TicketClassDAOImpl(TicketDAO ticketDAO, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.ticketDAO = ticketDAO;
-        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-    }
-
-    private final Logger logger = LoggerFactory.getLogger(TicketClassDAOImpl.class);
-
     private static final String SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER = "SELECT "
                                                                      + "tc.class_id, "
                                                                      + "class_name, "
@@ -92,6 +81,7 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
                                                                        + "INNER JOIN ticket_class on trip.trip_id = ticket_class.trip_id "
                                                                        + "WHERE user_a.user_id = ? AND ticket_class.class_id = ?";
 
+
     private final String INSERT_TICKET_CLASS =
             "INSERT INTO ticket_class (class_name, trip_id, class_seats, ticket_price) VALUES (?, ?, ?, ?)";
 
@@ -109,6 +99,17 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
     private final String GET_TICKET_CLASS_BY_NAME_AND_TRIP_ID =
             "SELECT class_id, class_name, trip_id, ticket_price, discount_id, class_seats "
             + "FROM ticket_class WHERE trip_id = ? AND LOWER(class_name) = ? ";
+
+    private final TicketDAO ticketDAO;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    @Autowired
+    public TicketClassDAOImpl(TicketDAO ticketDAO, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.ticketDAO = ticketDAO;
+        this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+    }
+
+    private final Logger logger = LoggerFactory.getLogger(TicketClassDAOImpl.class);
 
     @Override
     public Optional<TicketClass> findTicketClassBelongToCarrier(Number ticketClassId, Number carrierId) {

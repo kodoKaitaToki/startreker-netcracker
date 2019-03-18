@@ -36,14 +36,9 @@ public class TripCRUDMapper implements RowMapper<Trip> {
         trip.setOwner(mapUser(rs, "carrier"));
         trip.setApprover(mapUser(rs, "approver"));
 
-        trip.setDeparturePlanet(new Planet(rs.getLong("departure_planet_id"), rs.getString("departure_planet_name")));
-        trip.setArrivalPlanet(new Planet(rs.getLong("arrival_planet_id"), rs.getString("arrival_planet_name")));
-        trip.setDepartureSpaceport(new Spaceport(rs.getLong("departure_spaceport_id"),
-                                                 rs.getString("departure_spaceport_name"),
-                                                 rs.getLong("departure_planet_id")));
-        trip.setArrivalSpaceport(new Spaceport(rs.getLong("arrival_spaceport_id"),
-                                               rs.getString("arrival_spaceport_name"),
-                                               rs.getLong("arrival_planet_id")));
+        trip.setDepartureSpaceport(mapSpaceport(rs, "departure_spaceport"));
+        trip.setArrivalSpaceport(mapSpaceport(rs, "arrival_spaceport"));
+
         return trip;
     }
 
@@ -53,5 +48,23 @@ public class TripCRUDMapper implements RowMapper<Trip> {
         user.setUserId(rs.getInt(prefix + "_id"));
 
         return user;
+    }
+
+    private Spaceport mapSpaceport(ResultSet rs, String prefix) throws SQLException {
+        Spaceport spaceport = new Spaceport();
+
+        spaceport.setSpaceportId(rs.getLong(prefix + "_id"));
+        spaceport.setSpaceportName(rs.getString(prefix + "_name"));
+        spaceport.setPlanet(mapPlanet(rs, prefix + "_planet"));
+        return spaceport;
+    }
+
+    private Planet mapPlanet(ResultSet rs, String prefix) throws SQLException {
+        Planet planet = new Planet();
+
+        planet.setPlanetId(rs.getLong(prefix + "_id"));
+        planet.setPlanetName(rs.getString(prefix + "_name"));
+
+        return planet;
     }
 }

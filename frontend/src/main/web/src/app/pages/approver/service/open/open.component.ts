@@ -10,7 +10,11 @@ import {ServiceService} from '../shared/service/service.service';
 })
 export class OpenComponent implements OnInit {
 
-  @Input() services: Service[];
+  readonly pageNumber: number = 10;
+
+  pageFrom: number;
+
+  services: Service[];
 
   loadingService: Service;
 
@@ -36,7 +40,7 @@ export class OpenComponent implements OnInit {
   }
 
   getServices() {
-    this.serviceService.getServicesForApprover(0, 10, 2)
+    this.serviceService.getServicesForApprover(this.pageFrom, this.pageNumber, 2)
     .subscribe(data => {
       this.resetLoading();
       this.services = data;
@@ -44,6 +48,12 @@ export class OpenComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.pageFrom = 0;
+    this.getServices();
+  }
+
+  onPageUpdate(from: number) {
+    this.pageFrom = from;
     this.getServices();
   }
 }

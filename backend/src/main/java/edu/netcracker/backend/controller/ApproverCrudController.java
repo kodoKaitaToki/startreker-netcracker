@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 public class ApproverCrudController {
 
-    private ApproverCrudService acs;
+    private final ApproverCrudService acs;
 
     @Autowired
     public ApproverCrudController(ApproverCrudService acs) {

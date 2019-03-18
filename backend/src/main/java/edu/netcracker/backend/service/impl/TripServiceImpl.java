@@ -6,12 +6,9 @@ import edu.netcracker.backend.dao.SpaceportDAO;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.message.request.*;
 import edu.netcracker.backend.message.request.trips.TripCreation;
-import edu.netcracker.backend.message.response.TripDTO;
 import edu.netcracker.backend.message.response.trips.ReadTripsDTO;
 import edu.netcracker.backend.model.*;
-import edu.netcracker.backend.model.state.trip.Draft;
-import edu.netcracker.backend.model.state.trip.TripState;
-import edu.netcracker.backend.model.state.trip.TripStateRegistry;
+import edu.netcracker.backend.model.state.trip.*;
 import edu.netcracker.backend.service.SuggestionService;
 import edu.netcracker.backend.service.TicketClassService;
 import edu.netcracker.backend.service.TripService;
@@ -134,14 +131,29 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public Trip updateTrip(User requestUser, TripDTO tripDTO) {
-        Optional<Trip> optionalTrip = tripDAO.find(tripDTO.getTripId());
+    public Trip updateTrip(User requestUser, TripRequest tripRequest) {
+        Optional<Trip> optionalTrip = tripDAO.find(tripRequest.getTripId());
 
         if (!optionalTrip.isPresent()) {
             throw new RequestException("Illegal operation", HttpStatus.NOT_FOUND);
         } else {
-            return updateTrip(requestUser, optionalTrip.get(), tripDTO);
+            return updateTrip(requestUser, optionalTrip.get(), tripRequest);
         }
+    }
+
+    @Override
+    public List<Trip> findCarrierTripsByStatus(User requestUser, String status, Long offset, Long limit) {
+        TripState state = tripStateRegistry.getState(status);
+        if (state.getDatabaseValue() == Removed.DATABASE_VALUE) {
+            return new ArrayList<>();
+        }
+
+        return tripDAO.findAllByCarrierAndStatus(requestUser.getUserId(), state.getDatabaseValue(), offset, limit);
+    }
+
+    @Override
+    public List<Trip> findCarrierTrips(User requestUser, Long offset, Long limit) {
+        return tripDAO.findAllByCarrier(requestUser.getUserId(), Removed.DATABASE_VALUE, offset, limit);
     }
 
     @Override
@@ -172,21 +184,45 @@ public class TripServiceImpl implements TripService {
     }
 
 
-    private Trip updateTrip(User requestUser, Trip trip, TripDTO tripDTO) {
-        TripState dtoState = tripStateRegistry.getState(tripDTO.getStatus());
+    @Override
+    public List<Trip> findApproverTrips(User requestUser, String status, Long offset, Long limit) {
+        TripState state = tripStateRegistry.getState(status);
+        if (state.getDatabaseValue() == Open.DATABASE_VALUE) {
+            return tripDAO.findAllByStatus(state.getDatabaseValue(), offset, limit);
+        }
+        if (state.getDatabaseValue() == Assigned.DATABASE_VALUE) {
+            return tripDAO.findAllByApproverByStatus(requestUser.getUserId(), state.getDatabaseValue(), offset, limit);
+        }
+        throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
+    }
 
-        if (!dtoState.equals(trip.getTripState())) {
-            changeStatus(requestUser, trip, dtoState, tripDTO);
+    private Trip updateTrip(User requestUser, Trip trip, TripRequest tripRequest) {
+        TripState desiredState = tripStateRegistry.getState(tripRequest.getStatus());
+
+        if (!desiredState.equals(trip.getTripState())) {
+            startStatusChange(requestUser, trip, desiredState, tripRequest);
         }
 
         tripDAO.save(trip);
-        return trip;
+        return tripDAO.find(trip.getTripId())
+                      .orElseThrow(RequestException::new);
     }
 
-    private void changeStatus(User requestUser, Trip trip, TripState tripState, TripDTO tripDTO) {
-        if (!trip.changeStatus(requestUser, tripState, tripDTO)) {
+    private void startStatusChange(User requestUser, Trip trip, TripState tripState, TripRequest tripRequest) {
+        if (!changeStatus(requestUser, tripState, tripRequest, trip)) {
             throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
         }
+    }
+
+    private boolean changeStatus(User requestUser, TripState newTripState, TripRequest tripRequest, Trip trip) {
+        if (requestUser == null
+            || newTripState == null
+            || trip.getTripState() == null
+            || !newTripState.isStateChangeAllowed(trip, requestUser)) {
+            return false;
+        }
+
+        return newTripState.switchTo(trip, requestUser, tripRequest);
     }
 
     private List<TripWithArrivalAndDepartureDataDTO> createTripWithArrivalAndDepartureDataAndSuggestionDTOs(List<TripWithArrivalAndDepartureData> trips,
@@ -247,25 +283,32 @@ public class TripServiceImpl implements TripService {
         trip.setOwner(new User());
         trip.getOwner()
             .setUserId(7);
-        trip.setDeparturePlanet(new Planet(planetDAO.getIdByPlanetName(tripCreation.getDeparturePlanet()),
-                                           tripCreation.getDeparturePlanet()));
-        trip.setArrivalPlanet(new Planet(planetDAO.getIdByPlanetName(tripCreation.getArrivalPlanet()),
-                                         tripCreation.getArrivalPlanet()));
-        trip.setDepartureSpaceport(new Spaceport(spaceportDAO.getIdBySpaceportName(tripCreation.getDepartureSpaceport(),
-                                                                                   trip.getDeparturePlanet()
-                                                                                       .getPlanetId()),
-                                                 tripCreation.getDepartureSpaceport(),
-                                                 trip.getDeparturePlanet()
-                                                     .getPlanetId()));
-        trip.setArrivalSpaceport(new Spaceport(spaceportDAO.getIdBySpaceportName(tripCreation.getArrivalSpaceport(),
-                                                                                 trip.getArrivalPlanet()
-                                                                                     .getPlanetId()),
-                                 tripCreation.getArrivalSpaceport(),
-                                 trip.getArrivalPlanet()
-                                     .getPlanetId()));
         trip.setTripState(draft);
         trip.setCreationDate(LocalDateTime.now());
         trip.setTripPhoto("defaultPhoto.png");
+
+        Planet departurePlanet = new Planet(planetDAO.getIdByPlanetName(tripCreation.getDeparturePlanet()),
+                                            tripCreation.getDeparturePlanet());
+        Planet arrivalPlanet = new Planet(planetDAO.getIdByPlanetName(tripCreation.getArrivalPlanet()),
+                                          tripCreation.getArrivalPlanet());
+
+        Spaceport departureSpaceport = new Spaceport();
+        departureSpaceport.setSpaceportId(spaceportDAO.getIdBySpaceportName(tripCreation.getDepartureSpaceport(),
+                                                                            departurePlanet.getPlanetId()));
+        departureSpaceport.setSpaceportName(tripCreation.getDepartureSpaceport());
+        departureSpaceport.setPlanetId(departurePlanet.getPlanetId());
+        departureSpaceport.setPlanet(departurePlanet);
+
+        Spaceport arrivalSpaceport = new Spaceport();
+        arrivalSpaceport.setSpaceportId(spaceportDAO.getIdBySpaceportName(tripCreation.getArrivalSpaceport(),
+                                                                            arrivalPlanet.getPlanetId()));
+        arrivalSpaceport.setSpaceportName(tripCreation.getArrivalSpaceport());
+        arrivalSpaceport.setPlanetId(arrivalPlanet.getPlanetId());
+        arrivalSpaceport.setPlanet(arrivalPlanet);
+
+        trip.setDepartureSpaceport(departureSpaceport);
+        trip.setArrivalSpaceport(arrivalSpaceport);
+
         return trip;
     }
 

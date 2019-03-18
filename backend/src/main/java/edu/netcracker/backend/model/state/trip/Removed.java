@@ -4,26 +4,30 @@ import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.User;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.List;
+
 @Component
-public class Removed extends TripState {
+public class Removed implements TripState {
 
-    private final String stringValue = "Removed";
+    public final static int DATABASE_VALUE = 7;
+    public final static String NAME = "REMOVED";
 
-    private final static int databaseValue = 7;
+    private final List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(6);
 
     @Override
-    public boolean isStateChangeAllowed(Trip trip, User requestUser, TripState tripState) {
-        return requestUser.equals(trip.getApprover()) && !(tripState.getClass()
-                                                                    .equals(Removed.class));
+    public boolean isStateChangeAllowed(Trip trip, User requestUser) {
+        return requestUser.equals(trip.getOwner()) && allowedStatesToSwitchFrom.contains(trip.getTripState()
+                                                                                             .getDatabaseValue());
     }
 
     @Override
     public int getDatabaseValue() {
-        return databaseValue;
+        return DATABASE_VALUE;
     }
 
     @Override
-    public String getStringValue() {
-        return stringValue;
+    public String getName() {
+        return NAME;
     }
 }

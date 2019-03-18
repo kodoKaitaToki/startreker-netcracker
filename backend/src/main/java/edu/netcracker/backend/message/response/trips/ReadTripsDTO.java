@@ -52,16 +52,20 @@ public class ReadTripsDTO {
     public static ReadTripsDTO from(Trip trip) {
         ReadTripsDTO dto = new ReadTripsDTO();
         dto.tripId = trip.getTripId();
-        dto.tripStatus = trip.getTripState().getStringValue();
-        dto.tripStatusId = trip.getTripState().getDatabaseValue();
+        dto.tripStatus = trip.getTripState()
+                             .getName();
+        dto.tripStatusId = trip.getTripState()
+                               .getDatabaseValue();
         dto.departureSpaceportName = capitalize(trip.getDepartureSpaceport()
-                                         .getSpaceportName());
+                                                    .getSpaceportName());
         dto.arrivalSpaceportName = capitalize(trip.getArrivalSpaceport()
-                                       .getSpaceportName());
-        dto.departurePlanet = capitalize(trip.getDeparturePlanet()
-                                  .getPlanetName());
-        dto.arrivalPlanet = capitalize(trip.getArrivalPlanet()
-                                .getPlanetName());
+                                                  .getSpaceportName());
+        dto.departurePlanet = capitalize(trip.getDepartureSpaceport()
+                                             .getPlanet()
+                                             .getPlanetName());
+        dto.arrivalPlanet = capitalize(trip.getArrivalSpaceport()
+                                           .getPlanet()
+                                           .getPlanetName());
         dto.departureDate = getStringFromDate(trip.getDepartureDate());
         dto.arrivalDate = getStringFromDate(trip.getArrivalDate());
         dto.creationDate = getStringFromDate(trip.getCreationDate());
@@ -85,7 +89,8 @@ public class ReadTripsDTO {
                + "-"
                + String.format("%02d", date.getMonthValue())
                + "-"
-               + String.format("%02d", date.getDayOfMonth())
+               + String.format("%02d",
+                               date.getDayOfMonth())
                + " "
                + String.format("%02d", date.getHour())
                + ":"
@@ -95,7 +100,9 @@ public class ReadTripsDTO {
     }
 
     private static String capitalize(String toCapitalize) {
-        String capitalized = toCapitalize.substring(0, 1).toUpperCase() + toCapitalize.substring(1).toLowerCase();
+        String capitalized = toCapitalize.substring(0, 1)
+                                         .toUpperCase() + toCapitalize.substring(1)
+                                                                      .toLowerCase();
 
         return capitalized;
     }

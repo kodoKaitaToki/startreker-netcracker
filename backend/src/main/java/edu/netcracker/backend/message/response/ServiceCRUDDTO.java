@@ -36,7 +36,8 @@ public class ServiceCRUDDTO {
     private ServiceCRUDDTO(Long id,
                            String approverName,
                            String serviceName,
-                           String serviceDescription, String serviceStatus,
+                           String serviceDescription,
+                           String serviceStatus,
                            LocalDateTime creationDate) {
         this.id = id;
         this.approverName = approverName;
@@ -53,7 +54,8 @@ public class ServiceCRUDDTO {
                 serviceDescr.getServiceId(),
                 approver_name,
                 serviceDescr.getServiceName(),
-                serviceDescr.getServiceDescription(), statusVal,
+                serviceDescr.getServiceDescription(),
+                statusVal,
                 serviceDescr.getCreationDate());
     }
 }

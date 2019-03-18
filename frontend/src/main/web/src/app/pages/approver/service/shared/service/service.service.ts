@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { Service } from '../model/service';
 
-import { Api } from '../../../../../modules/api/index';
+import { Api } from 'src/app/modules/api/index';
 
 @Injectable({
   providedIn: 'root'

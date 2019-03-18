@@ -2,10 +2,10 @@ import { HttpHeaders } from '@angular/common/http';
 
 let baseUrl;
 const apiPort = ':80/'
-// const apiPort = '/'
+//const apiPort = '/'
 
-// baseUrl = `http://startreker-netcracker.herokuapp.com${apiPort}`
-baseUrl = `http://192.168.0.104${apiPort}`
+//baseUrl = `https://startreker-netcracker.herokuapp.com${apiPort}`
+baseUrl = `http://localhost${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
@@ -80,6 +80,18 @@ const trips = {
   }
  }
 
+const bundles = {
+  bundles(){
+    return `${baseUrl}api/v1/admin/carrier`;
+  },
+  getBundlesPagin(){
+    return `${baseUrl}api/v1/admin/pagination`;
+  }
+  /*  getCarrierByUsername(){
+      return `${baseUrl}api/v1/admin/carrier-by-username?username=`;
+    } */
+}
+
 const costDash = {
   getCosts(){
     return `${baseUrl}api/v1/admin/costs`;
@@ -98,6 +110,15 @@ const service = {
   }
 }
 
+const trip = {
+  trips(){
+    return `${baseUrl}api/v1/approver/trip`;
+  },
+  update(){
+    return `${baseUrl}api/v1/trip`;
+  }
+}
+
 export const Api = {
   auth,
   dashboard,
@@ -105,6 +126,7 @@ export const Api = {
   costDash,
   baseUrl,
   service,
+  trip,
   trips
 }
 
