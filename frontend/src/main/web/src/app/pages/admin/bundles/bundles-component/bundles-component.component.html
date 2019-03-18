@@ -1,0 +1,119 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <p-fieldset
+      legend="Create bundle"
+      [toggleable]="true"
+      [collapsed]="true"
+      >
+        <form [formGroup]="form"
+          (ngSubmit)="onPost()">
+  
+          <div class="row">
+            <div class="col-md-3">
+              <p-tree
+              [value]="inputTree"
+              selectionMode="checkbox"
+              [(selection)]="selectedTree"
+              [propagateSelectionDown]="false"
+              [style]="{'width':'100%'}"
+              >
+              </p-tree>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <input type="Date" class="form-control"
+                      [ngClass]="{
+                        'is-invalid':form.get('start_date').touched && form.get('start_date').invalid,
+                        'is-valid': form.get('start_date').valid}"
+                      formControlName="start_date"
+                      placeholder="Start Date">
+                <span *ngIf="form.get('start_date').touched && form.get('start_date').invalid"
+                      class="invalid-feedback">
+                  Input the correct date
+                </span>
+              </div>
+      
+              <div class="form-group">
+                <input type="Date" class="form-control"
+                      [ngClass]="{
+                        'is-invalid':form.get('finish_date').touched && form.get('finish_date').invalid,
+                        'is-valid': form.get('finish_date').valid}"
+                      formControlName="finish_date"
+                      placeholder="Finish Date">
+                <span *ngIf="form.get('finish_date').touched && form.get('finish_date').invalid"
+                      class="invalid-feedback">
+                  Input the correct date
+                </span>
+              </div>
+      
+              <div class="form-group">
+                <input type="number"
+                      class="form-control"
+                      placeholder="Price"
+                      formControlName="price"
+                      [ngClass]="{
+                        'is-invalid':form.get('price').invalid && form.get('price').touched,
+                        'is-valid': form.get('price').valid && form.get('price').touched}">
+                <span *ngIf="form.get('price').touched && form.get('price').invalid"
+                      class="invalid-feedback">
+                  Price cant be < 0 and null
+                </span>
+              </div>
+            </div>
+    
+            <div class="col-md-6">
+              <div class="form-group">
+                <textarea class="form-control"
+                      placeholder="Description"
+                      formControlName="description">
+                </textarea>
+              </div>
+            </div>
+          </div>
+  
+
+          <div class="row justify-content-around">
+              <button class="btn-success btn col-md-4"
+              type="submit"
+              [disabled]="form.invalid">
+                Add
+              </button>
+          </div>
+        </form>
+      </p-fieldset>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <hr>
+    
+      <div class="container-fluid">
+        <div class="row">
+          <select class="form-control col-xl-3 col-md-12 col-lg-5"
+                  (click)="chooseNewFilter($event.target)">
+            <option *ngFor="let filters of filterCriteria"
+                    [value]="filters.name">
+              {{filters.name}}
+            </option>
+          </select>
+
+          <input type="text" class="form-control col-xl-9 col-md-12 col-lg-7"
+                  [placeholder]="currentFilterPlaceholder"
+                  [(ngModel)]="filterContent"/>
+        </div>
+      </div>
+
+      <hr>
+
+      <app-bundles-table
+      [filterCriteria]="currentFilter"
+      [filterContent]="filterContent"
+      (onUpdateDataNotifier)="getBundlesForUpdate($event)"
+      (onDeleteDataNotifier)="getBundlesForDelete($event)">
+      </app-bundles-table>
+    </div>
+  </div>
+</div>

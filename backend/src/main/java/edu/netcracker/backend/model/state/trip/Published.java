@@ -5,24 +5,29 @@ import edu.netcracker.backend.model.User;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Component
-public class Published extends TripState {
+public class Published implements TripState {
 
-    private final static int databaseValue = 4;
+    public final static int DATABASE_VALUE = 4;
+    public final static String NAME = "PUBLISHED";
 
     private static List<Integer> allowedStatesToSwitchFrom = Arrays.asList(3, 6);
 
     @Override
-    public boolean isStateChangeAllowed(Trip trip, User requestUser, TripState tripState) {
+    public boolean isStateChangeAllowed(Trip trip, User requestUser) {
         return requestUser.equals(trip.getApprover())
-               && allowedStatesToSwitchFrom.contains(tripState.getDatabaseValue());
+               && allowedStatesToSwitchFrom.contains(trip.getTripState().getDatabaseValue());
     }
 
     @Override
     public int getDatabaseValue() {
-        return databaseValue;
+        return DATABASE_VALUE;
+    }
+
+    @Override
+    public String getName() {
+        return NAME;
     }
 }

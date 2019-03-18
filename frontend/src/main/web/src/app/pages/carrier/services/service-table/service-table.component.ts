@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { clone } from 'ramda';
+import {Component, OnInit} from '@angular/core';
+import {clone} from 'ramda';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MessageService} from 'primeng/components/common/messageservice';
+import { HttpResponse } from '@angular/common/http';
 
-import { Service } from '../shared/model/service.model';
-import { ServiceService } from '../shared/service/service.service';
+import {Service} from '../shared/model/service.model';
+import {ServiceService} from '../shared/service/service.service';
+import { checkToken } from '../../../../modules/api';
 
 
 @Component({
@@ -23,7 +25,8 @@ export class ServiceTableComponent implements OnInit {
   page: number = 1;
 
   constructor(private serviceService: ServiceService,
-              private messageService: MessageService) { }
+    private messageService: MessageService) {
+  }
 
   ngOnInit() {
     this.setFormInDefault();
@@ -43,13 +46,10 @@ export class ServiceTableComponent implements OnInit {
 
   getApprovedServices(){
     this.serviceService.getServiceByStatus('PUBLISHED')
-                      .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
-                          this.services = clone(resp);
+        .subscribe(
+                        (resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
+                          this.services = clone(resp.body);
                         },
                         error => console.log(error)
                       );
@@ -58,22 +58,21 @@ export class ServiceTableComponent implements OnInit {
   updateService(service: Service){
     this.isForUpdateAlertMessage = true;
     let createdMessage = '';
-    if (service.service_status == 'ARCHIVED'){
+    if (service.service_status == 'ARCHIVED') {
       createdMessage = this.createMessage('success',
-                                          'The service ' + service.service_name + ' was archieved',
-                                          'You can find it in Archive');
-    }else{
+        'The service ' + service.service_name + ' was archieved',
+        'You can find it in Archive'
+      );
+    } else {
       createdMessage = this.createMessage('success',
-                                          'The service ' + service.service_name + ' was edited',
-                                          'It was sent for approvement');
+        'The service ' + service.service_name + ' was edited',
+        'It was sent for approvement'
+      );
     }
     this.serviceService.updateService(service)
                       .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                        (resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
                           this.showMessage(createdMessage);
                           this.getApprovedServices();
                           this.isForUpdateAlertMessage = false;
@@ -103,7 +102,7 @@ export class ServiceTableComponent implements OnInit {
     this.isForUpdateAlertMessage = false;
   }
 
-  showMessage(msgObj: any){
+  showMessage(msgObj: any) {
     this.messageService.add(msgObj);
   }
 
@@ -115,7 +114,7 @@ export class ServiceTableComponent implements OnInit {
     };
   }
 
-  onChangePage(event: number){
+  onChangePage(event: number) {
     this.page = event;
   }
 }

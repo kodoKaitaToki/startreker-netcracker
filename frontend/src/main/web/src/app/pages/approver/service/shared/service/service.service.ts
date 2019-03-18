@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { Service } from '../model/service';
 
-import { Api } from '../../../../../modules/api/index';
+import { Api, HttpOptionsAuthorized } from 'src/app/modules/api/index';
 
 @Injectable({
   providedIn: 'root'
@@ -17,21 +17,18 @@ export class ServiceService {
     this.actionUrl = Api.baseUrl + 'api/v1';
   }
 
-  public getServicesForApprover(from: number, number: number, status: number): Observable<Service[]>{
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-    //TODO: remove debug backdoor
-    headers = headers.append('Authorization', 'debug_login 7');
-
+  public getServicesForApprover(from: number, number: number, status: number){
     let params = new HttpParams()
       .set("from", from.toString())
       .set("number", number.toString())
       .set("status", status.toString());
 
-    return this.http.get<any>(this.actionUrl + "/" + "approver/service", {headers: headers, params: params})
+    return this.http.get<any>(this.actionUrl + "/" + "approver/service", {headers: HttpOptionsAuthorized.headers, 
+                                                                          params: params,
+                                                                          observe: HttpOptionsAuthorized.observe})
       .pipe(map(res => {
 
-        return res.map(item => {
+        return res.body.map(item => {
           return new Service(
               item.id,
               item.approver_name,
@@ -45,12 +42,7 @@ export class ServiceService {
     }))
   }
 
-  public updateServiceReview(service: Service): Observable<Service>{
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-    //TODO: remove debug backdoor
-    headers = headers.append('Authorization', 'debug_login 7');
-
-    return this.http.put<any>(this.actionUrl + "/" + "approver/service", service, {headers: headers});
+  public updateServiceReview(service: Service){
+    return this.http.put<any>(this.actionUrl + "/" + "approver/service", service, HttpOptionsAuthorized);
   }
 }

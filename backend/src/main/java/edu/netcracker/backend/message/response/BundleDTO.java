@@ -32,9 +32,6 @@ public class BundleDTO {
     @JsonProperty("bundle_trips")
     private List<BundleTripDTO> bundleTrips;
 
-    @JsonProperty("bundle_services")
-    private List<BundleServiceDTO> bundleServices;
-
     public static LocalDateTime convertToLocalDate(String dateTime) {
         return LocalDateTime.parse(dateTime, DateTimeFormatter.ofPattern(datePattern));
     }

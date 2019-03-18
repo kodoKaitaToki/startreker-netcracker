@@ -14,7 +14,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 export class CarrierTableComponent implements OnInit {
 
   @Input() carriers: Carrier;
-  @Input() allCarriers: Carrier[] = [];
+  @Input() allCarriers: Carrier[];
   @Input() numpages: Number;
   @Input() butGroup = {};
   @Input() updateError;
@@ -51,7 +51,7 @@ export class CarrierTableComponent implements OnInit {
       {
         email: new FormControl('', [Validators.required, Validators.email]),
         name: new FormControl('', Validators.required),
-        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        telephone_number: new FormControl('', Validators.required),
         is_activated: new FormControl('on')
       }
     );
@@ -74,7 +74,7 @@ export class CarrierTableComponent implements OnInit {
       {
         email: new FormControl(this.currentCarrierForUpdate.email, [Validators.required, Validators.email]),
         username: new FormControl(this.currentCarrierForUpdate.username, Validators.required),
-        telephone_number: new FormControl(this.currentCarrierForUpdate.telephone_number, [Validators.required, Validators.pattern('[0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]')]),
+        telephone_number: new FormControl(this.currentCarrierForUpdate.telephone_number, Validators.required),
         is_activated: new FormControl(status)
       }
     );
@@ -102,8 +102,6 @@ export class CarrierTableComponent implements OnInit {
                 user_created_date: this.form.value['user_created_date']
     }
 
-    console.log(event);
-
     this.notifyAboutUpdate.emit(event);
             
     this.editBut = false;
@@ -111,6 +109,7 @@ export class CarrierTableComponent implements OnInit {
 
   onChange(event: number){
     this.page = event;
+    window.scrollTo(0, 0);
     this.notifyAboutChangePage.emit(event);
   }
 

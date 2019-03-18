@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import edu.netcracker.backend.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +27,7 @@ public class AdminController {
     }
 
     @GetMapping("/api/v1/admin/costs/{carrierId}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String getCostsPerCarrier(@PathVariable Long carrierId,
                                      @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
                                      @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
@@ -35,6 +37,7 @@ public class AdminController {
     }
 
     @GetMapping("/api/v1/admin/costs")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String getCostsPerPeriodPerCarrier(@RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
                                               @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
         return new Gson().toJson(adminService.getCostsPerPeriod(convertToLocalDateTimeViaInstant(from),
@@ -42,6 +45,7 @@ public class AdminController {
     }
 
     @GetMapping("/api/v1/admin/increasing/users")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String getUsersIncreasingPerPeriod(@RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
                                               @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
 
@@ -53,6 +57,7 @@ public class AdminController {
     }
 
     @GetMapping("/api/v1/admin/increasing/carriers")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String getCarriersIncreasingPerPeriod(
             @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
             @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
@@ -64,6 +69,7 @@ public class AdminController {
     }
 
     @GetMapping("/api/v1/admin/increasing/locations")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String getLocationsIncreasingPerPeriod(
             @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
             @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {

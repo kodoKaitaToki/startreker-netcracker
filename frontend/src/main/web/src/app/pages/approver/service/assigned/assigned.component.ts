@@ -1,9 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { clone } from 'ramda';
+import { HttpResponse } from '@angular/common/http';
 
 import { Service } from '../shared/model/service';
 import { MOCK_DATA } from '../shared/model/mock-data';
 import { ServiceService } from '../shared/service/service.service';
+import { checkToken } from '../../../../modules/api';
 
 @Component({
   selector: 'app-assigned',
@@ -12,7 +15,11 @@ import { ServiceService } from '../shared/service/service.service';
 })
 export class AssignedComponent implements OnInit {
 
-  @Input() services: Service[];
+  readonly pageNumber: number = 10;
+
+  pageFrom: number;
+
+  services: Service[];
 
   form: FormGroup;
 
@@ -46,7 +53,8 @@ export class AssignedComponent implements OnInit {
     this.loadingService = service;
 
     this.serviceService.updateServiceReview(service)
-    .subscribe(() => {
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
       this.getServices();
       alert(service.service_name + ' is now published');
     }, () => {
@@ -62,7 +70,8 @@ export class AssignedComponent implements OnInit {
     this.loadingService = service;
 
     this.serviceService.updateServiceReview(service)
-    .subscribe(() => {
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
       this.getServices();
       alert(service.service_name + ' is now under clarification');
     }, () => {
@@ -72,17 +81,24 @@ export class AssignedComponent implements OnInit {
   }
 
   getServices() {
-    this.serviceService.getServicesForApprover(0, 10, 3)
-    .subscribe(data => {
+    this.serviceService.getServicesForApprover(this.pageFrom, this.pageNumber, 3)
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
       this.resetLoading();
-      this.services = data;
+      this.services = clone(resp.body);
     });
   }
 
   constructor(private serviceService: ServiceService) { }
 
   ngOnInit() {
+    this.pageFrom = 0;
     this.setFormInDefault();
+    this.getServices();
+  }
+
+  onPageUpdate(from: number) {
+    this.pageFrom = from;
     this.getServices();
   }
 

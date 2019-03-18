@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {clone} from 'ramda';
 import {MessageService} from 'primeng/components/common/messageservice';
+import { HttpResponse } from '@angular/common/http';
 
-import { Service } from '../shared/model/service.model';
-import { ServiceService } from '../shared/service/service.service';
+import {Service} from '../shared/model/service.model';
+import {ServiceService} from '../shared/service/service.service';
+import { checkToken } from '../../../../modules/api';
 
 @Component({
   selector: 'app-service-crud',
@@ -27,7 +29,7 @@ export class ServiceCrudComponent implements OnInit {
   status: String;
 
   constructor(private serviceService: ServiceService,
-              private messageService: MessageService) {
+    private messageService: MessageService) {
   }
 
   ngOnInit(): void {
@@ -56,22 +58,21 @@ export class ServiceCrudComponent implements OnInit {
     const service: Service = this.form.value;
     service['service_status'] = status;
     let createdMessage = '';
-    if (status == 'DRAFT'){
+    if (status == 'DRAFT') {
       createdMessage = this.createMessage('success',
-                                          'The service ' + service.service_name + ' was created',
-                                          'You can continue to edit the service later');
-    }else{
+        'The service ' + service.service_name + ' was created',
+        'You can continue to edit the service later'
+      );
+    } else {
       createdMessage = this.createMessage('success',
-                                          'The service ' + service.service_name + ' was created',
-                                          'It was sent for approvement');
+        'The service ' + service.service_name + ' was created',
+        'It was sent for approvement'
+      );
     }
     this.serviceService.addService(service)
                       .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                        (resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
                           this.getDraftServices();
                           this.showMessage(createdMessage);
                         },
@@ -81,15 +82,12 @@ export class ServiceCrudComponent implements OnInit {
     this.form.reset();
   }
 
-  getDraftServices(){
+  getDraftServices() {
     this.serviceService.getServiceByStatus('DRAFT')
                       .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
-                          this.services = clone(resp);
+                        (resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
+                          this.services = clone(resp.body);
                         },
                         error => console.log(error)
                       );
@@ -98,22 +96,21 @@ export class ServiceCrudComponent implements OnInit {
   updateService(service: Service){
     this.isForUpdateAlertMessage = true;
     let createdMessage = '';
-    if (service.service_status == 'REMOVED'){
+    if (service.service_status == 'REMOVED') {
       createdMessage = this.createMessage('success',
-                                          'The service ' + service.service_name + ' was removed',
-                                          "You won't see it any more");
-    }else{
+        'The service ' + service.service_name + ' was removed',
+        "You won't see it any more"
+      );
+    } else {
       createdMessage = this.createMessage('success',
-                                          'The service ' + service.service_name + ' was edited',
-                                          'It was sent for approvement');
+        'The service ' + service.service_name + ' was edited',
+        'It was sent for approvement'
+      );
     }
     this.serviceService.updateService(service)
                       .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                        (resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
                           this.showMessage(createdMessage);
                           this.getDraftServices();
                           this.isForUpdateAlertMessage = false;
@@ -143,7 +140,7 @@ export class ServiceCrudComponent implements OnInit {
     this.isForUpdateAlertMessage = false;
   }
 
-  showMessage(msgObj: any){
+  showMessage(msgObj: any) {
     this.messageService.add(msgObj);
   }
 
@@ -155,7 +152,7 @@ export class ServiceCrudComponent implements OnInit {
     };
   }
 
-  onChangePage(event: number){
+  onChangePage(event: number) {
     this.page = event;
   }
 }

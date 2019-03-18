@@ -3,6 +3,9 @@ package edu.netcracker.backend.message.request;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 public class TicketClassForm {
 
@@ -11,4 +14,7 @@ public class TicketClassForm {
 
     @JsonProperty("item_number")
     private Integer itemNumber;
+
+    @JsonProperty("services")
+    private List<ServiceForm> bundleServices = new ArrayList<>();
 }

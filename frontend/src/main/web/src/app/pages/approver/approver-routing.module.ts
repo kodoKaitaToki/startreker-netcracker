@@ -1,56 +1,80 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { ApproverComponent } from './approver.component';
-import { ServiceComponent } from './service/service.component';
-import { TripComponent } from './trip/trip.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { NotificationsComponent } from './notifications/notifications.component';
-import { OpenComponent } from './service/open/open.component';
-import { AssignedComponent } from './service/assigned/assigned.component';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {ApproverComponent} from './approver.component';
+import {ServiceComponent} from './service/service.component';
+import {TripComponent} from './trip/trip.component';
+import {DashboardComponent} from './dashboard/dashboard-main-page/dashboard.component';
+import {NotificationsComponent} from './notifications/notifications.component';
+import {OpenComponent} from './service/open/open.component';
+import {AssignedComponent} from './service/assigned/assigned.component';
+import {AssignedTripComponent} from './trip/assigned/assigned.component';
+import {OpenTripComponent} from './trip/open/open.component';
+import {PendingServicesComponent} from "./dashboard/pending-services/pending-services.component";
+import {PendingTripsComponent} from "./dashboard/pending-trips/pending-trips.component";
 
 const routes: Routes = [
-    {
-        path: '',
-        component: ApproverComponent,
+  {
+    path: '',
+    component: ApproverComponent,
+    children: [
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
         children: [
           {
-              path: '',
-              redirectTo: 'dashboard',
-              pathMatch: 'full',
+            path: 'pending-services',
+            component: PendingServicesComponent
           },
           {
-              path: 'dashboard',
-              component: DashboardComponent
+            path: 'pending-trips',
+            component: PendingTripsComponent
+          }
+        ]
+      },
+      {
+        path: 'trip',
+        component: TripComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'open',
+            pathMatch: 'full',
           },
           {
-              path: 'trip',
-              component: TripComponent
+            path: 'open',
+            component: OpenTripComponent
           },
           {
-              path: 'service',
-              component: ServiceComponent,
-              children: [
-                {
-                    path: '',
-                    redirectTo: 'open',
-                    pathMatch: 'full',
-                },
-                {
-                    path: 'open',
-                    component: OpenComponent
-                },
-                {
-                    path: 'assigned',
-                    component: AssignedComponent
-                },
-              ]
-          },
-          {
-              path: 'notifications',
-              component: NotificationsComponent
+            path: 'assigned',
+            component: AssignedTripComponent
           },
         ]
-    },
+      },
+      {
+        path: 'service',
+        component: ServiceComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'open',
+            pathMatch: 'full',
+          },
+          {
+            path: 'opened',
+            component: OpenComponent
+          },
+          {
+            path: 'assigned',
+            component: AssignedComponent
+          },
+        ]
+      },
+      {
+        path: 'notifications',
+        component: NotificationsComponent
+      },
+    ]
+  },
 
 ];
 
@@ -58,4 +82,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class ApproverRoutingModule { }
+export class ApproverRoutingModule {
+}

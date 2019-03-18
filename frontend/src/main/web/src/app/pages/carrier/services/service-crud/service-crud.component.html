@@ -4,7 +4,7 @@
               New Service
             </h2>
 
-      <hr>
+          <hr>
 
               <form [formGroup]="form"
                     (ngSubmit)="onPost(status)">
@@ -56,21 +56,21 @@
 
                 <hr>
 
-                <div class="text-center row">
-                  <div class="col-3">
+                <div class="row" style="text-align: center">
+                  <div class="col-3" style="margin: 0 auto">
                       <button class="btn-success btn btn-block"
                               type="submit"
                               [disabled]="form.invalid"
-                              (click) = "onPost('OPEN')"
+                              (click)="onPost('OPEN')"
                       >
                         Add
                       </button>
                   </div>
-                  <div class="col-3">
+                  <div class="col-3" style="margin: 0 auto">
                       <button class="btn-primary btn btn-block"
                               type="submit"
                               [disabled]="form.invalid"
-                              (click) = "onPost('DRAFT')"
+                              (click)="onPost('DRAFT')"
                       >
                 Continue editing later
               </button>
@@ -208,14 +208,14 @@
               </form>
             </li>
           </ul>
-          <p-growl></p-growl>
+        <p-growl></p-growl>
       </div>
 
       <div class="row justify-content-center">
         <div class="col-8">
           <pagination-controls class="listing-pagination"
-                              maxSize=5
-                             (pageChange)="onChangePage($event)">
+                               maxSize=5
+                               (pageChange)="onChangePage($event)">
           </pagination-controls>
         </div>
       </div>

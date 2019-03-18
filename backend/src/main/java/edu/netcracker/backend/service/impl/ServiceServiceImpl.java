@@ -1,7 +1,6 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
-import edu.netcracker.backend.dao.ApproverDAO;
 import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.dao.ServiceReplyDAO;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
@@ -9,6 +8,7 @@ import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.ServiceReply;
 import edu.netcracker.backend.model.User;
+import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.ServiceService;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.utils.AuthorityUtils;
@@ -22,52 +22,57 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ServiceServiceImpl implements ServiceService {
 
-    @Autowired
     private ServiceDAO serviceDAO;
 
-    @Autowired
     private ServiceReplyDAO serviceReplyDAO;
 
-    @Autowired
     private UserService userService;
 
-    private Integer carrierId = 7;
+    private final SecurityContext securityContext;
 
-    public ServiceServiceImpl(){
-        //setCurCarrier();
+    @Autowired
+    public ServiceServiceImpl(ServiceDAO serviceDAO,
+                              ServiceReplyDAO serviceReplyDAO,
+                              UserService userService,
+                              SecurityContext securityContext){
+        this.serviceDAO = serviceDAO;
+        this.serviceReplyDAO = serviceReplyDAO;
+        this.userService = userService;
+        this.securityContext = securityContext;
     }
 
     @Override
-    public List<ServiceCRUDDTO> getServicesOfCarrier(){ return serviceDAO.findAllByCarrierId(carrierId);}
+    public List<ServiceCRUDDTO> getServicesOfCarrier(){ return serviceDAO.findAllByCarrierId(setCurUser());}
 
     @Override
     public List<ServiceCRUDDTO> getPaginServicesOfCarrier(Integer from, Integer amount){
-        return serviceDAO.findPaginByCarrierId(carrierId, from, amount);
+        return serviceDAO.findPaginByCarrierId(setCurUser(), from, amount);
     }
 
     @Override
-    public List<ServiceCRUDDTO> findByStatus(String status){
-        return serviceDAO.findByStatus(carrierId, getStatusValue(status));
+    public List<ServiceCRUDDTO> findByStatus(String status) {
+        return serviceDAO.findByStatus(setCurUser(), getStatusValue(status));
     }
 
     @Override
     public ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm){
         String serviceName = serviceCreateForm.getServiceName();
-        if(ifServiceExists(serviceName, carrierId)){
+        if(ifServiceExists(serviceName, setCurUser())){
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
         String status = serviceCreateForm.getServiceStatus();
-        if((!status.equals(ServiceStatus.DRAFT.toString()))&&(!status.equals(ServiceStatus.OPEN.toString()))){
+        if ((!status.equals(ServiceStatus.DRAFT.toString())) && (!status.equals(ServiceStatus.OPEN.toString()))) {
             throw new RequestException("Status of new service must be draft or open", HttpStatus.BAD_REQUEST);
         }
 
         ServiceDescr serviceDescr = new ServiceDescr();
-        serviceDescr.setCarrierId(carrierId);
+        serviceDescr.setCarrierId(setCurUser());
         serviceDescr.setServiceName(serviceCreateForm.getServiceName());
         serviceDescr.setServiceDescription(serviceCreateForm.getServiceDescription());
 
@@ -76,29 +81,31 @@ public class ServiceServiceImpl implements ServiceService {
 
         serviceDAO.save(serviceDescr);
 
-        ServiceDescr result = serviceDAO.findByName(serviceDescr.getServiceName(), carrierId).orElse(null);
+        ServiceDescr result = serviceDAO.findByName(serviceDescr.getServiceName(), setCurUser()).orElse(null);
 
         return ServiceCRUDDTO.form(result, "");
     }
 
     @Override
     public ServiceCRUDDTO updateService(ServiceCRUDDTO serviceCRUDDTO){
-        ServiceDescr serviceDescr = serviceDAO.find(serviceCRUDDTO.getId()).orElse(null);
+        Optional<ServiceDescr> serviceOpt = serviceDAO.find(serviceCRUDDTO.getId());
 
-        if(serviceDescr == null){
+        if(!serviceOpt.isPresent()){
             throw new RequestException("Service " + serviceCRUDDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
         }
 
-        if((ifServiceExists(serviceCRUDDTO.getServiceName(), carrierId))&&
+        ServiceDescr serviceDescr = serviceOpt.get();
+
+        if((ifServiceExists(serviceCRUDDTO.getServiceName(), setCurUser()))&&
                 (!Objects.equals(serviceCRUDDTO.getServiceName(),serviceDescr.getServiceName()))){
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
         String status = serviceCRUDDTO.getServiceStatus();
-        if(((status.equals(ServiceStatus.ASSIGNED.toString()) ||
-                (status.equals(ServiceStatus.PUBLISHED.toString()) ||
-                        (status.equals(ServiceStatus.UNDER_CLARIFICATION.toString()))) &&
-                            (!Objects.equals(serviceCRUDDTO.getServiceStatus(),serviceDescr.getServiceStatus()))))){
+        if (((status.equals(ServiceStatus.ASSIGNED.toString())
+              || (status.equals(ServiceStatus.PUBLISHED.toString())
+                  || (status.equals(ServiceStatus.UNDER_CLARIFICATION.toString())))
+                 && (!Objects.equals(serviceCRUDDTO.getServiceStatus(), serviceDescr.getServiceStatus()))))) {
             throw new RequestException("Cannot set service_status = " + serviceCRUDDTO.getServiceStatus(),
                     HttpStatus.BAD_REQUEST);
         }
@@ -124,12 +131,15 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, String status, Integer approverId) {
-        if(status.equals(ServiceStatus.OPEN.toString())){
+    public List<ServiceCRUDDTO> getServicesForApprover(Integer from,
+                                                       Integer number,
+                                                       String status,
+                                                       Integer approverId) {
+        if (status.equals(ServiceStatus.OPEN.toString())) {
             return serviceDAO.getServicesForApprover(from, number, getStatusValue(status));
-        }else if(status.equals(ServiceStatus.ASSIGNED.toString())){
+        } else if (status.equals(ServiceStatus.ASSIGNED.toString())) {
             return serviceDAO.getServicesForApprover(from, number, getStatusValue(status), approverId);
-        }else{
+        } else {
             throw new IllegalArgumentException("Illegal service status");
         }
     }
@@ -161,11 +171,11 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceDTO;
     }
 
-    private Integer getStatusValue(String status){
+    private Integer getStatusValue(String status) {
         try {
             ServiceStatus stat = ServiceStatus.valueOf(status);
-            return stat.ordinal()+1;
-        }catch (IllegalArgumentException e) {
+            return stat.ordinal() + 1;
+        } catch (IllegalArgumentException e) {
             throw new RequestException("The status " + status + " doesn't exist", HttpStatus.NOT_FOUND);
         }
     }
@@ -174,11 +184,8 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceDAO.findByName(name, id).isPresent();
     }
 
-    private void setCurCarrier(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String carrierName = authentication.getName();
-        User user = userService.findByUsernameWithRole(carrierName, AuthorityUtils.ROLE_CARRIER);
-        this.carrierId = user.getUserId();
+    private Integer setCurUser(){
+        return securityContext.getUser().getUserId();
     }
 
 

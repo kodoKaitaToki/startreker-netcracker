@@ -34,11 +34,11 @@ public class ServiceCRUDDTO {
     public ServiceCRUDDTO(){}
 
     private ServiceCRUDDTO(Long id,
-                       String approverName,
-                       String serviceName,
-                       String serviceDescription,
-                       String serviceStatus,
-                       LocalDateTime creationDate) {
+                           String approverName,
+                           String serviceName,
+                           String serviceDescription,
+                           String serviceStatus,
+                           LocalDateTime creationDate) {
         this.id = id;
         this.approverName = approverName;
         this.serviceName = serviceName;
@@ -49,7 +49,7 @@ public class ServiceCRUDDTO {
 
     public static ServiceCRUDDTO form(ServiceDescr serviceDescr, String approver_name) {
         int status = serviceDescr.getServiceStatus();
-        String statusVal = ServiceStatus.values()[status-1].toString();
+        String statusVal = ServiceStatus.values()[status - 1].toString();
         return new ServiceCRUDDTO(
                 serviceDescr.getServiceId(),
                 approver_name,
