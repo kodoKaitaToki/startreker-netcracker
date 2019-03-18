@@ -17,7 +17,7 @@ export class ServiceService {
     this.actionUrl = Api.baseUrl + 'api/v1';
   }
 
-  public getServicesForApprover(from: number, number: number, status: number){
+  public getServicesForApprover(from: number, number: number, status: string){
     let params = new HttpParams()
       .set("from", from.toString())
       .set("number", number.toString())

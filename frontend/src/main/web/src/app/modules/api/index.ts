@@ -22,8 +22,6 @@ export const HttpOptionsAuthorized = {
   observe: 'response' as 'response'
 }
 
-export
-
 const auth = {
   loginUser() {
     return `${baseUrl}api/auth/sign-in`;

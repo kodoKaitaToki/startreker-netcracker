@@ -41,7 +41,7 @@ export class BundlesTreeComponent implements OnInit {
     this.carrierSrvc.getAllCarriers()
     .subscribe(carriers => {
       this.inputTree = this.inputTree.concat(
-        carriers.map((carrier: Carrier) => {
+        carriers.body.map((carrier: Carrier) => {
           let node: TreeNode = {
             label: carrier.username,
             data: carrier,
