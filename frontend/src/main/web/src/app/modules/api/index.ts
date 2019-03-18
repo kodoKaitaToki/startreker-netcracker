@@ -5,7 +5,7 @@ const apiPort = ':80/'
 // const apiPort = '/'
 
 // baseUrl = `http://startreker-netcracker.herokuapp.com${apiPort}`
-baseUrl = `http://192.168.0.104${apiPort}`
+baseUrl = `http://localhost${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
