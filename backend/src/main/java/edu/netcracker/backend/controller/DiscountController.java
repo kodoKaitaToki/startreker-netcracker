@@ -1,6 +1,5 @@
 package edu.netcracker.backend.controller;
 
-import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.message.request.DiscountSuggestionDTO;
 import edu.netcracker.backend.message.request.DiscountTicketClassDTO;
 import edu.netcracker.backend.message.request.TripWithArrivalAndDepartureDataDTO;
@@ -8,7 +7,6 @@ import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.SuggestionService;
 import edu.netcracker.backend.service.TicketClassService;
 import edu.netcracker.backend.service.TripService;
-import edu.netcracker.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
