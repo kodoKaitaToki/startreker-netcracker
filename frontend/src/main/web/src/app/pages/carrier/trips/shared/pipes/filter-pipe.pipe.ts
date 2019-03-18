@@ -8,12 +8,24 @@ export class TripFilterPipe implements PipeTransform {
 
   transform(value: Trip[], filterCriteria: string, filterContent: string): Trip[] {
 
+    if (filterCriteria === 'status') {
+      filterCriteria = 'trip_status';
+    }
+
     if (filterCriteria === 'departure planet') {
       filterCriteria = 'departure_planet';
     }
 
     if (filterCriteria === 'arrival planet') {
       filterCriteria = 'arrival_planet';
+    }
+
+    if (filterCriteria === 'departure date') {
+      filterCriteria = 'departure_date';
+    }
+    
+    if (filterCriteria === 'arrival date') {
+      filterCriteria = 'arrival_date';
     }
 
 

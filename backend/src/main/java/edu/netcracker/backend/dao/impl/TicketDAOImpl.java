@@ -25,6 +25,8 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
 
     private final String FIND_REMAINING_SEATS = "SELECT COUNT(ticket_id) FROM ticket WHERE class_id = ? AND passenger_id IS NULL";
 
+    private final String DELETE_ALL_TICKETS_OF_TICKET_CLASS = "DELETE FROM ticket WHERE class_id = ?";
+
     private static final Logger logger = LoggerFactory.getLogger(TicketDAOImpl.class);
 
 
@@ -39,6 +41,16 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
         }
 
         return tickets;
+    }
+
+    /**
+     * Method for deleting all tickets of specified ticket class
+     *
+     * @param id - id of ticket class for which tickets have to be deleted
+     */
+    @Override
+    public void deleteAllTicketsOfTicketClass(Long id) {
+        getJdbcTemplate().update(DELETE_ALL_TICKETS_OF_TICKET_CLASS, id);
     }
 
     /**

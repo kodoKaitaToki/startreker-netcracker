@@ -4,6 +4,8 @@ import edu.netcracker.backend.dao.DiscountDAO;
 import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.dao.TicketDAO;
 import edu.netcracker.backend.model.TicketClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -23,6 +25,8 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
         this.ticketDAO = ticketDAO;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
+
+    private final Logger logger = LoggerFactory.getLogger(TicketClassDAOImpl.class);
 
     private static final String SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER = "SELECT "
                                                                      + "tc.class_id, "
@@ -94,7 +98,17 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
     private final String UPDATE_TICKET_CLASS =
             "UPDATE ticket_class SET class_seats = ?, ticket_price = ? WHERE class_id = ?";
 
-    private final String FIND_ID_BY_CLASS_NAME_AND_TRIP_ID = "SELECT class_id FROM ticket_class WHERE LOWER(class_name) = ? AND trip_id = ?";
+    private final String FIND_ID_BY_CLASS_NAME_AND_TRIP_ID =
+            "SELECT class_id FROM ticket_class WHERE LOWER(class_name) = ? AND trip_id = ?";
+
+    private final String DELETE_TICKET_CLASS_BY_ID = "DELETE FROM ticket_class WHERE class_id = ?";
+
+    private final String GET_NUMBER_OF_TICKET_CLASSES_BY_NAME_AND_TRIP_ID =
+            "SELECT COUNT(class_id) FROM ticket_class WHERE trip_id = ? AND LOWER(class_name) = ?";
+
+    private final String GET_TICKET_CLASS_BY_NAME_AND_TRIP_ID =
+            "SELECT class_id, class_name, trip_id, ticket_price, discount_id, class_seats "
+            + "FROM ticket_class WHERE trip_id = ? AND LOWER(class_name) = ? ";
 
     @Override
     public Optional<TicketClass> findTicketClassBelongToCarrier(Number ticketClassId, Number carrierId) {
@@ -110,9 +124,24 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
 
     @Override
     public List<TicketClass> findByTripId(Number id) {
-        List<TicketClass> ticketClasses = getJdbcTemplate().query(SELECT_BY_TRIP_ID, new Object[]{id}, getGenericMapper());
-        ticketClasses.forEach(ticketClass -> ticketClass.setRemainingSeats(ticketDAO.getRemainingSeatsForClass(ticketClass.getClassId())));
+        List<TicketClass> ticketClasses =
+                getJdbcTemplate().query(SELECT_BY_TRIP_ID, new Object[]{id}, getGenericMapper());
+        ticketClasses.forEach(ticketClass -> ticketClass.setRemainingSeats(ticketDAO.getRemainingSeatsForClass(
+                ticketClass.getClassId())));
         return ticketClasses;
+    }
+
+    /**
+     * Method for updating of ticket classes
+     *
+     * @param tripId - id of trip ticket class belongs to
+     * @param name   - name of ticket class
+     */
+    @Override
+    public TicketClass getTicketClassByNameAndTripId(Long tripId, String name) {
+        return getJdbcTemplate().queryForObject(GET_TICKET_CLASS_BY_NAME_AND_TRIP_ID,
+                                                new Object[]{tripId, name.toLowerCase()},
+                                                getGenericMapper());
     }
 
     /**
@@ -140,6 +169,24 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
                                  ticketClass.getClassSeats(),
                                  ticketClass.getTicketPrice(),
                                  ticketClass.getClassId());
+    }
+
+    /**
+     * Method for checking whether ticket class with specified name and trip id exists in database
+     *
+     * @param tripId    - trip_id of ticket class
+     * @param className - name of ticket class
+     */
+    @Override
+    public boolean exists(Long tripId, String className) {
+        Integer amount = getJdbcTemplate().queryForObject(GET_NUMBER_OF_TICKET_CLASSES_BY_NAME_AND_TRIP_ID,
+                                                          new Object[]{tripId, className.toLowerCase()},
+                                                          Integer.class);
+        if (amount.equals(new Integer(0))) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -201,9 +248,16 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
 
     @Override
     public Long getTicketClassId(String className, Long tripId) {
+        logger.debug("Getting id of ticket class where trip id is {} and class name - {}", tripId, className);
         return getJdbcTemplate().queryForObject(FIND_ID_BY_CLASS_NAME_AND_TRIP_ID,
-                                                      new Object[]{className.toLowerCase(), tripId},
-                                                      Long.class);
+                                                new Object[]{className, tripId},
+                                                Long.class);
+    }
+
+    @Override
+    public void deleteTicketClassById(Long id) {
+        logger.debug("Deleting ticket class with id {}", id);
+        getJdbcTemplate().update(DELETE_TICKET_CLASS_BY_ID, id);
     }
 
     private TicketClass createTicketClass(Map<String, Object> row) {

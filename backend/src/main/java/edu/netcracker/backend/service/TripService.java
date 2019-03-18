@@ -17,6 +17,8 @@ public interface TripService {
 
     List<ReadTripsDTO> getAllTripsForCarrier(Long carrierId);
 
+    List<ReadTripsDTO> getAllTripsForCarrierWithPagination(Integer limit, Integer offset);
+
     List<ReadTripsDTO> getAllTripsForUser(String departurePlanet,
                                              String departureSpaceport,
                                              String departureDate,
@@ -30,4 +32,6 @@ public interface TripService {
     List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithTicketClassAndDiscountsBelongToCarrier(Number carrierId);
 
     List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithSuggestionAndDiscountsBelongToCarrier(Number carrierId);
+
+    void updateTripForCarrier(TripCreation trip, Long tripId);
 }

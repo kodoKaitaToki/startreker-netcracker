@@ -32,6 +32,8 @@ import {TripsCrudComponent} from './trips/trips-crud/trips-crud.component';
 import {TripFilterPipe} from './trips/shared/pipes/filter-pipe.pipe';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
+import { TripsTicketClassComponent } from './trips/trips-ticket-class/trips-ticket-class.component';
+import {DialogModule} from 'primeng/dialog';
 
 @NgModule({
             declarations:
@@ -55,7 +57,8 @@ import {MessageModule} from 'primeng/message';
                TicketClassComponent,
                TripsTableComponent,
                TripsCrudComponent,
-               TripFilterPipe
+               TripFilterPipe,
+               TripsTicketClassComponent
               ],
             imports: [
               CommonModule,
@@ -66,7 +69,8 @@ import {MessageModule} from 'primeng/message';
               NgxPaginationModule,
               ToastModule,
               MessageModule,
-              MessagesModule
+              MessagesModule,
+              DialogModule
             ],
             providers: [
               MessageService,

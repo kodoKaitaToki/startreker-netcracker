@@ -5,11 +5,15 @@ import { ExisitingTrips } from '../../../services/interfaces/trips.interface';
 import { Trip } from './shared/model/trip';
 import { clone } from 'ramda';
 import { DateValidator } from './trips.helper';
+import {ShowMessageService} from "../../admin/approver/shared/service/show-message.service";
+import {MessageService} from "primeng/api";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-trips',
   templateUrl: './trips.component.html',
-  styleUrls: ['./trips.component.scss']
+  styleUrls: ['./trips.component.scss'],
+  providers: [ShowMessageService]
 })
 export class TripsComponent implements OnInit {
 
@@ -17,10 +21,11 @@ export class TripsComponent implements OnInit {
   currentTripForUpdate: Trip;
 
   filterCriteria = [
+    { name: 'status'},
     { name: 'departure planet' },
     { name: 'arrival planet' },
-    { name: 'departure_date'},
-    { name: 'id' }
+    { name: 'departure date'},
+    { name: 'arrival date'}
   ];
 
   departureSpaceports: any = [];
@@ -41,12 +46,16 @@ export class TripsComponent implements OnInit {
   currentDateError: boolean = false;
   departureDateError: boolean = false;
 
-  
+
   get f() {
     return this.form.controls;
   }
 
-  constructor(private tripsApi: TripsService) {
+  constructor(
+    private tripsApi: TripsService,
+    private showMsgSrvc: ShowMessageService,
+    private messageService: MessageService,
+  ) {
     this.form = new FormGroup(
       {
         departure_planet: new FormControl('', Validators.required),
@@ -57,7 +66,7 @@ export class TripsComponent implements OnInit {
         arrival_date: new FormControl('', [Validators.required, DateValidator.notEarlierThanCurrentDate]),
         arrival_time: new FormControl('', Validators.required),
         departure_time: new FormControl('', Validators.required),
-      }, 
+      },
       // {
       //   validators: Validators.compose([
       //     DateValidator.dateLessThan('arrival_date', 'departure_date', { 'arrival_date': true })])
@@ -113,6 +122,41 @@ export class TripsComponent implements OnInit {
   //     setTimeout(() => this.departureDateError = false, 3000);
   //   }
   // }
+
+  getTripForUpdate(trip) {
+    const id = trip.id;
+    delete trip.id;
+    this.tripsApi.updateTrip(trip, id)
+      .subscribe(() => {
+        this.getTrips();
+        this.showMsgSrvc.showMessage(this.messageService, 'success', 'Approver editing', 'The approver was edited');
+      }, (error: HttpErrorResponse) => {
+        this.showMsgSrvc.showMessage(this.messageService, 'error', `Error message - ${error.error.status}`,
+                                      error.error.error);
+      });
+  }
+
+  ticketClassSubmitHandler(ticketClass) {
+    this.tripsApi.saveTicketClass(ticketClass)
+      .subscribe(() => {
+        this.getTrips();
+        this.showMsgSrvc.showMessage(this.messageService, 'success', 'Ticket class editing', 'Ticket class was updated');
+      }, (error: HttpErrorResponse) => {
+        this.showMsgSrvc.showMessage(this.messageService, 'error', `Error message - ${error.error.status}`,
+                                      error.error.error);
+      });
+  }
+
+  ticketClassDelete(id) {
+    this.tripsApi.deleteTicketClass(id)
+      .subscribe(() => {
+        this.getTrips();
+        this.showMsgSrvc.showMessage(this.messageService, 'success', 'Ticket class deleting', 'Ticket class was deleted');
+      }, (error: HttpErrorResponse) => {
+        this.showMsgSrvc.showMessage(this.messageService, 'error', `Error message - ${error.error.status}`,
+                                      error.error.error);
+      });
+  }
 
   onSubmit() {
     // method to send data to server
