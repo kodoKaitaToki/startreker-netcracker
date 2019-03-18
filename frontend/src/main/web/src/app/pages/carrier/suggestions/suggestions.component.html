@@ -1,9 +1,27 @@
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-12 my-auto">
-      <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
-        <h1 class="card-title text-center">suggestions works!</h1>
-      </div>
+      <h3>Suggestions:</h3>
+      
+      <ng-container
+      *ngIf="!isAdding">
+        <div class="row justify-content-around">
+          <button class="btn-success btn col-md-4"
+          (click)="addSuggestion()">
+            Add
+          </button>
+        </div>
+      </ng-container>
+      
+      <ng-container
+      *ngIf="isAdding">
+        <div class="row justify-content-around">
+          <button class="btn-danger btn col-md-4"
+          (click)="cancelSuggestion()">
+            Cancel
+          </button>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>
