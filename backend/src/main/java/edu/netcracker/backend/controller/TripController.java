@@ -62,13 +62,13 @@ public class TripController {
     }
 
     @GetMapping("api/v1/user/trips")
-    public List<ReadTripsDTO> getTripsForUser(@RequestParam("departure_planet") String departurePlanet,
-                                              @RequestParam("departure_spaceport") String departureSpaceport,
-                                              @RequestParam("departure_date") String departureDate,
-                                              @RequestParam("arrival_planet") String arrivalPlanet,
-                                              @RequestParam("arrival_spaceport") String arrivalSpaceport,
-                                              @RequestParam("limit") Integer limit,
-                                              @RequestParam("offset") Integer offset) {
+    public List<ReadTripsDTO> getTripsForUser(@RequestParam(value = "departure_planet", required = false) String departurePlanet,
+                                              @RequestParam(value = "departure_spaceport", required = false) String departureSpaceport,
+                                              @RequestParam(value = "departure_date", required = false) String departureDate,
+                                              @RequestParam(value = "arrival_planet", required = false) String arrivalPlanet,
+                                              @RequestParam(value = "arrival_spaceport", required = false) String arrivalSpaceport,
+                                              @RequestParam(value = "limit", required = false) Integer limit,
+                                              @RequestParam(value = "offset", required = false) Integer offset) {
         return tripService.getAllTripsForUser(departurePlanet,
                                               departureSpaceport,
                                               departureDate,

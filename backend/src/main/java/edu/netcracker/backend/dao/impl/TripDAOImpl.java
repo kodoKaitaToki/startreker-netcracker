@@ -231,25 +231,56 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
                                          String arrivalSpaceport,
                                          Integer limit,
                                          Integer offset) {
-        logger.debug("Getting all trips from {} ({}) to {} ({}) ON {}",
-                     departureSpaceport,
-                     departurePlanet,
-                     arrivalSpaceport,
-                     arrivalPlanet,
-                     departureDate);
-        List<Trip> trips;
-        trips = getJdbcTemplate().query(FIND_ALL_TRIPS_FOR_USER,
-                                        new Object[]{departurePlanet.toLowerCase(),
-                                                     departureSpaceport.toLowerCase(),
-                                                     arrivalPlanet.toLowerCase(),
-                                                     arrivalSpaceport.toLowerCase(),
-                                                     departureDate,
-                                                     limit,
-                                                     offset},
-                                        new TripCRUDMapper(this.tripStateRegistry));
+        List<Trip> trips = new ArrayList<>();
+
+        List<Object> objects = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(FIND_ALL_TRIPS)
+               .append("WHERE trip_status = 4 ");
+
+        if (departurePlanet != null) {
+            logger.debug("Getting all from planet {}");
+            objects.add(departurePlanet.toLowerCase());
+            builder.append("AND LOWER(dp.planet_name) = ? ");
+        }
+
+        if (departureSpaceport != null) {
+            logger.debug("Getting all from port {}");
+            objects.add(departureSpaceport.toLowerCase());
+            builder.append("AND LOWER(ds.spaceport_name) = ? ");
+        }
+
+        if (arrivalPlanet != null) {
+            logger.debug("Getting all to planet {}");
+            objects.add(arrivalPlanet.toLowerCase());
+            builder.append("AND LOWER(arp.planet_name) = ? ");
+        }
+
+        if (arrivalSpaceport != null) {
+            logger.debug("Getting all to port {}");
+            objects.add(arrivalSpaceport.toLowerCase());
+            builder.append("AND LOWER(ars.spaceport_name) = ? ");
+        }
+
+        if (departureDate != null) {
+            logger.debug("Getting all ON {}");
+            objects.add(departureDate);
+            builder.append("AND TO_CHAR(departure_date, 'YYYY-MM-DD') = ? ");
+        }
+
+        builder.append(PAGINATION);
+
+        objects.add(limit);
+        objects.add(offset);
+
+        trips.addAll(getJdbcTemplate().query(builder.toString(),
+                                        objects.toArray(),
+                                        new TripCRUDMapper(this.tripStateRegistry)));
 
         logger.debug("Attaching ticket classes to trip");
         trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findByTripId(trip.getTripId())));
+
         return trips;
     }
 
