@@ -3,25 +3,29 @@
     <div class="col-md-12 my-auto">
       <h3>Suggestions:</h3>
       
-      <ng-container
-      *ngIf="!isAdding">
+      <div
+      [hidden]="isAdding">
         <div class="row justify-content-around">
           <button class="btn-success btn col-md-4"
           (click)="addSuggestion()">
             Add
           </button>
         </div>
-      </ng-container>
-      
-      <ng-container
-      *ngIf="isAdding">
-        <div class="row justify-content-around">
-          <button class="btn-danger btn col-md-4"
-          (click)="cancelSuggestion()">
-            Cancel
-          </button>
-        </div>
-      </ng-container>
+        <app-suggestions-table
+        [ticketClasses]="trip.ticket_classes"
+        (selectedSuggestion)="editSuggestion($event)"
+        (deletedSuggestion)="deleteSuggestion($event)">
+        </app-suggestions-table>
+      </div>
+
+      <div
+      [hidden]="!isAdding">
+        <app-suggestions-tree
+        [trip]="trip"
+        (selectedSuggestion)="postSuggestion($event)"
+        (canceledSuggestion)="cancelSuggestion($event)">
+        </app-suggestions-tree>
+      </div>
     </div>
   </div>
 </div>
