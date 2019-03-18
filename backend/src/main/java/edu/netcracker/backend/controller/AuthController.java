@@ -11,6 +11,7 @@ import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,11 +42,13 @@ public class AuthController {
     }
 
     @PostMapping(path = "/api/log-out")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CARRIER') or hasRole('APPROVER') or hasRole('USER')")
     public ResponseEntity<Message> logOut() {
         return ResponseEntity.ok().body(authenticationService.logOut());
     }
 
     @PatchMapping(path = "/api/change-password")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CARRIER') or hasRole('APPROVER') or hasRole('USER')")
     public ResponseEntity<Message> changePassword(@Valid @RequestBody ChangePasswordForm changePasswordForm) {
         return ResponseEntity.ok().body(authenticationService.changePassword(changePasswordForm));
     }
