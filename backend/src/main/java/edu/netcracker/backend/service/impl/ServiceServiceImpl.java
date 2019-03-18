@@ -187,6 +187,4 @@ public class ServiceServiceImpl implements ServiceService {
     private Integer setCurUser(){
         return securityContext.getUser().getUserId();
     }
-
-
 }
