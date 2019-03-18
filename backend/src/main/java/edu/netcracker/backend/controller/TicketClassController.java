@@ -5,6 +5,9 @@ import edu.netcracker.backend.service.TicketClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 @RestController
 public class TicketClassController {
 
@@ -17,17 +20,12 @@ public class TicketClassController {
 
     @PostMapping("api/v1/ticket-class")
     //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public void createTicketClass(@RequestBody TicketClassCreation ticketClass) {
-        this.ticketClassService.createNewTicketClass(ticketClass.toTicketClass());
+    public void createOrUpdateTicketClass(@RequestBody TicketClassCreation ticketClass) {
+        this.ticketClassService.createOrUpdate(ticketClass.toTicketClass());
     }
-//
-//    @PutMapping("api/v1/ticket-class")
-//    public void updateTicketClass() {
-//
-//    }
-//
-//    @DeleteMapping("api/v1/ticket-class")
-//    public void deleteTicketClass() {
-//
-//    }
+
+    @DeleteMapping("api/v1/ticket-class/{id}")
+    public void deleteTicketClass(@Valid @NotNull @PathVariable Long id) {
+        this.ticketClassService.deleteTicketClass(id);
+    }
 }

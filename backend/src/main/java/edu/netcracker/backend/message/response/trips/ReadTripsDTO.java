@@ -22,6 +22,9 @@ public class ReadTripsDTO {
     @JsonProperty("trip_status")
     private String tripStatus;
 
+    @JsonProperty("trip_status_id")
+    private Integer tripStatusId;
+
     @JsonProperty("departure_spaceport")
     private String departureSpaceportName;
 
@@ -50,6 +53,7 @@ public class ReadTripsDTO {
         ReadTripsDTO dto = new ReadTripsDTO();
         dto.tripId = trip.getTripId();
         dto.tripStatus = trip.getTripState().getStringValue();
+        dto.tripStatusId = trip.getTripState().getDatabaseValue();
         dto.departureSpaceportName = capitalize(trip.getDepartureSpaceport()
                                          .getSpaceportName());
         dto.arrivalSpaceportName = capitalize(trip.getArrivalSpaceport()

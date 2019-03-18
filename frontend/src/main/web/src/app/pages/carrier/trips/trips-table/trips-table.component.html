@@ -5,14 +5,19 @@
         | tripFilter: filterCriteria: filterContent
         | paginate: {id: 'listing_pagination', itemsPerPage: entriesAmountOnPage, currentPage: page ,totalItems: totalRec}">
       <div class="row">
-        <div class="col-1" title="id">
-          <span class="badge badge-primary badge-pill idBadge">{{trip.trip_id}}</span>
+        <div class="col-1" title="status">
+          <span class="badge badge-primary badge-pill idBadge">{{trip.trip_status}}</span>
         </div>
 
         <div class="row col-5 offset-6" *ngIf="!isForUpdateAlertMessage">
           <div class="col-1 offset-4 offset-lg-8">
             <p data-placement="top" data-toggle="tooltip" title="Edit" (click)="onTripUpdate(trip)" class="updatePrgph">
-              <button class="btn btn-primary btn-md">
+              <button
+                class="btn btn-primary btn-md"
+                [ngClass]="{
+                  'disabled': isUneditAble(trip.trip_status_id)
+                }"
+              >
                 <i class="fa fa-edit"></i>
               </button>
             </p>
@@ -26,6 +31,20 @@
               </button>
             </p>
           </div>
+          <div
+            *ngIf="trip.trip_status_id === 1"
+            class="col-1 offset-4 offset-lg-8"
+            [ngClass]="{
+              'disabled': !trip.ticket_classes.length > 0
+            }">
+              <p data-placement="top" data-toggle="tooltip" title="Edit" class="updatePrgph">
+                <button
+                  class="btn btn-primary btn-md"
+                >
+                  Send for approvement
+                </button>
+              </p>
+            </div>
         </div>
       </div>
 
@@ -38,16 +57,41 @@
               <h3 class="col-6 offset-1" *ngIf="currentTripForUpdate !== trip">
                 {{trip.departure_spaceport_name}} ({{trip.departure_planet}})
               </h3>
-              <!-- <input type="text"
-                      class="form-control"
-                      *ngIf="currentApproverForUpdate === approver && !isForUpdateAlertMessage"
-                      formControlName="username"
-                      [value]="currentApproverForUpdate.username"
-                      [ngClass]="{
-                    'is-invalid':form.get('username').invalid,
-                    'is-valid': form.get('username').valid
-                    }"
-              > -->
+              <select
+                class="form-control col-md-12 col-sm-12 col-lg-12"
+                *ngIf="currentTripForUpdate === trip && !isForUpdateAlertMessage"
+                [ngClass]="{
+                  'is-invalid':form.get('departure_planet').touched && form.get('departure_planet').invalid,
+                  'is-valid': form.get('departure_planet').valid
+                }"
+                formControlName="departure_planet"
+                [(ngModel)]="currentTripForUpdate.departure_planet"
+              >
+                <option
+                  *ngFor="let planet of exisitngDirections.planets"
+                  [value]="planet"
+                  [selected]="currentTripForUpdate.departure_planet === planet"
+                >
+                  {{planet}}
+                </option>
+              </select>
+              <select
+                class="form-control col-md-12 col-sm-12 col-lg-12"
+                *ngIf="currentTripForUpdate === trip && !isForUpdateAlertMessage"
+                [ngClass]="{
+                'is-invalid':form.get('departure_spaceport').touched && form.get('departure_spaceport').invalid,
+                'is-valid': form.get('departure_spaceport').valid
+                }"
+                formControlName="departure_spaceport"
+              >
+                <option
+                  *ngFor="let spaceport of exisitngDirections.spaceports[currentTripForUpdate.departure_planet]"
+                  [value]="spaceport"
+                  [selected]="currentTripForUpdate.departure_spaceport === spaceport"
+                >
+                  {{spaceport}}
+                </option>
+              </select>
             </div>
   
             <hr>
@@ -57,34 +101,95 @@
               <h3 class="col-6 offset-1" *ngIf="currentTripForUpdate !== trip">
                 {{trip.arrival_spaceport_name}} ({{trip.arrival_planet}})
               </h3>
-              <!-- <input type="text"
-                          class="form-control"
-                          *ngIf="currentApproverForUpdate === approver && !isForUpdateAlertMessage"
-                          formControlName="username"
-                          [value]="currentApproverForUpdate.username"
-                          [ngClass]="{
-                        'is-invalid':form.get('username').invalid,
-                        'is-valid': form.get('username').valid
-                        }"
-                  > -->
+              <select
+                class="form-control col-md-12 col-sm-12 col-lg-12"
+                *ngIf="currentTripForUpdate === trip && !isForUpdateAlertMessage"
+                [ngClass]="{
+                  'is-invalid':form.get('arrival_planet').touched && form.get('arrival_planet').invalid,
+                  'is-valid': form.get('arrival_planet').valid
+                }"
+                formControlName="arrival_planet"
+                [(ngModel)]="currentTripForUpdate.arrival_planet"
+              >
+                <option
+                  *ngFor="let planet of exisitngDirections.planets"
+                  [value]="planet"
+                  [selected]="currentTripForUpdate.arrival_planet === planet"
+                >
+                  {{planet}}
+                </option>
+              </select>
+              <select
+                class="form-control col-md-12 col-sm-12 col-lg-12"
+                *ngIf="currentTripForUpdate === trip && !isForUpdateAlertMessage"
+                [ngClass]="{
+                'is-invalid':form.get('arrival_spaceport').touched && form.get('arrival_spaceport').invalid,
+                'is-valid': form.get('arrival_spaceport').valid
+                }"
+                formControlName="arrival_spaceport"
+              >
+                <option
+                  *ngFor="let spaceport of exisitngDirections.spaceports[currentTripForUpdate.arrival_planet]"
+                  [value]="spaceport"
+                  [selected]="currentTripForUpdate.arrival_spaceport === spaceport"
+                >
+                  {{spaceport}}
+                </option>
+              </select>
             </div>
   
             <hr>
   
             <div class="row">
-              <h5 class="col-5">Departure date</h5>
-              <p class="col-6 offset-1">
+              <h5 class="col-5">Departure date and time</h5>
+              <p class="col-6 offset-1" *ngIf="currentTripForUpdate !== trip">
                 {{trip.departure_date}}
               </p>
+              <input
+                type="date"
+                *ngIf="currentTripForUpdate === trip && !isForUpdateAlertMessage"
+                name="flightDate"
+                class="form-control"
+                [ngClass]="{
+                  'is-invalid':form.get('departure_date').touched && form.get('departure_date').invalid,
+                  'is-valid': form.get('departure_date').valid
+                }"
+                formControlName="departure_date" />
+
+                <input
+                  type="time"
+                  *ngIf="currentTripForUpdate === trip && !isForUpdateAlertMessage"
+                  class="form-control"
+                  formControlName="departure_time"
+                />
             </div>
   
             <div class="row">
-              <h5 class="col-5">Arrival date</h5>
-              <p class="col-6 offset-1">
+              <h5 class="col-5">Arrival date and time</h5>
+              <p class="col-6 offset-1" *ngIf="currentTripForUpdate !== trip">
                 {{trip.arrival_date}}
               </p>
+              <input
+                type="date"
+                *ngIf="currentTripForUpdate === trip && !isForUpdateAlertMessage"
+                name="flightDate"
+                class="form-control"
+                [ngClass]="{
+                  'is-invalid':form.get('arrival_date').touched && form.get('arrival_date').invalid,
+                  'is-valid': form.get('arrival_date').valid
+                }"
+                formControlName="arrival_date" />
+
+                <input
+                  type="time"
+                  *ngIf="currentTripForUpdate === trip && !isForUpdateAlertMessage"
+                  class="form-control"
+                  formControlName="arrival_time"
+                />
             </div>
-  
+
+            <hr>
+
             <div class="row">
               <h5 class="col-5">Date of creation</h5>
               <p class="col-6 offset-1">
@@ -112,6 +217,31 @@
       </div>
 
       
+      </form>
+      <div class="row">
+        <button
+          class="btn btn-success col-4"
+          type="button"
+          (click)="toggleShowTicketClass(trip.ticket_classes)"
+        >
+          Add ticket class
+        </button>
+      </div>
+      <p-dialog
+        [(visible)]="showTicketClass"
+        *ngIf="currentTicketClassForUpdate === trip.ticket_classes"
+      >
+        <p-header>
+          Ticket classes
+        </p-header>
+        <app-trips-ticket-class
+          [ticketClasses]="trip.ticket_classes"
+          [trip_id]="trip.trip_id"
+          (submitFormEventEmitter$)="updateTickeClassNotifier($event)"
+          (deleteFormEventEmitter$)="deleteTicketClass($event)"
+          [uneditTicketClasses]="isUneditAble(trip.trip_status_id)"
+        ></app-trips-ticket-class>
+      </p-dialog>
     </li>
   </ul>
   <pagination-controls id="listing_pagination" maxSize=5 (pageChange)="onChangePage($event)" class="text-center">
@@ -119,3 +249,4 @@
 </div>
 
 <hr>
+<div *ngIf="showTicketClass" class="ui-widget-overlay ui-dialog-mask" style="z-index: 3;"></div>

@@ -77,11 +77,20 @@ const trips = {
   addTrip() {
     return `${baseUrl}api/v1/trips`;
   },
+  updateTrip(id) {
+    return `${baseUrl}api/v1/trips/${id}`
+  },
   getAllTrips() {
     return `${baseUrl}api/v1/trips`;
   },
   getCarrierTrips() {
     return `${baseUrl}api/v1/carrier/trips`;
+  },
+  addTicketClass() {
+    return `${baseUrl}api/v1/ticket-class`;
+  },
+  deleteTicketClass(id) {
+    return `${baseUrl}api/v1/ticket-class/${id}`;
   }
  }
 

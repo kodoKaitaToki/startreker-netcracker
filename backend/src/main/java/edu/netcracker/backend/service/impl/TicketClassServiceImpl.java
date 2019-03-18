@@ -101,18 +101,60 @@ public class TicketClassServiceImpl implements TicketClassService {
     }
 
     @Override
-    public void createNewTicketClass(TicketClass ticketClass) {
+    public void deleteTicketClass(Long id) {
+        logger.debug("Deleting all ticket which belong to ticket class with id {}", id);
+        this.ticketDAO.deleteAllTicketsOfTicketClass(id);
+        logger.debug("Deleting class with id {}", id);
+        this.ticketClassDAO.deleteTicketClassById(id);
+    }
+
+    @Override
+    public void createOrUpdate(TicketClass ticketClass) {
+        logger.debug("Checking whether ticket class with name {} and trip id {} exists",
+                     ticketClass.getClassName(),
+                     ticketClass.getTripId());
+        if (this.ticketClassDAO.exists(ticketClass.getTripId(), ticketClass.getClassName())) {
+            logger.debug("Ticket class exists in database: updating...");
+            updateTicketClass(ticketClass);
+        } else {
+            logger.debug("Ticket class is absent in database: creating...");
+            createNewTicketClass(ticketClass);
+        }
+    }
+
+    private void updateTicketClass(TicketClass ticketClass) {
+        logger.debug("Getting existing ticket class from database");
+        TicketClass existingTicketClass =
+                this.ticketClassDAO.getTicketClassByNameAndTripId(ticketClass.getTripId(), ticketClass.getClassName());
+        logger.debug("Copying class id value to new version of ticket class");
+        ticketClass.setClassId(existingTicketClass.getClassId());
+        logger.debug("Updating ticket class info");
+        this.ticketClassDAO.update(ticketClass);
+        logger.debug("Checking whether number of seats has changed");
+        if (!existingTicketClass.getClassSeats()
+                                .equals(ticketClass.getClassSeats())) {
+            logger.debug("Number of seats has changed - deleting all tickets and create new ones");
+            this.ticketDAO.deleteAllTicketsOfTicketClass(ticketClass.getClassId());
+            this.createTicketsForTicketClass(ticketClass);
+
+        }
+    }
+
+    private void createNewTicketClass(TicketClass ticketClass) {
         logger.debug("Creating ticket class");
         ticketClassDAO.create(ticketClass);
 
         logger.debug("Getting id of created ticket class by its class name and trip id");
-        Long ticketClassId = ticketClassDAO.getTicketClassId(ticketClass.getClassName(), ticketClass.getTripId());
+        ticketClass.setClassId(ticketClassDAO.getTicketClassId(ticketClass.getClassName(), ticketClass.getTripId()));
 
-        logger.debug("Adding {} new empty tickets for created ticket class", ticketClass.getClassSeats());
+        this.createTicketsForTicketClass(ticketClass);
+    }
+
+    private void createTicketsForTicketClass(TicketClass ticketClass) {
+        logger.debug("Adding {} new empty tickets for ticket class", ticketClass.getClassSeats());
         for (int i = 1; i <= ticketClass.getClassSeats(); i++) {
-            ticketDAO.createEmptyTicketForTicketClass(ticketClassId, ticketClassId * 1000 + i);
+            ticketDAO.createEmptyTicketForTicketClass(ticketClass.getClassId(), ticketClass.getClassId() * 1000 + i);
         }
-
     }
 
     private TicketClass getTicketClass(DiscountTicketClassDTO ticketClassDTO, Number userId) {

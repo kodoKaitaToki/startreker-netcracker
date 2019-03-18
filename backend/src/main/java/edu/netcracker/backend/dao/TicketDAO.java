@@ -17,4 +17,6 @@ public interface TicketDAO {
     Integer getRemainingSeatsForClass(Long classId);
 
     List<Ticket> findAllByClass(Number id);
+
+    void deleteAllTicketsOfTicketClass(Long id);
 }

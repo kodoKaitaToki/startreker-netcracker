@@ -41,4 +41,6 @@ public interface TripDAO {
     List<Trip> findAll();
 
     List<TripWithArrivalAndDepartureData> getAllTripsWitArrivalAndDepatureDataBelongToCarrier(Number carrierId);
+
+    void updateTripInfo(Trip trip);
 }

@@ -35,6 +35,8 @@ import {MessageModule} from 'primeng/message';
 import {TreeModule} from 'primeng/tree';
 import { SuggestionsTreeComponent } from './suggestions/suggestions-tree/suggestions-tree.component';
 import { SuggestionsTableComponent } from './suggestions/suggestions-table/suggestions-table.component';
+import { TripsTicketClassComponent } from './trips/trips-ticket-class/trips-ticket-class.component';
+import {DialogModule} from 'primeng/dialog';
 
 @NgModule({
             declarations:
@@ -60,7 +62,8 @@ import { SuggestionsTableComponent } from './suggestions/suggestions-table/sugge
                TripsCrudComponent,
                TripFilterPipe,
                SuggestionsTreeComponent,
-               SuggestionsTableComponent
+               SuggestionsTableComponent,
+               TripsTicketClassComponent
               ],
             imports: [
               CommonModule,
@@ -72,7 +75,8 @@ import { SuggestionsTableComponent } from './suggestions/suggestions-table/sugge
               ToastModule,
               MessageModule,
               MessagesModule,
-              TreeModule
+              TreeModule,
+              DialogModule
             ],
             providers: [
               MessageService,
