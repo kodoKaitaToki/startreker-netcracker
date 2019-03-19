@@ -1,15 +1,22 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
+import edu.netcracker.backend.dao.PossibleServiceDAO;
+import edu.netcracker.backend.dao.TicketDAO;
+import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.message.request.ChangePasswordForm;
 import edu.netcracker.backend.message.request.SignUpForm;
 import edu.netcracker.backend.message.request.UserCreateForm;
+import edu.netcracker.backend.message.response.BoughtTicketDTO;
+import edu.netcracker.backend.model.PossibleService;
 import edu.netcracker.backend.model.Role;
+import edu.netcracker.backend.model.Ticket;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.security.UserInformationHolder;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.utils.PasswordGeneratorUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,11 +28,14 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -33,6 +43,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private TicketDAO ticketDAO;
+
+    @Autowired
+    private PossibleServiceDAO possibleServiceDAO;
 
     @Override
     public void save(User user) {
@@ -160,6 +176,59 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userDAO.findByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException(username + " not found"));
+    }
+
+    @Override
+    public BoughtTicketDTO buyTicket(BoughtTicketDTO boughtTicketDTO) {
+        log.debug("Getting ticket with id {} from TicketDAO", boughtTicketDTO.getTicketId());
+        Optional<Ticket> optTicket = ticketDAO.find(boughtTicketDTO.getTicketId());
+
+        log.debug("Getting user with id {} from UserDAO");
+        Optional<User> optUser = userDAO.find(boughtTicketDTO.getPassengerId());
+
+        List<PossibleService> possibleServices = new ArrayList<>();
+
+        if (!optTicket.isPresent()) {
+            log.error("Ticket with id {} not found", boughtTicketDTO.getTicketId());
+            throw new RequestException(String.format("Ticket with id %s not found", boughtTicketDTO.getTicketId()),
+                                       HttpStatus.NOT_FOUND);
+        }
+
+        if (!optUser.isPresent()) {
+            log.error("User with id {} not found", boughtTicketDTO.getTicketId());
+            throw new RequestException(String.format("User with id %s not found", boughtTicketDTO.getPassengerId()),
+                                       HttpStatus.NOT_FOUND);
+        }
+
+        log.debug("Getting services by id");
+        boughtTicketDTO.getPServicesIds()
+                       .forEach(id -> {
+                           Optional<PossibleService> optPossibleService = possibleServiceDAO.find(id);
+
+                           if (!optPossibleService.isPresent()) {
+                               log.error("User with id {} not found", boughtTicketDTO.getTicketId());
+                               throw new RequestException(String.format("Possible service with id %s not found",
+                                                                        boughtTicketDTO.getPassengerId()),
+                                                          HttpStatus.NOT_FOUND);
+                           }
+
+                           possibleServices.add(optPossibleService.get());
+                       });
+
+        Ticket ticket = optTicket.get();
+        User user = optUser.get();
+
+        if (ticket.getPassengerId() != null) {
+            log.error("Ticket with id {} has already been purchased.", ticket.getTicketId());
+            throw new RequestException(String.format("Ticket with id %s has already been purchased.",
+                                                     ticket.getTicketId()), HttpStatus.BAD_REQUEST);
+        }
+
+
+        ticketDAO.buyTicket(ticket, user);
+        possibleServices.forEach(possibleService -> possibleServiceDAO.buyService(ticket, possibleService));
+
+        return boughtTicketDTO;
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<String> roles) {
