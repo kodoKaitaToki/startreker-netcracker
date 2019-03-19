@@ -1,8 +1,6 @@
 package edu.netcracker.backend.service.impl;
 
-import edu.netcracker.backend.message.request.PendingActivationTrip;
-import edu.netcracker.backend.model.Planet;
-import edu.netcracker.backend.model.Spaceport;
+import edu.netcracker.backend.message.request.TripPendingActivationDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,14 +20,14 @@ public class TripPendingSrvcTest {
     @Mock
     private TripPendingSrvc tripPendingSrvc;
 
-    private List<PendingActivationTrip> pendingActivationTripList;
+    private List<TripPendingActivationDto> tripPendingActivationDtoList;
 
     @Before
     public void init() {
 
-        PendingActivationTrip pendingActivationTrip = PendingActivationTrip.builder()
+        TripPendingActivationDto tripPendingActivationDto = TripPendingActivationDto.builder()
                 .tripID(14)
-                .tripStatus("1")
+                .tripStatus(1)
                 .arrivalDate("2019-03-13 00:12:00.000000")
                 .departureDate("2019-03-14 23:04:00.000000")
                 .creationDate("2019-03-12 12:03:38.853000")
@@ -45,13 +43,13 @@ public class TripPendingSrvcTest {
                 .arrivalSpaceportName("erat")
                 .build();
 
-        pendingActivationTripList = Arrays.asList(pendingActivationTrip);
+        tripPendingActivationDtoList = Arrays.asList(tripPendingActivationDto);
     }
 
     @Test
     public void getPendingWithOffsetAndLimit() {
 
-        when(tripPendingSrvc.getPendingWithOffsetAndLimit(1, 0)).thenReturn(pendingActivationTripList);
-        assertEquals(tripPendingSrvc.getPendingWithOffsetAndLimit(1, 0), pendingActivationTripList);
+        when(tripPendingSrvc.getPendingWithOffsetAndLimit(1, 0)).thenReturn(tripPendingActivationDtoList);
+        assertEquals(tripPendingSrvc.getPendingWithOffsetAndLimit(1, 0), tripPendingActivationDtoList);
     }
 }

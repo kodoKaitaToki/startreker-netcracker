@@ -1,19 +1,17 @@
 import {Trip} from "./trip";
 
 export class Bundle {
-  id: number;
+  constructor(
+    public id: number,
 
-  start_date: Date;
+    public start_date: Date,
 
-  finish_date: Date;
+    public finish_date: Date,
 
-  bundle_price: number;
+    public bundle_price: number,
 
-  bundle_description: string;
+    public bundle_description: string,
 
-  bundle_trips: Trip[];
-
-  constructor() {
-
-  }
+    public bundle_trips: Trip[],
+  ) {}
 }

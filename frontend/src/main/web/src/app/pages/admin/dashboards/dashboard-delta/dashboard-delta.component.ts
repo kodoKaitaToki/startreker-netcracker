@@ -7,6 +7,7 @@ import { clone } from 'ramda';
 
 import { DashboardDeltaService } from '../dashboard-delta.service';
 import {checkToken} from "../../../../modules/api/index";
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-dashboard-delta',
@@ -36,31 +37,39 @@ export class DashboardDeltaComponent implements OnInit {
     let toDateFormatted: string = formatDate(this.form.value.toDate, 'yyyy-MM-dd', 'en');
 
     this.dashboardDeltaService.getUsersIncreasingPerPeriod(fromDateFormatted, toDateFormatted)
-      //.subscribe((resp: Response) => {
-      .subscribe(data => {
-        //checkToken(resp.headers);
-        //this.userMap = clone(resp);
-        this.userMap = data;
+      .subscribe((resp: HttpResponse<any>) => {
+        checkToken(resp.headers);
+        let body = resp.body
+        this.userMap = this.convertBodyToMap(resp);
         this.reloadCharts();
     });
 
     this.dashboardDeltaService.getCarriersIncreasingPerPeriod(fromDateFormatted, toDateFormatted)
-      //.subscribe((resp: Response) => {
-      .subscribe(data => {
-        // checkToken(resp.headers);
-        // this.carrierMap = clone(resp);
-        this.carrierMap = data;
+      .subscribe((resp: HttpResponse<any>) => {
+        checkToken(resp.headers);
+        this.carrierMap = this.convertBodyToMap(resp);
         this.reloadCharts();
     });
 
     this.dashboardDeltaService.getLocationsIncreasingPerPeriod(fromDateFormatted, toDateFormatted)
-      //.subscribe((resp: Response) => {
-      .subscribe(data => {
-        // checkToken(resp.headers);
-        // this.locationsMap = clone(resp);
-        this.locationsMap = data;
+      .subscribe((resp: HttpResponse<any>) => {
+        checkToken(resp.headers);
+        this.locationsMap = this.convertBodyToMap(resp);
         this.reloadCharts();
     });
+  }
+
+  convertBodyToMap(resp: HttpResponse<any>) : Map<any, any> {
+    let map = new Map();
+    for (let key of Object.keys(resp.body)) {
+      map.set(new Date(key), resp.body[key]);
+    }
+    map = new Map([...map.entries()].sort(function compare(a, b) {
+      var dateA = new Date(a[0]);
+      var dateB = new Date(b[0]);
+      return dateA.getTime() - dateB.getTime();
+    }));
+    return map;
   }
 
   setToWeek() {

@@ -1,0 +1,28 @@
+<div style="width: 100%; height: 100%; max-height: 500px; overflow-y: scroll;">
+  <p-tree
+  [value]="inputTree"
+  [loading]="loading"
+  selectionMode="checkbox"
+  [(selection)]="selectedTree"
+  (onNodeExpand)="loadNode($event)"
+  (onNodeSelect)="nodeSelect($event)"
+  (onNodeUnselect)="nodeUnselect($event)"
+  [propagateSelectionDown]="false"
+  [propagateSelectionUp]="false"
+  [style]="{'width':'90%'}"
+  >
+  </p-tree>
+
+  <div style="padding-top: 1rem; width: 90%;" class="row justify-content-around">
+      <button class="btn-success btn col-md-4"
+      [disabled]="selectedTree === undefined || selectedTree.length <= 0"
+      (click)="addSuggestion()">
+        Add
+      </button>
+
+      <button class="btn-danger btn col-md-4"
+      (click)="cancelSuggestion()">
+        Cancel
+      </button>
+    </div>
+</div>

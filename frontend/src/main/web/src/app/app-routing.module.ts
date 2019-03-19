@@ -46,12 +46,18 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {roles: Role.Approver}
   },
-
   { path: 'flights',
     loadChildren: './pages/flights/flights.module#FlightsModule'
   },
+  { path: 'user',
+    loadChildren: './pages/user/user.module#UserModule',
 
-  { path: '**', redirectTo: '/notFound'},
+    //IMPORTANT! Lines below should be uncommented later to activate Auth guard
+
+    // canActivate: [AuthGuard],
+    // data: {roles: [Role.User]}
+  },
+  { path: '**', redirectTo: '/notFound'}
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
