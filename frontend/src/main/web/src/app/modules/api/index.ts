@@ -22,8 +22,6 @@ export const HttpOptionsAuthorized = {
   observe: 'response' as 'response'
 }
 
-export
-
 const auth = {
   loginUser() {
     return `${baseUrl}api/auth/sign-in`;
@@ -102,6 +100,15 @@ const trip = {
   }
 }
 
+const landing = {
+  planets(){
+    return `${baseUrl}api/v1/planets`;
+  },
+  spaceports(){
+    return `${baseUrl}api/v1/spaceports`;
+  }
+}
+
 export const Api = {
   HttpOptions,
   HttpOptionsAuthorized,
@@ -111,7 +118,8 @@ export const Api = {
   costDash,
   baseUrl,
   service,
-  trip
+  trip,
+  landing
 }
 
 export const options = {
