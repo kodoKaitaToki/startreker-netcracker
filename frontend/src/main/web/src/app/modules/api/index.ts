@@ -129,6 +129,15 @@ const trip = {
   }
 }
 
+const landing = {
+  planets(){
+    return `${baseUrl}api/v1/planets`;
+  },
+  spaceports(){
+    return `${baseUrl}api/v1/spaceports`;
+  }
+}
+
 export const Api = {
   HttpOptions,
   HttpOptionsAuthorized,
@@ -140,7 +149,8 @@ export const Api = {
   service, 
   possibleServices,
   trip,
-  trips
+  trips,
+  landing
 }
 
 export const options = {
