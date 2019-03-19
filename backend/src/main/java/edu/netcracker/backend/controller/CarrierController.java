@@ -22,7 +22,7 @@ import java.util.List;
 
 @RestController
 @Validated
-public class CarrierController {
+public class    CarrierController {
 
     private CarrierService carrierService;
 

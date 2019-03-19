@@ -33,7 +33,7 @@
     "ngx-pagination": "^3.2.1",
     "popper.js": "^1.14.7",
     "primeicons": "^1.0.0",
-    "primeng": "^7.1.0-rc.1",
+    "primeng": "^7.1.0",
     "ramda": "^0.26.1",
     "rxjs": "~6.3.3",
     "three": "^0.101.1",
