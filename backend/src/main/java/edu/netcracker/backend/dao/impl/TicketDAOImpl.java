@@ -31,8 +31,6 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
         this.namedTemplate = namedTemplate;
     }
 
-    private final Logger logger = LoggerFactory.getLogger(TicketDAOImpl.class);
-
     private NamedParameterJdbcTemplate namedTemplate;
 
     @Value("${FIND_ALL_BY_CLASS}")
@@ -110,6 +108,8 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
     public Integer getRemainingSeatsForClass(Long classId) {
         logger.debug("Getting amount of remaining seats for ticket class with id {}", classId);
         return getJdbcTemplate().queryForObject(FIND_REMAINING_SEATS, new Object[]{classId}, Integer.class);
+    }
+
     @Override
     public List<HistoryTicket> findAllPurchasedByUser(Number user_id,
                                                       Number limit,

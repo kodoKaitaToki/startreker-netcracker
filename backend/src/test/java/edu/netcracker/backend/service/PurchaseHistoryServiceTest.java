@@ -53,14 +53,14 @@ public class PurchaseHistoryServiceTest {
         HistoryTicket ticket1 = new HistoryTicket();
         HistoryTicket ticket2 = new HistoryTicket();
         HistoryTrip trip = new HistoryTrip();
-        ticket1.setTicketId(1);
-        ticket1.setSeat(1);
+        ticket1.setTicketId(1L);
+        ticket1.setSeat(1L);
         ticket1.setEndPrice(Float.MIN_VALUE);
         ticket1.setPurchaseDate(LocalDateTime.MIN);
         ticket1.setClassName("a");
         ticket1.setBundleId(0);
-        ticket2.setTicketId(2);
-        ticket2.setSeat(2);
+        ticket2.setTicketId(2L);
+        ticket2.setSeat(2L);
         ticket2.setEndPrice(Float.MIN_VALUE);
         ticket2.setPurchaseDate(LocalDateTime.MIN);
         ticket2.setBundleId(0);
