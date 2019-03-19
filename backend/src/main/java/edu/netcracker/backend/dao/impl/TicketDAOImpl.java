@@ -20,6 +20,11 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
     @Value("${FIND_ALL_BY_CLASS}")
     private String FIND_ALL_BY_CLASS;
 
+    private final String FIND_REMAINING_SEATS = "SELECT COUNT(ticket_id) "
+                                                + "FROM ticket "
+                                                + "WHERE class_id = ? AND passenger_id IS NULL";
+
+
     @Override
     public List<Ticket> findAllByClass(Number id) {
         ArrayList<Ticket> tickets = new ArrayList<>();
@@ -38,5 +43,10 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
     public void buyTicket(Ticket ticket, User user) {
         ticket.setPassengerId(user.getUserId());
         update(ticket);
+    }
+
+    @Override
+    public Integer getRemainingSeatsForClass(Long classId) {
+        return getJdbcTemplate().queryForObject(FIND_REMAINING_SEATS, new Object[]{classId}, Integer.class);
     }
 }

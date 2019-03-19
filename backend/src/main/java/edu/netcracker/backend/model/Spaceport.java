@@ -29,4 +29,10 @@ public class Spaceport {
     private Long planetId;
 
     private Planet planet;
+
+    public Spaceport(Long spaceportId, String spaceportName, Long planetId) {
+        this.spaceportId = spaceportId;
+        this.spaceportName = spaceportName;
+        this.planetId = planetId;
+    }
 }

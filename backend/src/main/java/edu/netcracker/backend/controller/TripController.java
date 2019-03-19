@@ -4,10 +4,7 @@ import edu.netcracker.backend.message.request.MandatoryTimeInterval;
 import edu.netcracker.backend.message.request.OptionalTimeInterval;
 import edu.netcracker.backend.message.request.Pageable;
 import edu.netcracker.backend.message.request.TripRequest;
-import edu.netcracker.backend.message.response.CarrierRevenueResponse;
-import edu.netcracker.backend.message.response.CarrierViewsResponse;
-import edu.netcracker.backend.message.response.TripResponse;
-import edu.netcracker.backend.message.response.TripDistributionElement;
+import edu.netcracker.backend.message.response.*;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.StatisticsService;
@@ -79,6 +76,23 @@ public class TripController {
                                                                              .getUserId(),
                                                               timeInterval.getFrom(),
                                                               timeInterval.getTo());
+    }
+
+    @GetMapping("api/v1/user/trips")
+    public List<ReadTripsDTO> getTripsForUser(@RequestParam(value = "departure_planet", required = false) String departurePlanet,
+                                              @RequestParam(value = "departure_spaceport", required = false) String departureSpaceport,
+                                              @RequestParam(value = "departure_date", required = false) String departureDate,
+                                              @RequestParam(value = "arrival_planet", required = false) String arrivalPlanet,
+                                              @RequestParam(value = "arrival_spaceport", required = false) String arrivalSpaceport,
+                                              @RequestParam(value = "limit", required = false) Integer limit,
+                                              @RequestParam(value = "offset", required = false) Integer offset) {
+        return tripService.getAllTripsForUser(departurePlanet,
+                                              departureSpaceport,
+                                              departureDate,
+                                              arrivalPlanet,
+                                              arrivalSpaceport,
+                                              limit,
+                                              offset);
     }
 
     @GetMapping(value = "api/v1/trip/sales/per_month")

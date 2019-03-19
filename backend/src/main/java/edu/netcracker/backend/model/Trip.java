@@ -54,6 +54,9 @@ public class Trip {
 
     private Spaceport arrivalSpaceport;
 
+    private Planet departurePlanet;
+
+    private Planet arrivalPlanet;
 
     private List<TripReply> replies;
 

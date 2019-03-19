@@ -16,4 +16,6 @@ public interface TicketDAO {
     List<Ticket> findAllByClass(Number id);
 
     void buyTicket(Ticket ticket, User user);
+
+    Integer getRemainingSeatsForClass(Long classId);
 }

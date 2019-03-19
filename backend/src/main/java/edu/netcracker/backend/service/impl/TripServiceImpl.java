@@ -3,6 +3,7 @@ package edu.netcracker.backend.service.impl;
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.message.request.*;
+import edu.netcracker.backend.message.response.ReadTripsDTO;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.TripWithArrivalAndDepartureData;
 import edu.netcracker.backend.model.User;
@@ -112,6 +113,17 @@ public class TripServiceImpl implements TripService {
             return tripDAO.findAllByApproverByStatus(requestUser.getUserId(), state.getDatabaseValue(), offset, limit);
         }
         throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
+    }
+
+    @Override
+    public List<ReadTripsDTO> getAllTripsForUser(String departurePlanet,
+                                                 String departureSpaceport,
+                                                 String departureDate,
+                                                 String arrivalPlanet,
+                                                 String arrivalSpaceport,
+                                                 Integer limit,
+                                                 Integer offset) {
+        return null;
     }
 
     private Trip updateTrip(User requestUser, Trip trip, TripRequest tripRequest) {
