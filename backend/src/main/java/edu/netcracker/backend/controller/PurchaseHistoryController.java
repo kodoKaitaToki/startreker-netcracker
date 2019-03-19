@@ -2,15 +2,12 @@ package edu.netcracker.backend.controller;
 
 import edu.netcracker.backend.message.response.HistoryDTO.HistoryServiceDTO;
 import edu.netcracker.backend.message.response.HistoryDTO.HistoryTicketDTO;
-import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.PurchaseHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class PurchaseHistoryController {

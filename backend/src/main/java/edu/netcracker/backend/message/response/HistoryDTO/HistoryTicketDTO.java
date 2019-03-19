@@ -5,7 +5,6 @@ import edu.netcracker.backend.model.history.HistoryTicket;
 import lombok.Data;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Data
 public class HistoryTicketDTO {
