@@ -2,9 +2,11 @@ import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { PossibleServiceService } from 'src/app/services/possible-service.service';
 import { TreeNode, MessageService } from 'primeng/api';
 import { PossibleService } from '../shared/model/possible-service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Trip } from '../shared/model/trip';
 import { Suggestion } from '../shared/model/suggestion';
+import { checkToken } from 'src/app/modules/api';
+import {clone} from 'ramda';
 
 @Component({
   selector: 'app-suggestions-tree',
@@ -75,8 +77,9 @@ export class SuggestionsTreeComponent implements OnInit {
 
   populateTicketClass(ticketClass: TreeNode) {
     this.possibleServiceApi.getAll(ticketClass.data.class_id)
-    .subscribe(services => {
-      ticketClass.children = services.map((service: PossibleService) => {
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
+      ticketClass.children = clone(resp.body).map((service: PossibleService) => {
           let node: TreeNode = {
             label: service.service_name,
             data: service,

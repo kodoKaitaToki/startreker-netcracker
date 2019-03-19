@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api } from 'src/app/modules/api';
+import { Api, HttpOptionsAuthorized } from 'src/app/modules/api';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { SuggestionDTO } from '../model/suggestionDTO';
@@ -21,15 +21,15 @@ export class SuggestionService {
   }
 
   public getAll(classId: number): Observable<any> {
-    return this.http.get(this.url + '?class-id=' + classId);
+    return this.http.get(this.url + '?class-id=' + classId, HttpOptionsAuthorized);
   }
 
   public postSuggestion(suggestion: SuggestionDTO): Observable<any> {
-    return this.http.post(this.url, suggestion);
+    return this.http.post(this.url, suggestion, HttpOptionsAuthorized);
   }
 
-  public putSuggestion(suggestion: SuggestionDTO): Observable<any> {
-    return this.http.put(this.url, suggestion)
+  public putSuggestion(suggestion: SuggestionDTO): Observable<any> { 
+    return this.http.put(this.url, suggestion, HttpOptionsAuthorized)
   }
 
   public deleteSuggestion(suggestion: SuggestionDTO): Observable<any> {
@@ -37,7 +37,9 @@ export class SuggestionService {
     return this.http.request('DELETE',
                              this.url + `/${suggestion.id}`,
                              {
-                               body: suggestion
+                               body: suggestion,
+                               headers:  HttpOptionsAuthorized.headers,
+                               observe: 'response'
                              });
   }
 }

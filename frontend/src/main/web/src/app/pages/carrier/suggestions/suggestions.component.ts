@@ -5,8 +5,9 @@ import { SuggestionService } from './shared/service/suggestion.service';
 import { MessageService } from 'primeng/api';
 import { SuggestionDTO } from './shared/model/suggestionDTO';
 import { SuggestionsTableComponent } from './suggestions-table/suggestions-table.component';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { SuggestionsTreeComponent } from './suggestions-tree/suggestions-tree.component';
+import { checkToken } from 'src/app/modules/api';
 
 @Component({
   selector: 'app-suggestions',
@@ -44,7 +45,8 @@ export class SuggestionsComponent implements OnInit {
 
   createSuggestion(suggestion: Suggestion) {
     this.suggestionSrvc.postSuggestion(this.SuggestionToDTO(suggestion))
-    .subscribe(() => {
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
       this.showMessage(this.createMessage('success', 'Suggestion post', 'The suggestion was created'));
       this.table.getAllSuggestions();
     }, (error: HttpErrorResponse) => {
@@ -54,7 +56,8 @@ export class SuggestionsComponent implements OnInit {
 
   updateSuggestion(suggestion: Suggestion) {
     this.suggestionSrvc.putSuggestion(this.SuggestionToDTO(suggestion))
-    .subscribe(() => {
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
       this.showMessage(this.createMessage('success', 'Suggestion put', 'The suggestion was updated'));
       this.table.getAllSuggestions();
     }, (error: HttpErrorResponse) => {
@@ -65,7 +68,8 @@ export class SuggestionsComponent implements OnInit {
   deleteSuggestion(suggestion: Suggestion) {
     this.table.suggestions = this.table.suggestions.filter(s => {s.id !== suggestion.id});
     this.suggestionSrvc.deleteSuggestion(this.SuggestionToDTO(suggestion))
-    .subscribe(() => {
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
       this.showMessage(this.createMessage('success', 'Suggestion delete', 'The suggestion was deleted'));
       this.table.getAllSuggestions();
     }, (error: HttpErrorResponse) => {
