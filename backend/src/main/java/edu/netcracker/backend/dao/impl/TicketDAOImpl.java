@@ -42,10 +42,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
                                                 + "WHERE class_id = ? AND passenger_id IS NULL";
 
 
-    @Override
     private final String CREATE_EMPTY_TICKET_FOR_TICKET_CLASS = "INSERT INTO ticket (class_id, seat) VALUES (?, ?)";
-
-    private final String FIND_REMAINING_SEATS = "SELECT COUNT(ticket_id) FROM ticket WHERE class_id = ? AND passenger_id IS NULL";
 
     private final String DELETE_ALL_TICKETS_OF_TICKET_CLASS = "DELETE FROM ticket WHERE class_id = ?";
 
@@ -111,7 +108,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
      *
      * @param classId - id of ticket class for which remaining seats have to be found
      * @return - number of remaining seats
-    **/
+     **/
     @Override
     public Integer getRemainingSeatsForClass(Long classId) {
         logger.debug("Getting amount of remaining seats for ticket class with id {}", classId);
@@ -142,10 +139,5 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
     public void buyTicket(Ticket ticket, User user) {
         ticket.setPassengerId(user.getUserId());
         update(ticket);
-    }
-
-    @Override
-    public Integer getRemainingSeatsForClass(Long classId) {
-        return getJdbcTemplate().queryForObject(FIND_REMAINING_SEATS, new Object[]{classId}, Integer.class);
     }
 }

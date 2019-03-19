@@ -24,8 +24,6 @@ public interface TicketDAO {
 
     void buyTicket(Ticket ticket, User user);
 
-    Integer getRemainingSeatsForClass(Long classId);
-
     void deleteAllTicketsOfTicketClass(Long id);
 
     List<HistoryTicket> findAllPurchasedByUser(Number user_id,

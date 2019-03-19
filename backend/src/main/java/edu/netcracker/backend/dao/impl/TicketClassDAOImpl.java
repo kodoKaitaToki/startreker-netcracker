@@ -105,9 +105,8 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
             + "FROM ticket_class WHERE trip_id = ? AND LOWER(class_name) = ? ";
 
     private final TicketDAO ticketDAO;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private TicketDAO ticketDAO;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
     public TicketClassDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, TicketDAO ticketDAO) {

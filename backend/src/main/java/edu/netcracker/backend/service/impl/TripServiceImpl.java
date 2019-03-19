@@ -8,7 +8,6 @@ import edu.netcracker.backend.message.request.*;
 import edu.netcracker.backend.message.request.trips.TripCreation;
 import edu.netcracker.backend.message.response.trips.ReadTripsDTO;
 import edu.netcracker.backend.model.*;
-import edu.netcracker.backend.message.response.ReadTripsDTO;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.TripWithArrivalAndDepartureData;
 import edu.netcracker.backend.model.User;
@@ -45,7 +44,6 @@ public class TripServiceImpl implements TripService {
     private final SuggestionService suggestionService;
 
     private static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
-
 
     private static final Logger logger = LoggerFactory.getLogger(TripServiceImpl.class);
 

@@ -4,7 +4,6 @@ import edu.netcracker.backend.message.request.TripWithArrivalAndDepartureDataDTO
 import edu.netcracker.backend.message.request.trips.TripCreation;
 import edu.netcracker.backend.message.response.trips.ReadTripsDTO;
 import edu.netcracker.backend.message.request.TripRequest;
-import edu.netcracker.backend.message.response.ReadTripsDTO;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.User;
 

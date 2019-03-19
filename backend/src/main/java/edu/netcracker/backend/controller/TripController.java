@@ -74,23 +74,6 @@ public class TripController {
         return tripService.getAllTripsForCarrierWithPagination(limit, offset);
     }
 
-    @GetMapping("api/v1/user/trips")
-    public List<ReadTripsDTO> getTripsForUser(@RequestParam("departure_planet") String departurePlanet,
-                                              @RequestParam("departure_spaceport") String departureSpaceport,
-                                              @RequestParam("departure_date") String departureDate,
-                                              @RequestParam("arrival_planet") String arrivalPlanet,
-                                              @RequestParam("arrival_spaceport") String arrivalSpaceport,
-                                              @RequestParam("limit") Integer limit,
-                                              @RequestParam("offset") Integer offset) {
-        return tripService.getAllTripsForUser(departurePlanet,
-                                              departureSpaceport,
-                                              departureDate,
-                                              arrivalPlanet,
-                                              arrivalSpaceport,
-                                              limit,
-                                              offset);
-    }
-
     @PostMapping("api/v1/trips")
     //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public void saveTrip(@RequestBody TripCreation trip) { tripService.saveTrip(trip); }

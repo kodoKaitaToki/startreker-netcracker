@@ -51,12 +51,4 @@ public interface TripDAO {
     List<Trip> findAllByApproverByStatus(Integer userId, Integer status, Long offset, Long limit);
 
     List<Trip> findAllByStatus(Integer status, Long offset, Long limit);
-
-    List<Trip> getAllTripsForUser(String departurePlanet,
-                                  String departureSpaceport,
-                                  String departureDate,
-                                  String arrivalPlanet,
-                                  String arrivalSpaceport,
-                                  Integer limit,
-                                  Integer offset);
 }
