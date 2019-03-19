@@ -27,9 +27,9 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {roles: Role.Admin}
   },
-
-
-
+  { path: 'trip-search',
+    loadChildren: './pages/flights/flights.module#FlightsModule'
+  },
   { path: 'carrier',
     loadChildren: './pages/carrier/carrier.module#CarrierModule',
 

@@ -6,6 +6,7 @@ import { LoginResponse } from '../../services/interfaces/login-response.interfac
 import { MessageService } from "primeng/api";
 import { ShowMessageService} from '../admin/approver/shared/service/show-message.service';
 import { Router } from '@angular/router';
+import { LoginLocations } from '../../shared/loginLocations';
 
 @Component({
   selector: 'app-login',
@@ -50,10 +51,11 @@ export class LoginComponent implements OnInit {
     this.submitBut = true;
     this.formData = this.loginForm.value;
     this.apiService.loginUser(this.formData)
-                    .subscribe((userData: LoginResponse) => {
+                    .subscribe((userData) => {
                       this.apiService.getLoggedUser(userData);
                       this.submitBut = false;
-                      this.router.navigateByUrl('/in-design');
+                      let role = userData.roles[0];
+                      this.router.navigateByUrl(LoginLocations[role]);
                     },
                     error => {
                       if(error.error.error == 'UNAUTHORIZED'){
