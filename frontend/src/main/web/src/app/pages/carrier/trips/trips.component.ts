@@ -7,7 +7,8 @@ import { clone } from 'ramda';
 import { DateValidator } from './trips.helper';
 import {ShowMessageService} from "../../admin/approver/shared/service/show-message.service";
 import {MessageService} from "primeng/api";
-import {HttpErrorResponse} from "@angular/common/http";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import { checkToken } from 'src/app/modules/api';
 
 @Component({
   selector: 'app-trips',
@@ -77,8 +78,9 @@ export class TripsComponent implements OnInit {
   ngOnInit(): void {
     this.tripsApi.setExistingTrips()
       .subscribe(
-        (resp: ExisitingTrips) => {
-          this.general = clone(resp);
+        (resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          this.general = clone(resp.body);
         },
         error => console.log(error)
       );
@@ -89,8 +91,9 @@ export class TripsComponent implements OnInit {
   getTrips() {
     this.tripsApi.getAllTrips()
       .subscribe(
-        (resp: Trip) => {
-          this.defaultTrips = clone(resp);
+        (resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          this.defaultTrips = clone(resp.body);
         },
         error => console.log(error)
       );
@@ -127,8 +130,9 @@ export class TripsComponent implements OnInit {
     const id = trip.id;
     delete trip.id;
     this.tripsApi.updateTrip(trip, id)
-      .subscribe(() => {
+      .subscribe((resp: HttpResponse<any>) => {
         this.getTrips();
+        checkToken(resp.headers);
         this.showMsgSrvc.showMessage(this.messageService, 'success', 'Approver editing', 'The approver was edited');
       }, (error: HttpErrorResponse) => {
         this.showMsgSrvc.showMessage(this.messageService, 'error', `Error message - ${error.error.status}`,
@@ -138,7 +142,8 @@ export class TripsComponent implements OnInit {
 
   ticketClassSubmitHandler(ticketClass) {
     this.tripsApi.saveTicketClass(ticketClass)
-      .subscribe(() => {
+      .subscribe((resp: HttpResponse<any>) => {
+        checkToken(resp.headers);
         this.getTrips();
         this.showMsgSrvc.showMessage(this.messageService, 'success', 'Ticket class editing', 'Ticket class was updated');
       }, (error: HttpErrorResponse) => {
@@ -149,7 +154,8 @@ export class TripsComponent implements OnInit {
 
   ticketClassDelete(id) {
     this.tripsApi.deleteTicketClass(id)
-      .subscribe(() => {
+      .subscribe((resp: HttpResponse<any>) => {
+        checkToken(resp.headers);
         this.getTrips();
         this.showMsgSrvc.showMessage(this.messageService, 'success', 'Ticket class deleting', 'Ticket class was deleted');
       }, (error: HttpErrorResponse) => {
@@ -171,7 +177,8 @@ export class TripsComponent implements OnInit {
     // console.log(this.submitData);
     this.tripsApi.createTrip(this.submitData)
       .subscribe(
-        (resp: Response) => {
+        (resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
           // console.log(resp);
           this.showSuccess = true;
           setTimeout(() => this.showSuccess = false, 3000);
