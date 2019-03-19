@@ -57,7 +57,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User find(Number id) {
-        return userDAO.find(id).orElse(null);
+        return userDAO.find(id)
+                      .orElse(null);
     }
 
     @Override
@@ -67,22 +68,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean ifUsernameExist(String username) {
-        return userDAO.findByUsername(username).isPresent();
+        return userDAO.findByUsername(username)
+                      .isPresent();
     }
 
     @Override
     public boolean ifEmailExist(String email) {
-        return userDAO.findByEmail(email).isPresent();
+        return userDAO.findByEmail(email)
+                      .isPresent();
     }
 
     @Override
     public User findByUsername(String userName) {
-        return userDAO.findByUsername(userName).orElse(null);
+        return userDAO.findByUsername(userName)
+                      .orElse(null);
     }
 
     @Override
     public User findByEmail(String email) {
-        return userDAO.findByEmail(email).orElse(null);
+        return userDAO.findByEmail(email)
+                      .orElse(null);
     }
 
     @Override
@@ -107,8 +112,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(SignUpForm signUpForm, boolean isActivated, List<Role> roles) {
         User user = new User(signUpForm.getUsername(),
-                passwordEncoder.encode(signUpForm.getPassword()),
-                signUpForm.getEmail());
+                             passwordEncoder.encode(signUpForm.getPassword()),
+                             signUpForm.getEmail());
         user.setUserIsActivated(isActivated);
         user.setUserRoles(roles);
         user.setUserTelephone(signUpForm.getTelephoneNumber());
@@ -120,8 +125,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(UserCreateForm userCreateForm, List<Role> roles) {
         User user = new User(userCreateForm.getUsername(),
-                passwordEncoder.encode(userCreateForm.getPassword()),
-                userCreateForm.getEmail());
+                             passwordEncoder.encode(userCreateForm.getPassword()),
+                             userCreateForm.getEmail());
         user.setUserIsActivated(userCreateForm.getIsActivated());
         user.setUserRoles(roles);
         user.setUserTelephone(userCreateForm.getTelephoneNumber());
@@ -133,17 +138,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByUsernameWithRole(String userName, Role role) {
-        return userDAO.findByUsernameWithRole(userName, role).orElse(null);
+        return userDAO.findByUsernameWithRole(userName, role)
+                      .orElse(null);
     }
 
     @Override
     public User findByEmailWithRole(String email, Role role) {
-        return userDAO.findByEmailWithRole(email, role).orElse(null);
+        return userDAO.findByEmailWithRole(email, role)
+                      .orElse(null);
     }
 
     @Override
     public User findByIdWithRole(Number id, Role role) {
-        return userDAO.findByIdWithRole(id, role).orElse(null);
+        return userDAO.findByIdWithRole(id, role)
+                      .orElse(null);
     }
 
     @Override
@@ -168,14 +176,14 @@ public class UserServiceImpl implements UserService {
         }
 
         return new org.springframework.security.core.userdetails.User(userInformationHolder.getUsername(),
-                userInformationHolder.getPassword(),
-                mapRolesToAuthorities(userInformationHolder.getRoles()));
+                                                                      userInformationHolder.getPassword(),
+                                                                      mapRolesToAuthorities(userInformationHolder.getRoles()));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userDAO.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException(username + " not found"));
+        return userDAO.findByUsername(username)
+                      .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
     }
 
     @Override
@@ -232,7 +240,9 @@ public class UserServiceImpl implements UserService {
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<String> roles) {
-        return roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return roles.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
     }
 
     private boolean oldPasswordNotMatched(String userPassword, String oldPassword) {
