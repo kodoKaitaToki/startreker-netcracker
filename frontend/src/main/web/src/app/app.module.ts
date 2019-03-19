@@ -20,9 +20,13 @@ import {RegistrationComponent} from './pages/registration/registration.component
 import {LoginComponent} from './pages/login/login.component';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {RecoveryComponent} from './pages/recovery/recovery.component';
+import {MessageService, GrowlModule} from "primeng/primeng";
 
-import {Configuration} from './app.constants';
+
 import {FlightsModule} from "./pages/flights/flights.module";
+import { Configuration } from './app.constants';
+import { ConfirmMessageComponent } from './pages/confirm-message/confirm-message.component';
+import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +42,8 @@ import {FlightsModule} from "./pages/flights/flights.module";
     RegistrationComponent,
     LoginComponent,
     RecoveryComponent,
+    ConfirmMessageComponent,
+    ComingSoonComponent
   ],
   imports: [
     AppRoutingModule,
@@ -46,14 +52,12 @@ import {FlightsModule} from "./pages/flights/flights.module";
     ReactiveFormsModule,
     LoadingBarHttpClientModule,
     BrowserModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    GrowlModule
   ],
-  providers: [Configuration],
-  bootstrap: [AppComponent],
-  exports: [
-    HeaderComponent,
-    SearchMenuComponent
-  ]
+
+  providers: [Configuration, MessageService],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }

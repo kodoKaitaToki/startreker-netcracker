@@ -5,6 +5,8 @@ import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
+import edu.netcracker.backend.model.User;
+import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.impl.ServiceServiceImpl;
 import edu.netcracker.backend.utils.ServiceStatus;
 import org.junit.Assert;
@@ -25,6 +27,7 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -35,6 +38,9 @@ public class ServiceServiceTest {
 
     @Mock
     UserService userService;
+
+    @Mock
+    SecurityContext securityContext;
 
     @InjectMocks
     ServiceServiceImpl serviceService;
@@ -94,6 +100,11 @@ public class ServiceServiceTest {
         expectedEx.expect(RequestException.class);
         expectedEx.expectMessage("Status of new service must be draft or open");
 
+        User user = new User();
+        user.setUserId(2);
+
+        when(securityContext.getUser()).thenReturn(user);
+
         serviceService.addService(serviceCreateForm);
     }
 
@@ -111,6 +122,10 @@ public class ServiceServiceTest {
     public void FindByStatusTest(){
         String expectedStatus = ServiceStatus.OPEN.toString();
 
+        User user = new User();
+        user.setUserId(2);
+
+        when(securityContext.getUser()).thenReturn(user);
         when(serviceDAO.findByStatus(any(), eq(2))).thenReturn(ret);
 
         String actualStatus = serviceService.findByStatus(ServiceStatus.OPEN.toString()).get(0).getServiceStatus();

@@ -13,15 +13,15 @@ export class DashCostService {
     constructor(private http: HttpClient) {
     }
 
-    public getCosts<T>(from: string, to: string): Observable<T>{
+    public getCosts(from: string, to: string){
         let url = Api.costDash.getCosts() + '?' + 'from=' + from + '&to=' + to;
-        return this.http.get<any>(url);
+        return this.http.get<any>(url, HttpOptionsAuthorized);
     }
 
-    public getCarCosts<T>(id: number, from: string, to: string): Observable<T>{
+    public getCarCosts(id: number, from: string, to: string){
         let url = Api.costDash.getCosts() + '/' + id + '?' + 'from=' + from + '&to=' + to;
         console.log(url);
-        return this.http.get<T>(url);
+        return this.http.get(url, HttpOptionsAuthorized);
     }
 
     public parseResponse(response){
