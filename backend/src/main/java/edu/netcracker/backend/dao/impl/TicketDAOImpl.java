@@ -38,6 +38,12 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
     @Value("${FIND_ALL_BY_CLASS}")
     private String FIND_ALL_BY_CLASS;
 
+    private final String CREATE_EMPTY_TICKET_FOR_TICKET_CLASS = "INSERT INTO ticket (class_id, seat) VALUES (?, ?)";
+
+    private final String FIND_REMAINING_SEATS = "SELECT COUNT(ticket_id) FROM ticket WHERE class_id = ? AND passenger_id IS NULL";
+
+    private final String DELETE_ALL_TICKETS_OF_TICKET_CLASS = "DELETE FROM ticket WHERE class_id = ?";
+
     private final static String FIND_ALL_BY_USER = "SELECT t.ticket_id, t.seat, t.end_price, t.purchase_date, "
                                                    + "tc.class_name, tr.departure_date, tr.arrival_date, "
                                                    + "sd.spaceport_name, sa.spaceport_name, pa.planet_name, "
@@ -56,14 +62,6 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
                                                    + "ORDER BY t.purchase_date DESC "
                                                    + "LIMIT :limit "
                                                    + "OFFSET :offset";
-
-
-    private final String CREATE_EMPTY_TICKET_FOR_TICKET_CLASS = "INSERT INTO ticket (class_id, seat) VALUES (?, ?)";
-
-    private final String FIND_REMAINING_SEATS = "SELECT COUNT(ticket_id) FROM ticket WHERE class_id = ? AND passenger_id IS NULL";
-
-    private final String DELETE_ALL_TICKETS_OF_TICKET_CLASS = "DELETE FROM ticket WHERE class_id = ?";
-
 
 
     public List<Ticket> findAllByClass(Number id) {

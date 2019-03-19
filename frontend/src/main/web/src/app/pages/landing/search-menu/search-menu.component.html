@@ -3,24 +3,30 @@
     <div class="card" style="background-color: rgba(240, 248, 255, 0.9);">
       <div class="card-body card-block container-fluid">
         <h1 class="card-title text-left">Choose your flight</h1>
-        <form [formGroup]="searchForm">
+        <form [formGroup]="searchForm"
+              (ngSubmit)="onSubmit()">
 
           <hr class="hr-xs">
 
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="one_way" (click)='disableDatepicker()'>
+            <input class="form-check-input" 
+                  type="radio" 
+                  name="inlineRadioOptions" 
+                  id="inlineRadio1" 
+                  value="one_way" 
+                  (click)='disableDatepicker()'>
             <label class="form-check-label" for="inlineRadio1">One way</label>
           </div>
           <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="return" checked="checked" (click)='enableDatepicker()'>
             <label class="form-check-label" for="inlineRadio2">Return</label>
           </div>
-          <div class="form-check">
+          <!-- <div class="form-check">
             <input class="form-check-input" type="checkbox" value="withConnections" id="connections">
             <label class="form-check-label" for="connections">
               Suggest fligts with connection(s)
             </label>
-          </div>
+          </div> -->
 
           <br/>
 
@@ -29,50 +35,44 @@
               <h6 class= "search-bar__heading">From:</h6>
             </div>
             <div class="col-lg-2">
-              <select class="custom-select" onclick='setPoint("start")' id="select_from">
-                <option selected>Choose a planet</option>
-                <option value="mercury">Mercury</option>
-                <option value="venus">Venus</option>
-                <option value="earth">Earth</option>
-                <option value="mars">Mars</option>
-                <option value="jupiter">Jupiter</option>
-                <option value="saturn">Saturn</option>
-                <option value="uranus">Uranus</option>
-                <option value="neptune">Neptune</option>
-                <option value="pluto">Pluto</option>
+              <select class="custom-select" 
+                      onclick='setPoint("start")' 
+                      id="select_from"
+                      class='form-control'
+                      formControlName="startPlanet"
+                      (change)="getSpaceports(true)">
+                <option selected hidden>Choose a planet</option>
+                <option *ngFor="let planet of planets"
+                        [value]="planet.planetName.toLowerCase()">{{planet.planetName | titlecase}}</option>
               </select>
             </div>
             <div class="col-lg-2">
-              <select class="custom-select">
-                <option selected>Choose cosmoport</option>
-                <option value="port1">1</option>
-                <option value="port2">2</option>
-                <option value="port3">3</option>
+              <select class="custom-select"
+                      formControlName="startSpaceport">
+                <option selected>Choose a spaceport</option>
+                <option *ngFor="let spaceport of spaceportsFrom">{{spaceport.spaceport_name}}</option>
               </select>
             </div>
             <div class="col-lg-1">
               <h6 class= "search-bar__heading">To:</h6>
             </div>
             <div class="col-lg-2">
-              <select class="custom-select" onclick='setPoint("finish")'  id="select_to">
+              <select class="custom-select" 
+                      onclick='setPoint("finish")'  
+                      id="select_to"
+                      class='form-control'
+                      formControlName="finishPlanet"
+                      (change)="getSpaceports(false)">
                 <option selected>Choose a planet</option>
-                <option value="mercury">Mercury</option>
-                <option value="venus">Venus</option>
-                <option value="earth">Earth</option>
-                <option value="mars">Mars</option>
-                <option value="jupiter">Jupiter</option>
-                <option value="saturn">Saturn</option>
-                <option value="uranus">Uranus</option>
-                <option value="neptune">Neptune</option>
-                <option value="pluto">Pluto</option>
+                <option *ngFor="let planet of planets"
+                        [value]="planet.planetName.toLowerCase()">{{planet.planetName | titlecase}}</option>
               </select>
             </div>
             <div class="col-lg-2">
-              <select class="custom-select">
-                <option selected>Choose cosmoport</option>
-                <option value="port1">1</option>
-                <option value="port2">2</option>
-                <option value="port3">3</option>
+              <select class="custom-select"
+                      formControlName="finishSpaceport">
+                <option selected>Choose a spaceport</option>
+                <option *ngFor="let spaceport of spaceportsTo">{{spaceport.spaceport_name}}</option>
               </select>
             </div>
           </div>
@@ -85,14 +85,26 @@
               <h6 class="search-bar__heading">Pick a date of flight:</h6>
             </div>
             <div class="col-lg-2">
-              <input type="date" name="flightDate" class="form-control">
+              <!-- <input type="date" 
+                    name="flightDate" 
+                    class="form-control"
+                    formControlName="startDate"
+                    > -->
+                    <p-calendar [minDate]="minimumDate"
+                                formControlName="startDate"></p-calendar>
             </div>
             <div class="col-lg-1"></div>
             <div class="col-lg-2">
               <h6 class="search-bar__heading">Pick a date of return:</h6>
             </div>
             <div class="col-lg-2">
-              <input type="date" name="returnDate" id="returnDate" class="form-control datepicker">
+              <!-- <input type="date" 
+                    name="returnDate" 
+                    id="returnDate" 
+                    class="form-control datepicker"
+                    formControlName="finishDate"> -->
+              <p-calendar [minDate]="searchForm.get('startDate').value.getDate() + 1"
+                          formControlName="finishDate"></p-calendar>
             </div>
           </div>
 

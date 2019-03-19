@@ -93,7 +93,7 @@ export class TripsComponent implements OnInit {
         checkToken(resp.headers);
         this.defaultTrips = clone(resp.body);
         },
-        // error => console.log(error)
+        error => console.log(error)
       );
   }
 
@@ -161,7 +161,6 @@ export class TripsComponent implements OnInit {
                                       error.error.error);
       });
   }
-  
 
   onSubmit() {
     // method to send data to server

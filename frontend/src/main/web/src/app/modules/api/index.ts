@@ -4,7 +4,7 @@ let baseUrl;
 const apiPort = ':80/'
 //const apiPort = '/'
 
-//baseUrl = `https://startreker-netcracker.herokuapp.com${apiPort}`
+// baseUrl = `http://startreker-netcracker.herokuapp.com${apiPort}`
 baseUrl = `http://localhost${apiPort}`
 
 export const HttpOptions = {
@@ -21,8 +21,6 @@ export const HttpOptionsAuthorized = {
   }),
   observe: 'response' as 'response'
 }
-
-export
 
 const auth = {
   loginUser() {
@@ -63,6 +61,17 @@ const carrier = {
   }
 }
 
+const bundles = {
+  bundles(){
+    return `${baseUrl}api/v1/admin/carrier`;
+  },
+  getBundlesPagin(){
+    return `${baseUrl}api/v1/admin/pagination`;
+  }
+/*  getCarrierByUsername(){
+    return `${baseUrl}api/v1/admin/carrier-by-username?username=`;
+  } */
+}
 const trips = {
   getExistingPlanets() {
     return `${baseUrl}api/v1/planets`;
@@ -76,6 +85,9 @@ const trips = {
   getAllTrips() {
     return `${baseUrl}api/v1/trips`;
   },
+  getCarrierTrips() {
+    return `${baseUrl}api/v1/carrier/trips`;
+  },
   addTicketClass() {
     return `${baseUrl}api/v1/ticket-class`;
   },
@@ -87,21 +99,15 @@ const trips = {
   }
  }
 
-const bundles = {
-  bundles(){
-    return `${baseUrl}api/v1/admin/carrier`;
-  },
-  getBundlesPagin(){
-    return `${baseUrl}api/v1/admin/pagination`;
-  }
-  /*  getCarrierByUsername(){
-      return `${baseUrl}api/v1/admin/carrier-by-username?username=`;
-    } */
-}
-
 const costDash = {
   getCosts(){
     return `${baseUrl}api/v1/admin/costs`;
+  }
+}
+
+const possibleServices = {
+  possibleServices(){
+    return `${baseUrl}api/v1/possible-services`;
   }
 }
 
@@ -126,6 +132,15 @@ const trip = {
   }
 }
 
+const landing = {
+  planets(){
+    return `${baseUrl}api/v1/planets`;
+  },
+  spaceports(){
+    return `${baseUrl}api/v1/spaceports`;
+  }
+}
+
 export const Api = {
   HttpOptions,
   HttpOptionsAuthorized,
@@ -134,9 +149,11 @@ export const Api = {
   carrier,
   costDash,
   baseUrl,
-  service,
+  service, 
+  possibleServices,
   trip,
-  trips
+  trips,
+  landing
 }
 
 export const options = {

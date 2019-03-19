@@ -3,10 +3,11 @@ import {HttpClient} from "@angular/common/http";
 import {Bundle} from "../model/bundle";
 import {Injectable} from "@angular/core";
 
-import { Api } from '../../../../../modules/api/index';
+import { Api, HttpOptionsAuthorized } from '../../../../../modules/api/index';
+import { BundleForm } from '../model/bundle-form';
 
 @Injectable()
-export class BundlesService {
+export class BundlesService { 
 
   private defaultUrl: string = Api.baseUrl;
 
@@ -23,34 +24,36 @@ export class BundlesService {
 
   public getCount(): Observable<any> {
 
-    return this.http.get(this.url + '/count');
+    return this.http.get(this.url + '/count', HttpOptionsAuthorized);
   }
 
   public getAll(): Observable<any> {
 
-    return this.http.get(this.url);
+    return this.http.get(this.url, HttpOptionsAuthorized);
   }
 
   public getBundlesInInterval(limit: number, offset: number): Observable<any> {
 
-    return this.http.get(this.url + '?limit=' + limit + '&offset=' + offset);
+    return this.http.get(this.url + '?limit=' + limit + '&offset=' + offset, HttpOptionsAuthorized);
   }
 
-  public postBundles(bundles: Bundle): Observable<any> {
+  public postBundle(bundle: BundleForm): Observable<any> {
 
-    return this.http.post(this.url, bundles);
+    return this.http.post(this.url, bundle, HttpOptionsAuthorized);
   }
 
-  public putBundles(bundles: Bundle): Observable<any> {
-    return this.http.put(this.url, bundles)
+  public putBundle(bundle: BundleForm): Observable<any> {
+    return this.http.put(this.url + `/${bundle.id}`, bundle, HttpOptionsAuthorized)
   }
 
-  public deleteBundles(bundles: Bundle): Observable<any> {
+  public deleteBundle(bundle: Bundle): Observable<any> {
 
     return this.http.request('DELETE',
-                             this.url,
+                             this.url + `/${bundle.id}`,
                              {
-                               body: bundles
+                               body: bundle,
+                               headers:  HttpOptionsAuthorized.headers,
+                               observe: 'response'
                              });
   }
 }

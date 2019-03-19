@@ -29,6 +29,10 @@ export class TripsService {
     return this.http.get<any>(Api.trips.getAllTrips(), HttpOptionsAuthorized)
   }
 
+  getTripsForCarrier(carrierId: number): Observable<any> {
+    return this.http.get<any>(Api.trips.getCarrierTrips() + '?carrier_id=' + carrierId, HttpOptionsAuthorized)
+  }
+  
   saveTicketClass(payload) {
     return this.http.post<any>(Api.trips.addTicketClass(),payload, HttpOptionsAuthorized);
   }

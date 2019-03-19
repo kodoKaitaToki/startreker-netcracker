@@ -15,4 +15,6 @@ public interface PlanetDAO {
     Long getIdByPlanetName(String planet);
 
     void delete(Planet planet);
+
+    List<Planet> getAllPlanets();
 }

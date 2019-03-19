@@ -32,6 +32,9 @@ import {TripsCrudComponent} from './trips/trips-crud/trips-crud.component';
 import {TripFilterPipe} from './trips/shared/pipes/filter-pipe.pipe';
 import {MessagesModule} from 'primeng/messages';
 import {MessageModule} from 'primeng/message';
+import {TreeModule} from 'primeng/tree';
+import { SuggestionsTreeComponent } from './suggestions/suggestions-tree/suggestions-tree.component';
+import { SuggestionsTableComponent } from './suggestions/suggestions-table/suggestions-table.component';
 import { TripsTicketClassComponent } from './trips/trips-ticket-class/trips-ticket-class.component';
 import {DialogModule} from 'primeng/dialog';
 
@@ -58,6 +61,8 @@ import {DialogModule} from 'primeng/dialog';
                TripsTableComponent,
                TripsCrudComponent,
                TripFilterPipe,
+               SuggestionsTreeComponent,
+               SuggestionsTableComponent,
                TripsTicketClassComponent
               ],
             imports: [
@@ -70,6 +75,7 @@ import {DialogModule} from 'primeng/dialog';
               ToastModule,
               MessageModule,
               MessagesModule,
+              TreeModule,
               DialogModule
             ],
             providers: [
