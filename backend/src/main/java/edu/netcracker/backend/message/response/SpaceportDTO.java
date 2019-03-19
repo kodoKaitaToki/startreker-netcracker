@@ -27,12 +27,25 @@ public class SpaceportDTO {
     @JsonProperty("planet")
     private PlanetDTO planetDTO;
 
+    private SpaceportDTO(Long spaceportId,
+                         String spaceportName,
+                         String creationDate){
+        this.setSpaceportId(spaceportId);
+        this.setSpaceportName(spaceportName);
+        this.setCreationDate(creationDate);
+    }
+
     public static SpaceportDTO from(Spaceport spaceport) {
         if(spaceport == null) return null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if(spaceport.getPlanet() == null){
+            return new SpaceportDTO(spaceport.getSpaceportId(),
+                    spaceport.getSpaceportName(),
+                    spaceport.getCreationDate().format(formatter));
+        }
         return new SpaceportDTO(spaceport.getSpaceportId(),
-                                spaceport.getSpaceportName(),
-                                spaceport.getCreationDate().format(formatter),
-                                PlanetDTO.from(spaceport.getPlanet()));
+                spaceport.getSpaceportName(),
+                spaceport.getCreationDate().format(formatter),
+                PlanetDTO.from(spaceport.getPlanet()));
     }
 }
