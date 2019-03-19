@@ -27,7 +27,9 @@ public class Ticket {
     @Attribute("seat")
     private Long seat;
 
+    @Attribute("end_price")
+    private Float endPrice;
+
     @Attribute("purchase_date")
     private LocalDateTime purchaseDate;
-
 }
