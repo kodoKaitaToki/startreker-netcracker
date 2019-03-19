@@ -25,10 +25,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
         ArrayList<Ticket> tickets = new ArrayList<>();
 
         try {
-            tickets.addAll(getJdbcTemplate().query(
-                    FIND_ALL_BY_CLASS,
-                    new Object[]{id},
-                    getGenericMapper()));
+            tickets.addAll(getJdbcTemplate().query(FIND_ALL_BY_CLASS, new Object[]{id}, getGenericMapper()));
 
         } catch (EmptyResultDataAccessException e) {
             log.error(e.getMessage());
