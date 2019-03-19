@@ -41,8 +41,8 @@ public class BundleTripRowMapper implements RowMapper<Trip> {
                             .toLocalDateTime());
         t.setTripPhoto(rs.getString("trip_photo"));
 
-        t.setDeparturePort(mapSpaceport(rs, "departure"));
-        t.setArrivalPort(mapSpaceport(rs, "arrival"));
+        t.setDepartureSpaceport(mapSpaceport(rs, "departure"));
+        t.setArrivalSpaceport(mapSpaceport(rs, "arrival"));
 
         return t;
     }

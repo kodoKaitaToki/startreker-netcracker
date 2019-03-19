@@ -1,7 +1,6 @@
 package edu.netcracker.backend.security;
 
 import edu.netcracker.backend.model.User;
-
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.service.impl.UserInformationHolderServiceImpl;
 import edu.netcracker.backend.utils.JwtUtils;

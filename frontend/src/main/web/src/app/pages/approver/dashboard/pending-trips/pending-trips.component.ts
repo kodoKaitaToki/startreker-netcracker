@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ServiceTripPendingService} from "../shared/service/service-trip-pending.service";
 import {PendingTrip} from "../shared/model/pending-trip.model";
+import { HttpResponse } from '@angular/common/http';
+import { checkToken } from 'src/app/modules/api';
+import { clone } from 'ramda';
 
 @Component({
   selector: 'app-pending-trips',
@@ -40,8 +43,9 @@ export class PendingTripsComponent implements OnInit {
 
   public getAllPendingTrips() {
     this.pendingSrvc.getAllPendingTrips()
-      .subscribe((data) => {
-        this.pendingTrips = data;
+      .subscribe((resp: HttpResponse<any>) => {
+        checkToken(resp.headers);
+        this.pendingTrips = clone(resp);
       })
   }
 

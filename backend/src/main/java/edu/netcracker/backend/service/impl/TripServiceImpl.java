@@ -1,8 +1,13 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
+import edu.netcracker.backend.dao.PlanetDAO;
+import edu.netcracker.backend.dao.SpaceportDAO;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.message.request.*;
+import edu.netcracker.backend.message.request.trips.TripCreation;
+import edu.netcracker.backend.message.response.trips.ReadTripsDTO;
+import edu.netcracker.backend.model.*;
 import edu.netcracker.backend.message.response.ReadTripsDTO;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.TripWithArrivalAndDepartureData;
@@ -14,10 +19,10 @@ import edu.netcracker.backend.service.TripService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,26 +32,111 @@ import java.util.stream.Collectors;
 @Service
 public class TripServiceImpl implements TripService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TripServiceImpl.class);
+    private TripDAO tripDAO;
 
-    private static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
+    private PlanetDAO planetDAO;
 
-    private final TripDAO tripDAO;
-    private final TripStateRegistry tripStateRegistry;
+    private SpaceportDAO spaceportDAO;
+
+    private TripStateRegistry tripStateRegistry;
 
     private final TicketClassService ticketClassService;
 
     private final SuggestionService suggestionService;
 
+    private static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
+
+
+    private static final Logger logger = LoggerFactory.getLogger(TripServiceImpl.class);
+
+    @Autowired
+    private Draft draft;
+
+
     @Autowired
     public TripServiceImpl(TripDAO tripDAO,
+                           PlanetDAO planetDAO,
+                           SpaceportDAO spaceportDAO,
                            TripStateRegistry tripStateRegistry,
                            TicketClassService ticketClassService,
                            SuggestionService suggestionService) {
         this.tripDAO = tripDAO;
+        this.planetDAO = planetDAO;
+        this.spaceportDAO = spaceportDAO;
         this.tripStateRegistry = tripStateRegistry;
         this.ticketClassService = ticketClassService;
         this.suggestionService = suggestionService;
+    }
+
+    @Override
+    public List<ReadTripsDTO> getAllTripsForCarrier() {
+        logger.debug("Getting all trips for carrier from TripDAO");
+        //        TODO: implement getting carrier id from access token
+        List<Trip> trips = tripDAO.allCarriersTrips(7L);
+
+        return getAllTripsDTO(trips);
+    }
+
+    @Override
+    public List<ReadTripsDTO> getAllTripsForCarrier(Long carrierId) {
+        logger.debug("Getting all trips for carrier from TripDAO");
+        List<Trip> trips = tripDAO.allCarriersTrips(carrierId);
+
+        return getAllTripsDTO(trips);
+    }
+
+    @Override
+    public List<ReadTripsDTO> getAllTripsForCarrierWithPagination(Integer limit, Integer offset) {
+        logger.debug("Getting {} trips for carrier from TripDAO with pagination starting from {}", limit, offset);
+        //        TODO: implement getting carrier id from access token
+        List<Trip> trips = tripDAO.paginationForCarrier(limit, offset, 7L);
+
+        return getAllTripsDTO(trips);
+    }
+
+    @Override
+    public List<ReadTripsDTO> getAllTripsForUser(String departurePlanet,
+                                                 String departureSpaceport,
+                                                 String departureDate,
+                                                 String arrivalPlanet,
+                                                 String arrivalSpaceport,
+                                                 Integer limit,
+                                                 Integer offset) {
+        logger.debug("Getting all trips for user from TripDAO");
+        List<Trip> trips = tripDAO.getAllTripsForUser(departurePlanet,
+                                                      departureSpaceport,
+                                                      departureDate,
+                                                      arrivalPlanet,
+                                                      arrivalSpaceport,
+                                                      limit,
+                                                      offset);
+
+        logger.debug("Remove ticket classes where all tickets are sold");
+        for (Trip trip : trips) {
+            trip.getTicketClasses()
+                .removeIf(ticketClass -> ticketClass.getRemainingSeats() == 0);
+        }
+
+        logger.debug("Remove trip where all tickets are sold");
+        trips.removeIf(trip -> trip.getTicketClasses()
+                                   .isEmpty());
+
+        return getAllTripsDTO(trips);
+    }
+
+    @Override
+    public void saveTrip(TripCreation tripCreation) {
+        logger.debug("Saving trip from request DTO");
+        Trip trip = parseTripFromTripCreation(tripCreation);
+        tripDAO.add(trip);
+    }
+
+    @Override
+    public void updateTripForCarrier(TripCreation tripToUpdate, Long tripId) {
+        Trip trip = parseTripFromTripCreation(tripToUpdate);
+        trip.setTripId(tripId);
+        logger.debug("Updating trip info");
+        tripDAO.updateTripInfo(trip);
     }
 
     @Override
@@ -113,35 +203,6 @@ public class TripServiceImpl implements TripService {
             return tripDAO.findAllByApproverByStatus(requestUser.getUserId(), state.getDatabaseValue(), offset, limit);
         }
         throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
-    }
-
-    @Override
-    public List<ReadTripsDTO> getAllTripsForUser(String departurePlanet,
-                                                 String departureSpaceport,
-                                                 String departureDate,
-                                                 String arrivalPlanet,
-                                                 String arrivalSpaceport,
-                                                 Integer limit,
-                                                 Integer offset) {
-        logger.debug("Getting all trips for user from TripDAO");
-        List<Trip> trips = tripDAO.getAllTripsForUser(departurePlanet,
-                                                      departureSpaceport,
-                                                      departureDate,
-                                                      arrivalPlanet,
-                                                      arrivalSpaceport,
-                                                      limit,
-                                                      offset);
-        logger.debug("Remove ticket classes where all tickets are sold");
-        for (Trip trip : trips) {
-            trip.getTicketClasses()
-                .removeIf(ticketClass -> ticketClass.getRemainingSeats() == 0);
-        }
-        logger.debug("Remove trip where all tickets are sold");
-        trips.removeIf(trip -> trip.getTicketClasses()
-                                   .isEmpty());
-        return trips.stream()
-                .map(ReadTripsDTO::from)
-                .collect(Collectors.toList());
     }
 
     private Trip updateTrip(User requestUser, Trip trip, TripRequest tripRequest) {
@@ -220,5 +281,53 @@ public class TripServiceImpl implements TripService {
         }
 
         return TripWithArrivalAndDepartureDataAndTicketClassesDTO.form(trip, relatedTicketClassDTOs, DATE_PATTERN);
+    }
+
+    private Trip parseTripFromTripCreation(TripCreation tripCreation) {
+        logger.debug("Converting DTO to Trip");
+        Trip trip = new Trip();
+        trip.setDepartureDate(tripCreation.getDepartureDateTime());
+        trip.setArrivalDate(tripCreation.getArrivalDateTime());
+        //        TODO: implement getting carrier id from access token
+        trip.setOwner(new User());
+        trip.getOwner()
+            .setUserId(7);
+        trip.setTripState(draft);
+        trip.setCreationDate(LocalDateTime.now());
+        trip.setTripPhoto("defaultPhoto.png");
+
+        Planet departurePlanet = new Planet(planetDAO.getIdByPlanetName(tripCreation.getDeparturePlanet()),
+                                            tripCreation.getDeparturePlanet());
+        Planet arrivalPlanet = new Planet(planetDAO.getIdByPlanetName(tripCreation.getArrivalPlanet()),
+                                          tripCreation.getArrivalPlanet());
+
+        Spaceport departureSpaceport = new Spaceport();
+        departureSpaceport.setSpaceportId(spaceportDAO.getIdBySpaceportName(tripCreation.getDepartureSpaceport(),
+                                                                            departurePlanet.getPlanetId()));
+        departureSpaceport.setSpaceportName(tripCreation.getDepartureSpaceport());
+        departureSpaceport.setPlanetId(departurePlanet.getPlanetId());
+        departureSpaceport.setPlanet(departurePlanet);
+
+        Spaceport arrivalSpaceport = new Spaceport();
+        arrivalSpaceport.setSpaceportId(spaceportDAO.getIdBySpaceportName(tripCreation.getArrivalSpaceport(),
+                                                                            arrivalPlanet.getPlanetId()));
+        arrivalSpaceport.setSpaceportName(tripCreation.getArrivalSpaceport());
+        arrivalSpaceport.setPlanetId(arrivalPlanet.getPlanetId());
+        arrivalSpaceport.setPlanet(arrivalPlanet);
+
+        trip.setDepartureSpaceport(departureSpaceport);
+        trip.setArrivalSpaceport(arrivalSpaceport);
+
+        return trip;
+    }
+
+    private List<ReadTripsDTO> getAllTripsDTO(List<Trip> trips) {
+        logger.debug("Converting trips to DTO");
+        List<ReadTripsDTO> tripsDTO = new ArrayList<>();
+        for (Trip trip : trips) {
+            tripsDTO.add(ReadTripsDTO.from(trip));
+        }
+
+        return tripsDTO;
     }
 }

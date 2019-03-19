@@ -21,13 +21,12 @@ import static org.hamcrest.Matchers.equalTo;
 @ActiveProfiles(profiles = "test")
 public class StatisticsServiceTest {
 
-    @Autowired
-    private StatisticsService statisticsService;
-
     private static CarrierRevenueResponse tripsSalesTestExpected;
     private static CarrierRevenueResponse tripsSalesTestWithTimeLimitsExpected;
     private static CarrierRevenueResponse servicesSalesTestExpected;
     private static CarrierRevenueResponse servicesSalesTestWithTimeLimitsExpected;
+    @Autowired
+    private StatisticsService statisticsService;
 
     @BeforeClass
     public static void init() {

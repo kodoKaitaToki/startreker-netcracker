@@ -3,7 +3,11 @@ package edu.netcracker.backend.model;
 import edu.netcracker.backend.dao.annotations.Attribute;
 import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.dao.annotations.Table;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
 
 @Getter
 @Setter
@@ -16,6 +20,6 @@ public class Planet {
     @EqualsAndHashCode.Include
     private Long planetId;
 
-    @Attribute("planetName")
+    @Attribute("planet_name")
     private String planetName;
 }

@@ -1,6 +1,8 @@
 package edu.netcracker.backend.service;
 
 import edu.netcracker.backend.message.request.TripWithArrivalAndDepartureDataDTO;
+import edu.netcracker.backend.message.request.trips.TripCreation;
+import edu.netcracker.backend.message.response.trips.ReadTripsDTO;
 import edu.netcracker.backend.message.request.TripRequest;
 import edu.netcracker.backend.message.response.ReadTripsDTO;
 import edu.netcracker.backend.model.Trip;
@@ -22,6 +24,14 @@ public interface TripService {
 
     List<Trip> findApproverTrips(User requestUser, String status, Long offset, Long limit);
 
+    void saveTrip(TripCreation tripCreation);
+
+    List<ReadTripsDTO> getAllTripsForCarrier();
+
+    List<ReadTripsDTO> getAllTripsForCarrier(Long carrierId);
+
+    List<ReadTripsDTO> getAllTripsForCarrierWithPagination(Integer limit, Integer offset);
+
     List<ReadTripsDTO> getAllTripsForUser(String departurePlanet,
                                           String departureSpaceport,
                                           String departureDate,
@@ -29,4 +39,6 @@ public interface TripService {
                                           String arrivalSpaceport,
                                           Integer limit,
                                           Integer offset);
+
+    void updateTripForCarrier(TripCreation trip, Long tripId);
 }
