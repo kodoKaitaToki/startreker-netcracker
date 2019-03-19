@@ -57,18 +57,18 @@ public class TripController {
     }
 
     @GetMapping("api/v1/trips")
-    //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<ReadTripsDTO> getAllTrips() {return tripService.getAllTripsForCarrier();}
 
     @GetMapping("api/v1/carrier/trips")
-    //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<ReadTripsDTO> getAllTripsForCarrier(@RequestParam("carrier_id") Long carrierId) {
         return tripService.getAllTripsForCarrier(carrierId);
     }
 
 
     @GetMapping("api/v1/trips/paging")
-    //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<ReadTripsDTO> getAllTripsForCarrierWithPagination(@RequestParam("limit") Integer limit,
                                                                 @RequestParam("offset") Integer offset) {
         return tripService.getAllTripsForCarrierWithPagination(limit, offset);
@@ -92,11 +92,11 @@ public class TripController {
     }
 
     @PostMapping("api/v1/trips")
-    //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public void saveTrip(@RequestBody TripCreation trip) { tripService.saveTrip(trip); }
 
     @PutMapping("api/v1/trips/{tripId}")
-    //    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public void updateTrip(@NotNull @PathVariable("tripId") Long tripId,
                            @RequestBody TripCreation trip) { tripService.updateTripForCarrier(trip, tripId); }
 
