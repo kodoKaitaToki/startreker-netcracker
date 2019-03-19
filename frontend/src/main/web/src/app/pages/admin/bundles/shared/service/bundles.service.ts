@@ -3,11 +3,11 @@ import {HttpClient} from "@angular/common/http";
 import {Bundle} from "../model/bundle";
 import {Injectable} from "@angular/core";
 
-import { Api } from '../../../../../modules/api/index';
+import { Api, HttpOptionsAuthorized } from '../../../../../modules/api/index';
 import { BundleForm } from '../model/bundle-form';
 
 @Injectable()
-export class BundlesService {
+export class BundlesService { 
 
   private defaultUrl: string = Api.baseUrl;
 
@@ -24,26 +24,26 @@ export class BundlesService {
 
   public getCount(): Observable<any> {
 
-    return this.http.get(this.url + '/count');
+    return this.http.get(this.url + '/count', HttpOptionsAuthorized);
   }
 
   public getAll(): Observable<any> {
 
-    return this.http.get(this.url);
+    return this.http.get(this.url, HttpOptionsAuthorized);
   }
 
   public getBundlesInInterval(limit: number, offset: number): Observable<any> {
 
-    return this.http.get(this.url + '?limit=' + limit + '&offset=' + offset);
+    return this.http.get(this.url + '?limit=' + limit + '&offset=' + offset, HttpOptionsAuthorized);
   }
 
   public postBundle(bundle: BundleForm): Observable<any> {
 
-    return this.http.post(this.url, bundle);
+    return this.http.post(this.url, bundle, HttpOptionsAuthorized);
   }
 
   public putBundle(bundle: BundleForm): Observable<any> {
-    return this.http.put(this.url + `/${bundle.id}`, bundle)
+    return this.http.put(this.url + `/${bundle.id}`, bundle, HttpOptionsAuthorized)
   }
 
   public deleteBundle(bundle: Bundle): Observable<any> {
@@ -51,7 +51,9 @@ export class BundlesService {
     return this.http.request('DELETE',
                              this.url + `/${bundle.id}`,
                              {
-                               body: bundle
+                               body: bundle,
+                               headers:  HttpOptionsAuthorized.headers,
+                               observe: 'response'
                              });
   }
 }

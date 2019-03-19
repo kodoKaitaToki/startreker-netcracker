@@ -67,8 +67,7 @@ export class TripDashboardComponent implements OnInit {
       .subscribe(
         (resp: HttpResponse<any>) => {
           checkToken(resp.headers);
-            console.log(resp.body)
-            this.tripData.trips = clone(resp);
+            this.tripData.trips = clone(resp.body);
             // console.log(this.tripData.trips);
             this.buildChart(this.tripData);
         },

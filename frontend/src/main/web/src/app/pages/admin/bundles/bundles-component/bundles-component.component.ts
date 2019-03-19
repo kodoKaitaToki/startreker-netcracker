@@ -10,7 +10,8 @@ import {TreeNode} from 'primeng/api';
 import { Trip } from '../shared/model/trip';
 import { TicketClass } from '../shared/model/ticket-class';
 import { Service } from '../shared/model/service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { checkToken } from 'src/app/modules/api';
 
 @Component({
              selector: 'app-bundles-component',
@@ -33,7 +34,8 @@ export class BundlesComponentComponent implements OnInit {
     console.log(bundleForm);
 
     this.bundlesSrvc.postBundle(bundleForm)
-        .subscribe(() => {
+        .subscribe((resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
           this.showMessage(this.createMessage('success', 'Bundle post', 'The bundle was created'));
           this.table.getAllBundles();
         }, (error: HttpErrorResponse) => {

@@ -5,9 +5,11 @@ import { CarrierCrudService } from '../../carrier/carrier-crud.service';
 import { TripsService } from 'src/app/services/trips.service';
 import { PossibleServiceService } from 'src/app/services/possible-service.service';
 import { Carrier } from '../../carrier/carrier';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { TicketClass } from '../shared/model/ticket-class';
 import { Service } from '../shared/model/service';
+import { clone } from 'ramda';
+import { checkToken } from 'src/app/modules/api';
 
 @Component({
   selector: 'app-bundles-tree',
@@ -39,9 +41,11 @@ export class BundlesTreeComponent implements OnInit {
     this.loading = true;
     this.inputTree = [];
     this.carrierSrvc.getAllCarriers()
-    .subscribe(carriers => {
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
+      let carriers = clone(resp.body);
       this.inputTree = this.inputTree.concat(
-        carriers.body.map((carrier: Carrier) => {
+        carriers.map((carrier: Carrier) => {
           let node: TreeNode = {
             label: carrier.username,
             data: carrier,
@@ -85,7 +89,9 @@ export class BundlesTreeComponent implements OnInit {
 
   populateCarrier(carrier: TreeNode) {
     this.tripsApi.getTripsForCarrier(carrier.data.id)
-    .subscribe(trips => {
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
+      let trips = clone(resp.body);
       let properTrips = trips.map(trip => {
         let properTrip = trip;
         properTrip.departure_spaceport_name = properTrip.departure_spaceport;
@@ -96,7 +102,7 @@ export class BundlesTreeComponent implements OnInit {
       });
       console.log(properTrips);
       carrier.children = properTrips.filter(trip => {
-        return (trip.trip_status == "Published")
+        return (trip.trip_status == "PUBLISHED")
       })
       .map(trip => {
           let node: TreeNode = {
@@ -126,7 +132,9 @@ export class BundlesTreeComponent implements OnInit {
 
   populateTicketClass(ticketClass: TreeNode) {
     this.possibleServiceApi.getAll(ticketClass.data.class_id)
-    .subscribe(services => {
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
+      let services = clone(resp.body);
       ticketClass.children = services.map((service: Service) => {
           let node: TreeNode = {
             label: service.service_name,

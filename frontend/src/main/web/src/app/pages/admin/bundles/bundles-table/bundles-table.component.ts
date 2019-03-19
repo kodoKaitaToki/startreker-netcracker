@@ -1,15 +1,14 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChildren, QueryList} from '@angular/core';
 import {Bundle} from '../shared/model/bundle';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {BundlesService} from "../shared/service/bundles.service";
 import {MessageService} from "primeng/api";
-import {HttpErrorResponse} from "@angular/common/http";
-import {Carrier} from '../../carrier/carrier';
-import {CarrierCrudService} from '../../carrier/carrier-crud.service';
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import { clone } from 'ramda';
 import { Trip } from '../shared/model/trip';
 import { TicketClass } from '../shared/model/ticket-class';
 import { Service } from '../shared/model/service';
 import { BundlesFormComponent } from '../bundles-form/bundles-form.component';
+import { checkToken } from 'src/app/modules/api';
 
 
 @Component({
@@ -63,7 +62,8 @@ export class BundlesTableComponent implements OnInit {
     console.log("Putting bundle");
     console.log(bundle);
     this.bundlesSrvc.putBundle(bundle)
-    .subscribe(() => {
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
       this.showMessage(this.createMessage('success', 'Bundle editing', 'The bundle was updated'));
       this.getAllBundles();
     }, (error: HttpErrorResponse) => {
@@ -75,7 +75,8 @@ export class BundlesTableComponent implements OnInit {
   onDelete(bundle) {
     this.currentBundleToHideId = bundle.id;
     this.bundlesSrvc.deleteBundle(bundle)
-    .subscribe(() => {
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
       this.showMessage(this.createMessage('success', 'Bundle deletion', 'The bundle was deleted'));
       this.getAllBundles();
     }, (error: HttpErrorResponse) => {
@@ -86,12 +87,16 @@ export class BundlesTableComponent implements OnInit {
 
   getAllBundles() {
     this.bundlesSrvc.getCount()
-        .subscribe(data => this.pageAmount = data);
+        .subscribe((resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          this.pageAmount = clone(resp.body);
+        });
 
     this.bundlesSrvc.getBundlesInInterval(this.pageNumber, this.pageFrom)
-        .subscribe(data => {
+        .subscribe((resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
           this.showMessage(this.createMessage('success', 'Bundle list', 'The list was updated'));
-          this.bundles = data;
+          this.bundles = clone(resp.body);
           this.currentBundleToHideId = undefined;
           this.currentBundleForUpdate = undefined;
         }, (error: HttpErrorResponse) => {
