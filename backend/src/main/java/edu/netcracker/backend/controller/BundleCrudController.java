@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class BundleCrudController {
     }
 
     @GetMapping("api/v1/bundles")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public List<BundleDTO> getAllBundles(@RequestParam("limit") Number limit, @RequestParam("offset") Number offset) {
@@ -47,7 +48,7 @@ public class BundleCrudController {
     }
 
     @GetMapping("api/v1/bundles/{id}")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public BundleDTO getBundleById(@PathVariable("id") Number id) {
@@ -56,14 +57,14 @@ public class BundleCrudController {
     }
 
     @PostMapping("api/v1/bundles")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public void addBundle(@RequestBody final BundleForm bundleForm) {
         bcs.add(convertFromDTO(bundleForm));
     }
 
     @PutMapping("api/v1/bundles/{id}")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public void updateBundle(@PathVariable("id") final Number id, @RequestBody final BundleForm bundleForm) {
         if (bundleForm.getId() == null) {
@@ -74,14 +75,14 @@ public class BundleCrudController {
     }
 
     @DeleteMapping("api/v1/bundles/{id}")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public void deleteBundle(@PathVariable final Number id) {
         bcs.delete(id);
     }
 
     @GetMapping("api/v1/bundles/count")
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public Long countBundles() {
         return bcs.count();
     }

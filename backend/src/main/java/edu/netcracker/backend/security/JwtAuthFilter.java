@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -26,13 +27,10 @@ public class JwtAuthFilter extends AuthFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
-    @Autowired
     private JwtProvider jwtProvider;
 
-    @Autowired
     private UserInformationHolderServiceImpl userInformationHolderService;
 
-    @Autowired
     private UserService userService;
 
     @Override
@@ -99,5 +97,20 @@ public class JwtAuthFilter extends AuthFilter {
 
     private boolean isNotMatchedWithUsersRefreshToken(String refreshToken, User user) {
         return user == null || !refreshToken.equals(user.getUserRefreshToken());
+    }
+
+    @Autowired
+    public void setJwtProvider(JwtProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
+    }
+
+    @Autowired
+    public void setUserInformationHolderService(UserInformationHolderServiceImpl userInformationHolderService) {
+        this.userInformationHolderService = userInformationHolderService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 }

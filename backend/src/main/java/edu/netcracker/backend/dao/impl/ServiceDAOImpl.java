@@ -1,11 +1,11 @@
 package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.ServiceDAO;
-import edu.netcracker.backend.dao.ServiceReplyDAO;
-import edu.netcracker.backend.model.Service;
+import edu.netcracker.backend.dao.mapper.history.HistoryServiceMapper;
 import edu.netcracker.backend.dao.mapper.ServiceMapper;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
+import edu.netcracker.backend.model.history.HistoryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,21 +14,19 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import java.util.*;
 
 @Repository
 public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements ServiceDAO {
 
-    private final static String GET_ALL_SERVICES_BELONG_TO_SUGGESTIONS = "SELECT "
-                                                                         + "  s_service.suggestion_id AS suggestion_id, "
-                                                                         + "  service.service_id AS servicedescr_service_id, "
-                                                                         + "  service.service_name AS servicedescr_service_name "
-                                                                         + "FROM service "
-                                                                         + "INNER JOIN possible_service p_service ON p_service.service_id = service.service_id "
-                                                                         + "INNER JOIN suggested_service s_service ON s_service.p_service_id = p_service.p_service_id "
-                                                                         + "WHERE s_service.suggestion_id IN (:suggestionIds)";
-    private final String FIND_SERVICE_BY_NAME = "SELECT * " + "FROM service " + "WHERE carrier_id = ? " +
-            "AND service_name = ?";
+    private final String FIND_SERVICE_BY_NAME = "SELECT * "
+                                                + "FROM service "
+                                                + "WHERE carrier_id = ? "
+                                                + "AND service_name = ?";
+
     private final String FIND_ALL_SERVICES = "SELECT service.service_id, "
                                              + "        service.carrier_id, "
                                              + "        user_a.user_name,"
@@ -41,6 +39,7 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
                                              + "ON service.approver_id = user_a.user_id "
                                              + "WHERE carrier_id = ?"
                                              + "ORDER BY service_id";
+
     private final String FIND_PAGIN_SERVICES = "SELECT service.service_id, "
                                                + "        service.carrier_id, "
                                                + "        user_a.user_name, "
@@ -54,7 +53,9 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
                                                + "WHERE carrier_id = ? "
                                                + "ORDER BY service_id "
                                                + "LIMIT ? OFFSET ?";
+
     private final String DELETE_SERVICE = "DELETE FROM service " + "WHERE service_id = ?";
+
     private final String FIND_BY_STATUS = "SELECT service.service_id, "
                                           + "        service.carrier_id, "
                                           + "        user_a.user_name, "
@@ -68,6 +69,7 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
                                           + "WHERE carrier_id = ? "
                                           + "AND service_status = ? "
                                           + "ORDER BY service_id";
+
     private final String APPROVER_FIND_BY_STATUS = "SELECT service.service_id, "
                                                    + "        service.carrier_id, "
                                                    + "        user_a.user_name, "
@@ -81,6 +83,7 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
                                                    + "WHERE service_status = ? "
                                                    + "ORDER BY service_id "
                                                    + "LIMIT ? OFFSET ?";
+
     private final String APPROVER_FIND_BY_STATUS_AND_ID = "SELECT service.service_id, "
                                                           + "        service.carrier_id, "
                                                           + "        user_a.user_name, "
@@ -95,6 +98,7 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
                                                           + "AND service_status = ? "
                                                           + "ORDER BY service_id "
                                                           + "LIMIT ? OFFSET ?";
+
     private final String FIND_ALL_REPLY_TEXTS = "SELECT reply_text "
                                                 + "FROM service_reply "
                                                 + "WHERE service_id = ? "
@@ -102,21 +106,39 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
                                                 + "                    FROM service_reply "
                                                 + "                    WHERE service_id = ?)";
 
+    private final static String GET_ALL_SERVICES_BELONG_TO_SUGGESTIONS = "SELECT "
+                                                                         + "  s_service.suggestion_id AS suggestion_id, "
+                                                                         + "  service.service_id AS servicedescr_service_id, "
+                                                                         + "  service.service_name AS servicedescr_service_name "
+                                                                         + "FROM service "
+                                                                         + "INNER JOIN possible_service p_service ON p_service.service_id = service.service_id "
+                                                                         + "INNER JOIN suggested_service s_service ON s_service.p_service_id = p_service.p_service_id "
+                                                                         + "WHERE s_service.suggestion_id IN (:suggestionIds)";
+
+    private final static String GET_SERVICE_NAMES_BY_TICKET = "SELECT s.service_name, count(s.service_id) "
+                                                              + "FROM ticket t "
+                                                              + "JOIN bought_service bs ON t.ticket_id=bs.ticket_id "
+                                                              + "AND t.ticket_id = ? "
+                                                              + "JOIN possible_service ps ON bs.p_service_id=ps.p_service_id "
+                                                              + "JOIN service s ON ps.service_id = s.service_id "
+                                                              + "GROUP BY s.service_id "
+                                                              + "ORDER BY s.service_id";
+
     private static final Logger logger = LoggerFactory.getLogger(ServiceDAOImpl.class);
 
     private ServiceMapper mapper = new ServiceMapper();
+
+
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
     public Optional<ServiceDescr> find(Number id) {
-        logger.debug("Querying a service by id = {}", id);
+        logger.debug("Getting a service with id = " + id);
         Optional<ServiceDescr> serviceOpt = super.find(id);
 
         if (serviceOpt.isPresent()) {
             return serviceOpt;
         }
-
-        logger.debug("There is no service with id = {}", id);
         return Optional.empty();
     }
 
@@ -128,26 +150,26 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
 
     @Override
     public void delete(Long id) {
-        logger.debug("Deleting a service with id = {}", id);
+        logger.debug("Deleting service with id = " + id);
         getJdbcTemplate().update(DELETE_SERVICE, id);
     }
 
     @Override
     public void update(ServiceDescr service) {
-        logger.debug("Updating service with id = {}", service.getServiceId());
+        logger.debug("Updating service with id = " + service.getServiceId());
         super.update(service);
     }
 
     @Override
-    public Optional<ServiceDescr> findByName(String name, Number id){
-        logger.debug("Querying a service by name = {} of carrier  = {}", name, id);
-        try{
-            Optional<ServiceDescr> serviceOpt =
-                    Optional.of(
-                            getJdbcTemplate().queryForObject(FIND_SERVICE_BY_NAME, new Object[]{id, name}, getGenericMapper()));
-            return serviceOpt;
-        }catch(EmptyResultDataAccessException e){
-            logger.debug("Carrier {} doesn't have service with name = {}", id, name);
+    public Optional<ServiceDescr> findByName(String name, Number id) {
+        logger.debug("Getting a service with name = " + name);
+
+        try {
+            ServiceDescr serviceOpt = getJdbcTemplate().queryForObject(FIND_SERVICE_BY_NAME,
+                                                                       new Object[]{id, name},
+                                                                       getGenericMapper());
+            return serviceOpt != null ? Optional.of(serviceOpt) : Optional.empty();
+        } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
 
@@ -174,19 +196,12 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     }
 
     @Override
-    public List<ServiceCRUDDTO> findByStatus(Number id, Integer status){
-        logger.debug("Querying services with status = {} of carrier = {}", status, id);
+    public List<ServiceCRUDDTO> findByStatus(Number id, Integer status) {
+        logger.debug("Getting services where status = " + status);
 
         List<ServiceCRUDDTO> result = new ArrayList<>();
         result.addAll(getJdbcTemplate().query(FIND_BY_STATUS, new Object[]{id, status}, mapper));
-
-        ServiceReplyDAO serviceReplyDAO = new ServiceReplyDAOImpl();
-
-        result.forEach(service -> {
-            Long serviceId = service.getId();
-            String replyText = serviceReplyDAO.getLastReply(serviceId).orElse(null);
-            service.setReplyText(replyText);
-        });
+        result.forEach(this::attachReply);
 
         return result;
     }
@@ -196,17 +211,15 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
         logger.debug("Pagin services where status = " + status);
 
         List<ServiceCRUDDTO> result = new ArrayList<>();
-        result.addAll(
-                getJdbcTemplate()
-                        .query(
-                                APPROVER_FIND_BY_STATUS,
-                                new Object[]{status, number, from},
-                                mapper));
+        result.addAll(getJdbcTemplate().query(APPROVER_FIND_BY_STATUS, new Object[]{status, number, from}, mapper));
         return result;
     }
 
     @Override
-    public List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status, Integer approverId) {
+    public List<ServiceCRUDDTO> getServicesForApprover(Integer from,
+                                                       Integer number,
+                                                       Integer status,
+                                                       Integer approverId) {
         logger.debug("Pagin services where status = " + status + " and approver = " + approverId);
 
         List<ServiceCRUDDTO> result = new ArrayList<>();
@@ -220,8 +233,8 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
         Long id = serviceCRUDDTO.getId();
         try {
             String replyText = getJdbcTemplate().queryForObject(FIND_ALL_REPLY_TEXTS,
-                    new Object[]{id, id},
-                    String.class);
+                                                                new Object[]{id, id},
+                                                                String.class);
             serviceCRUDDTO.setReplyText(replyText);
             return serviceCRUDDTO;
         } catch (EmptyResultDataAccessException e) {
@@ -246,6 +259,12 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
         }
 
         return relatedServices;
+    }
+
+    @Override
+    public List<HistoryService> getServiceNamesByTicket(Number id) {
+        logger.info("Querying purchased services for ticket {}", id);
+        return getJdbcTemplate().query(GET_SERVICE_NAMES_BY_TICKET, new Object[]{id}, new HistoryServiceMapper());
     }
 
     private ServiceDescr createService(Map<String, Object> row) {

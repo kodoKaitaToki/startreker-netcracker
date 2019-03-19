@@ -7,7 +7,8 @@ import { clone } from 'ramda';
 import { DateValidator } from './trips.helper';
 import {ShowMessageService} from "../../admin/approver/shared/service/show-message.service";
 import {MessageService} from "primeng/api";
-import {HttpErrorResponse} from "@angular/common/http";
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import { checkToken } from 'src/app/modules/api';
 
 @Component({
   selector: 'app-trips',
@@ -76,9 +77,9 @@ export class TripsComponent implements OnInit {
 
   ngOnInit(): void {
     this.tripsApi.setExistingTrips()
-      .subscribe(
-        (resp: ExisitingTrips) => {
-          this.general = clone(resp);
+        .subscribe((resp: HttpResponse<ExisitingTrips>) => {
+          checkToken(resp.headers);
+          this.general = clone(resp.body);
         },
         error => console.log(error)
       );
@@ -88,9 +89,9 @@ export class TripsComponent implements OnInit {
 
   getTrips() {
     this.tripsApi.getAllTrips()
-      .subscribe(
-        (resp: Trip) => {
-          this.defaultTrips = clone(resp);
+     .subscribe((resp: HttpResponse<Trip>) => {
+        checkToken(resp.headers);
+        this.defaultTrips = clone(resp.body);
         },
         // error => console.log(error)
       );
@@ -127,7 +128,8 @@ export class TripsComponent implements OnInit {
     const id = trip.id;
     delete trip.id;
     this.tripsApi.updateTrip(trip, id)
-      .subscribe(() => {
+      .subscribe((resp: HttpResponse<any>) => {
+        checkToken(resp.headers);
         this.getTrips();
         this.showMsgSrvc.showMessage(this.messageService, 'success', 'Trip editing', 'The trip was edited');
       }, (error: HttpErrorResponse) => {
@@ -138,7 +140,8 @@ export class TripsComponent implements OnInit {
 
   ticketClassSubmitHandler(ticketClass) {
     this.tripsApi.saveTicketClass(ticketClass)
-      .subscribe(() => {
+      .subscribe((resp: HttpResponse<any>) => {
+        checkToken(resp.headers);
         this.getTrips();
         this.showMsgSrvc.showMessage(this.messageService, 'success', 'Ticket class editing', 'Ticket class was updated');
       }, (error: HttpErrorResponse) => {
@@ -149,7 +152,8 @@ export class TripsComponent implements OnInit {
 
   ticketClassDelete(id) {
     this.tripsApi.deleteTicketClass(id)
-      .subscribe(() => {
+      .subscribe((resp: HttpResponse<any>) => {
+        checkToken(resp.headers);
         this.getTrips();
         this.showMsgSrvc.showMessage(this.messageService, 'success', 'Ticket class deleting', 'Ticket class was deleted');
       }, (error: HttpErrorResponse) => {
@@ -172,8 +176,9 @@ export class TripsComponent implements OnInit {
     // console.log(this.submitData);
     this.tripsApi.createTrip(this.submitData)
       .subscribe(
-        (resp: Response) => {
+        (resp: HttpResponse<any>) => {
           // console.log(resp);
+          checkToken(resp.headers);
           this.showSuccess = true;
           setTimeout(() => this.showSuccess = false, 3000);
           this.getTrips();
@@ -187,5 +192,4 @@ export class TripsComponent implements OnInit {
     // submit form if !this.currentDateError && !this.departureDateError
     this.form.reset();
   }
-
 }

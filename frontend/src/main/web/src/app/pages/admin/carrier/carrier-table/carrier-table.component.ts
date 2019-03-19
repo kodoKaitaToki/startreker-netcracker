@@ -14,7 +14,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 export class CarrierTableComponent implements OnInit {
 
   @Input() carriers: Carrier;
-  @Input() allCarriers: Carrier[] = [];
+  @Input() allCarriers: Carrier[];
   @Input() numpages: Number;
   @Input() butGroup = {};
   @Input() updateError;
@@ -101,8 +101,6 @@ export class CarrierTableComponent implements OnInit {
                 is_activated: status,
                 user_created_date: this.form.value['user_created_date']
     }
-
-    console.log(event);
 
     this.notifyAboutUpdate.emit(event);
             

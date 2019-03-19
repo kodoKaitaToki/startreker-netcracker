@@ -1,6 +1,7 @@
 package edu.netcracker.backend.service;
 
 
+import edu.netcracker.backend.message.request.ChangePasswordForm;
 import edu.netcracker.backend.message.request.EmailFrom;
 import edu.netcracker.backend.message.request.SignInForm;
 import edu.netcracker.backend.message.request.SignUpForm;
@@ -21,4 +22,6 @@ public interface AuthenticationService {
     Message confirmPassword(String token);
 
     Message logOut();
+
+    Message changePassword(ChangePasswordForm changePasswordForm);
 }

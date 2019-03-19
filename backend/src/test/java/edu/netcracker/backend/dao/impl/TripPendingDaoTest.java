@@ -1,8 +1,6 @@
 package edu.netcracker.backend.dao.impl;
 
-import edu.netcracker.backend.message.request.PendingActivationTrip;
-import edu.netcracker.backend.model.Planet;
-import edu.netcracker.backend.model.Spaceport;
+import edu.netcracker.backend.message.request.TripPendingActivationDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +17,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class TripPendingDaoTest {
 
-    private List<PendingActivationTrip> pendingActivationTripList;
+    private List<TripPendingActivationDto> tripPendingActivationDtoList;
 
     @Mock
     private TripPendingDao tripPendingDao;
@@ -27,7 +25,7 @@ public class TripPendingDaoTest {
     @Before
     public void init() {
 
-        PendingActivationTrip pendingActivationTrip = PendingActivationTrip.builder()
+        TripPendingActivationDto tripPendingActivationDto = TripPendingActivationDto.builder()
                 .tripID(14)
                 .tripStatus(1)
                 .arrivalDate("2019-03-13 00:12:00.000000")
@@ -45,13 +43,13 @@ public class TripPendingDaoTest {
                 .arrivalSpaceportName("erat")
                 .build();
 
-        pendingActivationTripList = Arrays.asList(pendingActivationTrip);
+        tripPendingActivationDtoList = Arrays.asList(tripPendingActivationDto);
     }
 
     @Test
     public void getPendingWithOffsetAndLimit() {
 
-        when(tripPendingDao.getPendingWithOffsetAndLimit(1, 0)).thenReturn(pendingActivationTripList);
-        assertEquals(tripPendingDao.getPendingWithOffsetAndLimit(1, 0), pendingActivationTripList);
+        when(tripPendingDao.getPendingWithOffsetAndLimit(1, 0)).thenReturn(tripPendingActivationDtoList);
+        assertEquals(tripPendingDao.getPendingWithOffsetAndLimit(1, 0), tripPendingActivationDtoList);
     }
 }

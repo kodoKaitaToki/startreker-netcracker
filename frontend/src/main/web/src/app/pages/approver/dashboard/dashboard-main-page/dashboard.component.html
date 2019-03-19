@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-3">
+      <ul class="nav nav-pills">
+        <li class="nav-item"
+        >
+          <a class="nav-link"
+             routerLink="pending-services"
+             [routerLinkActiveOptions]="{exact: true}"
+             routerLinkActive="active"
+          >Pending activation services</a>
+        </li>
+        <li class="nav-item"
+        >
+          <a class="nav-link"
+             routerLink="pending-trips"
+             routerLinkActive="active"
+          >Pending activation trips</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<br>
+<router-outlet></router-outlet>

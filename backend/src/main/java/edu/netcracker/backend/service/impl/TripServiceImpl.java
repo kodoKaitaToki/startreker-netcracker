@@ -66,9 +66,8 @@ public class TripServiceImpl implements TripService {
     @Override
     public List<ReadTripsDTO> getAllTripsForCarrier() {
         logger.debug("Getting all trips for carrier from TripDAO");
-        //        TODO: implement getting carrier id from access token
-//        Long carrierId = Long.valueOf(securityContext.getUser().getUserId());
-        List<Trip> trips = tripDAO.allCarriersTrips(7L);
+        Long carrierId = Long.valueOf(securityContext.getUser().getUserId());
+        List<Trip> trips = tripDAO.allCarriersTrips(carrierId);
 
         return getAllTripsDTO(trips);
     }
@@ -84,9 +83,8 @@ public class TripServiceImpl implements TripService {
     @Override
     public List<ReadTripsDTO> getAllTripsForCarrierWithPagination(Integer limit, Integer offset) {
         logger.debug("Getting {} trips for carrier from TripDAO with pagination starting from {}", limit, offset);
-        //        TODO: implement getting carrier id from access token
-//        Long carrierId = Long.valueOf(securityContext.getUser().getUserId());
-        List<Trip> trips = tripDAO.paginationForCarrier(limit, offset, 7L);
+        Long carrierId = Long.valueOf(securityContext.getUser().getUserId());
+        List<Trip> trips = tripDAO.paginationForCarrier(limit, offset, carrierId);
 
         return getAllTripsDTO(trips);
     }
@@ -285,10 +283,9 @@ public class TripServiceImpl implements TripService {
         Trip trip = new Trip();
         trip.setDepartureDate(tripCreation.getDepartureDateTime());
         trip.setArrivalDate(tripCreation.getArrivalDateTime());
-        //        TODO: implement getting carrier id from access token
         trip.setOwner(new User());
         trip.getOwner()
-            .setUserId(7);
+            .setUserId(securityContext.getUser().getUserId());
         trip.setTripState(draft);
         trip.setCreationDate(LocalDateTime.now());
         trip.setTripPhoto("defaultPhoto.png");
