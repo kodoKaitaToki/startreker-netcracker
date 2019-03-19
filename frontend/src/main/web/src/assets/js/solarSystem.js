@@ -198,14 +198,18 @@ function animate() {
 function setStartPoint(){
   var select = document.getElementById("select_from");
   startName = select.value;
-  startPoint = planetsInfo[startName].position;
-  sizePoint = planetsInfo[startName].size;
+  if(startName in planetsInfo){
+    startPoint = planetsInfo[startName].position;
+    sizePoint = planetsInfo[startName].size;
+  }
 }
 
 function setFinishPoint(){
   var select = document.getElementById("select_to");
   finishName = select.value;
-  finishPoint = planetsInfo[finishName].position;
+  if(finishName in planetsInfo){
+    finishPoint = planetsInfo[finishName].position;
+  }
 }
 
 function addCurve(){
@@ -214,8 +218,6 @@ function addCurve(){
     new THREE.Vector2( (startPoint + finishPoint)/2, Math.abs((startPoint - finishPoint)/2) ),
     new THREE.Vector2( finishPoint, 0 )
   );
-
-  console.log("Start point: " + startPoint + "Finish point: " + finishPoint + "size" + sizePoint);
 
   var points = newCurve.getPoints( 50 );
   var geometry = new THREE.BufferGeometry().setFromPoints( points );
@@ -284,23 +286,24 @@ function setPoint(point){
     }
 }
 
-
-
 function createRing(selectField){
   var select = document.getElementById(selectField);
   var name = select.value;
-  var position = planetsInfo[name].position;
-  var size = planetsInfo[name].size + 1;
-
-  var whitePl = scene.getObjectByName(selectField);
-  if(whitePl !== null){
-    scene.remove(whitePl);
+  if(name in planetsInfo){
+    var position = planetsInfo[name].position;
+    var size = planetsInfo[name].size + 1;
+  
+    var whitePl = scene.getObjectByName(selectField);
+    if(whitePl !== null){
+      scene.remove(whitePl);
+    }
+  
+    var material = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+    var geometry = new THREE.RingGeometry(size, size + 0.5, 32);
+    var ring = new THREE.Mesh(geometry, material);
+    ring.position.set(position, 0, 0);
+    ring.name = selectField;
+    scene.add(ring);
   }
 
-  var material = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
-  var geometry = new THREE.RingGeometry(size, size + 0.5, 32);
-  var ring = new THREE.Mesh(geometry, material);
-  ring.position.set(position, 0, 0);
-  ring.name = selectField;
-  scene.add(ring);
 }

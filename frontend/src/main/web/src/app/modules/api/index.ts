@@ -103,6 +103,9 @@ const trip = {
 const landing = {
   planets(){
     return `${baseUrl}api/v1/planets`;
+  },
+  spaceports(){
+    return `${baseUrl}api/v1/spaceports`;
   }
 }
 
