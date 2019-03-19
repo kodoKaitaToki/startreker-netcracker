@@ -73,7 +73,7 @@ export class BundlesFormComponent implements OnInit {
     bundleForm = {
       id: bundle.id,
       start_date: `${this.datepipe.transform(bundle.start_date, 'yyyy-MM-dd HH:mm')}`,
-      finish_date: `${this.datepipe.transform(bundle.start_date, 'yyyy-MM-dd HH:mm')}`,
+      finish_date: `${this.datepipe.transform(bundle.finish_date, 'yyyy-MM-dd HH:mm')}`,
       bundle_price: bundle.bundle_price,
       bundle_description: bundle.bundle_description,
       photo_uri: "",

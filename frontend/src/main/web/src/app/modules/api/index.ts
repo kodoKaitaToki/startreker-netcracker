@@ -2,25 +2,24 @@ import { HttpHeaders } from '@angular/common/http';
 
 let baseUrl;
 const apiPort = ':80/'
-// const apiPort = '/'
+//const apiPort = '/'
 
 // baseUrl = `http://startreker-netcracker.herokuapp.com${apiPort}`
 baseUrl = `http://localhost${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
-    'Content-Type':  'application/json',
-    // 'Access-Control-Allow-Origin': '*'
+    'Content-Type':  'application/json'
   })
 }
 
 export const HttpOptionsAuthorized = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
-    // 'Access-Control-Allow-Origin': '*',
-    // 'Authorization': `Bearer ${localStorage.getItem('at')}`,
-    // 'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
-  })
+    'Authorization': `Bearer ${localStorage.getItem('at')}`,
+    'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
+  }),
+  observe: 'response' as 'response'
 }
 
 const auth = {
@@ -35,6 +34,9 @@ const auth = {
   },
   recoverPassword() {
     return `${baseUrl}api/auth/password-recovery`;
+  },
+  confirmPassword(){
+    return `${baseUrl}api/auth/confirm-password`;
   }
 }
 
@@ -118,7 +120,18 @@ const service = {
   }
 }
 
+const trip = {
+  trips(){
+    return `${baseUrl}api/v1/approver/trip`;
+  },
+  update(){
+    return `${baseUrl}api/v1/trip`;
+  }
+}
+
 export const Api = {
+  HttpOptions,
+  HttpOptionsAuthorized,
   auth,
   dashboard,
   carrier,
@@ -126,9 +139,17 @@ export const Api = {
   baseUrl,
   service, 
   possibleServices,
+  trip,
   trips
 }
 
 export const options = {
   root: baseUrl
+}
+
+export function checkToken(heads: HttpHeaders){
+  if (heads.has('New-Access-Token')) {
+    localStorage.removeItem('at');
+    localStorage.setItem('at', heads.get('New-Access-Token'));
+  }
 }

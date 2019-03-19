@@ -11,7 +11,7 @@
     <div class="navbar-collapse collapse" id="navbarsExample04">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-          <a class="nav-link" [routerLink]="['/approver/dashboard']">Dashboard</a>
+          <a class="nav-link" [routerLink]="['/approver/dashboard/pending-services']">Dashboard</a>
         </li>
         <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
           <a class="nav-link" [routerLink]="['/approver/trip']">Trips</a>
@@ -24,7 +24,7 @@
         </li>
         <li class="nav-item">
           <div class="d-inline-block">
-            <a class="slide-btn" routerLink="">
+            <a class="slide-btn" (click)="logOut()">
               <span>Log out</span>
             </a>
           </div>

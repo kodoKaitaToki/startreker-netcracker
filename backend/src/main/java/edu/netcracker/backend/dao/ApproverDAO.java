@@ -59,7 +59,7 @@ public class ApproverDAO extends CrudDAOImpl<User> {
             "INNER JOIN role_a r ON ar.role_id = r.role_id " +
             "WHERE r.role_name = 'ROLE_APPROVER';";
 
-    private ApproverRowMapper rowMapper;
+    private final ApproverRowMapper rowMapper;
     private final Logger logger = LoggerFactory.getLogger(ApproverDAO.class);
 
     public ApproverDAO() {

@@ -1,10 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {clone} from 'ramda';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MessageService} from 'primeng/components/common/messageservice';
+import { HttpResponse } from '@angular/common/http';
 
 import {Service} from '../shared/model/service.model';
 import {ServiceService} from '../shared/service/service.service';
+import {checkToken} from "../../../../modules/api/index";
 
 @Component({
   selector: 'app-clarification',
@@ -44,12 +46,9 @@ export class ClarificationComponent implements OnInit {
   getClarificationServices(){
     this.serviceService.getServiceByStatus('UNDER_CLARIFICATION')
         .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
-                          this.services = clone(resp);
+                        (resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
+                          this.services = clone(resp.body);
                         },
                         error => console.log(error)
                       );
@@ -71,11 +70,8 @@ export class ClarificationComponent implements OnInit {
     }
     this.serviceService.updateService(service)
                       .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                        (resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
                           this.showMessage(createdMessage);
                           this.getClarificationServices();
                           this.isForUpdateAlertMessage = false;

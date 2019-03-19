@@ -10,13 +10,14 @@ public class TripWithArrivalAndDepartureDataMapper implements RowMapper<TripWith
 
     @Override
     public TripWithArrivalAndDepartureData mapRow(ResultSet rs, int rowNum) throws SQLException {
-        TripWithArrivalAndDepartureData trip =
-                new TripWithArrivalAndDepartureData();
+        TripWithArrivalAndDepartureData trip = new TripWithArrivalAndDepartureData();
 
         trip.setTripId(rs.getLong("trip_id"));
 
-        trip.setArrivalDate(rs.getTimestamp("arrival_date").toLocalDateTime());
-        trip.setDepartureDate(rs.getTimestamp("departure_date").toLocalDateTime());
+        trip.setArrivalDate(rs.getTimestamp("arrival_date")
+                              .toLocalDateTime());
+        trip.setDepartureDate(rs.getTimestamp("departure_date")
+                                .toLocalDateTime());
 
         trip.setArrivalSpacePort(rs.getString("arrival_spaceport_name"));
         trip.setDepartureSpacePort(rs.getString("departure_spaceport_name"));

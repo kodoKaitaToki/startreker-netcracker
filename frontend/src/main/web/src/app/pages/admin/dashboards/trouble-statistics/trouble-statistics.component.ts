@@ -3,6 +3,9 @@ import * as CanvasJS from '../../canvasjs.min';
 import {TroubleStatisticsService} from '../trouble-statistics.service';
 import {TroubleStatisticsModel} from './trouble-statistics.model';
 import {FormControl, FormGroup} from '@angular/forms';
+import { clone } from 'ramda';
+import { HttpResponse } from '@angular/common/http';
+import { checkToken } from 'src/app/modules/api';
 
 @Component({
              selector: 'app-trouble-statistics',
@@ -25,16 +28,18 @@ export class TroubleStatisticsComponent implements OnInit {
   onSubmit() {
     if (this.form.value.isTotal == "true" || this.form.value.id == "") {
       this.troubleStatisticsService.getStatistic()
-          .subscribe(data => {
-            this.troubleStatisticsModel = data;
+          .subscribe((resp: HttpResponse<any>) => {
+            checkToken(resp.headers);
+            this.troubleStatisticsModel = clone(resp.body.amount);
             this.ticketChart.options.title.text = "Tickets:";
             this.reloadChart();
           });
     }
     else {
       this.troubleStatisticsService.getStatisticForApprover(this.form.value.id)
-          .subscribe(data => {
-            this.troubleStatisticsModel = data;
+          .subscribe((resp: HttpResponse<any>) => {
+            checkToken(resp.headers);
+            this.troubleStatisticsModel = clone(resp.body.amount);
             this.ticketChart.options.title.text = "Tickets for approver id " + this.form.value.id + ":";
             this.reloadChart();
           });

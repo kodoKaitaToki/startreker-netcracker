@@ -14,22 +14,6 @@ public enum BundleQueries {
 
     SELECT_BY_ID(SELECT_ALL_BUNDLES + " WHERE bundle_id = ?"),
 
-    INSERT_BUNDLE("INSERT INTO bundle ( "
-                  + "start_date, "
-                  + "finish_date, "
-                  + "bundle_price, "
-                  + "bundle_description, "
-                  + "bundle_photo "
-                  + " ) VALUES ( ?, ?, ?, ?, ?);"),
-
-    UPDATE_BUNDLE("UPDATE bundle "
-                  + "SET start_date   = ?, "
-                  + "    finish_date  = ?, "
-                  + "    bundle_price = ?, "
-                  + "    bundle_description = ?, "
-                  + "    bundle_photo = ? "
-                  + "WHERE bundle_id = ?;"),
-
     DELETE_BUNDLE("DELETE FROM bundle WHERE bundle_id = ?;"),
 
     COUNT_BUNDLES("SELECT count(*) FROM bundle"),

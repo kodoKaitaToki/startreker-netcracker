@@ -22,14 +22,8 @@ import java.io.IOException;
 @Primary // override default production auth filter
 public class DebugJwtAuthFilter extends AuthFilter {
 
-    private final JwtAuthFilter authFilter;
-    private final UserService userService;
-
-    @Autowired
-    public DebugJwtAuthFilter(@Qualifier("ProductionAuthFilter") JwtAuthFilter authFilter, UserService userService) {
-        this.authFilter = authFilter;
-        this.userService = userService;
-    }
+    private JwtAuthFilter authFilter;
+    private UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -55,5 +49,15 @@ public class DebugJwtAuthFilter extends AuthFilter {
             filterChain.doFilter(request, response);
         }
 
+    }
+
+    @Autowired
+    public void setAuthFilter(JwtAuthFilter authFilter) {
+        this.authFilter = authFilter;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 }

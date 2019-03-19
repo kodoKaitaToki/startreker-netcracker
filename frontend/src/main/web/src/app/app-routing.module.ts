@@ -6,6 +6,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { RegistrationComponent } from './pages/registration/registration.component';
 import { RecoveryComponent } from './pages/recovery/recovery.component'
 import { Role } from './guards/role';
+import { ConfirmMessageComponent } from './pages/confirm-message/confirm-message.component';
+import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
 
 import { AuthGuard } from './guards/auth.guard';
 
@@ -15,29 +17,31 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent},
   { path: 'sign-up', component: RegistrationComponent},
   { path: 'password-recovery', component: RecoveryComponent},
+  { path: 'confirm', component: ConfirmMessageComponent},
+  { path: 'in-design', component: ComingSoonComponent },
   { path: 'admin',
     loadChildren: './pages/admin/admin.module#AdminModule',
 
     //IMPORTANT! Lines below should be uncommented later to activate Auth guard
 
-    // canActivate: [AuthGuard],
-    // data: {roles: [Role.Admin]}
+    canActivate: [AuthGuard],
+    data: {roles: Role.Admin}
   },
   { path: 'carrier',
     loadChildren: './pages/carrier/carrier.module#CarrierModule',
 
     //IMPORTANT! Lines below should be uncommented later to activate Auth guard
 
-    // canActivate: [AuthGuard],
-    // data: {roles: [Role.Carrier]}
+    canActivate: [AuthGuard],
+    data: {roles: Role.Carrier}
   },
   { path: 'approver',
     loadChildren: './pages/approver/approver.module#ApproverModule',
 
     //IMPORTANT! Lines below should be uncommented later to activate Auth guard
 
-    // canActivate: [AuthGuard],
-    // data: {roles: [Role.Carrier]}
+    canActivate: [AuthGuard],
+    data: {roles: Role.Approver}
   },
   { path: '**', redirectTo: '/notFound'}
 ];

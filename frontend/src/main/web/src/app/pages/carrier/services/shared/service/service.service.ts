@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Api} from '../../../../../modules/api';
+import {Api, HttpOptionsAuthorized} from '../../../../../modules/api';
 
 import {Service} from '../model/service.model';
 
@@ -14,29 +14,29 @@ export class ServiceService{
     }
 
     public getAllServices(){
-        return this.http.get<any>(Api.service.services());
+        return this.http.get<any>(Api.service.services(), HttpOptionsAuthorized);
     }
 
-    public getPaginServices<Service>(from:Number, number: Number): Observable<Service>{
+    public getPaginServices(from:Number, number: Number){
         let url = Api.service.paginServices() + '?from=' + from + '&number=' + number;
-        return this.http.get<any>(url);
+        return this.http.get<any>(url, HttpOptionsAuthorized);
     }
 
-  public getServiceByStatus<Service>(status: String): Observable<Service> {
+  public getServiceByStatus(status: String){
         let url = Api.service.servicesByStatus() + '?status=' + status;
-        return this.http.get<any>(url);
+        return this.http.get<any>(url, HttpOptionsAuthorized);
     }
 
-    public addService<T>(service: Service): Observable<T>{
-        return this.http.post<T>(Api.service.services(), service);
+    public addService(service: Service){
+        return this.http.post<any>(Api.service.services(), service, HttpOptionsAuthorized);
     }
 
-    public deleteService<T>(id: Number): Observable<T>{
+    public deleteService(id: Number){
         let url = Api.carrier.carriers() + '/' + id;
-        return this.http.delete<T>(url);
+        return this.http.delete(url, HttpOptionsAuthorized);
     }
 
-    public updateService<T>(service: Service): Observable<T>{
-        return this.http.put<T>(Api.service.services(), service);
+    public updateService(service: Service){
+        return this.http.put<any>(Api.service.services(), service, HttpOptionsAuthorized);
     }
 }

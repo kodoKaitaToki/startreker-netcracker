@@ -3,8 +3,11 @@ import * as CanvasJS from '../../canvasjs.min';
 
 import { FormGroup, FormControl } from '@angular/forms';
 import {formatDate} from '@angular/common';
+import { clone } from 'ramda';
 
 import { DashboardDeltaService } from '../dashboard-delta.service';
+import {checkToken} from "../../../../modules/api/index";
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-dashboard-delta',
@@ -33,20 +36,40 @@ export class DashboardDeltaComponent implements OnInit {
     let fromDateFormatted: string = formatDate(this.form.value.fromDate, 'yyyy-MM-dd', 'en');
     let toDateFormatted: string = formatDate(this.form.value.toDate, 'yyyy-MM-dd', 'en');
 
-    this.dashboardDeltaService.getUsersIncreasingPerPeriod(fromDateFormatted, toDateFormatted).subscribe(data => {
-      this.userMap = data;
-      this.reloadCharts();
+    this.dashboardDeltaService.getUsersIncreasingPerPeriod(fromDateFormatted, toDateFormatted)
+      .subscribe((resp: HttpResponse<any>) => {
+        checkToken(resp.headers);
+        let body = resp.body
+        this.userMap = this.convertBodyToMap(resp);
+        this.reloadCharts();
     });
 
-    this.dashboardDeltaService.getCarriersIncreasingPerPeriod(fromDateFormatted, toDateFormatted).subscribe(data => {
-      this.carrierMap = data;
-      this.reloadCharts();
+    this.dashboardDeltaService.getCarriersIncreasingPerPeriod(fromDateFormatted, toDateFormatted)
+      .subscribe((resp: HttpResponse<any>) => {
+        checkToken(resp.headers);
+        this.carrierMap = this.convertBodyToMap(resp);
+        this.reloadCharts();
     });
 
-    this.dashboardDeltaService.getLocationsIncreasingPerPeriod(fromDateFormatted, toDateFormatted).subscribe(data => {
-      this.locationsMap = data;
-      this.reloadCharts();
+    this.dashboardDeltaService.getLocationsIncreasingPerPeriod(fromDateFormatted, toDateFormatted)
+      .subscribe((resp: HttpResponse<any>) => {
+        checkToken(resp.headers);
+        this.locationsMap = this.convertBodyToMap(resp);
+        this.reloadCharts();
     });
+  }
+
+  convertBodyToMap(resp: HttpResponse<any>) : Map<any, any> {
+    let map = new Map();
+    for (let key of Object.keys(resp.body)) {
+      map.set(new Date(key), resp.body[key]);
+    }
+    map = new Map([...map.entries()].sort(function compare(a, b) {
+      var dateA = new Date(a[0]);
+      var dateB = new Date(b[0]);
+      return dateA.getTime() - dateB.getTime();
+    }));
+    return map;
   }
 
   setToWeek() {
