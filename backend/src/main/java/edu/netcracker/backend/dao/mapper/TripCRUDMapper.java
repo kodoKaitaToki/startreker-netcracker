@@ -13,19 +13,11 @@ import java.sql.SQLException;
 
 public class TripCRUDMapper implements RowMapper<Trip> {
 
-    private final TripStateRegistry tripStateRegistry;
-
-    @Autowired
-    public TripCRUDMapper(TripStateRegistry tripStateRegistry) {
-        this.tripStateRegistry = tripStateRegistry;
-    }
-
     @Override
     public Trip mapRow(ResultSet rs, int i) throws SQLException {
         Trip trip = new Trip();
 
         trip.setTripId(rs.getLong("trip_id"));
-        trip.setTripState(tripStateRegistry.getState(rs.getInt("trip_status")));
         trip.setDepartureDate(rs.getTimestamp("departure_date")
                                 .toLocalDateTime());
         trip.setArrivalDate(rs.getTimestamp("arrival_date")

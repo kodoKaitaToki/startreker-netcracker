@@ -4,11 +4,14 @@ import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.dao.TripDAO;
 import edu.netcracker.backend.dao.TripReplyDAO;
 import edu.netcracker.backend.dao.UserDAO;
+import edu.netcracker.backend.dao.mapper.TripCRUDMapper;
 import edu.netcracker.backend.dao.mapper.TripMapper;
 import edu.netcracker.backend.dao.mapper.TripReplyMapper;
 import edu.netcracker.backend.dao.mapper.TripWithArrivalAndDepartureDataMapper;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.TripWithArrivalAndDepartureData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -26,12 +29,17 @@ import java.util.stream.Collectors;
 public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
 
     private TicketClassDAO ticketClassDAO;
+
     private final String FIND_ALL_TICKET_TRIPS = "SELECT class_id FROM ticket_class WHERE trip_id = ?";
 
     private final UserDAO userDAO;
+
     private final TripMapper tripMapper;
+
     private final TripReplyMapper tripReplyMapper;
+
     private final String findAllByCarrierId = "SELECT * FROM trip WHERE carrier_id = ?";
+
     private final String findAll = "SELECT * FROM trip";
 
     @Value("${SELECT_FULL}")
@@ -77,10 +85,27 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     @Value("${SELECT_BY_STATUS}")
     private String SELECT_BY_STATUS;
 
+    private final Logger logger = LoggerFactory.getLogger(TripDAOImpl.class);
+
+    private String PAGINATION = "LIMIT ? OFFSET ?";
+
+    private String FIND_ALL_TRIPS = "SELECT trip_id, carrier_id, trip_status, "
+                                    + "ds.spaceport_id AS departure_spaceport_id, ds.spaceport_name AS departure_spaceport_name, "
+                                    + "dp.planet_id AS departure_planet_id, dp.planet_name AS departure_planet_name, departure_date, "
+                                    + "ars.spaceport_id AS arrival_spaceport_id, ars.spaceport_name AS arrival_spaceport_name, "
+                                    + "arp.planet_id AS arrival_planet_id, arp.planet_name AS arrival_planet_name, arrival_date, "
+                                    + "trip_photo, approver_id, t.creation_date "
+                                    + "FROM trip as t "
+                                    + "INNER JOIN spaceport AS ds ON ds.spaceport_id = t.departure_id "
+                                    + "INNER JOIN planet AS dp ON dp.planet_id = ds.planet_id "
+                                    + "INNER JOIN spaceport AS ars ON ars.spaceport_id = t.arrival_id "
+                                    + "INNER JOIN planet AS arp ON arp.planet_id = ars.planet_id ";
+
     @Autowired
     public TripDAOImpl(TicketClassDAO ticketClassDAO,
                        UserDAO userDAO,
-                       TripMapper tripMapper, TripReplyMapper tripReplyMapper) {
+                       TripMapper tripMapper,
+                       TripReplyMapper tripReplyMapper) {
         this.ticketClassDAO = ticketClassDAO;
         this.userDAO = userDAO;
         this.tripMapper = tripMapper;
@@ -125,6 +150,65 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     @Override
     public List<Trip> findAllByStatus(Integer status, Long offset, Long limit) {
         return findAndAttach(SELECT_BY_STATUS, new Object[]{status, offset, limit});
+    }
+
+    @Override
+    public List<Trip> getAllTripsForUser(String departurePlanet,
+                                         String departureSpaceport,
+                                         String departureDate,
+                                         String arrivalPlanet,
+                                         String arrivalSpaceport,
+                                         Integer limit,
+                                         Integer offset) {
+        List<Trip> trips = new ArrayList<>();
+
+        List<Object> objects = new ArrayList<>();
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(FIND_ALL_TRIPS)
+               .append("WHERE trip_status = 4 ");
+
+        if (departurePlanet != null) {
+            logger.debug("Getting all from planet {}");
+            objects.add(departurePlanet.toLowerCase());
+            builder.append("AND LOWER(dp.planet_name) = ? ");
+        }
+
+        if (departureSpaceport != null) {
+            logger.debug("Getting all from port {}");
+            objects.add(departureSpaceport.toLowerCase());
+            builder.append("AND LOWER(ds.spaceport_name) = ? ");
+        }
+
+        if (arrivalPlanet != null) {
+            logger.debug("Getting all to planet {}");
+            objects.add(arrivalPlanet.toLowerCase());
+            builder.append("AND LOWER(arp.planet_name) = ? ");
+        }
+
+        if (arrivalSpaceport != null) {
+            logger.debug("Getting all to port {}");
+            objects.add(arrivalSpaceport.toLowerCase());
+            builder.append("AND LOWER(ars.spaceport_name) = ? ");
+        }
+
+        if (departureDate != null) {
+            logger.debug("Getting all ON {}");
+            objects.add(departureDate);
+            builder.append("AND TO_CHAR(departure_date, 'YYYY-MM-DD') = ? ");
+        }
+
+        builder.append(PAGINATION);
+
+        objects.add(limit);
+        objects.add(offset);
+
+        trips.addAll(getJdbcTemplate().query(builder.toString(), objects.toArray(), new TripCRUDMapper()));
+
+        logger.debug("Attaching ticket classes to trip");
+        trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findByTripId(trip.getTripId())));
+
+        return trips;
     }
 
     private List<Trip> findAndAttach(String sql, Object[] data) {

@@ -123,7 +123,25 @@ public class TripServiceImpl implements TripService {
                                                  String arrivalSpaceport,
                                                  Integer limit,
                                                  Integer offset) {
-        return null;
+        logger.debug("Getting all trips for user from TripDAO");
+        List<Trip> trips = tripDAO.getAllTripsForUser(departurePlanet,
+                                                      departureSpaceport,
+                                                      departureDate,
+                                                      arrivalPlanet,
+                                                      arrivalSpaceport,
+                                                      limit,
+                                                      offset);
+        logger.debug("Remove ticket classes where all tickets are sold");
+        for (Trip trip : trips) {
+            trip.getTicketClasses()
+                .removeIf(ticketClass -> ticketClass.getRemainingSeats() == 0);
+        }
+        logger.debug("Remove trip where all tickets are sold");
+        trips.removeIf(trip -> trip.getTicketClasses()
+                                   .isEmpty());
+        return trips.stream()
+                .map(ReadTripsDTO::from)
+                .collect(Collectors.toList());
     }
 
     private Trip updateTrip(User requestUser, Trip trip, TripRequest tripRequest) {
