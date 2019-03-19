@@ -1,9 +1,7 @@
 package edu.netcracker.backend.controller;
 
-import edu.netcracker.backend.message.request.PendingActivationService;
-import edu.netcracker.backend.message.request.PendingActivationTrip;
-import edu.netcracker.backend.model.Planet;
-import edu.netcracker.backend.model.Spaceport;
+import edu.netcracker.backend.message.request.ServicePendingActivationDto;
+import edu.netcracker.backend.message.request.TripPendingActivationDto;
 import edu.netcracker.backend.service.impl.ServicePendingSrvc;
 import edu.netcracker.backend.service.impl.TripPendingSrvc;
 import org.junit.Before;
@@ -28,21 +26,21 @@ public class PendingTripServiceControllerTest {
     @Mock
     private TripPendingSrvc tripPendingSrvc;
 
-    private List<PendingActivationTrip> pendingActivationTripList;
+    private List<TripPendingActivationDto> tripPendingActivationDtoList;
 
-    private List<PendingActivationService> expectedPendingActivationServicesListQueryLimit_1;
+    private List<ServicePendingActivationDto> expectedServicesListQueryLimit_1PendingActivationDto;
 
-    private List<PendingActivationService> expectedPendingActivationServicesListQueryLimit_2;
+    private List<ServicePendingActivationDto> expectedServicesListQueryLimit_2PendingActivationDto;
 
-    private List<PendingActivationService> expectedPendingActivationServicesListQueryLimit_1_Offset_1;
+    private List<ServicePendingActivationDto> expectedServicesListQueryLimit_1_Offset_1PendingActivationDto;
 
 
     @Before
     public void init() {
 
-        PendingActivationTrip pendingActivationTrip = PendingActivationTrip.builder()
+        TripPendingActivationDto tripPendingActivationDto = TripPendingActivationDto.builder()
                 .tripID(14)
-                .tripStatus("1")
+                .tripStatus(1)
                 .arrivalDate("2019-03-13 00:12:00.000000")
                 .departureDate("2019-03-14 23:04:00.000000")
                 .creationDate("2019-03-12 12:03:38.853000")
@@ -58,13 +56,13 @@ public class PendingTripServiceControllerTest {
                 .arrivalSpaceportName("erat")
                 .build();
 
-        pendingActivationTripList = Arrays.asList(pendingActivationTrip);
+        tripPendingActivationDtoList = Arrays.asList(tripPendingActivationDto);
 
-        PendingActivationService firstPendingActivationService = PendingActivationService.builder()
+        ServicePendingActivationDto firstServicePendingActivationDto = ServicePendingActivationDto.builder()
                 .serviceId(12)
                 .serviceName("new_service")
                 .serviceDescr("sapien urna pretium nisl ut volutpat sapien arcu sed augue aliquam")
-                .serviceStatus("1")
+                .serviceStatus(1)
                 .creationDate("2019-03-05 10:57:01.026000")
                 .approverName(null)
                 .approverEmail(null)
@@ -74,11 +72,11 @@ public class PendingTripServiceControllerTest {
                 .carrierTel("2111984543")
                 .build();
 
-        PendingActivationService secondPendingActivationService = PendingActivationService.builder()
+        ServicePendingActivationDto secondServicePendingActivationDto = ServicePendingActivationDto.builder()
                 .serviceId(20)
                 .serviceName("draft")
                 .serviceDescr("draft_description")
-                .serviceStatus("1")
+                .serviceStatus(1)
                 .creationDate("2019-03-05 11:48:14.627000")
                 .approverName(null)
                 .approverEmail(null)
@@ -88,27 +86,27 @@ public class PendingTripServiceControllerTest {
                 .carrierTel("2111984543")
                 .build();
 
-        expectedPendingActivationServicesListQueryLimit_1 = Arrays.asList(firstPendingActivationService);
-        expectedPendingActivationServicesListQueryLimit_2 = Arrays.asList(firstPendingActivationService, secondPendingActivationService);
-        expectedPendingActivationServicesListQueryLimit_1_Offset_1 = Arrays.asList(secondPendingActivationService);
+        expectedServicesListQueryLimit_1PendingActivationDto = Arrays.asList(firstServicePendingActivationDto);
+        expectedServicesListQueryLimit_2PendingActivationDto = Arrays.asList(firstServicePendingActivationDto, secondServicePendingActivationDto);
+        expectedServicesListQueryLimit_1_Offset_1PendingActivationDto = Arrays.asList(secondServicePendingActivationDto);
     }
 
     @Test
     public void getServicesLimitOffset() {
 
-        when(servicePendingSrvc.getPendingWithOffsetAndLimit(1, 0)).thenReturn(expectedPendingActivationServicesListQueryLimit_1);
-        when(servicePendingSrvc.getPendingWithOffsetAndLimit(2, 0)).thenReturn(expectedPendingActivationServicesListQueryLimit_2);
-        when(servicePendingSrvc.getPendingWithOffsetAndLimit(1, 1)).thenReturn(expectedPendingActivationServicesListQueryLimit_1_Offset_1);
+        when(servicePendingSrvc.getPendingWithOffsetAndLimit(1, 0)).thenReturn(expectedServicesListQueryLimit_1PendingActivationDto);
+        when(servicePendingSrvc.getPendingWithOffsetAndLimit(2, 0)).thenReturn(expectedServicesListQueryLimit_2PendingActivationDto);
+        when(servicePendingSrvc.getPendingWithOffsetAndLimit(1, 1)).thenReturn(expectedServicesListQueryLimit_1_Offset_1PendingActivationDto);
 
-        assertEquals(servicePendingSrvc.getPendingWithOffsetAndLimit(1, 0), expectedPendingActivationServicesListQueryLimit_1);
-        assertEquals(servicePendingSrvc.getPendingWithOffsetAndLimit(2, 0), expectedPendingActivationServicesListQueryLimit_2);
-        assertEquals(servicePendingSrvc.getPendingWithOffsetAndLimit(1, 1), expectedPendingActivationServicesListQueryLimit_1_Offset_1);
+        assertEquals(servicePendingSrvc.getPendingWithOffsetAndLimit(1, 0), expectedServicesListQueryLimit_1PendingActivationDto);
+        assertEquals(servicePendingSrvc.getPendingWithOffsetAndLimit(2, 0), expectedServicesListQueryLimit_2PendingActivationDto);
+        assertEquals(servicePendingSrvc.getPendingWithOffsetAndLimit(1, 1), expectedServicesListQueryLimit_1_Offset_1PendingActivationDto);
     }
 
     @Test
     public void getTripsLimitOffset() {
 
-        when(tripPendingSrvc.getPendingWithOffsetAndLimit(1, 0)).thenReturn(pendingActivationTripList);
-        assertEquals(tripPendingSrvc.getPendingWithOffsetAndLimit(1, 0), pendingActivationTripList);
+        when(tripPendingSrvc.getPendingWithOffsetAndLimit(1, 0)).thenReturn(tripPendingActivationDtoList);
+        assertEquals(tripPendingSrvc.getPendingWithOffsetAndLimit(1, 0), tripPendingActivationDtoList);
     }
 }

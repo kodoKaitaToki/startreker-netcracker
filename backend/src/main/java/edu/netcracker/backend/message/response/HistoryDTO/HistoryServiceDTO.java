@@ -2,8 +2,9 @@ package edu.netcracker.backend.message.response.HistoryDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.netcracker.backend.model.history.HistoryService;
+import lombok.Data;
 
-//This class is a stub. It will be redesigned based on FE requirements
+@Data
 public class HistoryServiceDTO {
 
     @JsonProperty("bought_services_name")

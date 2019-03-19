@@ -2,13 +2,10 @@ package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.dao.mapper.history.HistoryServiceMapper;
-import edu.netcracker.backend.model.Service;
 import edu.netcracker.backend.dao.mapper.ServiceMapper;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
-import edu.netcracker.backend.model.TicketClass;
 import edu.netcracker.backend.model.history.HistoryService;
-import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

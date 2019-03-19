@@ -31,7 +31,7 @@
       <div class="card text-center">
         <div class="card-header">
           <h5 class="text-center">
-            {{currentService.serviceStatus}}
+            {{currentService.serviceStatus | statePipe: currentService.serviceStatus}}
           </h5>
         </div>
         <div class="card-body">
@@ -64,7 +64,7 @@
           <div class="row">
             <div class="col-6">
               <div class="card-body"
-                   *ngIf="currentPendingService === currentService && currentService.approverName !== ''"
+                   *ngIf="currentPendingService === currentService && currentService.approverName !== null"
               >
                 <hr>
                 <h5>Approver</h5>
@@ -77,7 +77,7 @@
                 </h6>
               </div>
               <div class="card-body"
-                   *ngIf="currentPendingService === currentService && currentService.approverName === ''"
+                   *ngIf="currentPendingService === currentService && currentService.approverName === null"
               >
                 <hr>
                 <h5>Approver</h5>
@@ -88,7 +88,7 @@
             </div>
             <div class="col-6">
               <div class="card-body"
-                   *ngIf="currentPendingService === currentService && currentService.carrierName !== ''"
+                   *ngIf="currentPendingService === currentService && currentService.carrierName !== null"
               >
                 <hr>
                 <h5>Carrier</h5>
@@ -102,7 +102,7 @@
               </div>
 
               <div class="card-body"
-                   *ngIf="currentPendingService === currentService && currentService.carrierName === ''"
+                   *ngIf="currentPendingService === currentService && currentService.carrierName === null"
               >
                 <hr>
                 <h5>Carrier</h5>
