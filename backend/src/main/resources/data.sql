@@ -290,8 +290,6 @@ insert into BUNDLE_SERVICE (BUNDLE_ID, P_SERVICE_ID, ITEM_NUMBER) values (2, 2, 
 insert into BUNDLE_SERVICE (BUNDLE_ID, P_SERVICE_ID, ITEM_NUMBER) values (1, 1, 1);
 insert into BUNDLE_SERVICE (BUNDLE_ID, P_SERVICE_ID, ITEM_NUMBER) values (1, 2, 1);
 
-insert into SCHEDULE (TRIP_ID, START_DATE, FINISH_DATE, INTERVAL, CREATION_DATE) values (4, '2014-08-03', '2020-08-03', 365, '2014-08-02');
-
 insert into REPORT (REPORTER_ID, APPROVER_ID, TRIP_ID, STATUS, REPORT_RATE, REPORT_TEXT, CREATION_DATE) values (15, null, 7, 1, null, 'donec posuere metus vitae ipsum aliquam non mauris morbi non lectus aliquam sit', '2018-12-09');
 insert into REPORT (REPORTER_ID, APPROVER_ID, TRIP_ID, STATUS, REPORT_RATE, REPORT_TEXT, CREATION_DATE) values (35, 2, 7, 2, null, 'amet turpis elementum ligula vehicula consequat morbi a ipsum integer a nibh in quis justo', '2019-01-25');
 insert into REPORT (REPORTER_ID, APPROVER_ID, TRIP_ID, STATUS, REPORT_RATE, REPORT_TEXT, CREATION_DATE) values (36, 2, 6, 3, null, 'duis bibendum morbi non quam nec dui luctus rutrum nulla tellus in sagittis dui vel nisl duis ac nibh', '2018-12-28');
