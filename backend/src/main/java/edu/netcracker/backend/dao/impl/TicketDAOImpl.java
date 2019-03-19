@@ -31,13 +31,18 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
         this.namedTemplate = namedTemplate;
     }
 
-    private final Logger logger = LoggerFactory.getLogger(TicketDAOImpl.class);
-
     private NamedParameterJdbcTemplate namedTemplate;
 
     @Value("${FIND_ALL_BY_CLASS}")
     private String FIND_ALL_BY_CLASS;
 
+    private final String CREATE_EMPTY_TICKET_FOR_TICKET_CLASS = "INSERT INTO ticket (class_id, seat) VALUES (?, ?)";
+
+    private final String FIND_REMAINING_SEATS = "SELECT COUNT(ticket_id) FROM ticket WHERE class_id = ? AND passenger_id IS NULL";
+
+    private final String DELETE_ALL_TICKETS_OF_TICKET_CLASS = "DELETE FROM ticket WHERE class_id = ?";
+
+    private static final Logger logger = LoggerFactory.getLogger(TicketDAOImpl.class);
     private final static String FIND_ALL_BY_USER = "SELECT t.ticket_id, t.seat, t.end_price, t.purchase_date, "
                                                    + "tc.class_name, tr.departure_date, tr.arrival_date, "
                                                    + "sd.spaceport_name, sa.spaceport_name, pa.planet_name, "
@@ -69,6 +74,40 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
         }
 
         return tickets;
+    }
+
+    /**
+     * Method for deleting all tickets of specified ticket class
+     *
+     * @param id - id of ticket class for which tickets have to be deleted
+     */
+    @Override
+    public void deleteAllTicketsOfTicketClass(Long id) {
+        getJdbcTemplate().update(DELETE_ALL_TICKETS_OF_TICKET_CLASS, id);
+    }
+
+    /**
+     * Method for adding to database empty tickets (tickets which are not purchased)
+     *
+     * @param classId - id of ticket class for which tickets are created
+     * @param seat    - seat number
+     */
+    @Override
+    public void createEmptyTicketForTicketClass(Long classId, Long seat) {
+        logger.debug("Adding to database empty ticket with seat number {} for ticket class with id {}", seat, classId);
+        getJdbcTemplate().update(CREATE_EMPTY_TICKET_FOR_TICKET_CLASS, classId, seat);
+    }
+
+    /**
+     * Method for getting amount of remaining seats for specified ticket class
+     *
+     * @param classId - id of ticket class for which remaining seats have to be found
+     * @return - number of remaining seats
+    **/
+    @Override
+    public Integer getRemainingSeatsForClass(Long classId) {
+        logger.debug("Getting amount of remaining seats for ticket class with id {}", classId);
+        return getJdbcTemplate().queryForObject(FIND_REMAINING_SEATS, new Object[]{classId}, Integer.class);
     }
 
     @Override

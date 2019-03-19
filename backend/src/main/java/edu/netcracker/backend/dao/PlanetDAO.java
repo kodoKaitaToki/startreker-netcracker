@@ -10,6 +10,10 @@ public interface PlanetDAO {
 
     Optional<Planet> find(Number id);
 
+    List<Planet> findAllPlanets();
+
+    Long getIdByPlanetName(String planet);
+
     void delete(Planet planet);
 
     List<Planet> getAllPlanets();

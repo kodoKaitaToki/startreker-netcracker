@@ -19,23 +19,17 @@ export class TroubleStatisticsService {
     this.actionUrl = Api.baseUrl + 'api/v1/trouble/statistics';
   }
 
-  public getStatistic<T>(): Observable<T>{
+  public getStatistic(): Observable<any>{
       /*let headers = new HttpHeaders();
       headers.append('Content-Type', 'application/json');*/
 
-      return this.http.get<any>(this.actionUrl, HttpOptionsAuthorized)
-        .pipe(map(res => {
-          return res.body.amount;
-        }))
+      return this.http.get<any>(this.actionUrl, HttpOptionsAuthorized);
   }
 
-  public getStatisticForApprover<T>(id: number): Observable<T>{
+  public getStatisticForApprover(id: number): Observable<any>{
       /*let headers = new HttpHeaders();
       headers = headers.append('Content-Type', 'application/json');*/
 
-      return this.http.get<any>(this.actionUrl + "/" + id, HttpOptionsAuthorized)
-        .pipe(map(res => {
-          return res.body.amount;
-        }))
+      return this.http.get<any>(this.actionUrl + "/" + id, HttpOptionsAuthorized);
   }
 }

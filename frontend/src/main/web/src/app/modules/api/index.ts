@@ -4,8 +4,8 @@ let baseUrl;
 const apiPort = ':80/'
 //const apiPort = '/'
 
-//baseUrl = `https://startreker-netcracker.herokuapp.com${apiPort}`
-baseUrl = `http://127.0.0.1${apiPort}`
+// baseUrl = `http://startreker-netcracker.herokuapp.com${apiPort}`
+baseUrl = `http://localhost${apiPort}`
 
 export const HttpOptions = {
   headers: new HttpHeaders({
@@ -72,10 +72,39 @@ const bundles = {
     return `${baseUrl}api/v1/admin/carrier-by-username?username=`;
   } */
 }
+const trips = {
+  getExistingPlanets() {
+    return `${baseUrl}api/v1/planets`;
+  },
+  addTrip() {
+    return `${baseUrl}api/v1/trips`;
+  },
+  updateTrip(id) {
+    return `${baseUrl}api/v1/trips/${id}`
+  },
+  getAllTrips() {
+    return `${baseUrl}api/v1/trips`;
+  },
+  getCarrierTrips() {
+    return `${baseUrl}api/v1/carrier/trips`;
+  },
+  addTicketClass() {
+    return `${baseUrl}api/v1/ticket-class`;
+  },
+  deleteTicketClass(id) {
+    return `${baseUrl}api/v1/ticket-class/${id}`;
+  }
+ }
 
 const costDash = {
   getCosts(){
     return `${baseUrl}api/v1/admin/costs`;
+  }
+}
+
+const possibleServices = {
+  possibleServices(){
+    return `${baseUrl}api/v1/possible-services`;
   }
 }
 
@@ -117,8 +146,10 @@ export const Api = {
   carrier,
   costDash,
   baseUrl,
-  service,
+  service, 
+  possibleServices,
   trip,
+  trips,
   landing
 }
 

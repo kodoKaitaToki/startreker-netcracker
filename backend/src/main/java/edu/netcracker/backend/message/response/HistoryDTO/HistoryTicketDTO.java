@@ -34,8 +34,8 @@ public class HistoryTicketDTO {
 
     public static HistoryTicketDTO from(HistoryTicket historyTicket) {
         HistoryTicketDTO htd = new HistoryTicketDTO();
-        htd.ticketId = historyTicket.getTicketId();
-        htd.seat = historyTicket.getSeat();
+        htd.ticketId = historyTicket.getTicketId().intValue();
+        htd.seat = historyTicket.getSeat().intValue();
         htd.endPrice = historyTicket.getEndPrice();
         htd.purchaseDate = historyTicket.getPurchaseDate()
                                         .format(DateTimeFormatter.ofPattern(datePattern));

@@ -35,7 +35,6 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -118,8 +117,7 @@ public class CarrierRESTTest {
     public void getCarrierByEmailTestWithAbsentEmail() throws Exception {
         String actual = getResponse("/api/v1/admin/carrier-by-email?email=absentUserName@gmail.com",
                                     HttpMethod.GET,
-                                    null
-                                   );
+                                    null);
 
         actual = deleteNodes(actual, "timestamp");
 
@@ -211,8 +209,7 @@ public class CarrierRESTTest {
 
         List<User> users = userService.findByRangeIdWithRole(firstUser.getUserId(),
                                                              lastUser.getUserId(),
-                                                             AuthorityUtils.ROLE_CARRIER
-                                                            );
+                                                             AuthorityUtils.ROLE_CARRIER);
 
         List<UserDTO> userDTOS = users.stream()
                                       .map(UserDTO::from)
@@ -553,11 +550,8 @@ public class CarrierRESTTest {
     private String getResponse(String uri, HttpMethod httpMethod, String body) {
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(createURLWithPort(uri),
-                                                                httpMethod,
-                                                                entity,
-                                                                String.class
-                                                               );
+        ResponseEntity<String> response =
+                restTemplate.exchange(createURLWithPort(uri), httpMethod, entity, String.class);
 
         return response.getBody();
     }
@@ -590,64 +584,56 @@ public class CarrierRESTTest {
                                     "vitya@gmail.ua",
                                     "093",
                                     true,
-                                    Arrays.asList(AuthorityUtils.ROLE_USER, AuthorityUtils.ROLE_CARRIER)
-                                   ));
+                                    Arrays.asList(AuthorityUtils.ROLE_USER, AuthorityUtils.ROLE_CARRIER)));
 
         userService.save(createUser("aaaa",
                                     "1111111111",
                                     "a@gmail.com",
                                     "093",
                                     true,
-                                    Arrays.asList(AuthorityUtils.ROLE_USER, AuthorityUtils.ROLE_CARRIER)
-                                   ));
+                                    Arrays.asList(AuthorityUtils.ROLE_USER, AuthorityUtils.ROLE_CARRIER)));
 
         userService.save(createUser("bbbb",
                                     "1111111111",
                                     "b@gmail.com",
                                     "093",
                                     true,
-                                    Arrays.asList(AuthorityUtils.ROLE_USER)
-                                   ));
+                                    Arrays.asList(AuthorityUtils.ROLE_USER)));
 
         userService.save(createUser("cccc",
                                     "111111111",
                                     "c@gmail.com",
                                     "093",
                                     true,
-                                    Arrays.asList(AuthorityUtils.ROLE_USER)
-                                   ));
+                                    Arrays.asList(AuthorityUtils.ROLE_USER)));
 
         userService.save(createUser("dddd",
                                     "11111111",
                                     "d@gmail.com",
                                     "093",
                                     true,
-                                    Arrays.asList(AuthorityUtils.ROLE_USER, AuthorityUtils.ROLE_CARRIER)
-                                   ));
+                                    Arrays.asList(AuthorityUtils.ROLE_USER, AuthorityUtils.ROLE_CARRIER)));
 
         userService.save(createUser("eeee",
                                     "1111111",
                                     "e@gmail.com",
                                     "093",
                                     true,
-                                    Arrays.asList(AuthorityUtils.ROLE_USER, AuthorityUtils.ROLE_CARRIER)
-                                   ));
+                                    Arrays.asList(AuthorityUtils.ROLE_USER, AuthorityUtils.ROLE_CARRIER)));
 
         userService.save(createUser("ffff",
                                     "11111111",
                                     "f@gmail.com",
                                     "093",
                                     true,
-                                    Arrays.asList(AuthorityUtils.ROLE_USER, AuthorityUtils.ROLE_ADMIN)
-                                   ));
+                                    Arrays.asList(AuthorityUtils.ROLE_USER, AuthorityUtils.ROLE_ADMIN)));
 
         userService.save(createUser("admin",
                                     "admin123",
                                     "admin@gmail.com",
                                     "093",
                                     true,
-                                    Arrays.asList(AuthorityUtils.ROLE_USER, AuthorityUtils.ROLE_ADMIN)
-                                   ));
+                                    Arrays.asList(AuthorityUtils.ROLE_USER, AuthorityUtils.ROLE_ADMIN)));
 
         String body = "{\n" + "\"username\":\"admin\",\n" + "\"password\":\"admin123\"\n" + "}";
 
@@ -660,13 +646,11 @@ public class CarrierRESTTest {
         headers.add("Authorization",
                     rootNode.get("type")
                             .asText() + " " + rootNode.get("access_token")
-                                                      .asText()
-                   );
+                                                      .asText());
         headers.add("Authorization-Refresh",
                     rootNode.get("type")
                             .asText() + " " + rootNode.get("refresh_token")
-                                                      .asText()
-                   );
+                                                      .asText());
     }
 
     private User createUser(String userName, String password, String mail, String telephone, boolean isActivated,
@@ -685,8 +669,7 @@ public class CarrierRESTTest {
 
     private void executeScript(String scriptName) throws SQLException {
         ScriptUtils.executeSqlScript(dataSource.getConnection(),
-                                     new EncodedResource(new ClassPathResource(scriptName), StandardCharsets.UTF_8)
-                                    );
+                                     new EncodedResource(new ClassPathResource(scriptName), StandardCharsets.UTF_8));
     }
 
     private String deleteNodes(String json, String... nodeNames) throws IOException {

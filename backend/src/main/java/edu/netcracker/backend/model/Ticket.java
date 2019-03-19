@@ -16,16 +16,16 @@ import java.time.LocalDateTime;
 public class Ticket {
     @PrimaryKey("ticket_id")
     @EqualsAndHashCode.Include
-    private Integer ticketId;
+    private Long ticketId;
 
     @Attribute("passenger_id")
     private Integer passengerId;
 
     @Attribute("class_id")
-    private Integer classId;
+    private Long classId;
 
     @Attribute("seat")
-    private Integer seat;
+    private Long seat;
 
     @Attribute("end_price")
     private Float endPrice;

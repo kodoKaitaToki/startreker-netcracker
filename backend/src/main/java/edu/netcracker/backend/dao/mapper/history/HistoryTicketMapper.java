@@ -13,8 +13,8 @@ public class HistoryTicketMapper implements RowMapper<HistoryTicket> {
     public HistoryTicket mapRow(ResultSet resultSet, int i) throws SQLException {
         HistoryTicket ticket = new HistoryTicket();
         HistoryTrip trip = new HistoryTrip();
-        ticket.setTicketId(resultSet.getInt(1));
-        ticket.setSeat(resultSet.getInt(2));
+        ticket.setTicketId(resultSet.getLong(1));
+        ticket.setSeat(resultSet.getLong(2));
         ticket.setEndPrice(resultSet.getFloat(3));
         ticket.setPurchaseDate(resultSet.getTimestamp(4)
                                         .toLocalDateTime());

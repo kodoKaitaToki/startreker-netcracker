@@ -1,4 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { clone } from 'ramda';
 import { HttpResponse } from '@angular/common/http';
@@ -30,7 +31,7 @@ export class OpenComponent implements OnInit {
   }
 
   onAssign(service) {
-    service.service_status = 3;
+    service.service_status = "ASSIGNED";
 
     this.loadingService = service;
 
@@ -46,7 +47,7 @@ export class OpenComponent implements OnInit {
   }
 
   getServices() {
-    this.serviceService.getServicesForApprover(this.pageFrom, this.pageNumber, 2)
+    this.serviceService.getServicesForApprover(this.pageFrom, this.pageNumber, "OPEN")
     .subscribe((resp: HttpResponse<any>) => {
       checkToken(resp.headers);
       this.resetLoading();

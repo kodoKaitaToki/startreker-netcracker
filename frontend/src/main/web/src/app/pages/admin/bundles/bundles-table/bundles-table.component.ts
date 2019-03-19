@@ -1,11 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChildren, QueryList} from '@angular/core';
 import {Bundle} from '../shared/model/bundle';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {BundlesService} from "../shared/service/bundles.service";
 import {MessageService} from "primeng/api";
-import {HttpErrorResponse} from "@angular/common/http";
-import {Carrier} from '../../carrier/carrier';
-import {CarrierCrudService} from '../../carrier/carrier-crud.service';
+import {HttpErrorResponse, HttpResponse} from "@angular/common/http";
+import { clone } from 'ramda';
+import { Trip } from '../shared/model/trip';
+import { TicketClass } from '../shared/model/ticket-class';
+import { Service } from '../shared/model/service';
+import { BundlesFormComponent } from '../bundles-form/bundles-form.component';
+import { checkToken } from 'src/app/modules/api';
 
 
 @Component({
@@ -14,9 +17,7 @@ import {CarrierCrudService} from '../../carrier/carrier-crud.service';
              styleUrls: ['./bundles-table.component.scss']
            })
 export class BundlesTableComponent implements OnInit {
-  @Input() filterCriteria: string;
-
-  @Input() filterContent: string;
+  @ViewChildren(BundlesFormComponent) forms !: QueryList<BundlesFormComponent>;
 
   readonly pageNumber: number = 10;
 
@@ -26,24 +27,13 @@ export class BundlesTableComponent implements OnInit {
 
   bundles: Bundle[];
 
-  currentBundlesForUpdate: Bundle;
+  currentBundleForUpdate: Bundle;
 
-  isForUpdateAlertMessage = false;
-
-  isEditButtonBlockedAfterSubmit = true;
-
-  form: FormGroup;
-
-  @Output() onUpdateDataNotifier = new EventEmitter();
-
-  @Output() onDeleteDataNotifier = new EventEmitter();
-
-  @Output() update = new EventEmitter<number>();
+  currentBundleToHideId: number;
 
   constructor(
     private bundlesSrvc: BundlesService,
-    private messageService: MessageService,
-    private carrierSrvc: CarrierCrudService) {
+    private messageService: MessageService,) {
 
   }
 
@@ -51,97 +41,64 @@ export class BundlesTableComponent implements OnInit {
     this.pageFrom = 0;
 
     this.getAllBundles();
-
-    this.setFormInDefault();
   }
 
-  setFormInDefault() {
-
-    this.form = new FormGroup(
-      {
-        start_date: new FormControl('', Validators.required),
-        finish_date: new FormControl('', Validators.required),
-        price: new FormControl('', [Validators.required, Validators.min(0)]),
-        description: new FormControl(''),
-        trips: new FormControl(''),
-      }
-    );
+  onBundleUpdate(onClickedBundleForUpdate) {
+    this.currentBundleForUpdate = onClickedBundleForUpdate;
+    let bundleFormComponent: BundlesFormComponent;
+    bundleFormComponent =  this.forms.find(b => {
+      return b.bundleId == this.currentBundleForUpdate.id;
+    });
+    bundleFormComponent.onBundleUpdate(this.currentBundleForUpdate);
+    //bundleFormComponent.onBundleUpdate(this.currentBundleForUpdate);
   }
 
-  onBundlesUpdate(onClickedBundlesForUpdate) {
-
-    this.isEditButtonBlockedAfterSubmit = true;
-
-    this.currentBundlesForUpdate = onClickedBundlesForUpdate;
-
-    this.form.patchValue({
-                           start_date: this.currentBundlesForUpdate.start_date,
-                           finish_date: this.currentBundlesForUpdate.finish_date,
-                           price: this.currentBundlesForUpdate.bundle_price,
-                           description: this.currentBundlesForUpdate.bundle_description,
-                           trips : this.currentBundlesForUpdate.bundle_trips,
-                         });
+  cancelUpdate() {
+    this.currentBundleForUpdate = undefined;
   }
 
-  onBundlesDelete(onClickedBundlesForDelete) {
-
-    this.onDeleteDataNotifier.emit((BundlesTableComponent.deleteUnnecessaryFieldAfterClick(onClickedBundlesForDelete)));
-  }
-
-  onSubmitUpdate() {
-
-    this.isEditButtonBlockedAfterSubmit = false;
-    this.isForUpdateAlertMessage = true;
-
-    this.form.value.id = this.currentBundlesForUpdate.id;
-
-    this.onUpdateDataNotifier.emit(this.form.value);
-    this.closeUpdateForm();
-  }
-
-  static deleteUnnecessaryFieldAfterClick(bundles): Bundle {
-    delete bundles['id'];
-    delete bundles['start_date'];
-
-    return bundles;
-  }
-
-  closeUpdateForm() {
-    this.currentBundlesForUpdate = null;
-    this.isForUpdateAlertMessage = false;
-  }
-
-  getBundlesForUpdate(bundles) {
-
-    this.bundlesSrvc.putBundles(bundles)
-    .subscribe(() => {
+  onPut(bundle) {
+    this.currentBundleToHideId = bundle.id;
+    console.log("Putting bundle");
+    console.log(bundle);
+    this.bundlesSrvc.putBundle(bundle)
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
       this.showMessage(this.createMessage('success', 'Bundle editing', 'The bundle was updated'));
       this.getAllBundles();
     }, (error: HttpErrorResponse) => {
       this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
+      this.currentBundleToHideId = undefined;
     });
   }
 
-  getBundlesForDelete(bundles) {
-
-    this.bundlesSrvc.deleteBundles(bundles)
-    .subscribe(() => {
+  onDelete(bundle) {
+    this.currentBundleToHideId = bundle.id;
+    this.bundlesSrvc.deleteBundle(bundle)
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
       this.showMessage(this.createMessage('success', 'Bundle deletion', 'The bundle was deleted'));
       this.getAllBundles();
     }, (error: HttpErrorResponse) => {
       this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
+      this.currentBundleToHideId = undefined;
     });
   }
 
   getAllBundles() {
-
     this.bundlesSrvc.getCount()
-        .subscribe(data => this.pageAmount = data);
+        .subscribe((resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          this.pageAmount = clone(resp.body);
+        });
 
     this.bundlesSrvc.getBundlesInInterval(this.pageNumber, this.pageFrom)
-        .subscribe(data => {
+        .subscribe((resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
           this.showMessage(this.createMessage('success', 'Bundle list', 'The list was updated'));
-          this.bundles = data;
+          this.bundles = clone(resp.body);
+          this.currentBundleToHideId = undefined;
+          this.currentBundleForUpdate = undefined;
         }, (error: HttpErrorResponse) => {
           this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
         })
@@ -162,6 +119,31 @@ export class BundlesTableComponent implements OnInit {
       summary: summary,
       detail: detail
     };
+  }
+
+  getBundlePrice(bundle: Bundle) {
+    let tripsPrice: number = bundle.bundle_trips
+    .map(trip => this.getTripPrice(trip))
+    .reduce(( acc, cur ) => acc + cur, 0);
+    return (tripsPrice);
+  }
+
+  getTripPrice(trip: Trip) {
+    let classesPrice: number = trip.ticket_classes
+    .map(ticketClass => this.getTicketPrice(ticketClass))
+    .reduce(( acc, cur ) => acc + cur, 0);
+    return (classesPrice);
+  }
+
+  getTicketPrice(ticketClass: TicketClass) {
+    let servicesPrice: number = ticketClass.services
+    .map(service => this.getServicePrice(service))
+    .reduce(( acc, cur ) => acc + cur, 0);
+    return ((ticketClass.ticket_price || 0) * (ticketClass.item_number || 0) + servicesPrice);
+  }
+
+  getServicePrice(service: Service) {
+    return ((service.service_price || 0) * (service.item_number || 0));
   }
 
   showMessage(msgObj: any) {

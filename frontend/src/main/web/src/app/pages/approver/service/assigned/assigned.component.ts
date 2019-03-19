@@ -1,10 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { clone } from 'ramda';
 import { HttpResponse } from '@angular/common/http';
 
-import { Service } from '../shared/model/service';
-import { MOCK_DATA } from '../shared/model/mock-data';
+import {Service} from '../shared/model/service';
 import { ServiceService } from '../shared/service/service.service';
 import { checkToken } from '../../../../modules/api';
 
@@ -48,7 +47,7 @@ export class AssignedComponent implements OnInit {
   }
 
   onPublish(service) {
-    service.service_status = 4;
+    service.service_status = "PUBLISHED";
 
     this.loadingService = service;
 
@@ -64,7 +63,7 @@ export class AssignedComponent implements OnInit {
   }
 
   onReview(service) {
-    service.service_status = 5;
+    service.service_status = "UNDER_CLARIFICATION";
     service.reply_text = this.form.value.reply_text;
 
     this.loadingService = service;
@@ -81,7 +80,7 @@ export class AssignedComponent implements OnInit {
   }
 
   getServices() {
-    this.serviceService.getServicesForApprover(this.pageFrom, this.pageNumber, 3)
+    this.serviceService.getServicesForApprover(this.pageFrom, this.pageNumber, "ASSIGNED")
     .subscribe((resp: HttpResponse<any>) => {
       checkToken(resp.headers);
       this.resetLoading();
