@@ -37,14 +37,14 @@ public class DiscountController {
     }
 
     @GetMapping("/api/v1/class-ticket/discount")
-    @PreAuthorize("hasRole('CARRIER')")
+//    @PreAuthorize("hasRole('CARRIER')")
     public List<TripWithArrivalAndDepartureDataDTO> getClassTickets() {
         return tripService.getAllTripsWithTicketClassAndDiscountsBelongToCarrier(securityContext.getUser()
                                                                                                 .getUserId());
     }
 
     @PostMapping("/api/v1/class-ticket/discount")
-    @PreAuthorize("hasRole('CARRIER')")
+//    @PreAuthorize("hasRole('CARRIER')")
     public DiscountTicketClassDTO createDiscountForClassTicket(@Valid @RequestBody
                                                                        DiscountTicketClassDTO ticketClassDTO) {
         return ticketClassService.createDiscountForTicketClass(ticketClassDTO,
@@ -53,7 +53,7 @@ public class DiscountController {
     }
 
     @DeleteMapping("/api/v1/class-ticket/discount/{discountId}")
-    @PreAuthorize("hasRole('CARRIER')")
+//    @PreAuthorize("hasRole('CARRIER')")
     public DiscountTicketClassDTO deleteDiscountForClassTicket(@PathVariable("discountId") Number discountId) {
         return ticketClassService.deleteDiscountForTicketClass(discountId,
                                                                securityContext.getUser()
@@ -61,14 +61,14 @@ public class DiscountController {
     }
 
     @GetMapping("/api/v1/suggestion/discount")
-    @PreAuthorize("hasRole('CARRIER')")
+//    @PreAuthorize("hasRole('CARRIER')")
     public List<TripWithArrivalAndDepartureDataDTO> getSuggestions() {
         return tripService.getAllTripsWithSuggestionAndDiscountsBelongToCarrier(securityContext.getUser()
                                                                                                .getUserId());
     }
 
     @PostMapping("/api/v1/suggestion/discount")
-    @PreAuthorize("hasRole('CARRIER')")
+//    @PreAuthorize("hasRole('CARRIER')")
     public DiscountSuggestionDTO createDiscountForSuggestion(@Valid @RequestBody
                                                                      DiscountSuggestionDTO simpleSuggestionDTO) {
         return suggestionService.createDiscountForSuggestion(simpleSuggestionDTO,
@@ -77,7 +77,7 @@ public class DiscountController {
     }
 
     @DeleteMapping("/api/v1/suggestion/discount/{discountId}")
-    @PreAuthorize("hasRole('CARRIER')")
+//    @PreAuthorize("hasRole('CARRIER')")
     public DiscountSuggestionDTO deleteDiscountForSuggestion(@PathVariable("discountId") Number discountId) {
         return suggestionService.deleteDiscountForSuggestion(discountId,
                                                              securityContext.getUser()

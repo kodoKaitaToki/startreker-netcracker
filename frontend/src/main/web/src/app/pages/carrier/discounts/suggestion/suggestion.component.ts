@@ -17,17 +17,21 @@ export class SuggestionComponent implements OnInit {
 
   isDiscountFormActivated = false;
 
+  currentSuggestion: Suggestion;
+
   constructor() {
   }
 
   ngOnInit() {
   }
 
-  openSuggestionDiscountForm() {
+  openSuggestionDiscountForm(suggestion) {
+    this.currentSuggestion = suggestion;
     this.isDiscountFormActivated = true;
   }
 
   closeDiscountForm() {
+    this.currentSuggestion = null;
     this.isDiscountFormActivated = false;
   }
 
