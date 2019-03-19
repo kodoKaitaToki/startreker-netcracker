@@ -77,6 +77,9 @@ const trips = {
   },
   deleteTicketClass(id) {
     return `${baseUrl}api/v1/ticket-class/${id}`;
+  },
+  deleteTrip(id) {
+    return `${baseUrl}api/v1/trip/${id}`;
   }
  }
 

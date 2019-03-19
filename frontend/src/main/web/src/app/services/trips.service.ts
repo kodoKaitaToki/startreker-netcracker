@@ -36,4 +36,8 @@ export class TripsService {
   deleteTicketClass(id) {
     return this.http.delete<any>(Api.trips.deleteTicketClass(id), HttpOptionsAuthorized);
   }
+
+  deleteTrip(payload, id) {
+    return this.http.patch<any>(Api.trips.deleteTrip(id), payload, HttpOptionsAuthorized);
+  }
 }

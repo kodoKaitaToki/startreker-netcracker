@@ -41,6 +41,8 @@ export class TripsTableComponent implements OnInit {
 
   @Output() deleteTicketClassEmitter$ = new EventEmitter();
 
+  // @Output() deleteTripEmitter$ = new EventEmitter();
+
   showTicketClass: boolean = false;
 
   constructor() {
@@ -122,7 +124,7 @@ export class TripsTableComponent implements OnInit {
   }
 
   onTripDelete(onClickedTripForDelete) {
-    this.onDeleteDataNotifier.emit((TripsTableComponent.deleteUnnecessaryFieldAfterClick(onClickedTripForDelete)));
+    // this.deleteTripEmitter.emit(onClickedTripForDelete);
   }
 
   onSubmitUpdate() {
@@ -166,13 +168,6 @@ export class TripsTableComponent implements OnInit {
   deleteTicketClass($event) {
     this.deleteTicketClassEmitter$.emit($event);
     this.showTicketClass = !this.showTicketClass;
-  }
-
-  static deleteUnnecessaryFieldAfterClick(trip): Trip {
-    // delete approver['roles'];
-    // delete approver['user_created_date'];
-
-    return trip;
   }
 
   closeUpdateForm() {

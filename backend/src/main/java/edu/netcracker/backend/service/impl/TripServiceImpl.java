@@ -9,6 +9,7 @@ import edu.netcracker.backend.message.request.trips.TripCreation;
 import edu.netcracker.backend.message.response.trips.ReadTripsDTO;
 import edu.netcracker.backend.model.*;
 import edu.netcracker.backend.model.state.trip.*;
+import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.SuggestionService;
 import edu.netcracker.backend.service.TicketClassService;
 import edu.netcracker.backend.service.TripService;
@@ -34,6 +35,7 @@ public class TripServiceImpl implements TripService {
     private TripStateRegistry tripStateRegistry;
     private final TicketClassService ticketClassService;
     private final SuggestionService suggestionService;
+    private final SecurityContext securityContext;
 
     private static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
 
@@ -50,19 +52,22 @@ public class TripServiceImpl implements TripService {
                            SpaceportDAO spaceportDAO,
                            TripStateRegistry tripStateRegistry,
                            TicketClassService ticketClassService,
-                           SuggestionService suggestionService) {
+                           SuggestionService suggestionService,
+                           SecurityContext securityContext) {
         this.tripDAO = tripDAO;
         this.planetDAO = planetDAO;
         this.spaceportDAO = spaceportDAO;
         this.tripStateRegistry = tripStateRegistry;
         this.ticketClassService = ticketClassService;
         this.suggestionService = suggestionService;
+        this.securityContext = securityContext;
     }
 
     @Override
     public List<ReadTripsDTO> getAllTripsForCarrier() {
         logger.debug("Getting all trips for carrier from TripDAO");
         //        TODO: implement getting carrier id from access token
+//        Long carrierId = Long.valueOf(securityContext.getUser().getUserId());
         List<Trip> trips = tripDAO.allCarriersTrips(7L);
 
         return getAllTripsDTO(trips);
@@ -80,6 +85,7 @@ public class TripServiceImpl implements TripService {
     public List<ReadTripsDTO> getAllTripsForCarrierWithPagination(Integer limit, Integer offset) {
         logger.debug("Getting {} trips for carrier from TripDAO with pagination starting from {}", limit, offset);
         //        TODO: implement getting carrier id from access token
+//        Long carrierId = Long.valueOf(securityContext.getUser().getUserId());
         List<Trip> trips = tripDAO.paginationForCarrier(limit, offset, 7L);
 
         return getAllTripsDTO(trips);

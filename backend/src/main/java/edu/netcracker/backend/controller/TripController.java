@@ -11,6 +11,7 @@ import edu.netcracker.backend.message.response.TripResponse;
 import edu.netcracker.backend.message.response.TripDistributionElement;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.message.response.trips.ReadTripsDTO;
+import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.StatisticsService;
 import edu.netcracker.backend.service.TripService;

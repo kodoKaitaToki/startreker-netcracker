@@ -11,6 +11,7 @@ import edu.netcracker.backend.model.Role;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.model.state.trip.*;
+import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.impl.TripServiceImpl;
 import edu.netcracker.backend.utils.AuthorityUtils;
 import org.junit.Test;
@@ -19,7 +20,6 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -52,6 +52,8 @@ public class TripServiceImplTest {
     private SpaceportDAO spaceportDAO;
 
     private TripService tripService;
+
+    private SecurityContext securityContext;
 
     private User approver;
     private User carrier;
@@ -151,7 +153,13 @@ public class TripServiceImplTest {
         underClarificationTripDTO.setReplies(replies);
         removedTripDTO = TripRequest.from(removedTrip);
 
-        tripService = new TripServiceImpl(tripDAOMock, planetDAO, spaceportDAO, tripStateRegistry, null, null);
+        tripService = new TripServiceImpl(tripDAOMock,
+                                          planetDAO,
+                                          spaceportDAO,
+                                          tripStateRegistry,
+                                          null,
+                                          null,
+                                          securityContext);
     }
 
     // Draft tests

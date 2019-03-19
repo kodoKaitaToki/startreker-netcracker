@@ -9,8 +9,11 @@
           <span class="badge badge-primary badge-pill idBadge">{{trip.trip_status}}</span>
         </div>
 
-        <div class="row col-4 offset-7" *ngIf="!isForUpdateAlertMessage">
-          <!-- <div class="col-1 offset-4 offset-lg-8">
+        <div class="row col-11 top-button" *ngIf="!isForUpdateAlertMessage">
+          <div 
+            *ngIf="trip.trip_status_id === 4"
+            class="top-button"
+            >
             <p data-placement="top"
                data-toggle="tooltip"
                title="Archive"
@@ -19,21 +22,34 @@
                 <i class="fa fa-archive" style="color: white;"></i>
               </button>
             </p>
-          </div>       -->
-          <div class="col-1 offset-1 offset-lg-8">
+          </div>
+          
+          <div 
+            *ngIf="trip.trip_status_id === 5"
+            class="top-button"
+            >
+            <p data-placement="top"
+               data-toggle="tooltip"
+               title="Restore"
+            >
+              <button class="btn btn-success btn-md">
+                <i class="fa fa-refresh" style="color: white;"></i>
+              </button>
+            </p>
+          </div>
+
+          <div class="top-button">
             <p data-placement="top" data-toggle="tooltip" title="Edit" (click)="onTripUpdate(trip)" class="updatePrgph">
               <button
+                *ngIf="!isUneditAble(trip.trip_status_id)"
                 class="btn btn-primary btn-md"
-                [ngClass]="{
-                  'disabled': isUneditAble(trip.trip_status_id)
-                }"
               >
                 <i class="fa fa-edit"></i>
               </button>
             </p>
           </div>
 
-          <div class="col-1 offset-1">
+          <div class="top-button">
             <p data-placement="top" data-toggle="tooltip" title="Delete" (click)="onTripDelete(trip)"
               class="deletePrgph">
               <button class="btn btn-danger btn-md" data-title="Delete" data-toggle="modal" data-target="#delete">
@@ -44,7 +60,7 @@
         </div>
         <div
             *ngIf="trip.trip_status_id === 1"
-            class="row col-5 offset-3 offset-lg-9"
+            class="col-12 top-button"
             [ngClass]="{
               'disabled': !trip.ticket_classes.length > 0
             }">

@@ -129,7 +129,7 @@ export class TripsComponent implements OnInit {
     this.tripsApi.updateTrip(trip, id)
       .subscribe(() => {
         this.getTrips();
-        this.showMsgSrvc.showMessage(this.messageService, 'success', 'Approver editing', 'The approver was edited');
+        this.showMsgSrvc.showMessage(this.messageService, 'success', 'Trip editing', 'The trip was edited');
       }, (error: HttpErrorResponse) => {
         this.showMsgSrvc.showMessage(this.messageService, 'error', `Error message - ${error.error.status}`,
                                       error.error.error);
@@ -157,6 +157,7 @@ export class TripsComponent implements OnInit {
                                       error.error.error);
       });
   }
+  
 
   onSubmit() {
     // method to send data to server

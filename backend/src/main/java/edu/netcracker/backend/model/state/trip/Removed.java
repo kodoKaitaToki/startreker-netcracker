@@ -4,6 +4,7 @@ import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.User;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class Removed implements TripState {
     public final static int DATABASE_VALUE = 7;
     public final static String NAME = "REMOVED";
 
-    private final List<Integer> allowedStatesToSwitchFrom = Collections.singletonList(6);
+    private final List<Integer> allowedStatesToSwitchFrom = Arrays.asList(1, 2, 3, 4, 5, 6);
 
     @Override
     public boolean isStateChangeAllowed(Trip trip, User requestUser) {
