@@ -48,13 +48,14 @@
         </div>
       </div>
 
-      <form [formGroup]="form" (ngSubmit)="onSubmitUpdate()">
-        <div class="row">
-          <div class="col-md-8">
+      <div class="row">
+        <div class="col-md-7">
+          <form [formGroup]="form" (ngSubmit)="onSubmitUpdate()">
+      
             <div class="row">
-              <h3 class="col-2">From</h3>
-              <h3 class="col-2 offset-3" *ngIf="currentTripForUpdate !== trip">
-                {{trip.departure_spaceport}} ({{trip.departure_planet}})
+              <h3 class="col-5">From</h3>
+              <h3 class="col-6 offset-1" *ngIf="currentTripForUpdate !== trip">
+                {{trip.departure_spaceport_name}} ({{trip.departure_planet}})
               </h3>
               <select
                 class="form-control col-md-12 col-sm-12 col-lg-12"
@@ -92,13 +93,13 @@
                 </option>
               </select>
             </div>
-
+  
             <hr>
-
+  
             <div class="row">
-              <h3 class="col-2">To</h3>
-              <h3 class="col-2 offset-3" *ngIf="currentTripForUpdate !== trip">
-                {{trip.arrival_spaceport}} ({{trip.arrival_planet}})
+              <h3 class="col-5">To</h3>
+              <h3 class="col-6 offset-1" *ngIf="currentTripForUpdate !== trip">
+                {{trip.arrival_spaceport_name}} ({{trip.arrival_planet}})
               </h3>
               <select
                 class="form-control col-md-12 col-sm-12 col-lg-12"
@@ -136,12 +137,12 @@
                 </option>
               </select>
             </div>
-
+  
             <hr>
-
+  
             <div class="row">
-              <h5 class="col-2">Departure date and time</h5>
-              <p class="col-2 offset-3" *ngIf="currentTripForUpdate !== trip">
+              <h5 class="col-5">Departure date and time</h5>
+              <p class="col-6 offset-1" *ngIf="currentTripForUpdate !== trip">
                 {{trip.departure_date}}
               </p>
               <input
@@ -162,10 +163,10 @@
                   formControlName="departure_time"
                 />
             </div>
-
+  
             <div class="row">
-              <h5 class="col-2">Arrival date and time</h5>
-              <p class="col-2 offset-3" *ngIf="currentTripForUpdate !== trip">
+              <h5 class="col-5">Arrival date and time</h5>
+              <p class="col-6 offset-1" *ngIf="currentTripForUpdate !== trip">
                 {{trip.arrival_date}}
               </p>
               <input
@@ -190,25 +191,30 @@
             <hr>
 
             <div class="row">
-              <h5 class="col-2">Date of creation</h5>
-              <p class="col-2 offset-3">
+              <h5 class="col-5">Date of creation</h5>
+              <p class="col-6 offset-1">
                 {{trip.creation_date}}
               </p>
             </div>
-
+  
             <div class="row"
               *ngIf="currentTripForUpdate === trip && isEditButtonBlockedAfterSubmit && !isForUpdateAlertMessage">
               <button class="btn btn-success col-4" type="submit" [disabled]="form.invalid">
                 Confirm
               </button>
-
+  
               <button class="btn btn-info col-4 offset-4" (click)="closeUpdateForm()">
                 Close editing
               </button>
             </div>
-          </div>
+          </form>
         </div>
-      </form>
+        <div class="col-md-5">
+          <app-suggestions
+          [trip]="trip">
+          </app-suggestions>
+        </div>
+      </div>
       <div class="row">
         <button
           class="btn btn-success col-4"

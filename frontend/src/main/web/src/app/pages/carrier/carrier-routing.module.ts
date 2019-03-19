@@ -4,7 +4,6 @@ import {CarrierComponent} from './carrier.component';
 import {IndexComponent} from './index/index.component';
 import {TripsComponent} from './trips/trips.component';
 import {ServicesComponent} from './services/services.component';
-import {SuggestionsComponent} from './suggestions/suggestions.component';
 import {DashboardsComponent} from './dashboard/dashboards/dashboards.component';
 import {SalesComponent} from './dashboard/sales/sales.component';
 import {ViewsComponent} from './dashboard/views/views.component';
@@ -48,10 +47,6 @@ const routes: Routes = [
             component: ArchiveComponent
           }
         ]
-      },
-      {
-        path: 'suggestions',
-        component: SuggestionsComponent
       },
       {
         path: 'discounts',
