@@ -4,6 +4,7 @@ import edu.netcracker.backend.dao.TicketDAO;
 import edu.netcracker.backend.dao.mapper.history.HistoryTicketMapper;
 import edu.netcracker.backend.model.history.HistoryTicket;
 import edu.netcracker.backend.model.Ticket;
+import edu.netcracker.backend.model.User;
 import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,13 +37,17 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
     @Value("${FIND_ALL_BY_CLASS}")
     private String FIND_ALL_BY_CLASS;
 
-    private final String CREATE_EMPTY_TICKET_FOR_TICKET_CLASS = "INSERT INTO ticket (class_id, seat) VALUES (?, ?)";
+    private final String FIND_REMAINING_SEATS = "SELECT COUNT(ticket_id) "
+                                                + "FROM ticket "
+                                                + "WHERE class_id = ? AND passenger_id IS NULL";
 
-    private final String FIND_REMAINING_SEATS = "SELECT COUNT(ticket_id) FROM ticket WHERE class_id = ? AND passenger_id IS NULL";
+
+    private final String CREATE_EMPTY_TICKET_FOR_TICKET_CLASS = "INSERT INTO ticket (class_id, seat) VALUES (?, ?)";
 
     private final String DELETE_ALL_TICKETS_OF_TICKET_CLASS = "DELETE FROM ticket WHERE class_id = ?";
 
     private static final Logger logger = LoggerFactory.getLogger(TicketDAOImpl.class);
+
     private final static String FIND_ALL_BY_USER = "SELECT t.ticket_id, t.seat, t.end_price, t.purchase_date, "
                                                    + "tc.class_name, tr.departure_date, tr.arrival_date, "
                                                    + "sd.spaceport_name, sa.spaceport_name, pa.planet_name, "
@@ -103,7 +108,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
      *
      * @param classId - id of ticket class for which remaining seats have to be found
      * @return - number of remaining seats
-    **/
+     **/
     @Override
     public Integer getRemainingSeatsForClass(Long classId) {
         logger.debug("Getting amount of remaining seats for ticket class with id {}", classId);
@@ -128,5 +133,11 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
                                                                .addValue("start_date", startDate)
                                                                .addValue("end_date", endDate);
         return namedTemplate.query(FIND_ALL_BY_USER, params, new HistoryTicketMapper());
+    }
+
+    @Override
+    public void buyTicket(Ticket ticket, User user) {
+        ticket.setPassengerId(user.getUserId());
+        update(ticket);
     }
 }

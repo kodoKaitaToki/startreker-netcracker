@@ -7,11 +7,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.AllArgsConstructor;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@AllArgsConstructor
+@NoArgsConstructor
 @Table("planet")
 public class Planet {
     @PrimaryKey("planet_id")
@@ -20,9 +22,4 @@ public class Planet {
 
     @Attribute("planet_name")
     private String planetName;
-
-    public Planet(Long planetId, String planetName) {
-        this.planetId = planetId;
-        this.planetName = planetName;
-    }
 }
