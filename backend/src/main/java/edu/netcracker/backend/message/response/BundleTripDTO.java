@@ -21,7 +21,7 @@ public class BundleTripDTO {
     private String departurePlanetName;
 
     @JsonProperty("arrival_planet")
-    private String arrivalPlanet;
+    private String arrivalPlanetName;
 
     @JsonProperty("ticket_classes")
     private List<BundleTicketClassDTO> ticketClasses;

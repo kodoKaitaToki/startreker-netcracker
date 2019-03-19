@@ -22,6 +22,8 @@ import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {RecoveryComponent} from './pages/recovery/recovery.component';
 import {MessageService, GrowlModule, CalendarModule} from "primeng/primeng";
 
+
+import {FlightsModule} from "./pages/flights/flights.module";
 import { Configuration } from './app.constants';
 import { ConfirmMessageComponent } from './pages/confirm-message/confirm-message.component';
 import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
@@ -56,6 +58,7 @@ import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
     FormsModule,
     CalendarModule
   ],
+
   providers: [Configuration, MessageService],
   bootstrap: [AppComponent]
 })

@@ -4,7 +4,7 @@ import { LandingComponent } from './pages/landing/landing.component';
 import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.component';
 import { LoginComponent } from './pages/login/login.component';
 import { RegistrationComponent } from './pages/registration/registration.component';
-import { RecoveryComponent } from './pages/recovery/recovery.component'
+import { RecoveryComponent } from './pages/recovery/recovery.component';
 import { Role } from './guards/role';
 import { ConfirmMessageComponent } from './pages/confirm-message/confirm-message.component';
 import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
@@ -27,6 +27,9 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: {roles: Role.Admin}
   },
+
+
+
   { path: 'carrier',
     loadChildren: './pages/carrier/carrier.module#CarrierModule',
 
@@ -42,6 +45,9 @@ const routes: Routes = [
 
     canActivate: [AuthGuard],
     data: {roles: Role.Approver}
+  },
+  { path: 'flights',
+    loadChildren: './pages/flights/flights.module#FlightsModule'
   },
   { path: 'user',
     loadChildren: './pages/user/user.module#UserModule',

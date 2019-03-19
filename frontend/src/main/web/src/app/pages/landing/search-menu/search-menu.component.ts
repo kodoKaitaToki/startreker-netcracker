@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators} from '@angular/forms';
+import { Router } from "@angular/router";
 import { clone } from 'ramda';
 
 import { LandingService } from '../shared/service/landing.service';
@@ -28,7 +29,8 @@ export class SearchMenuComponent implements OnInit {
 
   field = '';
 
-  constructor(private landingService: LandingService) {
+  constructor(private landingService: LandingService,
+             private router: Router) {
     this.searchForm = new FormGroup({
       startPlanet: new FormControl({value: 'Choose a planet', disabled: true}),
       finishPlanet: new FormControl({value: 'Choose a planet', disabled: true}),
@@ -68,6 +70,7 @@ export class SearchMenuComponent implements OnInit {
 
   onSubmit(){
     localStorage.setItem('formData', JSON.stringify(this.searchForm.value));
+    this.router.navigate(['/trip-search'])
   }
   
   getSpaceports(point: boolean){
