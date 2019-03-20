@@ -16,13 +16,13 @@ export class FlightsComponent implements OnInit {
   searchForm: FormGroup;
 
   constructor(private svc: SearchService) {
-    //this.getTripsByCriteria()
+    //this.getTripsByCriteria();
 
     let trip: Trip = new Trip();
     trip.departure_date = "20-02-2020 12:20:00";
     trip.departure_spaceport_name = "SpaceX";
     trip.departure_planet_name = "EARTH";
-    trip.arrival_date = "28-02-2020 22:28:00"
+    trip.arrival_date = "28-02-2020 22:28:00";
     trip.arrival_spaceport_name = "Blackhole";
     trip.arrival_planet_name = "MOON";
     trip.ticket_classes = [];
@@ -57,7 +57,7 @@ export class FlightsComponent implements OnInit {
   }
 
 
-  getUrl() {
+  static getUrl() {
     return "url('assets/images/bg.jpg')";
   }
 
