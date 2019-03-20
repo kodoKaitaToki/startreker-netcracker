@@ -3,6 +3,8 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Carrier} from '../carrier';
 import {CarrierCrudService} from '../carrier-crud.service';
 import { clone } from 'ramda';
+import {checkToken} from "../../../../modules/api/index";
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-carrier-component',
@@ -17,6 +19,7 @@ export class CarrierComponentComponent implements OnInit {
   usernameMaxLength = 24;
 
   carriers;
+  allCarriers;
   currentCarrierForUpdate: Carrier;
   addBut: boolean = false;
   curPage: number = 1;
@@ -52,6 +55,8 @@ export class CarrierComponentComponent implements OnInit {
   ngOnInit(): void {
 
     this.getCarriers();
+    //this.getCarriersPagin();
+
     this.createNewForm();
   }
 
@@ -69,16 +74,13 @@ export class CarrierComponentComponent implements OnInit {
     this.currentCarrierForUpdate = event;
     this.carCrudService.updateCarrier(event)
                       .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                        (resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
                           this.butGroup.updateBut = false;
                           this.butGroup.editBut = false;
+                          //this.getCarriersPagin();
                          },
                         error => {
-                          console.log(error);
                           if(error.error.message = 'Username already exist'){
                             this.updateError = 'The user with this name alredy exists';
                           }else{
@@ -93,17 +95,14 @@ export class CarrierComponentComponent implements OnInit {
     this.butGroup.editBut = true;
     this.carCrudService.deleteCarrier(event)
                       .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                        (resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
                           this.butGroup.deleteBut = false;
                           this.butGroup.editBut = false;
                           this.getCarriers();
+                          //this.getCarriersPagin();
                          },
                         error => {
-                          console.log(error);
                           this.butGroup.deleteBut = false;
                           this.butGroup.editBut = false;
                         }
@@ -113,22 +112,31 @@ export class CarrierComponentComponent implements OnInit {
 
   processChangePage(event){
     this.curPage = event;
+    //this.getCarriersPagin();
   }
 
   getCarriers(){
     this.carCrudService.getAllCarriers()
                       .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
-                          this.carriers = clone(resp);
+                        (resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
+                          this.allCarriers = clone(resp.body);
                           this.dataAvailable = true;
-                        },
-                        error => console.log(error)
+                        }
                       );
   }
+
+  getCarriersPagin(){
+    let from = (this.curPage*this.carPerPage)-(this.carPerPage-1);
+    this.carCrudService.getCarriersPagin(from, this.carPerPage)
+                      .subscribe(
+                        (resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
+                          this.carriers = clone(resp.body);
+                          this.dataAvailable = true;
+                         }
+                      );
+   }
 
    getAddingUser(){
      let status: boolean;
@@ -146,17 +154,13 @@ export class CarrierComponentComponent implements OnInit {
     let newCar = this.form.value;
     this.carCrudService.addCarrier(newCar)
                       .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                        (resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
                           this.getCarriers();
+                          //this.getCarriersPagin();
                           this.clearform();
-                          console.log('carrier is added');
                          },
                         error => {
-                          console.log(error);
                           this.addBut = false;
                           if(error.error.message = 'Username already exist'){
                             this.errorText = 'The user with this name alredy exists';

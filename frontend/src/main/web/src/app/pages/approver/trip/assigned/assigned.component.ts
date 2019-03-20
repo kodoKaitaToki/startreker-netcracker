@@ -5,6 +5,8 @@ import {MessageService} from 'primeng/components/common/messageservice';
 
 import { Trip } from '../shared/model/trip.model';
 import { TripService } from '../shared/service/trip.service'; 
+import { checkToken } from '../../../../modules/api';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-assigned',
@@ -50,14 +52,10 @@ export class AssignedTripComponent implements OnInit {
 
   getTrips(status: String){
     this.tripService.getTrips(status, 0, 10)
-                      .subscribe(
-                        (resp: Response) => {
-                          /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                      .subscribe((resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
                           this.loadingTrip = null;
-                          this.trips = clone(resp);
+                          this.trips = clone(resp.body);
                         }
                       );
   }
@@ -78,11 +76,8 @@ export class AssignedTripComponent implements OnInit {
 
     this.tripService.updateTripReply(trip)
                     .subscribe(
-                      (resp: Response) => {
-                        /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                      (resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
                           this.showMessage(this.createMessage('success',
                                                               'The trip is succeesfully reviewed',
                                                               'The carrier of the trip will see your reply'));
@@ -101,11 +96,8 @@ export class AssignedTripComponent implements OnInit {
 
     this.tripService.updateTripStatus(trip)
                     .subscribe(
-                      (resp: Response) => {
-                        /*if (resp.headers.get('New-Access-Token')) {
-                            localStorage.removeItem('at');
-                            localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-                          }*/
+                      (resp: HttpResponse<any>) => {
+                        checkToken(resp.headers);
                         this.showMessage(this.createMessage('success',
                                                             'The trip was published',
                                                             'Users can buy tickets of this trip'));

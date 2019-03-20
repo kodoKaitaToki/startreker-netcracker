@@ -3,6 +3,8 @@ import { ApiDashboardService } from '../../../../../services/dashboards.service'
 import { TripList, Trip } from '../../../../../services/interfaces/trip-dashboard.interface'
 import { clone } from 'ramda';
 import * as CanvasJS from '../../../../../../assets/js/canvasjs.min';
+import {checkToken} from "../../../../../modules/api/index";
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-trip-dashboard',
@@ -63,13 +65,9 @@ export class TripDashboardComponent implements OnInit {
   ngOnInit() {
       this.tripService.setTripDistribution()
       .subscribe(
-        (resp: Response) => {
-            // console.log(resp)
-            // if (resp.headers.get('New-Access-Token')) {
-            //     localStorage.removeItem('at');
-            //     localStorage.setItem('at', resp.headers.get('New-Access-Token'));
-            // }
-            console.log(resp)
+        (resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+            console.log(resp.body)
             this.tripData.trips = clone(resp);
             // console.log(this.tripData.trips);
             this.buildChart(this.tripData);

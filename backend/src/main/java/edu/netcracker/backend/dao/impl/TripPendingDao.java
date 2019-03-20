@@ -49,7 +49,7 @@ public class TripPendingDao implements IPendingDao<PendingActivationTrip> {
 
         return PendingActivationTrip.builder()
                 .tripID((Integer) obj.get("trip_id"))
-                .tripStatus((Integer) obj.get("trip_status"))
+                .tripStatus(((Integer) obj.get("trip_status")).toString())
                 .arrivalDate(((Timestamp) obj.get("arrival_date")).toLocalDateTime().toString())
                 .departureDate(((Timestamp) obj.get("departure_date")).toLocalDateTime().toString())
                 .creationDate(((Timestamp) obj.get("creation_date")).toLocalDateTime().toString())

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as $ from 'jquery';
 
+import { ApiUserService } from '../../../services/auth.service';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -8,7 +10,9 @@ import * as $ from 'jquery';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+	btn: boolean = true;
+
+  constructor(private apiService: ApiUserService) { }
 
   ngOnInit() {
     $(document).on('click', 'a[href^="#"]', function(e) {
@@ -29,7 +33,14 @@ export class HeaderComponent implements OnInit {
     
 			// animated top scrolling
 			$('body, html').animate({scrollTop: pos});
+
 		});
-  }
+		this.btn = (localStorage.getItem('rt') === null ? true : false);
+		
+	}
+	
+	logOut(){
+		this.apiService.logoutUser();
+	}
 
 }

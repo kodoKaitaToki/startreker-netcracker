@@ -4,7 +4,7 @@ import {NgModule} from '@angular/core';
 import {HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule} from '@angular/forms';
 
-import {LoadingBarHttpClientModule} from '@ngx-loading-bar/http-client';
+import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -21,8 +21,7 @@ import {LoginComponent} from './pages/login/login.component';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {RecoveryComponent} from './pages/recovery/recovery.component';
 
-import {Configuration} from './app.constants';
-import {FlightsModule} from "./pages/flights/flights.module";
+import { Configuration } from './app.constants';
 
 @NgModule({
   declarations: [
@@ -37,7 +36,7 @@ import {FlightsModule} from "./pages/flights/flights.module";
     HeaderComponent,
     RegistrationComponent,
     LoginComponent,
-    RecoveryComponent,
+    RecoveryComponent
   ],
   imports: [
     AppRoutingModule,
@@ -49,11 +48,7 @@ import {FlightsModule} from "./pages/flights/flights.module";
     BrowserAnimationsModule
   ],
   providers: [Configuration],
-  bootstrap: [AppComponent],
-  exports: [
-    HeaderComponent,
-    SearchMenuComponent
-  ]
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }
