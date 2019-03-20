@@ -5,6 +5,7 @@ import {NgModule} from '@angular/core';
 import {HttpClientModule} from "@angular/common/http";
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
+import {MessageService, GrowlModule, CalendarModule} from "primeng/primeng";
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -20,8 +21,8 @@ import {RegistrationComponent} from './pages/registration/registration.component
 import {LoginComponent} from './pages/login/login.component';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {RecoveryComponent} from './pages/recovery/recovery.component';
-import {MessageService, GrowlModule, CalendarModule} from "primeng/primeng";
 
+import {FlightsModule} from "./pages/flights/flights.module";
 import { Configuration } from './app.constants';
 import { ConfirmMessageComponent } from './pages/confirm-message/confirm-message.component';
 import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
@@ -54,8 +55,10 @@ import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
     BrowserAnimationsModule,
     GrowlModule,
     FormsModule,
-    CalendarModule
+    CalendarModule,
+    FlightsModule
   ],
+
   providers: [Configuration, MessageService],
   bootstrap: [AppComponent]
 })

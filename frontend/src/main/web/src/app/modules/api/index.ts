@@ -74,7 +74,7 @@ const bundles = {
 }
 const trips = {
   getExistingPlanets() {
-    return `${baseUrl}api/v1/planets`;
+    return `${baseUrl}api/v1/planets-spaceports`;
   },
   addTrip() {
     return `${baseUrl}api/v1/trips`;

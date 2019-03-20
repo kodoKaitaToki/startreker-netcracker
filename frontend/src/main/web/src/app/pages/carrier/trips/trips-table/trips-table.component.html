@@ -81,7 +81,7 @@
             <div class="row">
               <h3 class="col-5">From</h3>
               <h3 class="col-6 offset-1" *ngIf="currentTripForUpdate !== trip">
-                {{trip.departure_spaceport_name}} ({{trip.departure_planet}})
+                {{trip.departure_spaceport}} ({{trip.departure_planet}})
               </h3>
               <select
                 class="form-control col-md-12 col-sm-12 col-lg-12"
@@ -125,7 +125,7 @@
             <div class="row">
               <h3 class="col-5">To</h3>
               <h3 class="col-6 offset-1" *ngIf="currentTripForUpdate !== trip">
-                {{trip.arrival_spaceport_name}} ({{trip.arrival_planet}})
+                {{trip.arrival_spaceport}} ({{trip.arrival_planet}})
               </h3>
               <select
                 class="form-control col-md-12 col-sm-12 col-lg-12"

@@ -5,6 +5,7 @@ import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.model.PossibleService;
 import edu.netcracker.backend.model.Service;
 import edu.netcracker.backend.model.ServiceDescr;
+import edu.netcracker.backend.model.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -31,6 +32,11 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
                                                           + "p_service_status FROM possible_service "
                                                           + "INNER JOIN suggested_service ON possible_service.p_service_id = suggested_service.p_service_id "
                                                           + "WHERE suggestion_id = ? AND p_service_status = 1";
+
+    private static final String BUY_P_SERVICE = "INSERT INTO bought_service ("
+                                                + "p_service_id, "
+                                                + "ticket_id) "
+                                                + "VALUES (?, ?)";
 
     @Autowired
     public PossibleServiceDAOImpl(ServiceDAO serviceDAO) {
@@ -83,5 +89,10 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
                                                         getGenericMapper()));
 
         return possibleServices;
+    }
+
+    @Override
+    public void buyService(Ticket ticket, PossibleService possibleService) {
+        getJdbcTemplate().update(BUY_P_SERVICE, possibleService.getPServiceId(), ticket.getTicketId());
     }
 }

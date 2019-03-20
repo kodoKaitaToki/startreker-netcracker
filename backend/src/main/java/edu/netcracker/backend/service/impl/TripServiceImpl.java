@@ -8,6 +8,9 @@ import edu.netcracker.backend.message.request.*;
 import edu.netcracker.backend.message.request.trips.TripCreation;
 import edu.netcracker.backend.message.response.trips.ReadTripsDTO;
 import edu.netcracker.backend.model.*;
+import edu.netcracker.backend.model.Trip;
+import edu.netcracker.backend.model.TripWithArrivalAndDepartureData;
+import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.model.state.trip.*;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.SuggestionService;
@@ -30,15 +33,19 @@ import java.util.stream.Collectors;
 public class TripServiceImpl implements TripService {
 
     private TripDAO tripDAO;
+
     private PlanetDAO planetDAO;
+
     private SpaceportDAO spaceportDAO;
+
     private TripStateRegistry tripStateRegistry;
+
     private final TicketClassService ticketClassService;
+
     private final SuggestionService suggestionService;
     private final SecurityContext securityContext;
 
     private static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
-
 
     private static final Logger logger = LoggerFactory.getLogger(TripServiceImpl.class);
 
@@ -283,9 +290,7 @@ public class TripServiceImpl implements TripService {
         Trip trip = new Trip();
         trip.setDepartureDate(tripCreation.getDepartureDateTime());
         trip.setArrivalDate(tripCreation.getArrivalDateTime());
-        trip.setOwner(new User());
-        trip.getOwner()
-            .setUserId(securityContext.getUser().getUserId());
+        trip.setOwner(securityContext.getUser());
         trip.setTripState(draft);
         trip.setCreationDate(LocalDateTime.now());
         trip.setTripPhoto("defaultPhoto.png");

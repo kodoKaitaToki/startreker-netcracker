@@ -17,17 +17,21 @@ export class TicketClassComponent implements OnInit {
 
   isDiscountFormActivated = false;
 
+  currentTicketClass: TicketClass;
+
   constructor() {
   }
 
   ngOnInit() {
   }
 
-  openTicketClassDiscountForm() {
+  openTicketClassDiscountForm(ticketClass) {
+    this.currentTicketClass = ticketClass;
     this.isDiscountFormActivated = true;
   }
 
   closeDiscountForm() {
+    this.currentTicketClass = null;
     this.isDiscountFormActivated = false;
   }
 
