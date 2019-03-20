@@ -135,6 +135,9 @@ const landing = {
   },
   spaceports(){
     return `${baseUrl}api/v1/spaceports`;
+  },
+  trips(){
+    return `${baseUrl}api/v1/user/trips`;
   }
 }
 
