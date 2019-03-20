@@ -47,11 +47,6 @@ export class TripsComponent implements OnInit {
   currentDateError: boolean = false;
   departureDateError: boolean = false;
 
-
-  get f() {
-    return this.form.controls;
-  }
-
   constructor(
     private tripsApi: TripsService,
     private showMsgSrvc: ShowMessageService,
@@ -162,6 +157,52 @@ export class TripsComponent implements OnInit {
       });
   }
 
+  tripDelete(trip) {
+    this.currentTripForUpdate = clone(trip);
+    this.currentTripForUpdate.trip_status = "REMOVED";
+    this.requestStatusUpdate(this.currentTripForUpdate);    
+  }
+
+  tripSendForApprovement(trip) {
+    this.currentTripForUpdate = clone(trip);
+    this.currentTripForUpdate.trip_status = "OPEN";
+    this.requestStatusUpdate(this.currentTripForUpdate);    
+  }
+
+  tripArchive(trip) {
+    this.currentTripForUpdate = clone(trip);
+    this.currentTripForUpdate.trip_status = "ARCHIVED";
+    this.requestStatusUpdate(this.currentTripForUpdate);      
+  }
+
+  tripRestore(trip) {
+    this.currentTripForUpdate = clone(trip);
+    this.currentTripForUpdate.trip_status = "OPEN";
+    this.requestStatusUpdate(this.currentTripForUpdate);
+  }
+
+  requestStatusUpdate(trip: Trip) {
+    this.tripsApi.updateTripStatus(this.removeFieldsFromTrip(trip), trip.trip_id)
+    .subscribe((resp: HttpResponse<any>) => {
+      checkToken(resp.headers);
+      this.getTrips();
+      this.showMsgSrvc.showMessage(this.messageService, 'success', 'Trip status updating', `Trip status was changed to ${trip.trip_status}`);
+    }, (error: HttpErrorResponse) => {
+      this.showMsgSrvc.showMessage(this.messageService, 'error', `Error message - ${error.error.status}`,
+                                    error.error.error);
+    });
+  }
+
+  removeFieldsFromTrip(trip: Trip) {
+    delete trip.trip_status_id;
+    delete trip.departure_planet;
+    delete trip.departure_spaceport;
+    delete trip.arrival_planet;
+    delete trip.arrival_spaceport;
+    delete trip.ticket_classes;
+    return trip;
+  }
+
   onSubmit() {
     // method to send data to server
     // this.validateDate();
@@ -170,9 +211,6 @@ export class TripsComponent implements OnInit {
     this.submitData.arrival_date = `${this.submitData.arrival_date} ${this.submitData.arrival_time}:00`;
     delete this.submitData.arrival_time;
     delete this.submitData.departure_time;
-    // this.submitData.arrival_time = `${this.submitData.arrival_time}:00`;
-    // this.submitData.departure_time = `${this.submitData.departure_time}:00`;
-    // console.log(this.submitData);
     this.tripsApi.createTrip(this.submitData)
       .subscribe(
         (resp: HttpResponse<any>) => {

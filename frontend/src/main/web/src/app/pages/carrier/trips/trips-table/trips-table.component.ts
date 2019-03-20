@@ -41,7 +41,13 @@ export class TripsTableComponent implements OnInit {
 
   @Output() deleteTicketClassEmitter$ = new EventEmitter();
 
-  // @Output() deleteTripEmitter$ = new EventEmitter();
+  @Output() deleteTripEmitter$ = new EventEmitter();
+
+  @Output() approvementTripEmitter$ = new EventEmitter();
+
+  @Output() archiveTripEmitter$ = new EventEmitter();
+
+  @Output() restoreTripEmitter$ = new EventEmitter();
 
   showTicketClass: boolean = false;
 
@@ -124,7 +130,18 @@ export class TripsTableComponent implements OnInit {
   }
 
   onTripDelete(onClickedTripForDelete) {
-    // this.deleteTripEmitter.emit(onClickedTripForDelete);
+     this.deleteTripEmitter$.emit(onClickedTripForDelete);
+  }
+
+  onTripSendForApprovement(onClickedTripForApprovement) {
+    this.approvementTripEmitter$.emit(onClickedTripForApprovement);
+  }
+  
+  onTripArchive(onClickedTripForArchive) {
+    this.archiveTripEmitter$.emit(onClickedTripForArchive);
+  }
+  onTripRestore(onClickedTripForRestore) {
+    this.restoreTripEmitter$.emit(onClickedTripForRestore);
   }
 
   onSubmitUpdate() {

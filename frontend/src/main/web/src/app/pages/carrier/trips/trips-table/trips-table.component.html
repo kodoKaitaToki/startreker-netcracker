@@ -17,6 +17,7 @@
             <p data-placement="top"
                data-toggle="tooltip"
                title="Archive"
+               (click)="onTripArchive(trip)" 
             >
               <button class="btn btn-warning btn-md">
                 <i class="fa fa-archive" style="color: white;"></i>
@@ -31,6 +32,7 @@
             <p data-placement="top"
                data-toggle="tooltip"
                title="Restore"
+               (click)="onTripRestore(trip)"
             >
               <button class="btn btn-success btn-md">
                 <i class="fa fa-refresh" style="color: white;"></i>
@@ -39,7 +41,12 @@
           </div>
 
           <div class="top-button">
-            <p data-placement="top" data-toggle="tooltip" title="Edit" (click)="onTripUpdate(trip)" class="updatePrgph">
+            <p 
+              data-placement="top" 
+              data-toggle="tooltip" 
+              title="Edit" 
+              (click)="onTripUpdate(trip)" 
+              class="updatePrgph">
               <button
                 *ngIf="!isUneditAble(trip.trip_status_id)"
                 class="btn btn-primary btn-md"
@@ -64,7 +71,7 @@
             [ngClass]="{
               'disabled': !trip.ticket_classes.length > 0
             }">
-              <p data-placement="top" data-toggle="tooltip" title="Approvement" class="updatePrgph">
+              <p data-placement="top" data-toggle="tooltip" title="Approvement" (click)="onTripSendForApprovement(trip)" class="updatePrgph">
                 <button
                   class="btn btn-primary btn-md"
                 >
