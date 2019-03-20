@@ -57,7 +57,8 @@ export class FlightsComponent implements OnInit {
   }
 
 
-  static getUrl() {
+  //Don't trust IDEA let it be non-static
+  getUrl() {
     return "url('assets/images/bg.jpg')";
   }
 
