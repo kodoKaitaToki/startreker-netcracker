@@ -1,7 +1,7 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.dao.IPendingDao;
-import edu.netcracker.backend.message.request.PendingActivationTrip;
+import edu.netcracker.backend.message.request.TripPendingActivationDto;
 import edu.netcracker.backend.service.IPendingSrvc;
 import edu.netcracker.backend.utils.ServiceStatus;
 import lombok.extern.slf4j.Slf4j;
@@ -13,36 +13,20 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j(topic = "log")
-public class TripPendingSrvc implements IPendingSrvc<PendingActivationTrip> {
+public class TripPendingSrvc implements IPendingSrvc<TripPendingActivationDto> {
 
-    private IPendingDao<PendingActivationTrip> iPendingDao;
+    private IPendingDao<TripPendingActivationDto> iPendingDao;
 
     @Override
-    public List<PendingActivationTrip> getPendingEntries() {
+    public List<TripPendingActivationDto> getPendingEntries() {
 
         log.debug("TripPendingSrvc.getPendingEntries() was invoked");
 
-        return iPendingDao.getPendingEntries().stream().map(obj -> {
-            if (obj.getApproverName() == null) {
-                obj.setApproverEmail("");
-                obj.setApproverName("");
-                obj.setApproverTel("");
-            }
-
-            if (((Integer)ServiceStatus.DRAFT.getValue()).toString().equals(obj.getTripStatus())) {
-                obj.setTripStatus("Draft");
-            } else if (((Integer)ServiceStatus.OPEN.getValue()).toString().equals(obj.getTripStatus())) {
-                obj.setTripStatus("Opened");
-            } else if (((Integer)ServiceStatus.ASSIGNED.getValue()).toString().equals(obj.getTripStatus())) {
-                obj.setTripStatus("Assigned");
-            }
-
-            return obj;
-        }).collect(Collectors.toList());
+        return iPendingDao.getPendingEntries();
     }
 
     @Override
-    public List<PendingActivationTrip> getPendingWithOffsetAndLimit(Number limit, Number offset) {
+    public List<TripPendingActivationDto> getPendingWithOffsetAndLimit(Number limit, Number offset) {
 
         log.debug("TripPendingSrvc.getPendingWithOffsetAndLimit(Number limit, Number offset) was invoked with parameters limit = {} offset = {}", limit, offset);
 
@@ -50,7 +34,7 @@ public class TripPendingSrvc implements IPendingSrvc<PendingActivationTrip> {
     }
 
     @Autowired
-    public void setiPendingDao(IPendingDao<PendingActivationTrip> iPendingDao) {
+    public void setiPendingDao(IPendingDao<TripPendingActivationDto> iPendingDao) {
         this.iPendingDao = iPendingDao;
     }
 }

@@ -1,8 +1,10 @@
 package edu.netcracker.backend.config.security;
 
-import edu.netcracker.backend.security.JwtAuthFilter;
+import edu.netcracker.backend.security.AuthFilter;
+import edu.netcracker.backend.security.DebugJwtAuthFilter;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.service.impl.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +31,8 @@ import java.util.Collections;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    //private AuthFilter authFilter;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf()
@@ -36,10 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .cors()
             .and()
             .authorizeRequests()
-            .antMatchers("/api/auth/**")
-            .permitAll()
             .anyRequest()
-            .authenticated()
+            .permitAll()
             .and()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -104,7 +106,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //    }
 
     @Bean
-    public JwtAuthFilter setAuthFilter() {
-        return new JwtAuthFilter();
+    public AuthFilter setAuthFilter() {
+        return new DebugJwtAuthFilter();
     }
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-public class CarrierViewsResponse extends CarrierStatisticsResponse{
+public class CarrierViewsResponse extends CarrierStatisticsResponse {
 
     private Long views;
 }

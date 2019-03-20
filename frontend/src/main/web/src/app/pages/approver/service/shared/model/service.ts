@@ -7,7 +7,7 @@ export class Service {
 
   service_descr: string;
 
-  service_status: number;
+  service_status: string;
 
   creation_date: Date;
 

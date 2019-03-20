@@ -27,6 +27,8 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class DiscountServiceTest {
 
+    @Rule
+    public ExpectedException expectedEx = ExpectedException.none();
     @Mock
     private DiscountDAO discountDAO;
 
@@ -34,9 +36,6 @@ public class DiscountServiceTest {
     public void startUp() {
         MockitoAnnotations.initMocks(this);
     }
-
-    @Rule
-    public ExpectedException expectedEx = ExpectedException.none();
 
     @Test
     public void getDiscountDTOs() {
@@ -160,7 +159,8 @@ public class DiscountServiceTest {
             Discount discount = invocationOnMock.getArgument(0);
             discount.setDiscountId(12L);
             return null;
-        }).when(discountDAO).save(any(Discount.class));
+        }).when(discountDAO)
+          .save(any(Discount.class));
 
         DiscountService discountService = new DiscountServiceImpl(discountDAO);
 
@@ -190,7 +190,8 @@ public class DiscountServiceTest {
         discount.setStartDate(LocalDateTime.of(2011, 12, 11, 3, 2));
         discount.setFinishDate(LocalDateTime.of(2013, 12, 11, 3, 2));
 
-        doNothing().when(discountDAO).delete(isA(Number.class));
+        doNothing().when(discountDAO)
+                   .delete(isA(Number.class));
         when(discountDAO.find(any())).thenReturn(Optional.of(discount));
 
         DiscountService discountService = new DiscountServiceImpl(discountDAO);
@@ -211,7 +212,8 @@ public class DiscountServiceTest {
         discount.setStartDate(LocalDateTime.of(2011, 12, 11, 3, 2));
         discount.setFinishDate(LocalDateTime.of(2024, 12, 11, 3, 2));
 
-        doNothing().when(discountDAO).delete(isA(Number.class));
+        doNothing().when(discountDAO)
+                   .delete(isA(Number.class));
         when(discountDAO.find(any())).thenReturn(Optional.of(discount));
 
         DiscountService discountService = new DiscountServiceImpl(discountDAO);
@@ -241,8 +243,7 @@ public class DiscountServiceTest {
 
         DiscountService discountService = new DiscountServiceImpl(discountDAO);
 
-        Assert.assertNull(discountService.getRelatedDiscountDTO(null, Arrays.asList(discountDTO1,
-                discountDTO2)));
+        Assert.assertNull(discountService.getRelatedDiscountDTO(null, Arrays.asList(discountDTO1, discountDTO2)));
     }
 
     @Test
@@ -263,8 +264,8 @@ public class DiscountServiceTest {
 
         DiscountService discountService = new DiscountServiceImpl(discountDAO);
 
-        Assert.assertEquals(discountDTO1, discountService.getRelatedDiscountDTO(1L,
-                Arrays.asList(discountDTO1, discountDTO2)));
+        Assert.assertEquals(discountDTO1,
+                            discountService.getRelatedDiscountDTO(1L, Arrays.asList(discountDTO1, discountDTO2)));
     }
 
     @Test
@@ -285,7 +286,6 @@ public class DiscountServiceTest {
 
         DiscountService discountService = new DiscountServiceImpl(discountDAO);
 
-        Assert.assertNull(discountService.getRelatedDiscountDTO(3L,
-                Arrays.asList(discountDTO1, discountDTO2)));
+        Assert.assertNull(discountService.getRelatedDiscountDTO(3L, Arrays.asList(discountDTO1, discountDTO2)));
     }
 }

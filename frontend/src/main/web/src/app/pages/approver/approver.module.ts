@@ -23,6 +23,7 @@ import {SelectInfoPipe} from './dashboard/shared/pipes/select-info.pipe';
 import {ItemsFilter} from './dashboard/shared/pipes/trip-filter.pipe';
 import {NgxPaginationModule} from "ngx-pagination";
 import {SelectServiceInfoPipe} from './dashboard/shared/pipes/select-service-info.pipe';
+import {StatePipe} from "./dashboard/shared/pipes/StatePipe";
 
 @NgModule({
   declarations: [ServiceComponent,
@@ -37,7 +38,7 @@ import {SelectServiceInfoPipe} from './dashboard/shared/pipes/select-service-inf
     OpenTripComponent,
     PendingTripsComponent,
     PendingServicesComponent,
-    SelectInfoPipe, ItemsFilter, SelectServiceInfoPipe
+    SelectInfoPipe, ItemsFilter, SelectServiceInfoPipe, StatePipe
   ],
   imports: [
     CommonModule,

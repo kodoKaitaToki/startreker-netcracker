@@ -5,6 +5,7 @@ import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.dao.annotations.Table;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@NoArgsConstructor
 @Table("spaceport")
 public class Spaceport {
     @PrimaryKey("spaceport_id")
@@ -29,4 +31,10 @@ public class Spaceport {
     private Long planetId;
 
     private Planet planet;
+
+    public Spaceport(Long spaceportId, String spaceportName, Long planetId) {
+        this.spaceportId = spaceportId;
+        this.spaceportName = spaceportName;
+        this.planetId = planetId;
+    }
 }

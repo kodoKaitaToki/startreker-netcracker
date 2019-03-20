@@ -1,8 +1,8 @@
 <div class="row">
-  <input type="text" class="form-control col-3 ml-auto"
+  <input [(ngModel)]="filterContent" class="form-control col-3 ml-auto"
          placeholder="Filter by name"
-         [(ngModel)]="filterContent"
          style="margin-top: 1.5%; margin-right: 1.5%;"
+         type="text"
   />
 </div>
 <div class="list-group">

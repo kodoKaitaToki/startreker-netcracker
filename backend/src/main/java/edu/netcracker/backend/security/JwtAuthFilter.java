@@ -1,7 +1,6 @@
 package edu.netcracker.backend.security;
 
 import edu.netcracker.backend.model.User;
-
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.service.impl.UserInformationHolderServiceImpl;
 import edu.netcracker.backend.utils.JwtUtils;
@@ -24,7 +23,7 @@ import java.io.IOException;
 
 @Service
 @Qualifier("ProductionAuthFilter")
-public class JwtAuthFilter extends OncePerRequestFilter {
+public class JwtAuthFilter extends AuthFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
@@ -33,7 +32,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private UserInformationHolderServiceImpl userInformationHolderService;
 
     private UserService userService;
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,

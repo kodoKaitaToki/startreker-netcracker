@@ -1,10 +1,11 @@
+import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {NgModule} from '@angular/core';
 import {HttpClientModule} from "@angular/common/http";
-import {ReactiveFormsModule} from '@angular/forms';
-
+import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
+import {MessageService, GrowlModule, CalendarModule} from "primeng/primeng";
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -21,7 +22,10 @@ import {LoginComponent} from './pages/login/login.component';
 import {AngularFontAwesomeModule} from 'angular-font-awesome';
 import {RecoveryComponent} from './pages/recovery/recovery.component';
 
+import {FlightsModule} from "./pages/flights/flights.module";
 import { Configuration } from './app.constants';
+import { ConfirmMessageComponent } from './pages/confirm-message/confirm-message.component';
+import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
 
 @NgModule({
   declarations: [
@@ -36,18 +40,26 @@ import { Configuration } from './app.constants';
     HeaderComponent,
     RegistrationComponent,
     LoginComponent,
-    RecoveryComponent
+    RecoveryComponent,
+    ConfirmMessageComponent,
+    ComingSoonComponent
   ],
   imports: [
+    CommonModule,
     AppRoutingModule,
     HttpClientModule,
     AngularFontAwesomeModule,
     ReactiveFormsModule,
     LoadingBarHttpClientModule,
     BrowserModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    GrowlModule,
+    FormsModule,
+    CalendarModule,
+    FlightsModule
   ],
-  providers: [Configuration],
+
+  providers: [Configuration, MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

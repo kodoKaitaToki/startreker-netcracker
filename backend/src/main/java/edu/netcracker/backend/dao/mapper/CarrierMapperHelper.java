@@ -3,7 +3,6 @@ package edu.netcracker.backend.dao.mapper;
 import edu.netcracker.backend.message.response.CarrierStatisticsResponse;
 import lombok.extern.log4j.Log4j2;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;

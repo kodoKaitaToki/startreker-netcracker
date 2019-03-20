@@ -189,15 +189,15 @@ insert into TRIP (CARRIER_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTU
 insert into TRIP (CARRIER_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, APPROVER_ID, CREATION_DATE) values (7, 6, '2017-06-22 13:10:36', '2017-07-21 07:19:15', 15, 3, 'Metus.gif', 1, '2015-02-17 20:41:12');
 insert into TRIP (CARRIER_ID, TRIP_STATUS, DEPARTURE_DATE, ARRIVAL_DATE, DEPARTURE_ID, ARRIVAL_ID, TRIP_PHOTO, APPROVER_ID, CREATION_DATE) values (5, 7, '2017-02-22 14:57:36', '2017-11-21 17:59:10', 10, 20, 'Turpis.gif', 3, '2015-08-09 06:31:50');
 
-insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('eget vulputate', 4, 11, null, 1984);
-insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('non sodales', 4, 20, null, 2531);
-insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('lacinia', 4, 14, 1, 3906);
-insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('eget vulputate-1', 1, 11, null, 1984);
-insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('eget vulputate-2', 2, 11, null, 1984);
-insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('eget vulputate-3', 3, 11, null, 1984);
-insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('eget vulputate-5', 5, 11, null, 1984);
-insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('eget vulputate-6', 6, 11, null, 1984);
-insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('eget vulputate-7', 7, 11, null, 1984);
+insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('first', 4, 11, null, 1984);
+insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('economy', 4, 20, null, 2531);
+insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('business', 4, 14, 1, 3906);
+insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('economy', 1, 11, null, 1984);
+insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('economy', 2, 11, null, 1984);
+insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('business', 3, 11, null, 1984);
+insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('first', 5, 11, null, 1984);
+insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('economy', 6, 11, null, 1984);
+insert into TICKET_CLASS (CLASS_NAME, TRIP_ID, CLASS_SEATS, DISCOUNT_ID, TICKET_PRICE) values ('economy', 7, 11, null, 1984);
 
 
 
@@ -289,8 +289,6 @@ insert into BUNDLE_CLASS (BUNDLE_ID, CLASS_ID, ITEM_NUMBER) values (2, 1, 3);
 insert into BUNDLE_SERVICE (BUNDLE_ID, P_SERVICE_ID, ITEM_NUMBER) values (2, 2, 3);
 insert into BUNDLE_SERVICE (BUNDLE_ID, P_SERVICE_ID, ITEM_NUMBER) values (1, 1, 1);
 insert into BUNDLE_SERVICE (BUNDLE_ID, P_SERVICE_ID, ITEM_NUMBER) values (1, 2, 1);
-
-insert into SCHEDULE (TRIP_ID, START_DATE, FINISH_DATE, INTERVAL, CREATION_DATE) values (4, '2014-08-03', '2020-08-03', 365, '2014-08-02');
 
 insert into REPORT (REPORTER_ID, APPROVER_ID, TRIP_ID, STATUS, REPORT_RATE, REPORT_TEXT, CREATION_DATE) values (15, null, 7, 1, null, 'donec posuere metus vitae ipsum aliquam non mauris morbi non lectus aliquam sit', '2018-12-09');
 insert into REPORT (REPORTER_ID, APPROVER_ID, TRIP_ID, STATUS, REPORT_RATE, REPORT_TEXT, CREATION_DATE) values (35, 2, 7, 2, null, 'amet turpis elementum ligula vehicula consequat morbi a ipsum integer a nibh in quis justo', '2019-01-25');
