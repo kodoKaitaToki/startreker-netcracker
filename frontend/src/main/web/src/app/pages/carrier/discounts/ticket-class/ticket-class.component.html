@@ -1,112 +1,55 @@
 <div class="container-fluid"
      *ngFor="let ticketClass of trip.ticket_classes"
 >
+
   <div class="row justify-content-center">
-    <div class="col-md-6 text-center">
-      <h4>Ticket class</h4>
+    <div class="row col-md-5 text-center">
+      <div class="col-5">
+        <h4>{{trip.departure_planet_name}} (spaceport {{trip.departure_spaceport_name}})</h4>
+        <br>
+        <h6>at {{trip.departure_date}}</h6>
+      </div>
+      <div class="col-2">
+        <h4>-></h4>
+      </div>
+      <div class="col-5">
+        <h4>{{trip.arrival_planet_name}} (spaceport {{trip.arrival_spaceport_name}})</h4>
+        <br>
+        <h6>at {{trip.arrival_date}}</h6>
+      </div>
     </div>
   </div>
 
-  <div class="row justify-content-center">
-    <h3 class="text-center">Departure information</h3>
-  </div>
-
-  <div class="row justify-content-center">
-    <div class="col-md-6 text-center">
-      <h5>Departure planet</h5>
-    </div>
-    <div class="col-md-6 text-center">
-      <h6>{{trip.departure_planet_name}}</h6>
-    </div>
-  </div>
-
-  <div class="row justify-content-center">
-    <div class="col-md-6 text-center">
-      <h5>Departure spaceport</h5>
-    </div>
-    <div class="col-md-6 text-center">
-      <h6>{{trip.departure_spaceport_name}}</h6>
-    </div>
-  </div>
-
-  <div class="row justify-content-center">
-    <div class="col-md-6 text-center">
-      <h5>Departure date</h5>
-    </div>
-    <div class="col-md-6 text-center">
-      <h6>{{trip.departure_date}}</h6>
-    </div>
-  </div>
-
-  <hr>
-
-  <div class="row justify-content-center">
-    <h3 class="text-center">Arrival information</h3>
-  </div>
-
-  <div class="row justify-content-center">
-    <div class="col-md-6 text-center">
-      <h5>Arrival planet</h5>
-    </div>
-    <div class="col-md-6 text-center">
-      <h6>{{trip.arrival_planet_name}}</h6>
-    </div>
-  </div>
-
-  <div class="row justify-content-center">
-    <div class="col-md-6 text-center">
-      <h5>Arrival spaceport</h5>
-    </div>
-    <div class="col-md-6 text-center">
-      <h6>{{trip.arrival_spaceport_name}}</h6>
-    </div>
-  </div>
-
-  <div class="row justify-content-center">
-    <div class="col-md-6 text-center">
-      <h5>Arrival date</h5>
-    </div>
-    <div class="col-md-6 text-center">
-      <h6>{{trip.arrival_date}}</h6>
-    </div>
-  </div>
-
-  <hr>
-
-  <div class="row justify-content-center">
-    <h3 class="text-center">Ticket class information</h3>
-  </div>
-
-  <div class="row justify-content-center">
-    <div class="col-md-6 text-center">
+  <div class="row">
+    <div class="col-md-3">
       <h5>Name</h5>
     </div>
-    <div class="col-md-6 text-center">
+    <div class="col-md-6">
       <h6>{{ticketClass.class_name}}</h6>
     </div>
   </div>
 
-  <div class="row justify-content-center">
-    <div class="col-md-6 text-center">
-      <h5>Class seats</h5>
+  <div class="row">
+    <div class="col-md-3">
+      <h5>Seats amount</h5>
     </div>
-    <div class="col-md-6 text-center">
+    <div class="col-md-6 ">
       <h6>{{ticketClass.class_seats}}</h6>
     </div>
   </div>
 
-  <div class="row justify-content-center">
-    <div class="col-md-6 text-center">
+  <div class="row">
+    <div class="col-md-3">
       <h5>Price</h5>
     </div>
-    <div class="col-md-6 text-center">
+    <div class="col-md-6">
       <h6>{{ticketClass.ticket_price}}</h6>
     </div>
   </div>
 
   <hr>
 
-  <div class="row justify-content-center">
+  <div class="row justify-content-center align-items-center">
     <div class="col-md-6 text-center">
       <h6>Discount</h6>
     </div>
@@ -221,7 +164,7 @@
     <div class="row justify-content-center">
       <button type="button"
               class="btn btn-success"
-              (click)="openTicketClassDiscountForm()"
+              (click)="openTicketClassDiscountForm(ticketClass)"
       >
         Add
       </button>
@@ -235,5 +178,6 @@
     [isDiscountFormActivated]="isDiscountFormActivated"
     (closeDiscountFormNotifier)="closeDiscountForm()"
     (submitFormEmitter)="emitToMainComponentTicketClassOnAddEvent($event)"
+    *ngIf="currentTicketClass === ticketClass"
   ></discount-form>
 </div>

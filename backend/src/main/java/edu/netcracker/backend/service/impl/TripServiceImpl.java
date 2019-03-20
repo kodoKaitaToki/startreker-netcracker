@@ -8,6 +8,9 @@ import edu.netcracker.backend.message.request.*;
 import edu.netcracker.backend.message.request.trips.TripCreation;
 import edu.netcracker.backend.message.response.trips.ReadTripsDTO;
 import edu.netcracker.backend.model.*;
+import edu.netcracker.backend.model.Trip;
+import edu.netcracker.backend.model.TripWithArrivalAndDepartureData;
+import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.model.state.trip.*;
 import edu.netcracker.backend.service.SuggestionService;
 import edu.netcracker.backend.service.TicketClassService;
@@ -29,14 +32,18 @@ import java.util.stream.Collectors;
 public class TripServiceImpl implements TripService {
 
     private TripDAO tripDAO;
+
     private PlanetDAO planetDAO;
+
     private SpaceportDAO spaceportDAO;
+
     private TripStateRegistry tripStateRegistry;
+
     private final TicketClassService ticketClassService;
+
     private final SuggestionService suggestionService;
 
     private static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
-
 
     private static final Logger logger = LoggerFactory.getLogger(TripServiceImpl.class);
 

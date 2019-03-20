@@ -2,6 +2,7 @@ package edu.netcracker.backend.dao;
 
 import edu.netcracker.backend.model.history.HistoryTicket;
 import edu.netcracker.backend.model.Ticket;
+import edu.netcracker.backend.model.User;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,7 +22,10 @@ public interface TicketDAO {
 
     List<Ticket> findAllByClass(Number id);
 
+    void buyTicket(Ticket ticket, User user);
+
     void deleteAllTicketsOfTicketClass(Long id);
+
     List<HistoryTicket> findAllPurchasedByUser(Number user_id,
                                                Number limit,
                                                Number offset,
