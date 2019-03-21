@@ -141,12 +141,15 @@
       <app-trips-table
         [trips]="defaultTrips"
         (onUpdateDataNotifier)="getTripForUpdate($event)"
-        (notifyAboutDelete)="processDeleteNotification()"
         [filterCriteria]="currentFilter"
         [filterContent]="filterContent"
         [exisitngDirections]="general"
         (onSubmitTicketClassEmitter$)="ticketClassSubmitHandler($event)"
         (deleteTicketClassEmitter$)="ticketClassDelete($event)"
+        (deleteTripEmitter$)="tripDelete($event)"
+        (approvementTripEmitter$)="tripSendForApprovement($event)"
+        (archiveTripEmitter$)="tripArchive($event)"
+        (restoreTripEmitter$)="tripRestore($event)"
       >
       </app-trips-table>
     </div>

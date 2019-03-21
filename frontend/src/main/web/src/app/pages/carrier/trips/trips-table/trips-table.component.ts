@@ -41,6 +41,14 @@ export class TripsTableComponent implements OnInit {
 
   @Output() deleteTicketClassEmitter$ = new EventEmitter();
 
+  @Output() deleteTripEmitter$ = new EventEmitter();
+
+  @Output() approvementTripEmitter$ = new EventEmitter();
+
+  @Output() archiveTripEmitter$ = new EventEmitter();
+
+  @Output() restoreTripEmitter$ = new EventEmitter();
+
   showTicketClass: boolean = false;
 
   constructor() {
@@ -122,7 +130,18 @@ export class TripsTableComponent implements OnInit {
   }
 
   onTripDelete(onClickedTripForDelete) {
-    this.onDeleteDataNotifier.emit((TripsTableComponent.deleteUnnecessaryFieldAfterClick(onClickedTripForDelete)));
+     this.deleteTripEmitter$.emit(onClickedTripForDelete);
+  }
+
+  onTripSendForApprovement(onClickedTripForApprovement) {
+    this.approvementTripEmitter$.emit(onClickedTripForApprovement);
+  }
+  
+  onTripArchive(onClickedTripForArchive) {
+    this.archiveTripEmitter$.emit(onClickedTripForArchive);
+  }
+  onTripRestore(onClickedTripForRestore) {
+    this.restoreTripEmitter$.emit(onClickedTripForRestore);
   }
 
   onSubmitUpdate() {
@@ -166,13 +185,6 @@ export class TripsTableComponent implements OnInit {
   deleteTicketClass($event) {
     this.deleteTicketClassEmitter$.emit($event);
     this.showTicketClass = !this.showTicketClass;
-  }
-
-  static deleteUnnecessaryFieldAfterClick(trip): Trip {
-    // delete approver['roles'];
-    // delete approver['user_created_date'];
-
-    return trip;
   }
 
   closeUpdateForm() {
