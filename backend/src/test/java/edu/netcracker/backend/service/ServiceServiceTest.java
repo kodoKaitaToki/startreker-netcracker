@@ -2,6 +2,7 @@ package edu.netcracker.backend.service;
 
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.ServiceDAO;
+import edu.netcracker.backend.dao.ServiceReplyDAO;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
@@ -29,21 +30,25 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
+import static sun.plugin.javascript.navig.JSType.Option;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ServiceServiceTest {
 
     @Mock
-    ServiceDAO serviceDAO;
+    private ServiceDAO serviceDAO;
 
     @Mock
-    UserService userService;
+    private UserService userService;
 
     @Mock
-    SecurityContext securityContext;
+    private SecurityContext securityContext;
 
     @InjectMocks
-    ServiceServiceImpl serviceService;
+    private ServiceServiceImpl serviceService;
+
+    @Mock
+    private ServiceReplyDAO serviceReplyDAO;
 
     @Rule
     public ExpectedException expectedEx = ExpectedException.none();
@@ -113,7 +118,11 @@ public class ServiceServiceTest {
         expectedEx.expect(RequestException.class);
         expectedEx.expectMessage("Service " + serviceCRUDDTO.getId() + " not found ");
 
+        User user = new User();
+        user.setUserId(2);
+
         when(serviceDAO.find(serviceCRUDDTO.getId())).thenReturn(Optional.empty());
+        when(securityContext.getUser()).thenReturn(user);
 
         serviceService.updateService(serviceCRUDDTO);
     }
@@ -126,9 +135,11 @@ public class ServiceServiceTest {
         user.setUserId(2);
 
         when(securityContext.getUser()).thenReturn(user);
-        when(serviceDAO.findByStatus(any(), eq(2))).thenReturn(ret);
+        when(serviceDAO.findByCarrierId(any(), any(), any(), eq(2))).thenReturn(ret);
+        when(serviceReplyDAO.getLastReply(any())).thenReturn(Optional.empty());
 
-        String actualStatus = serviceService.findByStatus(ServiceStatus.OPEN.toString()).get(0).getServiceStatus();
+        String actualStatus = serviceService.getServicesOfCarrier(0, 1, ServiceStatus.OPEN.toString())
+                .get(0).getServiceStatus();
 
         Assert.assertEquals(expectedStatus, actualStatus);
     }
