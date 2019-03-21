@@ -2,9 +2,10 @@
 
 <app-header></app-header>
 <main>
-  <app-search-panel></app-search-panel>
+  <app-search-bar (onGetTripsNotifier)="getTripsByCriteria($event)"></app-search-bar>
   <div class="trip-list">
-    <app-trip-info *ngFor="let trip of trips" [trip]="trip"></app-trip-info>
+    <app-trip-info *ngFor="let trip of trips" 
+                    [trip]="trip"></app-trip-info>
     <div class="row not-found" *ngIf="trips.length == 0"></div>
   </div>
 </main>

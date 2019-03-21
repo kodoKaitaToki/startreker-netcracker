@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators} from '@angular/forms';
-import { Router } from "@angular/router";
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { LandingService } from '../../landing/shared/service/landing.service';
+import { Planet } from '../../landing/shared/model/planet.model';
+import { FormGroup, FormControl } from '@angular/forms';
+import { Spaceport } from 'src/app/pages/landing/shared/model/spaceport.model';
+import { Router } from '@angular/router';
+import { DataService } from '../../../shared/data.service';
 import { clone } from 'ramda';
-
-import { LandingService } from '../shared/service/landing.service';
-import { Planet } from '../shared/model/planet.model';
-import { Spaceport } from '../../approver/trip/shared/model/spaceport.model';
+import { Location } from '@angular/common';
 
 declare function setPoint(point): any;
 
 @Component({
-  selector: 'app-search-menu',
-  templateUrl: './search-menu.component.html',
-  styleUrls: ['./search-menu.component.scss']
+  selector: 'app-search-bar',
+  templateUrl: './search-bar.component.html',
+  styleUrls: ['./search-bar.component.scss']
 })
-export class SearchMenuComponent implements OnInit {
+export class SearchBarComponent implements OnInit {
 
   searchForm: FormGroup;
 
@@ -28,9 +29,13 @@ export class SearchMenuComponent implements OnInit {
   minFinishDate = new Date();
 
   field = '';
+  
+  @Output() onGetTripsNotifier = new EventEmitter();
 
   constructor(private landingService: LandingService,
-             private router: Router) {
+             private router: Router,
+             private dataService: DataService,
+             private location: Location) {
     this.searchForm = new FormGroup({
       startPlanet: new FormControl({value: 'Choose a planet', disabled: true}),
       finishPlanet: new FormControl({value: 'Choose a planet', disabled: true}),
@@ -42,7 +47,16 @@ export class SearchMenuComponent implements OnInit {
    }
 
   ngOnInit() {
-    this.getPlanets();
+    
+    if(!this.location.isCurrentPathEqualTo('/')){
+      
+      this.dataService.getMessage().subscribe(message => { 
+        this.searchForm.patchValue(message);
+      })
+
+    }else{
+      this.getPlanets();
+    }
   }
 
   getPlanets(){
@@ -69,8 +83,13 @@ export class SearchMenuComponent implements OnInit {
   }
 
   onSubmit(){
-    localStorage.setItem('formData', JSON.stringify(this.searchForm.value));
-    this.router.navigate(['/trip-search'])
+    if(this.location.isCurrentPathEqualTo('/')){
+      this.dataService.sendFormData(this.searchForm.value);
+      this.router.navigate(['/trip-search']);
+    }else{
+      
+      this.onGetTripsNotifier.emit(this.searchForm.value);
+    }
   }
   
   getSpaceports(point: boolean){

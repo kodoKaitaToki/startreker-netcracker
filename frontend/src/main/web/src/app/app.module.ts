@@ -12,7 +12,6 @@ import {AppComponent} from './app.component';
 import {LandingComponent} from './pages/landing/landing.component';
 import {CarouselComponent} from './pages/landing/carousel/carousel.component';
 import {MapComponent} from './pages/landing/map/map.component';
-import {SearchMenuComponent} from './pages/landing/search-menu/search-menu.component';
 import {FeaturesComponent} from './pages/landing/features/features.component';
 import {FooterComponent} from './pages/landing/footer/footer.component';
 import {NotFoundPageComponent} from './pages/not-found-page/not-found-page.component';
@@ -26,13 +25,14 @@ import {FlightsModule} from "./pages/flights/flights.module";
 import { Configuration } from './app.constants';
 import { ConfirmMessageComponent } from './pages/confirm-message/confirm-message.component';
 import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
+import { DataService } from './shared/data.service';
+import { SearchBarModule } from './pages/search-bar/search-bar.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     CarouselComponent,
     MapComponent,
-    SearchMenuComponent,
     FeaturesComponent,
     FooterComponent,
     NotFoundPageComponent,
@@ -56,10 +56,11 @@ import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
     GrowlModule,
     FormsModule,
     CalendarModule,
-    FlightsModule
+    FlightsModule,
+    SearchBarModule
   ],
 
-  providers: [Configuration, MessageService],
+  providers: [Configuration, MessageService, DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
