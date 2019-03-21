@@ -49,22 +49,21 @@ public class ServiceDAOTest {
         ret.add(testService);
     }
 
-    @Test
-    public void getServicesForApprover() {
-
-        when(jdbcTemplate.query(anyString(), (Object[]) any(), any(ServiceMapper.class)))
-                .thenReturn(ret);
-
-        Assert.assertEquals(serviceDAOImpl.getServicesForApprover(0, 10, 2), ret);
-    }
-
-    @Test
-    public void getServicesForApproverId() {
-
-        when(jdbcTemplate.query(anyString(), (Object[]) any(), any(ServiceMapper.class)))
-                .thenReturn(ret);
-
-        Assert.assertEquals(serviceDAOImpl.getServicesForApprover(0, 10, 2, 2), ret);
-    }
+//    @Test
+//    public void getServicesForApprover() {
+//
+//        when(jdbcTemplate.query(anyString(), (Object[]) any(), any(ServiceMapper.class))).thenReturn(ret);
+//
+//        Assert.assertEquals(serviceDAOImpl.getServicesForApprover(0, 10, 2), ret);
+//    }
+//
+//    @Test
+//    public void getServicesForApproverId() {
+//
+//        when(jdbcTemplate.query(anyString(), (Object[]) any(), any(ServiceMapper.class)))
+//                .thenReturn(ret);
+//
+//        Assert.assertEquals(serviceDAOImpl.getServicesForApprover(0, 10, 2, 2), ret);
+//    }
 
 }
