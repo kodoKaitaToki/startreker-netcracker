@@ -12,6 +12,7 @@ import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.TripWithArrivalAndDepartureData;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.model.state.trip.*;
+import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.SuggestionService;
 import edu.netcracker.backend.service.TicketClassService;
 import edu.netcracker.backend.service.TripService;
@@ -42,6 +43,7 @@ public class TripServiceImpl implements TripService {
     private final TicketClassService ticketClassService;
 
     private final SuggestionService suggestionService;
+    private final SecurityContext securityContext;
 
     private static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
 
@@ -57,20 +59,22 @@ public class TripServiceImpl implements TripService {
                            SpaceportDAO spaceportDAO,
                            TripStateRegistry tripStateRegistry,
                            TicketClassService ticketClassService,
-                           SuggestionService suggestionService) {
+                           SuggestionService suggestionService,
+                           SecurityContext securityContext) {
         this.tripDAO = tripDAO;
         this.planetDAO = planetDAO;
         this.spaceportDAO = spaceportDAO;
         this.tripStateRegistry = tripStateRegistry;
         this.ticketClassService = ticketClassService;
         this.suggestionService = suggestionService;
+        this.securityContext = securityContext;
     }
 
     @Override
     public List<ReadTripsDTO> getAllTripsForCarrier() {
         logger.debug("Getting all trips for carrier from TripDAO");
-        //        TODO: implement getting carrier id from access token
-        List<Trip> trips = tripDAO.allCarriersTrips(7L);
+        Long carrierId = Long.valueOf(securityContext.getUser().getUserId());
+        List<Trip> trips = tripDAO.allCarriersTrips(carrierId);
 
         return getAllTripsDTO(trips);
     }
@@ -86,8 +90,8 @@ public class TripServiceImpl implements TripService {
     @Override
     public List<ReadTripsDTO> getAllTripsForCarrierWithPagination(Integer limit, Integer offset) {
         logger.debug("Getting {} trips for carrier from TripDAO with pagination starting from {}", limit, offset);
-        //        TODO: implement getting carrier id from access token
-        List<Trip> trips = tripDAO.paginationForCarrier(limit, offset, 7L);
+        Long carrierId = Long.valueOf(securityContext.getUser().getUserId());
+        List<Trip> trips = tripDAO.paginationForCarrier(limit, offset, carrierId);
 
         return getAllTripsDTO(trips);
     }
@@ -286,10 +290,7 @@ public class TripServiceImpl implements TripService {
         Trip trip = new Trip();
         trip.setDepartureDate(tripCreation.getDepartureDateTime());
         trip.setArrivalDate(tripCreation.getArrivalDateTime());
-        //        TODO: implement getting carrier id from access token
-        trip.setOwner(new User());
-        trip.getOwner()
-            .setUserId(7);
+        trip.setOwner(securityContext.getUser());
         trip.setTripState(draft);
         trip.setCreationDate(LocalDateTime.now());
         trip.setTripPhoto("defaultPhoto.png");
