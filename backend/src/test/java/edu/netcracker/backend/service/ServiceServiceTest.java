@@ -28,18 +28,13 @@ import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
-import static sun.plugin.javascript.navig.JSType.Option;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ServiceServiceTest {
 
     @Mock
     private ServiceDAO serviceDAO;
-
-    @Mock
-    private UserService userService;
 
     @Mock
     private SecurityContext securityContext;
