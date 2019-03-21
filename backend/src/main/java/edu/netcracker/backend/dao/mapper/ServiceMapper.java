@@ -18,8 +18,9 @@ public class ServiceMapper implements RowMapper {
         service.setApproverName(rs.getString("user_name"));
         service.setServiceName(rs.getString("service_name"));
         service.setServiceDescription(rs.getString("service_description"));
+
         int status = rs.getInt("service_status");
-        String statusVal = ServiceStatus.values()[status - 1].toString();
+        String statusVal = ServiceStatus.get(status).toString();
         service.setServiceStatus(statusVal);
 
         Date date = rs.getDate("creation_date");

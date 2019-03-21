@@ -12,6 +12,7 @@ import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.ServiceService;
 import edu.netcracker.backend.service.StatisticsService;
 import edu.netcracker.backend.utils.ServiceStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +22,8 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@Slf4j(topic = "log")
+@RequestMapping("/api/v1")
 public class ServiceController {
 
     private final StatisticsService statisticsService;
@@ -37,13 +40,13 @@ public class ServiceController {
         this.serviceService = serviceService;
     }
 
-    @GetMapping("api/v1/service/distribution")
+    @RequestMapping(value = "/service/distribution", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<ServiceDistributionElement> getServiceStatistics() {
         return statisticsService.getServiceStatistics();
     }
 
-    @GetMapping(value = "api/v1/service/sales")
+    @RequestMapping(value = "/service/sales", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public CarrierRevenueResponse getServicesSalesStatistics(OptionalTimeInterval timeInterval) {
         return timeInterval != null && timeInterval.isProvided()
@@ -55,7 +58,7 @@ public class ServiceController {
                                                                               .getUserId());
     }
 
-    @GetMapping(value = "api/v1/service/sales/per_week")
+    @RequestMapping(value = "/service/sales/per_week", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierRevenueResponse> getServicesSalesStatisticsByWeek(@Valid MandatoryTimeInterval timeInterval) {
         return statisticsService.getServicesSalesStatisticsByWeek(securityContext.getUser()
@@ -64,7 +67,7 @@ public class ServiceController {
                                                                   timeInterval.getTo());
     }
 
-    @GetMapping(value = "api/v1/service/sales/per_month")
+    @RequestMapping(value = "/service/sales/per_month", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierRevenueResponse> getServicesSalesStatisticsByMonth(@Valid MandatoryTimeInterval timeInterval) {
         return statisticsService.getServicesSalesStatisticsByMonth(securityContext.getUser()
@@ -73,7 +76,7 @@ public class ServiceController {
                                                                    timeInterval.getTo());
     }
 
-    @GetMapping(value = "api/v1/service/views/per_week")
+    @RequestMapping(value = "/service/views/per_week", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierViewsResponse> getServiceViewsStatisticsByWeek(@Valid MandatoryTimeInterval timeInterval) {
         return statisticsService.getServiceViewsStatisticsByWeek(securityContext.getUser()
@@ -82,7 +85,7 @@ public class ServiceController {
                                                                  timeInterval.getTo());
     }
 
-    @GetMapping(value = "api/v1/service/views/per_month")
+    @RequestMapping(value = "/service/views/per_month", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierViewsResponse> getServiceViewsStatisticsByMonth(@Valid MandatoryTimeInterval timeInterval) {
         return statisticsService.getServiceViewsStatisticsByMonth(securityContext.getUser()
@@ -91,7 +94,7 @@ public class ServiceController {
                                                                   timeInterval.getTo());
     }
 
-    @GetMapping(value = "api/v1/service/{id}/views/per_week")
+    @RequestMapping(value = "/service/{id}/views/per_week", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByWeek(@Valid MandatoryTimeInterval timeInterval,
                                                                                @PathVariable("id") Long serviceId) {
@@ -101,7 +104,7 @@ public class ServiceController {
                                                                           timeInterval.getTo());
     }
 
-    @GetMapping(value = "api/v1/service/{id}/views/per_month")
+    @RequestMapping(value = "/service/{id}/views/per_month", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByMonth(@Valid MandatoryTimeInterval timeInterval,
                                                                                 @PathVariable("id") Long serviceId) {
@@ -111,40 +114,34 @@ public class ServiceController {
                                                                            timeInterval.getTo());
     }
 
-    @GetMapping("api/v1/carrier/service")
+    @RequestMapping(value = "/carrier/service", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceCRUDDTO> getAllServices() {return serviceService.getServicesOfCarrier();}
-
-    @GetMapping("api/v1/carrier/service/pagin")
-    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceCRUDDTO> getPaginServices(@RequestParam("from") Integer from,
+    public List<ServiceCRUDDTO> getPaginServices(@RequestParam("status") String status,
+                                                 @RequestParam("from") Integer from,
                                                  @RequestParam("number") Integer number) {
-        return serviceService.getPaginServicesOfCarrier(from, number);
+        log.debug("ServiceController.getPaginServices(String status, Integer from, Integer number) was invoked " +
+                "with parameters status={}, from={}, number={}", status, from, number);
+        return serviceService.getServicesOfCarrier(from, number, status);
     }
 
-    @GetMapping("api/v1/carrier/service/by-status")
-    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceCRUDDTO> getByStatus(@RequestParam("status") String status) {
-        return serviceService.findByStatus(status);
-    }
-
-    @DeleteMapping("api/v1/carrier/service/{servId}")
-    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public ServiceCRUDDTO deleteService(@PathVariable Long servId) {return serviceService.deleteService(servId);}
-
-    @PutMapping("api/v1/carrier/service")
+    @RequestMapping(value = "/carrier/service", method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public ServiceCRUDDTO updateService(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO) {
+        log.debug("ServiceController.updateService(ServiceCRUDDTO serviceCRUDDTO) was invoked " +
+                "to update a service with id={}", serviceCRUDDTO.getId());
         return serviceService.updateService(serviceCRUDDTO);
     }
 
-    @PostMapping("api/v1/carrier/service")
+    @RequestMapping(value = "/carrier/service", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public ServiceCRUDDTO addService(@Valid @RequestBody ServiceCreateForm serviceCreateForm) {
+        log.debug("ServiceController.addService(ServiceCreateForm serviceCreateForm) was invoked " +
+                "to add a new service with name={}, status={}",
+                serviceCreateForm.getServiceName(), serviceCreateForm.getServiceStatus());
         return serviceService.addService(serviceCreateForm);
     }
 
-    @GetMapping("api/v1/approver/service")
+    @RequestMapping(value = "/approver/service", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_APPROVER')")
     public List<ServiceCRUDDTO> getServicesForApprover(@RequestParam("from") int from,
                                                        @RequestParam("number") int number,
@@ -158,7 +155,7 @@ public class ServiceController {
         return serviceService.getServicesForApprover(from, number, status, approverId);
     }
 
-    @PutMapping("api/v1/approver/service")
+    @RequestMapping(value = "/approver/service", method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('ROLE_APPROVER')")
     public ServiceCRUDDTO updateServiceReview(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO) {
         boolean reviewOnAssigned = (serviceCRUDDTO.getServiceStatus() != ServiceStatus.UNDER_CLARIFICATION.toString()

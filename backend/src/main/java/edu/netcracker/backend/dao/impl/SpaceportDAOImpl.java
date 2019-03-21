@@ -20,6 +20,11 @@ public class SpaceportDAOImpl extends CrudDAOImpl<Spaceport> implements Spacepor
     private final String FIND_ID_BY_SPACEPORT_NAME =
             "SELECT spaceport_id FROM spaceport WHERE spaceport_name = LOWER(?) AND planet_id = ?";
 
+    private final String FIND_SPACEPORTS_OF_PLANET = "SELECT spaceport_id, spaceport_name, creation_date, planet_id\n"
+                                                        + "FROM spaceport\n"
+                                                        + "WHERE planet_id = ?\n"
+                                                        + "ORDER BY spaceport_name";
+
     @Override
     public List<Spaceport> findByPlanet(String planet) {
         List<Spaceport> spaceports = new ArrayList<>();
@@ -28,10 +33,6 @@ public class SpaceportDAOImpl extends CrudDAOImpl<Spaceport> implements Spacepor
 
         return spaceports;
     }
-
-    private final String FIND_SPACEPORTS_OF_PLANET = "SELECT spaceport_id, spaceport_name, creation_date, planet_id\n" +
-            "FROM spaceport\n" +
-            "WHERE planet_id = ?";
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceDAOImpl.class);
 

@@ -19,24 +19,20 @@ import java.util.List;
 @Repository
 public class PlanetDAOImpl extends CrudDAOImpl<Planet> implements PlanetDAO {
 
-    private final String FIND_ALL_PLANETS_SQL = "SELECT planet_id, planet_name FROM planet";
     private final String FIND_ID_BY_PlANET_NAME = "SELECT planet_id FROM planet WHERE planet_name = UPPER(?)";
+    private final String FIND_ALL_PLANETS = "SELECT planet_id, planet_name FROM planet ORDER BY planet_name";
 
     @Override
     public List<Planet> findAllPlanets() {
 
-        List<Planet> planets = getJdbcTemplate().query(FIND_ALL_PLANETS_SQL,
+        return getJdbcTemplate().query(FIND_ALL_PLANETS,
                 new BeanPropertyRowMapper(Planet.class));
-
-        return planets;
     }
 
     @Override
     public Long getIdByPlanetName(String planet) {
         return getJdbcTemplate().queryForObject(FIND_ID_BY_PlANET_NAME, new Object[]{planet}, Long.class);
     }
-    private final String FIND_ALL_PLANETS = "SELECT planet_id, planet_name\n" +
-            "FROM planet";
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceDAOImpl.class);
 
@@ -44,7 +40,6 @@ public class PlanetDAOImpl extends CrudDAOImpl<Planet> implements PlanetDAO {
     public List<Planet> getAllPlanets() {
         logger.debug("Querying all planets");
         List<Planet> planets = new ArrayList<>();
-
         planets.addAll(getJdbcTemplate().query(FIND_ALL_PLANETS, getGenericMapper()));
         return planets;
     }

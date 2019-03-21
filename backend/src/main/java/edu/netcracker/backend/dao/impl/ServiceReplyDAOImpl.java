@@ -50,8 +50,8 @@ public class ServiceReplyDAOImpl extends CrudDAOImpl<ServiceReply> implements Se
         logger.debug("Querying last reply of service with id = {}", id);
         try{
             String reply_text = getJdbcTemplate().queryForObject(GET_LAST_REPLY, new Object[]{id, id}, String.class);
-            return Optional.ofNullable(reply_text);
-        }catch(NullPointerException e){
+            return Optional.of(reply_text);
+        }catch(EmptyResultDataAccessException e){
             return Optional.empty();
         }
     }
