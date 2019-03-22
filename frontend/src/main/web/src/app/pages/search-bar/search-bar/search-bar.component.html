@@ -9,11 +9,11 @@
           <hr class="hr-xs">
 
           <div class="form-check form-check-inline">
-            <input class="form-check-input" 
-                  type="radio" 
-                  name="inlineRadioOptions" 
-                  id="inlineRadio1" 
-                  value="one_way" 
+            <input class="form-check-input"
+                  type="radio"
+                  name="inlineRadioOptions"
+                  id="inlineRadio1"
+                  value="one_way"
                   (click)='disableDatepicker()'>
             <label class="form-check-label" for="inlineRadio1">One way</label>
           </div>
@@ -35,10 +35,9 @@
               <h6 class= "search-bar__heading">From:</h6>
             </div>
             <div class="col-lg-2">
-              <select class="custom-select" 
-                      onclick='setPoint("start")' 
+              <select onclick='setPoint("start")'
                       id="select_from"
-                      class='form-control'
+                      class='custom-select form-control'
                       formControlName="startPlanet"
                       (change)="getSpaceports(true)">
                 <option selected hidden>Choose a planet</option>
@@ -57,10 +56,9 @@
               <h6 class= "search-bar__heading">To:</h6>
             </div>
             <div class="col-lg-2">
-              <select class="custom-select" 
-                      onclick='setPoint("finish")'  
+              <select onclick='setPoint("finish")'
                       id="select_to"
-                      class='form-control'
+                      class='custom-select form-control'
                       formControlName="finishPlanet"
                       (change)="getSpaceports(false)">
                 <option selected>Choose a planet</option>
@@ -80,31 +78,26 @@
           <br/>
 
           <div class="row justify-content-center">
-      <div class="col-lg-1"></div>
             <div class="col-lg-2">
               <h6 class="search-bar__heading">Pick a date of flight:</h6>
             </div>
-            <div class="col-lg-2">
-              <input type="date" 
-                    name="flightDate" 
-                    class="form-control"
-                    formControlName="startDate"
-                    >
-                    <!-- <p-calendar [minDate]="minimumDate"
-                                formControlName="startDate"></p-calendar> -->
+            <div class="col-lg-3">
+                    <p-calendar [minDate]="minimumDate"
+                                formControlName="startDate"
+                                dateFormat="dd.mm.yy"
+                                (onSelect)="onSelect($event)"
+                                readonlyInput="true"
+                                [showIcon]="true"></p-calendar>
             </div>
-            <div class="col-lg-1"></div>
             <div class="col-lg-2">
               <h6 class="search-bar__heading">Pick a date of return:</h6>
             </div>
-            <div class="col-lg-2">
-              <input type="date" 
-                    name="returnDate" 
-                    id="returnDate" 
-                    class="form-control datepicker"
-                    formControlName="finishDate">
-              <!-- <p-calendar [minDate]="searchForm.get('startDate').value.getDate() + 1"
-                          formControlName="finishDate"></p-calendar> -->
+            <div class="col-lg-3">
+                <p-calendar formControlName="finishDate"
+                            [minDate]="minFinishDate"
+                            dateFormat="dd.mm.yy"
+                            readonlyInput="true"
+                            [showIcon]="true"></p-calendar>
             </div>
           </div>
 
@@ -113,7 +106,8 @@
           <div class="row">
             <div class="col-lg-5"></div>
             <div class="col-lg-2">
-              <input type="submit" value="Search" class="btn btn-primary btn-block">
+              <input type="submit" value="Search" class="btn btn-primary btn-block"
+                      [disabled]="searchForm.invalid">
             </div>
           </div>
         </form>

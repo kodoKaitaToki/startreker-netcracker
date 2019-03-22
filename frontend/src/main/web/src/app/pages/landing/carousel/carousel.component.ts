@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import * as $ from 'jquery';
+import { LandingService } from '../../landing/shared/service/landing.service';
 
 @Component({
   selector: 'carousel-comp',
@@ -8,9 +8,12 @@ import * as $ from 'jquery';
 })
 export class CarouselComponent implements OnInit {
 
-  constructor() { }
+  bundles = [];
+
+  constructor(private landingService: LandingService) { }
 
   ngOnInit()  {
+    this.landingService.getBundles().subscribe(bundles => this.bundles = bundles);
   }
 
 }

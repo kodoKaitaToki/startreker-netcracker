@@ -51,4 +51,6 @@ public interface UserService extends UserDetailsService {
     List<User> paginationWithRole(Integer from, Integer number, Role role);
 
     BoughtTicketDTO buyTicket(BoughtTicketDTO boughtTicketDTO);
+
+    Integer getUserAmount(Role role);
 }

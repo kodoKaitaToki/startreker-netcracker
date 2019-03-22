@@ -3,7 +3,7 @@ import { Component,
         Output,
         OnInit, 
         EventEmitter} from '@angular/core';
-import {Carrier} from '../carrier';
+import {Carrier} from '../shared/model/carrier.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
@@ -38,6 +38,10 @@ export class CarrierTableComponent implements OnInit {
   form: FormGroup;
   isEditButtonBlockedAfterSubmit = true;
   editBut = false;
+
+  pageNumber: number = 10;
+
+  pageFrom: number = 0;;
 
   constructor() {}
 
@@ -108,9 +112,15 @@ export class CarrierTableComponent implements OnInit {
   }
 
   onChange(event: number){
+    console.log(event);
     this.page = event;
     window.scrollTo(0, 0);
     this.notifyAboutChangePage.emit(event);
+  }
+
+  onPageUpdate(from: number) {
+    this.pageFrom = from;
+    this.notifyAboutChangePage.emit(from);
   }
 
 }

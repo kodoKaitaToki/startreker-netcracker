@@ -34,7 +34,7 @@
             </p>
           </div>
 
-          <div class="col-1 offset-1">
+          <!-- <div class="col-1 offset-1">
             <p data-placement="top"
                data-toggle="tooltip"
                title="Edit"
@@ -45,7 +45,7 @@
                 <i class="fa fa-edit"></i>
               </button>
             </p>
-          </div>
+          </div> -->
         </div>
       </div>
 
@@ -55,41 +55,18 @@
           <div class="col-md-8">
             <div class="row">
               <h3 class="col-2">Name</h3>
-              <h3 class="offset-3"
-                  *ngIf="currentServiceForUpdate !== service">
+              <h3 class="offset-3">
                 {{service.service_name}}
               </h3>
-              <input type="text"
-                     class="form-control"
-                     *ngIf="currentServiceForUpdate === service && !isForUpdateAlertMessage"
-                     formControlName="service_name"
-                     [value]="currentServiceForUpdate.service_name"
-                     [ngClass]="{
-                        'is-invalid':form.get('service_name').invalid,
-                        'is-valid': form.get('service_descr').valid
-                      }"
-              >
             </div>
 
             <hr>
 
             <div class="row">
               <h5 class="col-2">Description</h5>
-              <p class="offset-3"
-                 *ngIf="currentServiceForUpdate !== service"
-              >
+              <p class="offset-3">
                 {{service.service_descr}}
               </p>
-              <textarea class="form-control"
-                        *ngIf="currentServiceForUpdate === service && !isForUpdateAlertMessage"
-                        [ngClass]="{'is-invalid':form.get('service_descr').touched && form.get('service_descr').invalid,
-                                    'is-valid': form.get('service_descr').valid
-                                   }"
-                        formControlName="service_descr"
-                        [value]="currentServiceForUpdate.service_descr"
-                        cols=40
-                        rows=10
-              ></textarea>
             </div>
 
             <hr>
@@ -99,23 +76,6 @@
               <p class="offset-3">
                 {{service.creation_date | date}}
               </p>
-            </div>
-
-            <div class="row"
-                 *ngIf="currentServiceForUpdate === service && !isForUpdateAlertMessage"
-            >
-              <button class="btn btn-success col-4"
-                      type="submit"
-                      [disabled]="form.invalid"
-              >
-                OK
-              </button>
-
-              <button class="btn btn-info col-4 offset-4"
-                      (click)="closeUpdateForm()"
-              >
-                Cancel
-              </button>
             </div>
           </div>
         </div>

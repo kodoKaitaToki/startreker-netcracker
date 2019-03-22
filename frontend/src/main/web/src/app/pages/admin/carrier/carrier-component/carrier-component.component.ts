@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Carrier} from '../carrier';
-import {CarrierCrudService} from '../carrier-crud.service';
+import {Carrier} from '../shared/model/carrier.model';
+import {CarrierCrudService} from '../shared/service/carrier-crud.service';
 import { clone } from 'ramda';
 import {checkToken} from "../../../../modules/api/index";
 import { HttpResponse } from '@angular/common/http';
@@ -22,13 +22,7 @@ export class CarrierComponentComponent implements OnInit {
   allCarriers;
   currentCarrierForUpdate: Carrier;
   addBut: boolean = false;
-  curPage: number = 1;
-
-  filterCriteria = [
-    {name: 'id'},
-    {name: 'name'},
-    {name: 'status'},
-  ];
+  curPage: number = 0;
 
   butGroup = {
     editBut: false,
@@ -37,10 +31,6 @@ export class CarrierComponentComponent implements OnInit {
   };
 
   filterContent = '';
-
-  currentFilter = this.filterCriteria[0].name;
-  currentFilterPlaceholder = `Search by ${this.currentFilter}`;
-
   form: FormGroup;
 
   dataAvailable: boolean = false;
@@ -53,18 +43,9 @@ export class CarrierComponentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    this.getCarriers();
-    //this.getCarriersPagin();
+    this.getCarriersPagin();
 
     this.createNewForm();
-  }
-
-  chooseNewFilter(chosenFilterName) {
-
-    this.currentFilter = chosenFilterName.value;
-
-    this.currentFilterPlaceholder = `Search by ${this.currentFilter}`;
   }
 
   processUpdateEvent(event) {
@@ -78,7 +59,7 @@ export class CarrierComponentComponent implements OnInit {
                           checkToken(resp.headers);
                           this.butGroup.updateBut = false;
                           this.butGroup.editBut = false;
-                          //this.getCarriersPagin();
+                          this.getCarriersPagin();
                          },
                         error => {
                           if(error.error.message = 'Username already exist'){
@@ -99,8 +80,7 @@ export class CarrierComponentComponent implements OnInit {
                           checkToken(resp.headers);
                           this.butGroup.deleteBut = false;
                           this.butGroup.editBut = false;
-                          this.getCarriers();
-                          //this.getCarriersPagin();
+                          this.getCarriersPagin();
                          },
                         error => {
                           this.butGroup.deleteBut = false;
@@ -112,28 +92,17 @@ export class CarrierComponentComponent implements OnInit {
 
   processChangePage(event){
     this.curPage = event;
-    //this.getCarriersPagin();
-  }
-
-  getCarriers(){
-    this.carCrudService.getAllCarriers()
-                      .subscribe(
-                        (resp: HttpResponse<any>) => {
-                          checkToken(resp.headers);
-                          this.allCarriers = clone(resp.body);
-                          this.dataAvailable = true;
-                        }
-                      );
+    this.getCarriersPagin();
   }
 
   getCarriersPagin(){
-    let from = (this.curPage*this.carPerPage)-(this.carPerPage-1);
-    this.carCrudService.getCarriersPagin(from, this.carPerPage)
+    this.carCrudService.getCarriersPagin(this.curPage, this.carPerPage)
                       .subscribe(
                         (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
                           this.carriers = clone(resp.body);
                           this.dataAvailable = true;
+                          window.scrollTo(0, 0);
                          }
                       );
    }
@@ -156,8 +125,7 @@ export class CarrierComponentComponent implements OnInit {
                       .subscribe(
                         (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
-                          this.getCarriers();
-                          //this.getCarriersPagin();
+                          this.getCarriersPagin();
                           this.clearform();
                          },
                         error => {

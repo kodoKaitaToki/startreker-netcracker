@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { LandingService } from '../../landing/shared/service/landing.service';
 import { Planet } from '../../landing/shared/model/planet.model';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Spaceport } from 'src/app/pages/landing/shared/model/spaceport.model';
 import { Router } from '@angular/router';
 import { DataService } from '../../../shared/data.service';
@@ -37,11 +37,11 @@ export class SearchBarComponent implements OnInit {
              private dataService: DataService,
              private location: Location) {
     this.searchForm = new FormGroup({
-      startPlanet: new FormControl({value: 'Choose a planet', disabled: true}),
-      finishPlanet: new FormControl({value: 'Choose a planet', disabled: true}),
-      startSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}),
-      finishSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}),
-      startDate: new FormControl(''),
+      startPlanet: new FormControl({value: 'Choose a planet', disabled: true}, Validators.required),
+      finishPlanet: new FormControl({value: 'Choose a planet', disabled: true}, Validators.required),
+      startSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}, Validators.required),
+      finishSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}, Validators.required),
+      startDate: new FormControl('', Validators.required),
       finishDate: new FormControl('')
     });
    }
@@ -116,6 +116,13 @@ export class SearchBarComponent implements OnInit {
       }
     }
     
+  }
+
+  onSelect(event){
+    if(this.searchForm.get('finishDate').value < event){
+      this.searchForm.patchValue({finishDate: ''});
+    }
+    this.minFinishDate.setDate(event.getDate() + 1);
   }
 
 }

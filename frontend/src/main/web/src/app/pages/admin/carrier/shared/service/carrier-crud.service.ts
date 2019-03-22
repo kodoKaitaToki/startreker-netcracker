@@ -1,9 +1,8 @@
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 
-import { Api } from '../../../modules/api/index';
-import { Carrier } from './carrier';
+import { Api } from '../../../../../modules/api';
+import { Carrier } from '../model/carrier.model';
 
 @Injectable({
     providedIn: 'root'

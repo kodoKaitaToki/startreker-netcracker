@@ -56,28 +56,13 @@ export class ArchiveComponent implements OnInit {
 
   updateService(service: Service, message: String) {
     this.isForUpdateAlertMessage = true;
-    let createdMessage = '';
-    if (message == 'removed') {
-      createdMessage = this.createMessage('success',
-        'The service ' + service.service_name + ' was removed',
-        "You won't see it any more"
-      );
-    } else if (message == 'edited') {
-      createdMessage = this.createMessage('success',
-        'The service ' + service.service_name + ' was edited',
-        'It was sent for approvement'
-      );
-    } else {
-      createdMessage = this.createMessage('success',
-        'The service ' + service.service_name + ' was restored',
-        'It was sent for approvement'
-      );
-    }
     this.serviceService.updateService(service)
                       .subscribe(
                         (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
-                          this.showMessage(createdMessage);
+                          this.showMessage(this.createMessage('success',
+                                                              'The service ' + service.service_name + ' was ' + message,
+                                                              'It was sent for approvement'));
                           this.getArchievedServices();
                           this.isForUpdateAlertMessage = false;
                         },

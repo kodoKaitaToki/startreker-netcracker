@@ -43,6 +43,9 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     @Value("${GET_SERVICE_NAMES_BY_TICKET}")
     private String GET_SERVICE_NAMES_BY_TICKET;
 
+    @Value("${UPDATE_SERVICE_BY_CARRIER}")
+    private String UPDATE_SERVICE_BY_CARRIER;
+
     private ServiceMapper mapper = new ServiceMapper();
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -68,6 +71,16 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     public void update(ServiceDescr service) {
         log.debug("ServiceDAO.update(ServiceDescr service) was invoked with parameters service={}", service);
         super.update(service);
+    }
+
+    @Override
+    public Integer updateServiceByCarrier(ServiceDescr service){
+        log.debug("ServiceDAO.update(ServiceDescr service) was invoked with parameters service={}", service);
+        return getJdbcTemplate().update(UPDATE_SERVICE_BY_CARRIER, service.getServiceName(),
+                service.getServiceDescription(),
+                service.getServiceStatus(),
+                service.getCarrierId(),
+                service.getServiceId());
     }
 
     @Override

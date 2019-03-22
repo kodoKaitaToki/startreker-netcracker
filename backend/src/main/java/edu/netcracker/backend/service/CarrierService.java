@@ -18,6 +18,8 @@ public interface CarrierService {
 
     List<UserDTO> getAllCarrier(Integer startId, Integer endId);
 
+    Integer getCarrierAmount();
+
     UserDTO createCarrier(UserCreateForm createForm);
 
     UserDTO deleteCarrier(Integer userId);

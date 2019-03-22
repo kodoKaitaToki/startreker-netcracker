@@ -68,9 +68,6 @@ const bundles = {
   getBundlesPagin(){
     return `${baseUrl}api/v1/admin/pagination`;
   }
-/*  getCarrierByUsername(){
-    return `${baseUrl}api/v1/admin/carrier-by-username?username=`;
-  } */
 }
 const trips = {
   getExistingPlanets() {
@@ -141,6 +138,9 @@ const landing = {
   },
   trips(){
     return `${baseUrl}api/v1/user/trips`;
+  },
+  bundles(){
+    return `${baseUrl}api/v1/bundles/fresh`;
   }
 }
 
@@ -152,7 +152,7 @@ export const Api = {
   carrier,
   costDash,
   baseUrl,
-  service, 
+  service,
   possibleServices,
   trip,
   trips,
