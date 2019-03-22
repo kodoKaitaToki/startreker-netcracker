@@ -1,6 +1,6 @@
 import {Observable} from "rxjs/internal/Observable";
 import {HttpClient} from "@angular/common/http";
-import {Bundle} from "../model/bundle";
+import {Bundle} from "../../../../../shared/model/bundle";
 import {Injectable} from "@angular/core";
 
 import { Api, HttpOptionsAuthorized } from '../../../../../modules/api/index';

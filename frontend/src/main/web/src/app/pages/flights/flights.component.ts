@@ -17,7 +17,6 @@ export class FlightsComponent implements OnInit {
   searchForm: FormGroup;
 
   constructor(private svc: SearchService) {
-    //this.getTripsByCriteria()
 
     let trip: Trip = new Trip();
     trip.departure_date = "20-02-2020 12:20:00";
@@ -51,6 +50,7 @@ export class FlightsComponent implements OnInit {
 
   getTripsByCriteria(event) {
 
+    console.log(event.start);
     // this.svc.getTrips(event.departure_planet, 
     //                   event.departure_spaceport, 
     //                   event.departure_date, 
@@ -59,7 +59,6 @@ export class FlightsComponent implements OnInit {
     //   this.trips = response;
     // })
   }
-
 
   getUrl() {
     return "url('assets/images/bg.jpg')";

@@ -14,11 +14,17 @@
                   name="inlineRadioOptions"
                   id="inlineRadio1"
                   value="one_way"
-                  (click)='disableDatepicker()'>
+                  (click)="searchForm.get('finishDate').disable();">
             <label class="form-check-label" for="inlineRadio1">One way</label>
           </div>
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="return" checked="checked" (click)='enableDatepicker()'>
+            <input class="form-check-input" 
+                  type="radio" 
+                  name="inlineRadioOptions" 
+                  id="inlineRadio2" 
+                  value="return" 
+                  checked="checked" 
+                  (click)="searchForm.get('finishDate').enable();">
             <label class="form-check-label" for="inlineRadio2">Return</label>
           </div>
           <!-- <div class="form-check">
@@ -46,7 +52,7 @@
               </select>
             </div>
             <div class="col-lg-2">
-              <select class="custom-select"
+              <select class="custom-select form-control"
                       formControlName="startSpaceport">
                 <option selected>Choose a spaceport</option>
                 <option *ngFor="let spaceport of spaceportsFrom">{{spaceport.spaceport_name}}</option>
@@ -67,7 +73,7 @@
               </select>
             </div>
             <div class="col-lg-2">
-              <select class="custom-select"
+              <select class="custom-select form-control"
                       formControlName="finishSpaceport">
                 <option selected>Choose a spaceport</option>
                 <option *ngFor="let spaceport of spaceportsTo">{{spaceport.spaceport_name}}</option>

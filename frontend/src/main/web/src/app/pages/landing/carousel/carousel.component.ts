@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import { LandingService } from '../../landing/shared/service/landing.service';
+import { Bundle } from '../../../shared/model/bundle';
 
 @Component({
   selector: 'carousel-comp',
@@ -8,7 +9,7 @@ import { LandingService } from '../../landing/shared/service/landing.service';
 })
 export class CarouselComponent implements OnInit {
 
-  bundles = [];
+  bundles: Bundle[] = [];
 
   constructor(private landingService: LandingService) { }
 

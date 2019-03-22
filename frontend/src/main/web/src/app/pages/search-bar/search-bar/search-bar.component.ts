@@ -28,8 +28,6 @@ export class SearchBarComponent implements OnInit {
   minimumDate = new Date();
   minFinishDate = new Date();
 
-  field = '';
-  
   @Output() onGetTripsNotifier = new EventEmitter();
 
   constructor(private landingService: LandingService,
@@ -42,18 +40,27 @@ export class SearchBarComponent implements OnInit {
       startSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}, Validators.required),
       finishSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}, Validators.required),
       startDate: new FormControl('', Validators.required),
-      finishDate: new FormControl('')
+      finishDate: new FormControl({value: '', disabled: false})
     });
    }
 
   ngOnInit() {
-    
+    this.dataService.getPlanets().subscribe(message => {this.planets = message});
+    this.dataService.getSpaceports().subscribe(message => {
+      this.spaceportsFrom = message.startPorts;
+      this.spaceportsTo = message.finishPorts;
+    });
     if(!this.location.isCurrentPathEqualTo('/')){
-      
-      this.dataService.getMessage().subscribe(message => { 
-        this.searchForm.patchValue(message);
-      })
 
+      this.searchForm.get('startSpaceport').enable();
+      this.searchForm.get('finishSpaceport').enable();
+      this.enablePlanets();
+
+      this.dataService.getMessage().subscribe(message => {       
+        this.searchForm.patchValue(message);
+      });
+
+      this.onGetTripsNotifier.emit(this.searchForm.value);
     }else{
       this.getPlanets();
     }
@@ -63,8 +70,7 @@ export class SearchBarComponent implements OnInit {
     this.landingService.getPlanets()
         .subscribe((resp: Response) => {
           this.planets = clone(resp);
-          this.searchForm.get('startPlanet').enable();
-          this.searchForm.get('finishPlanet').enable();
+          this.enablePlanets();
         })
   }
 
@@ -72,22 +78,14 @@ export class SearchBarComponent implements OnInit {
     setPoint(point);
   }
 
-  disableDatepicker(){
-    let element = <HTMLInputElement> document.getElementById("returnDate");
-    element.disabled = true;
-  }
-
-  enableDatepicker(){
-    let element = <HTMLInputElement> document.getElementById("returnDate");
-    element.disabled = false;
-  }
-
   onSubmit(){
     if(this.location.isCurrentPathEqualTo('/')){
       this.dataService.sendFormData(this.searchForm.value);
+      this.dataService.sendPlanetsData(this.planets);
+      this.dataService.sendSpaceportsData({startPorts: this.spaceportsFrom,
+                                          finishPorts: this.spaceportsTo});
       this.router.navigate(['/trip-search']);
     }else{
-      
       this.onGetTripsNotifier.emit(this.searchForm.value);
     }
   }
@@ -123,6 +121,11 @@ export class SearchBarComponent implements OnInit {
       this.searchForm.patchValue({finishDate: ''});
     }
     this.minFinishDate.setDate(event.getDate() + 1);
+  }
+
+  enablePlanets(){
+    this.searchForm.get('startPlanet').enable();
+    this.searchForm.get('finishPlanet').enable();
   }
 
 }
