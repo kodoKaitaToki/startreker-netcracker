@@ -30,7 +30,7 @@ export class TroubleStatisticsComponent implements OnInit {
       this.troubleStatisticsService.getStatistic()
           .subscribe((resp: HttpResponse<any>) => {
             checkToken(resp.headers);
-            this.troubleStatisticsModel = clone(resp.body.amount);
+            this.troubleStatisticsModel = clone(resp.body);
             this.ticketChart.options.title.text = "Tickets:";
             this.reloadChart();
           });
@@ -39,7 +39,7 @@ export class TroubleStatisticsComponent implements OnInit {
       this.troubleStatisticsService.getStatisticForApprover(this.form.value.id)
           .subscribe((resp: HttpResponse<any>) => {
             checkToken(resp.headers);
-            this.troubleStatisticsModel = clone(resp.body.amount);
+            this.troubleStatisticsModel = clone(resp.body);
             this.ticketChart.options.title.text = "Tickets for approver id " + this.form.value.id + ":";
             this.reloadChart();
           });

@@ -24,6 +24,6 @@ public class ReportStatisticsResponse {
     private double totalRated;
     @JsonProperty("total_removed")
     private double totalRemoved;
-    @JsonProperty("average")
+    @JsonProperty("avg_rate")
     private double averageMark;
 }
