@@ -1,5 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FlightClass} from "../../shared/models/flight-class.model";
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-ticket-class',
@@ -10,9 +11,15 @@ export class TicketClassComponent implements OnInit {
 
   @Input('ticket_class') ticket_class: FlightClass;
 
-  constructor() { }
+  display: boolean = false;
+
+  constructor(private modalService: NgbModal) {
+  }
 
   ngOnInit() {
   }
 
+  openVerticallyCentered(content) {
+    this.modalService.open(content, {centered: true});
+  }
 }

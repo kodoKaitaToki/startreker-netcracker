@@ -1,15 +1,34 @@
 <div class="row class-item">
   <div class="col-6 class-name">
-    {{"TICKET_CLASS_NAME"}}
+    {{ticket_class.class_name}}
   </div>
   <div class="col-1">
       <input class="tickets-amount-input" type="number" min="1" value="1" >
   </div>
   <div class="col-1">
-    {{20}}
+    {{ticket_class.remaining_seats}}
   </div>
   <div class="col-4 ticket-price">
-    <span class="price">{{"2000"}}</span>$
-    <button>CHOOSE</button>
+    <span class="price">{{ticket_class.ticket_price}}</span>$
+    <button class="btn btn-outline-primary mb-2 mr-2" (click)="openVerticallyCentered(content)">
+      CHOOSE
+    </button>
+
+    <ng-template #content let-modal>
+      <div class="modal-header">
+        <h4 class="modal-title">Modal title</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-ticket-class-info [ticket_class]="ticket_class"></app-ticket-class-info>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+      </div>
+    </ng-template>
+
+
   </div>
 </div>

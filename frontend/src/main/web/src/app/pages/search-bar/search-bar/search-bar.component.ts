@@ -1,12 +1,12 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { LandingService } from '../../landing/shared/service/landing.service';
-import { Planet } from '../../landing/shared/model/planet.model';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Spaceport } from 'src/app/pages/landing/shared/model/spaceport.model';
-import { Router } from '@angular/router';
-import { DataService } from '../../../shared/data.service';
-import { clone } from 'ramda';
-import { Location } from '@angular/common';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {LandingService} from '../../landing/shared/service/landing.service';
+import {Planet} from '../../landing/shared/model/planet.model';
+import {FormControl, FormGroup} from '@angular/forms';
+import {Spaceport} from 'src/app/pages/landing/shared/model/spaceport.model';
+import {Router} from '@angular/router';
+import {DataService} from '../../../shared/data.service';
+import {clone} from 'ramda';
+import {Location} from '@angular/common';
 
 declare function setPoint(point): any;
 
@@ -29,7 +29,7 @@ export class SearchBarComponent implements OnInit {
   minFinishDate = new Date();
 
   field = '';
-  
+
   @Output() onGetTripsNotifier = new EventEmitter();
 
   constructor(private landingService: LandingService,
@@ -47,10 +47,10 @@ export class SearchBarComponent implements OnInit {
    }
 
   ngOnInit() {
-    
+
     if(!this.location.isCurrentPathEqualTo('/')){
-      
-      this.dataService.getMessage().subscribe(message => { 
+
+      this.dataService.getMessage().subscribe(message => {
         this.searchForm.patchValue(message);
       })
 
@@ -85,13 +85,13 @@ export class SearchBarComponent implements OnInit {
   onSubmit(){
     if(this.location.isCurrentPathEqualTo('/')){
       this.dataService.sendFormData(this.searchForm.value);
-      this.router.navigate(['/trip-search']);
+      this.router.navigate(['/flights']);
     }else{
-      
+
       this.onGetTripsNotifier.emit(this.searchForm.value);
     }
   }
-  
+
   getSpaceports(point: boolean){
     let planetName;
     if(point){
@@ -115,7 +115,7 @@ export class SearchBarComponent implements OnInit {
         });
       }
     }
-    
+
   }
 
 }

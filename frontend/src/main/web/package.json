@@ -38,7 +38,8 @@
     "rxjs": "~6.3.3",
     "three": "^0.101.1",
     "tslib": "^1.9.0",
-    "zone.js": "~0.8.26"
+    "zone.js": "~0.8.26",
+    "@ng-bootstrap/ng-bootstrap": "latest"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.13.6",
