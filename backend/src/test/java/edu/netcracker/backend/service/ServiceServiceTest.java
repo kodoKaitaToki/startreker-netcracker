@@ -116,7 +116,7 @@ public class ServiceServiceTest {
         User user = new User();
         user.setUserId(2);
 
-        when(serviceDAO.find(serviceCRUDDTO.getId())).thenReturn(Optional.empty());
+        when(serviceDAO.find(serviceCRUDDTO.getId())).thenReturn(Optional.of(serviceDescr));
         when(securityContext.getUser()).thenReturn(user);
 
         serviceService.updateService(serviceCRUDDTO);
