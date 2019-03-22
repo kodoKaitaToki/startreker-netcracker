@@ -26,6 +26,8 @@ public class ServiceMapper implements RowMapper {
         Date date = rs.getDate("creation_date");
         String strDate = date.toLocalDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         service.setCreationDate(strDate);
+
+        service.setReplyText(rs.getString("reply_text"));
         return service;
     }
 }

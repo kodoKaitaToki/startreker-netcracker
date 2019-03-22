@@ -6,18 +6,8 @@
 
       <div class="row">
 
-        <select class="form-control col-md-12 col-sm-12 col-lg-4" (click)="chooseNewFilter($event.target)">
-
-          <option *ngFor="let filters of filterCriteria" [value]="filters.name">
-
-            {{filters.name}}
-
-          </option>
-
-        </select>
-
         <input type="text" class="form-control col-md-12 col-sm-12 col-lg-7 offset-lg-1"
-               [placeholder]="currentFilterPlaceholder"
+               placeholder="Filter by name"
                [(ngModel)]="filterContent"
         />
 

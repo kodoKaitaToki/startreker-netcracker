@@ -1,4 +1,4 @@
-import {Trip} from "./trip";
+import {Trip} from "../../pages/admin/bundles/shared/model/trip";
 
 export class Bundle {
   constructor(

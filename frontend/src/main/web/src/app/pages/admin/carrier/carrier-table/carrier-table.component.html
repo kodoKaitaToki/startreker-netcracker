@@ -1,17 +1,9 @@
 <div class="list-group">
-
-  <li class="list-group-item" *ngFor="let carrier of allCarriers 
-                              | filter: filterCriteria: filterContent
-                              | paginate: {id: 'listing_pagination', itemsPerPage: 10, currentPage: page ,totalItems: totalRec}">
+  <li class="list-group-item" *ngFor="let carrier of carriers | filter: filterContent">
 
     <div class="row">
 
-      <div class="col-1"
-           title="id"
-      >
-        <span class="badge badge-primary badge-pill idBadge">{{carrier.id}}</span>
-
-      </div>
+      <div class="col-1"></div>
 
       <div class="row col-5 offset-6"
            *ngIf="!isForUpdateMessage"
@@ -198,11 +190,20 @@
 
 <hr>
 
-<div class="clearfix"></div>
+<!-- <div class="clearfix"></div>
 <div style="text-align: center">
   <pagination-controls id='listing_pagination'
                         (pageChange)="onChange($event)"
                         previousLabel=""
                         nextLabel=""></pagination-controls>
     
-</div>
+</div> -->
+
+<app-paginator
+    [page]="carriers"
+    [amount]=10
+    [from]="pageFrom"
+    [number]="pageNumber"
+    (update)="onPageUpdate($event)"
+  >
+</app-paginator>

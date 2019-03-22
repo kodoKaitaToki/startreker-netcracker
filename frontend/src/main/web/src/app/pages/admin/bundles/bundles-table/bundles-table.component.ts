@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewChildren, QueryList} from '@angular/core';
-import {Bundle} from '../shared/model/bundle';
+import {Bundle} from '../../../../shared/model/bundle';
 import {BundlesService} from "../shared/service/bundles.service";
 import {MessageService} from "primeng/api";
 import {HttpErrorResponse, HttpResponse} from "@angular/common/http";

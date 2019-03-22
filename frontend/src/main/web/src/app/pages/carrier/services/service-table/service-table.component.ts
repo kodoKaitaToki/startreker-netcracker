@@ -18,7 +18,6 @@ export class ServiceTableComponent implements OnInit {
 
   services: Service[] = [];
 
-  currentServiceForUpdate: Service;
   form: FormGroup;
   isForUpdateAlertMessage = false;
   filterContent = '';
@@ -80,16 +79,7 @@ export class ServiceTableComponent implements OnInit {
                         error => console.log(error)
                       );
   }
-
-  editService(service: Service){
-    this.currentServiceForUpdate = service;
-
-    this.form.patchValue({
-                          service_name: this.currentServiceForUpdate.service_name,
-                          service_descr: this.currentServiceForUpdate.service_descr
-                         });
-  }
-
+  
   changeService(service: Service){
     service['service_name'] = this.form.get('service_name').value;
     service['service_descr'] = this.form.get('service_descr').value;
@@ -98,7 +88,6 @@ export class ServiceTableComponent implements OnInit {
   }
 
   closeUpdateForm(){
-    this.currentServiceForUpdate = null;
     this.isForUpdateAlertMessage = false;
   }
 

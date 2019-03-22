@@ -47,6 +47,14 @@ public class BundleCrudController {
                       .collect(Collectors.toList());
     }
 
+    @GetMapping("api/v1/bundles/fresh")
+    @ResponseBody
+    public List<BundleDTO> getAllBundles() {
+        log.debug("BundleCrudController.getAllBundles() was invoked");
+
+        return bcs.getAll();
+    }
+
     @GetMapping("api/v1/bundles/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.OK)

@@ -50,7 +50,7 @@ var planetsInfo =
     position: 180,
     size: 9
 },
-pluto: { texture: "https://preview.ibb.co/cZ1DB7/Neptune.jpg",
+  pluto: { texture: "https://preview.ibb.co/cZ1DB7/Neptune.jpg",
     position: -200,
     size: 2
 } };
@@ -292,12 +292,12 @@ function createRing(selectField){
   if(name in planetsInfo){
     var position = planetsInfo[name].position;
     var size = planetsInfo[name].size + 1;
-  
+
     var whitePl = scene.getObjectByName(selectField);
     if(whitePl !== null){
       scene.remove(whitePl);
     }
-  
+
     var material = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
     var geometry = new THREE.RingGeometry(size, size + 0.5, 32);
     var ring = new THREE.Mesh(geometry, material);

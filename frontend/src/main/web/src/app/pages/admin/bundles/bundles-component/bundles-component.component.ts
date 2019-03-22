@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild } from '@angular/core';
 import {FormControl, FormGroup, FormArray, Validators, FormBuilder} from '@angular/forms';
-import {Bundle} from '../shared/model/bundle';
+import {Bundle} from '../../../../shared/model/bundle';
 import {BundleForm} from '../shared/model/bundle-form';
 import {BundlesService} from "../shared/service/bundles.service";
 import {BundlesTableComponent} from "../bundles-table/bundles-table.component";
