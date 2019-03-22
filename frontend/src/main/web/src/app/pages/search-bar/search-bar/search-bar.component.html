@@ -85,26 +85,26 @@
               <h6 class="search-bar__heading">Pick a date of flight:</h6>
             </div>
             <div class="col-lg-2">
-              <!-- <input type="date" 
+              <input type="date" 
                     name="flightDate" 
                     class="form-control"
                     formControlName="startDate"
-                    > -->
-                    <p-calendar [minDate]="minimumDate"
-                                formControlName="startDate"></p-calendar>
+                    >
+                    <!-- <p-calendar [minDate]="minimumDate"
+                                formControlName="startDate"></p-calendar> -->
             </div>
             <div class="col-lg-1"></div>
             <div class="col-lg-2">
               <h6 class="search-bar__heading">Pick a date of return:</h6>
             </div>
             <div class="col-lg-2">
-              <!-- <input type="date" 
+              <input type="date" 
                     name="returnDate" 
                     id="returnDate" 
                     class="form-control datepicker"
-                    formControlName="finishDate"> -->
-              <p-calendar [minDate]="searchForm.get('startDate').value.getDate() + 1"
-                          formControlName="finishDate"></p-calendar>
+                    formControlName="finishDate">
+              <!-- <p-calendar [minDate]="searchForm.get('startDate').value.getDate() + 1"
+                          formControlName="finishDate"></p-calendar> -->
             </div>
           </div>
 

@@ -3,11 +3,12 @@ import {Trip} from "./shared/models/trip.model";
 import {SearchService} from "./shared/services/search.service";
 import {FormControl, FormGroup} from "@angular/forms";
 import {FlightClass} from "./shared/models/flight-class.model";
+import { DataService } from '../../shared/data.service';
 
 @Component({
   selector: 'app-flights',
   templateUrl: './flights.component.html',
-  styleUrls: ['./flights.component.scss']
+  styleUrls: ['./flights.component.scss'],
 })
 export class FlightsComponent implements OnInit {
 
@@ -46,14 +47,17 @@ export class FlightsComponent implements OnInit {
       startDate: new FormControl(''),
       finishDate: new FormControl('')
     });
-
-    this.searchForm = JSON.parse(localStorage.getItem('formData'));
   }
 
-  getTripsByCriteria() {
-    this.svc.getTrips("", "", "", "", "").subscribe((response) => {
-      this.trips = response;
-    })
+  getTripsByCriteria(event) {
+
+    // this.svc.getTrips(event.departure_planet, 
+    //                   event.departure_spaceport, 
+    //                   event.departure_date, 
+    //                   event.arrival_planet, 
+    //                   event.arrival_spaceport).subscribe((response) => {
+    //   this.trips = response;
+    // })
   }
 
 

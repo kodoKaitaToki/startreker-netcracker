@@ -12,10 +12,10 @@ public class HistoryTicketDTO {
     private static final String datePattern = "yyyy-MM-dd HH:mm";
 
     @JsonProperty("id")
-    private Integer ticketId;
+    private Long ticketId;
 
     @JsonProperty("seat")
-    private Integer seat;
+    private Long seat;
 
     @JsonProperty("end_price")
     private Float endPrice;
@@ -34,8 +34,8 @@ public class HistoryTicketDTO {
 
     public static HistoryTicketDTO from(HistoryTicket historyTicket) {
         HistoryTicketDTO htd = new HistoryTicketDTO();
-        htd.ticketId = historyTicket.getTicketId().intValue();
-        htd.seat = historyTicket.getSeat().intValue();
+        htd.ticketId = historyTicket.getTicketId();
+        htd.seat = historyTicket.getSeat();
         htd.endPrice = historyTicket.getEndPrice();
         htd.purchaseDate = historyTicket.getPurchaseDate()
                                         .format(DateTimeFormatter.ofPattern(datePattern));

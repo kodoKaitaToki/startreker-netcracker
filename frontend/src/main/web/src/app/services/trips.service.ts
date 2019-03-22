@@ -40,4 +40,8 @@ export class TripsService {
   deleteTicketClass(id) {
     return this.http.delete<any>(Api.trips.deleteTicketClass(id), HttpOptionsAuthorized);
   }
+
+  updateTripStatus(payload, id) {
+    return this.http.patch<any>(Api.trips.deleteTrip(id), payload, HttpOptionsAuthorized);
+  }
 }

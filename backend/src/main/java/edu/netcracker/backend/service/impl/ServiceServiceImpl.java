@@ -7,67 +7,72 @@ import edu.netcracker.backend.message.request.ServiceCreateForm;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.ServiceReply;
-import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.ServiceService;
-import edu.netcracker.backend.service.UserService;
-import edu.netcracker.backend.utils.AuthorityUtils;
 import edu.netcracker.backend.utils.ServiceStatus;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@Slf4j(topic = "log")
 public class ServiceServiceImpl implements ServiceService {
 
     private ServiceDAO serviceDAO;
 
     private ServiceReplyDAO serviceReplyDAO;
 
-    private UserService userService;
-
     private final SecurityContext securityContext;
 
     @Autowired
     public ServiceServiceImpl(ServiceDAO serviceDAO,
                               ServiceReplyDAO serviceReplyDAO,
-                              UserService userService,
                               SecurityContext securityContext){
         this.serviceDAO = serviceDAO;
         this.serviceReplyDAO = serviceReplyDAO;
-        this.userService = userService;
         this.securityContext = securityContext;
     }
 
     @Override
-    public List<ServiceCRUDDTO> getServicesOfCarrier(){ return serviceDAO.findAllByCarrierId(setCurUser());}
-
-    @Override
-    public List<ServiceCRUDDTO> getPaginServicesOfCarrier(Integer from, Integer amount){
-        return serviceDAO.findPaginByCarrierId(setCurUser(), from, amount);
-    }
-
-    @Override
-    public List<ServiceCRUDDTO> findByStatus(String status) {
-        return serviceDAO.findByStatus(setCurUser(), getStatusValue(status));
+    public List<ServiceCRUDDTO> getServicesOfCarrier(Integer from, Integer amount, String status){
+        log.debug("ServiceService.getServicesOfCarrier(Integer from, Integer amount, String status) was invoked " +
+                "with parameters from={}, amount={}, status={}", from, amount, status);
+        return serviceDAO.findByCarrierId(setCurUser(), from, amount, getStatusValue(status)).stream()
+                .map((ServiceCRUDDTO service) -> {
+                    service.setReplyText(serviceReplyDAO.getLastReply(service.getId()).orElse(""));
+                    return service; })
+                .collect(Collectors.toList());
     }
 
     @Override
     public ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm){
+        log.debug("ServiceService.addService(ServiceCreateForm serviceCreateForm) was invoked " +
+                "to add a new service with name={}, status={}",
+                serviceCreateForm.getServiceName(), serviceCreateForm.getServiceStatus());
         String serviceName = serviceCreateForm.getServiceName();
         if(ifServiceExists(serviceName, setCurUser())){
+
+            log.debug("ServiceService.addService(ServiceCreateForm serviceCreateForm)." +
+                    "Can't add new service: The carrier with id={} already has service with name={}", setCurUser(), serviceName);
+
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
         String status = serviceCreateForm.getServiceStatus();
         if ((!status.equals(ServiceStatus.DRAFT.toString())) && (!status.equals(ServiceStatus.OPEN.toString()))) {
+
+            log.debug("ServiceService.addService(ServiceCreateForm serviceCreateForm)." +
+                    "Can't add new service: The new service has illegal status={}", status);
+
             throw new RequestException("Status of new service must be draft or open", HttpStatus.BAD_REQUEST);
         }
 
@@ -75,7 +80,6 @@ public class ServiceServiceImpl implements ServiceService {
         serviceDescr.setCarrierId(setCurUser());
         serviceDescr.setServiceName(serviceCreateForm.getServiceName());
         serviceDescr.setServiceDescription(serviceCreateForm.getServiceDescription());
-
         serviceDescr.setServiceStatus(getStatusValue(status));
         serviceDescr.setCreationDate(LocalDateTime.now());
 
@@ -88,9 +92,16 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public ServiceCRUDDTO updateService(ServiceCRUDDTO serviceCRUDDTO){
+        log.debug("ServiceService.updateService(ServiceCRUDDTO serviceCRUDDTO) was invoked " +
+                        "to update a service with id={}", serviceCRUDDTO.getId());
+
         Optional<ServiceDescr> serviceOpt = serviceDAO.find(serviceCRUDDTO.getId());
 
         if(!serviceOpt.isPresent()){
+            log.debug("ServiceService.updateService(ServiceCRUDDTO serviceCRUDDTO)." +
+                    "Can't update a service: The carrier with id={} doesn't have a service with id={}",
+                    setCurUser(), serviceCRUDDTO.getId());
+
             throw new RequestException("Service " + serviceCRUDDTO.getId() + " not found ", HttpStatus.NOT_FOUND);
         }
 
@@ -98,6 +109,11 @@ public class ServiceServiceImpl implements ServiceService {
 
         if((ifServiceExists(serviceCRUDDTO.getServiceName(), setCurUser()))&&
                 (!Objects.equals(serviceCRUDDTO.getServiceName(),serviceDescr.getServiceName()))){
+
+            log.debug("ServiceService.updateService(ServiceCRUDDTO serviceCRUDDTO)." +
+                    "Can't update service with id={}: The carrier with id={} already has service with name={}",
+                    serviceCRUDDTO.getId(), setCurUser(), serviceCRUDDTO.getServiceName());
+
             throw new RequestException("The service with this name already exists", HttpStatus.CONFLICT);
         }
 
@@ -105,7 +121,11 @@ public class ServiceServiceImpl implements ServiceService {
         if (((status.equals(ServiceStatus.ASSIGNED.toString())
               || (status.equals(ServiceStatus.PUBLISHED.toString())
                   || (status.equals(ServiceStatus.UNDER_CLARIFICATION.toString())))
-                 && (!Objects.equals(serviceCRUDDTO.getServiceStatus(), serviceDescr.getServiceStatus()))))) {
+                 && (!Objects.equals(getStatusValue(status), serviceDescr.getServiceStatus()))))) {
+
+            log.debug("ServiceService.updateService(ServiceCreateForm serviceCreateForm)." +
+                    "Can't update service with id={}: A carrier can't set status={}", status);
+
             throw new RequestException("Cannot set service_status = " + serviceCRUDDTO.getServiceStatus(),
                     HttpStatus.BAD_REQUEST);
         }
@@ -115,17 +135,6 @@ public class ServiceServiceImpl implements ServiceService {
         serviceDescr.setServiceStatus(getStatusValue(status));
 
         serviceDAO.update(serviceDescr);
-
-        return serviceCRUDDTO;
-    }
-
-    @Override
-    public ServiceCRUDDTO deleteService(Long serviceId){
-        ServiceDescr serviceDescr = serviceDAO.find(serviceId).orElse(null);
-        User approver = userService.findByIdWithRole(serviceDescr.getApproverId(), AuthorityUtils.ROLE_APPROVER);
-        ServiceCRUDDTO serviceCRUDDTO = ServiceCRUDDTO.form(serviceDescr, approver.getUsername());
-
-        serviceDAO.delete(serviceId);
 
         return serviceCRUDDTO;
     }
@@ -174,8 +183,12 @@ public class ServiceServiceImpl implements ServiceService {
     private Integer getStatusValue(String status) {
         try {
             ServiceStatus stat = ServiceStatus.valueOf(status);
-            return stat.ordinal() + 1;
+            return stat.getValue();
         } catch (IllegalArgumentException e) {
+
+            log.debug("ServiceService.getStatusValue(String status)." +
+                    "Illegal format of status: Status={} doesn't exist", status);
+
             throw new RequestException("The status " + status + " doesn't exist", HttpStatus.NOT_FOUND);
         }
     }
