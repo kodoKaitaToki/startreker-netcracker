@@ -27,6 +27,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
     private final CarrierRevenueMapper carrierRevenueMapper;
     private final CarrierViewsMapper carrierViewsMapper;
+
     @Value("${SELECT_TRIP_VIEWS_TOTAL_BY_CARRIER_BY_WEEK}")
     private String SELECT_TRIP_VIEWS_TOTAL_BY_CARRIER_BY_WEEK;
 

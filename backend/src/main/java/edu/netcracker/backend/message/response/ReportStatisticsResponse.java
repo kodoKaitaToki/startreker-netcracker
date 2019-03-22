@@ -16,7 +16,7 @@ public class ReportStatisticsResponse {
     private double totalAnswered;
     @JsonProperty("total_in_progress")
     private double totalInProgress;
-    @JsonProperty("total_open")
+    @JsonProperty("total_opened")
     private double totalOpen;
     @JsonProperty("total_reopened")
     private double totalReOpened;
