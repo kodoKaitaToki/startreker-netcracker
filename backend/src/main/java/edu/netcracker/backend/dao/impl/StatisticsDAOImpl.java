@@ -3,10 +3,7 @@ package edu.netcracker.backend.dao.impl;
 import edu.netcracker.backend.dao.StatisticsDAO;
 import edu.netcracker.backend.dao.mapper.CarrierRevenueMapper;
 import edu.netcracker.backend.dao.mapper.CarrierViewsMapper;
-import edu.netcracker.backend.message.response.CarrierRevenueResponse;
-import edu.netcracker.backend.message.response.CarrierViewsResponse;
-import edu.netcracker.backend.message.response.ServiceDistributionElement;
-import edu.netcracker.backend.message.response.TripDistributionElement;
+import edu.netcracker.backend.message.response.*;
 import edu.netcracker.backend.utils.ReportStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +11,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -96,12 +94,8 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     public List<TripDistributionElement> getTripsStatistics() {
         return jdbcTemplate.query(SELECT_ROUTES_DISTRIBUTION, (rs, rowNum) -> {
             TripDistributionElement rstat = new TripDistributionElement();
-            rstat.setArrivalId(rs.getLong("arrival_id"));
-            rstat.setDepartureId(rs.getLong("departure_id"));
             rstat.setArrivalPlanetId(rs.getLong("arrival_planet_id"));
             rstat.setDeparturePlanetId(rs.getLong("departure_planet_id"));
-            rstat.setArrivalSpaceportName(rs.getString("arrival_spaceport_name"));
-            rstat.setDepartureSpaceportName(rs.getString("departure_spaceport_name"));
             rstat.setArrivalPlanetName(rs.getString("arrival_planet_name"));
             rstat.setDeparturePlanetName(rs.getString("departure_planet_name"));
             rstat.setOccurrenceCount(rs.getLong("occurrence_count"));
@@ -223,17 +217,17 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         });
     }
 
-    public Map<String, Double> getTroubleTicketStatistics() {
-        SqlRowSet data = namedJdbcTemplate.queryForRowSet(SELECT_TROUBLE_TICKETS_AMOUNT_IN_STATUS,
-                                                          getStatisticsParameters());
-        return toMap(data);
+    public ReportStatisticsResponse getTroubleTicketStatistics() {
+        SqlRowSet data =
+                namedJdbcTemplate.queryForRowSet(SELECT_TROUBLE_TICKETS_AMOUNT_IN_STATUS, getStatisticsParameters());
+        return toResponse(data);
     }
 
-    public Map<String, Double> getTroubleTicketStatisticsByApprover(Long approverId) {
+    public ReportStatisticsResponse getTroubleTicketStatisticsByApprover(Long approverId) {
         Map<String, Object> parameters = getStatisticsParameters();
         parameters.put("approver", approverId);
         SqlRowSet data = namedJdbcTemplate.queryForRowSet(SELECT_TROUBLE_TICKETS_BY_APPROVER, parameters);
-        return toMap(data);
+        return toResponse(data);
     }
 
     private Map<String, Object> getStatisticsParameters() {
@@ -246,16 +240,51 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         return parameters;
     }
 
-    private Map<String, Double> toMap(SqlRowSet data) {
-        data.next();
-        Map<String, Double> result = new HashMap<>();
-        int colCount = data.getMetaData()
-                           .getColumnCount();
-        for (int i = 1; i <= colCount; i++) {
-            result.put(data.getMetaData()
-                           .getColumnLabel(i)
-                           .toLowerCase(), data.getDouble(i));
+    private ReportStatisticsResponse toResponse(SqlRowSet data) {
+
+        ReportStatisticsResponse response = new ReportStatisticsResponse();
+
+        while (data.next()) {
+            String entry = data.getString("status");
+            double count = data.getDouble("count");
+
+            switch (entry) {
+                case "total": {
+                    response.setTotal(count);
+                    break;
+                }
+                case "average": {
+                    response.setAverageMark(count);
+                    break;
+                }
+                case "resolved": {
+                    response.setTotalResolved(count);
+                    break;
+                }
+                default: {
+                    if (Integer.toString(ReportStatus.OPEN.getDatabaseValue())
+                               .equals(entry)) {
+                        response.setTotalOpen(count);
+                    } else if (Integer.toString(ReportStatus.IN_PROGRESS.getDatabaseValue())
+                                      .equals(entry)) {
+                        response.setTotalInProgress(count);
+                    } else if (Integer.toString(ReportStatus.ANSWERED.getDatabaseValue())
+                                      .equals(entry)) {
+                        response.setTotalAnswered(count);
+                    } else if (Integer.toString(ReportStatus.REOPENED.getDatabaseValue())
+                                      .equals(entry)) {
+                        response.setTotalReOpened(count);
+                    } else if (Integer.toString(ReportStatus.RATED.getDatabaseValue())
+                                      .equals(entry)) {
+                        response.setTotalRated(count);
+                    } else if (Integer.toString(ReportStatus.REMOVED.getDatabaseValue())
+                                      .equals(entry)) {
+                        response.setTotalRemoved(count);
+                    }
+                }
+            }
         }
-        return result;
+
+        return response;
     }
 }
