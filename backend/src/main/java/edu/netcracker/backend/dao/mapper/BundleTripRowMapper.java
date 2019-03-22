@@ -3,7 +3,7 @@ package edu.netcracker.backend.dao.mapper;
 import edu.netcracker.backend.model.Planet;
 import edu.netcracker.backend.model.Spaceport;
 import edu.netcracker.backend.model.Trip;
-import edu.netcracker.backend.model.state.trip.TripStateRegistry;
+import edu.netcracker.backend.model.state.trip.TripState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +19,14 @@ import java.sql.SQLException;
 @Component
 public class BundleTripRowMapper implements RowMapper<Trip> {
 
-    private final TripStateRegistry tripStateRegistry;
     private final Logger logger = LoggerFactory.getLogger(BundleTripRowMapper.class);
-
-    @Autowired
-    public BundleTripRowMapper(TripStateRegistry tripStateRegistry) {
-        this.tripStateRegistry = tripStateRegistry;
-    }
 
     @Override
     public Trip mapRow(ResultSet rs, int i) throws SQLException {
         logger.debug("Mapping trip");
         Trip t = new Trip();
         t.setTripId(rs.getLong("trip_id"));
-        t.setTripState(tripStateRegistry.getState(rs.getInt("trip_status")));
+        t.setTripState(TripState.getState(rs.getInt("trip_status")));
         t.setDepartureDate(rs.getTimestamp("departure_date")
                              .toLocalDateTime());
         t.setArrivalDate(rs.getTimestamp("arrival_date")

@@ -19,6 +19,7 @@ import edu.netcracker.backend.service.TripService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class TripServiceImpl implements TripService {
 
     private SpaceportDAO spaceportDAO;
 
-    private TripStateRegistry tripStateRegistry;
+    private ApplicationContext applicationContext;
 
     private final TicketClassService ticketClassService;
 
@@ -50,21 +51,17 @@ public class TripServiceImpl implements TripService {
     private static final Logger logger = LoggerFactory.getLogger(TripServiceImpl.class);
 
     @Autowired
-    private Draft draft;
-
-
-    @Autowired
     public TripServiceImpl(TripDAO tripDAO,
                            PlanetDAO planetDAO,
                            SpaceportDAO spaceportDAO,
-                           TripStateRegistry tripStateRegistry,
+                           ApplicationContext applicationContext,
                            TicketClassService ticketClassService,
                            SuggestionService suggestionService,
                            SecurityContext securityContext) {
         this.tripDAO = tripDAO;
         this.planetDAO = planetDAO;
         this.spaceportDAO = spaceportDAO;
-        this.tripStateRegistry = tripStateRegistry;
+        this.applicationContext = applicationContext;
         this.ticketClassService = ticketClassService;
         this.suggestionService = suggestionService;
         this.securityContext = securityContext;
@@ -73,7 +70,8 @@ public class TripServiceImpl implements TripService {
     @Override
     public List<ReadTripsDTO> getAllTripsForCarrier() {
         logger.debug("Getting all trips for carrier from TripDAO");
-        Long carrierId = Long.valueOf(securityContext.getUser().getUserId());
+        Long carrierId = Long.valueOf(securityContext.getUser()
+                                                     .getUserId());
         List<Trip> trips = tripDAO.allCarriersTrips(carrierId);
 
         return getAllTripsDTO(trips);
@@ -90,7 +88,8 @@ public class TripServiceImpl implements TripService {
     @Override
     public List<ReadTripsDTO> getAllTripsForCarrierWithPagination(Integer limit, Integer offset) {
         logger.debug("Getting {} trips for carrier from TripDAO with pagination starting from {}", limit, offset);
-        Long carrierId = Long.valueOf(securityContext.getUser().getUserId());
+        Long carrierId = Long.valueOf(securityContext.getUser()
+                                                     .getUserId());
         List<Trip> trips = tripDAO.paginationForCarrier(limit, offset, carrierId);
 
         return getAllTripsDTO(trips);
@@ -154,8 +153,8 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<Trip> findCarrierTripsByStatus(User requestUser, String status, Long offset, Long limit) {
-        TripState state = tripStateRegistry.getState(status);
-        if (state.getDatabaseValue() == Removed.DATABASE_VALUE) {
+        TripState state = TripState.getState(status);
+        if (state == TripState.REMOVED) {
             return new ArrayList<>();
         }
 
@@ -164,7 +163,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<Trip> findCarrierTrips(User requestUser, Long offset, Long limit) {
-        return tripDAO.findAllByCarrier(requestUser.getUserId(), Removed.DATABASE_VALUE, offset, limit);
+        return tripDAO.findAllByCarrier(requestUser.getUserId(), TripState.REMOVED.getDatabaseValue(), offset, limit);
     }
 
     @Override
@@ -197,18 +196,18 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<Trip> findApproverTrips(User requestUser, String status, Long offset, Long limit) {
-        TripState state = tripStateRegistry.getState(status);
-        if (state.getDatabaseValue() == Open.DATABASE_VALUE) {
+        TripState state = TripState.getState(status);
+        if (state == TripState.OPEN) {
             return tripDAO.findAllByStatus(state.getDatabaseValue(), offset, limit);
         }
-        if (state.getDatabaseValue() == Assigned.DATABASE_VALUE) {
+        if (state == TripState.ASSIGNED) {
             return tripDAO.findAllByApproverByStatus(requestUser.getUserId(), state.getDatabaseValue(), offset, limit);
         }
         throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
     }
 
     private Trip updateTrip(User requestUser, Trip trip, TripRequest tripRequest) {
-        TripState desiredState = tripStateRegistry.getState(tripRequest.getStatus());
+        TripState desiredState = TripState.getState(tripRequest.getStatus());
 
         if (!desiredState.equals(trip.getTripState())) {
             startStatusChange(requestUser, trip, desiredState, tripRequest);
@@ -233,7 +232,7 @@ public class TripServiceImpl implements TripService {
             return false;
         }
 
-        return newTripState.switchTo(trip, requestUser, tripRequest);
+        return newTripState.switchTo(applicationContext, trip, tripRequest, requestUser);
     }
 
     private List<TripWithArrivalAndDepartureDataDTO> createTripWithArrivalAndDepartureDataAndSuggestionDTOs(List<TripWithArrivalAndDepartureData> trips,
@@ -291,7 +290,7 @@ public class TripServiceImpl implements TripService {
         trip.setDepartureDate(tripCreation.getDepartureDateTime());
         trip.setArrivalDate(tripCreation.getArrivalDateTime());
         trip.setOwner(securityContext.getUser());
-        trip.setTripState(draft);
+        trip.setTripState(TripState.DRAFT);
         trip.setCreationDate(LocalDateTime.now());
         trip.setTripPhoto("defaultPhoto.png");
 
@@ -309,7 +308,7 @@ public class TripServiceImpl implements TripService {
 
         Spaceport arrivalSpaceport = new Spaceport();
         arrivalSpaceport.setSpaceportId(spaceportDAO.getIdBySpaceportName(tripCreation.getArrivalSpaceport(),
-                                                                            arrivalPlanet.getPlanetId()));
+                                                                          arrivalPlanet.getPlanetId()));
         arrivalSpaceport.setSpaceportName(tripCreation.getArrivalSpaceport());
         arrivalSpaceport.setPlanetId(arrivalPlanet.getPlanetId());
         arrivalSpaceport.setPlanet(arrivalPlanet);
