@@ -7,17 +7,11 @@ import java.util.List;
 
 public interface ServiceService {
 
-    List<ServiceCRUDDTO> findByStatus(String status);
-
     ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm);
 
     ServiceCRUDDTO updateService(ServiceCRUDDTO serviceDTO);
     
-    List<ServiceCRUDDTO> getServicesOfCarrier();
-    
-    List<ServiceCRUDDTO> getPaginServicesOfCarrier(Integer from, Integer amount);
-    
-    ServiceCRUDDTO deleteService(Long serviceId);
+    List<ServiceCRUDDTO> getServicesOfCarrier(Integer from, Integer amount, String status);
 
     List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, String status, Integer approverId);
 
