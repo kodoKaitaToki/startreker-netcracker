@@ -10,7 +10,7 @@ import {DashboardsComponent} from './dashboards/dashboards.component';
 import {ApproverComponentComponent} from './approver/approver-component/approver-component.component';
 import {ApproverTableComponent} from './approver/approver-table/approver-table.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {FilterPipePipe} from './carrier/filter-pipe.pipe';
+import {FilterPipePipe} from './carrier/shared/pipes/filter-pipe.pipe';
 import {AprroverShowStatusPipe} from './approver/shared/pipes/aprrover-show-status.pipe';
 
 import {BundlesComponentComponent} from './bundles/bundles-component/bundles-component.component';
@@ -24,7 +24,7 @@ import {ServiceDashboardComponent} from './dashboards/trips-services/service-das
 import {DashboardDeltaComponent} from './dashboards/dashboard-delta/dashboard-delta.component';
 import {TroubleStatisticsComponent} from './dashboards/trouble-statistics/trouble-statistics.component';
 
-import {CarrierShowStatusPipe} from './carrier/carrier-show-status.pipe';
+import {CarrierShowStatusPipe} from './carrier/shared/pipes/carrier-show-status.pipe';
 
 import {CostsComponent} from './dashboards/costs/costs.component';
 import {CommonChartComponent} from './dashboards/costs/common-chart/common-chart.component';
@@ -45,16 +45,14 @@ import {ToastModule} from "primeng/toast";
 import {CalendarModule} from 'primeng/calendar';
 import {NgxPaginationModule} from 'ngx-pagination';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import {TreeModule} from 'primeng/tree';
-import {TreeNode} from 'primeng/api';
 import {FieldsetModule} from 'primeng/fieldset';
 
-import { SharedModule } from 'src/app/shared/shared.module';
+//import { SharedModule } from 'src/app/shared/shared.module';
 import { BundlesTreeComponent } from './bundles/bundles-tree/bundles-tree.component';
 import { BundlesFormComponent } from './bundles/bundles-form/bundles-form.component';
-
+import { PaginatorComponent } from '../../shared/paginator/paginator.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +84,8 @@ import { BundlesFormComponent } from './bundles/bundles-form/bundles-form.compon
     CostsComponent,
     ApproverFilterPipe,
     BundlesTreeComponent,
-    BundlesFormComponent
+    BundlesFormComponent,
+    PaginatorComponent
   ],
   imports: [
     CommonModule,
@@ -97,7 +96,7 @@ import { BundlesFormComponent } from './bundles/bundles-form/bundles-form.compon
     ToastModule,
     ProgressBarModule,
     TreeModule,
-    SharedModule,
+    //SharedModule,
     ScrollPanelModule,
     ToggleButtonModule,
     FieldsetModule,

@@ -2,6 +2,7 @@ package edu.netcracker.backend.service;
 
 import edu.netcracker.backend.message.request.ServiceCreateForm;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
+import edu.netcracker.backend.model.ServiceDescr;
 
 import java.util.List;
 

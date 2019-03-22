@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Input, EventEmitter, Output } from '@angu
 import { FormArray, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Trip } from '../shared/model/trip';
 import { TicketClass } from '../shared/model/ticket-class';
-import { Bundle } from '../shared/model/bundle';
+import { Bundle } from '../../../../shared/model/bundle';
 import { Service } from '../shared/model/service';
 import { BundleForm } from '../shared/model/bundle-form';
 import { HttpErrorResponse } from '@angular/common/http';

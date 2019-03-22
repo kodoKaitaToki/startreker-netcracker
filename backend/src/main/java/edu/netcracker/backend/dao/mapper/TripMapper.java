@@ -4,7 +4,6 @@ import edu.netcracker.backend.model.Planet;
 import edu.netcracker.backend.model.Spaceport;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.state.trip.TripState;
-import edu.netcracker.backend.model.state.trip.TripStateRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -16,19 +15,17 @@ import java.sql.SQLException;
 public class TripMapper implements RowMapper<Trip> {
 
     private final MapperHelper mapperHelper;
-    private final TripStateRegistry tripStateRegistry;
 
     @Autowired
-    public TripMapper(MapperHelper mapperHelper, TripStateRegistry tripStateRegistry) {
+    public TripMapper(MapperHelper mapperHelper) {
         this.mapperHelper = mapperHelper;
-        this.tripStateRegistry = tripStateRegistry;
     }
 
     @Override
     public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
         Trip trip = new Trip();
         trip.setTripId(rs.getLong("trip_id"));
-        trip.setTripState(tripStateRegistry.getState(rs.getInt("trip_status")));
+        trip.setTripState(TripState.getState(rs.getInt("trip_status")));
         trip.setDepartureDate(rs.getTimestamp("departure_date")
                                 .toLocalDateTime());
         trip.setArrivalDate(rs.getTimestamp("arrival_date")

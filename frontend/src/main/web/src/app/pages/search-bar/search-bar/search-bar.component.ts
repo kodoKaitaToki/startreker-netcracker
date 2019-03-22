@@ -1,12 +1,12 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {LandingService} from '../../landing/shared/service/landing.service';
-import {Planet} from '../../landing/shared/model/planet.model';
-import {FormControl, FormGroup} from '@angular/forms';
-import {Spaceport} from 'src/app/pages/landing/shared/model/spaceport.model';
-import {Router} from '@angular/router';
-import {DataService} from '../../../shared/data.service';
-import {clone} from 'ramda';
-import {Location} from '@angular/common';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { LandingService } from '../../landing/shared/service/landing.service';
+import { Planet } from '../../landing/shared/model/planet.model';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Spaceport } from 'src/app/pages/landing/shared/model/spaceport.model';
+import { Router } from '@angular/router';
+import { DataService } from '../../../shared/data.service';
+import { clone } from 'ramda';
+import { Location } from '@angular/common';
 
 declare function setPoint(point): any;
 
@@ -28,8 +28,6 @@ export class SearchBarComponent implements OnInit {
   minimumDate = new Date();
   minFinishDate = new Date();
 
-  field = '';
-
   @Output() onGetTripsNotifier = new EventEmitter();
 
   constructor(private landingService: LandingService,
@@ -37,23 +35,32 @@ export class SearchBarComponent implements OnInit {
              private dataService: DataService,
              private location: Location) {
     this.searchForm = new FormGroup({
-      startPlanet: new FormControl({value: 'Choose a planet', disabled: true}),
-      finishPlanet: new FormControl({value: 'Choose a planet', disabled: true}),
-      startSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}),
-      finishSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}),
-      startDate: new FormControl(''),
-      finishDate: new FormControl('')
+      startPlanet: new FormControl({value: 'Choose a planet', disabled: true}, Validators.required),
+      finishPlanet: new FormControl({value: 'Choose a planet', disabled: true}, Validators.required),
+      startSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}, Validators.required),
+      finishSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}, Validators.required),
+      startDate: new FormControl('', Validators.required),
+      finishDate: new FormControl({value: '', disabled: false})
     });
    }
 
   ngOnInit() {
-
+    this.dataService.getPlanets().subscribe(message => {this.planets = message});
+    this.dataService.getSpaceports().subscribe(message => {
+      this.spaceportsFrom = message.startPorts;
+      this.spaceportsTo = message.finishPorts;
+    });
     if(!this.location.isCurrentPathEqualTo('/')){
 
-      this.dataService.getMessage().subscribe(message => {
-        this.searchForm.patchValue(message);
-      })
+      this.searchForm.get('startSpaceport').enable();
+      this.searchForm.get('finishSpaceport').enable();
+      this.enablePlanets();
 
+      this.dataService.getMessage().subscribe(message => {       
+        this.searchForm.patchValue(message);
+      });
+
+      this.onGetTripsNotifier.emit(this.searchForm.value);
     }else{
       this.getPlanets();
     }
@@ -63,8 +70,7 @@ export class SearchBarComponent implements OnInit {
     this.landingService.getPlanets()
         .subscribe((resp: Response) => {
           this.planets = clone(resp);
-          this.searchForm.get('startPlanet').enable();
-          this.searchForm.get('finishPlanet').enable();
+          this.enablePlanets();
         })
   }
 
@@ -72,26 +78,18 @@ export class SearchBarComponent implements OnInit {
     setPoint(point);
   }
 
-  disableDatepicker(){
-    let element = <HTMLInputElement> document.getElementById("returnDate");
-    element.disabled = true;
-  }
-
-  enableDatepicker(){
-    let element = <HTMLInputElement> document.getElementById("returnDate");
-    element.disabled = false;
-  }
-
   onSubmit(){
     if(this.location.isCurrentPathEqualTo('/')){
       this.dataService.sendFormData(this.searchForm.value);
-      this.router.navigate(['/flights']);
+      this.dataService.sendPlanetsData(this.planets);
+      this.dataService.sendSpaceportsData({startPorts: this.spaceportsFrom,
+                                          finishPorts: this.spaceportsTo});
+      this.router.navigate(['/trip-search']);
     }else{
-
       this.onGetTripsNotifier.emit(this.searchForm.value);
     }
   }
-
+  
   getSpaceports(point: boolean){
     let planetName;
     if(point){
@@ -115,7 +113,19 @@ export class SearchBarComponent implements OnInit {
         });
       }
     }
+    
+  }
 
+  onSelect(event){
+    if(this.searchForm.get('finishDate').value < event){
+      this.searchForm.patchValue({finishDate: ''});
+    }
+    this.minFinishDate.setDate(event.getDate() + 1);
+  }
+
+  enablePlanets(){
+    this.searchForm.get('startPlanet').enable();
+    this.searchForm.get('finishPlanet').enable();
   }
 
 }

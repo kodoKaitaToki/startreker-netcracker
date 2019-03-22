@@ -16,6 +16,8 @@ public interface ServiceDAO {
 
     void update(ServiceDescr service);
 
+    Integer updateServiceByCarrier(ServiceDescr service);
+
     Optional<ServiceDescr> find(Number id);
 
     Optional<ServiceDescr> findByName(String name, Number id);

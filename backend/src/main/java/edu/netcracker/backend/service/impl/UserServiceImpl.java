@@ -187,6 +187,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Integer getUserAmount(Role role){
+        log.debug("UserService.getUserAmount(Role role) was invoked with parameter role={}", role);
+        return userDAO.getUserAmount(role);
+    }
+
+    @Override
     public BoughtTicketDTO buyTicket(BoughtTicketDTO boughtTicketDTO) {
         log.debug("Getting ticket with id {} from TicketDAO", boughtTicketDTO.getTicketId());
         Optional<Ticket> optTicket = ticketDAO.find(boughtTicketDTO.getTicketId());

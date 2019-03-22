@@ -9,6 +9,9 @@ public enum BundleQueries {
                        + "bundle_photo "
                        + "FROM bundle "),
 
+    GET_FRESH_BUNDLES("SELECT bundle_id, start_date, finish_date, bundle_price, bundle_description, bundle_photo "
+                      + "FROM bundle "
+                      + "WHERE finish_date > current_date "),
 
     PAGING_SELECT_BUNDLES(SELECT_ALL_BUNDLES + "ORDER BY bundle_id DESC " + "LIMIT ? OFFSET ?"),
 
