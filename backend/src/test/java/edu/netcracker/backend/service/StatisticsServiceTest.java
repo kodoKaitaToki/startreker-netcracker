@@ -56,8 +56,6 @@ public class StatisticsServiceTest {
     @Test
     public void getTripsSalesStatisticsTest() {
         CarrierRevenueResponse cres = statisticsService.getTripsSalesStatistics(7);
-        System.out.println(cres.getRevenue());
-        System.out.println(cres.getSold());
         assertThat(cres, equalTo(tripsSalesTestExpected));
     }
 
