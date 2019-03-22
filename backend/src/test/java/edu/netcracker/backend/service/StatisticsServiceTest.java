@@ -20,21 +20,21 @@ import static org.hamcrest.Matchers.equalTo;
 @SpringBootTest
 @AutoConfigureTestDatabase
 @ActiveProfiles(profiles = "test")
-@Ignore
 public class StatisticsServiceTest {
 
     private static CarrierRevenueResponse tripsSalesTestExpected;
     private static CarrierRevenueResponse tripsSalesTestWithTimeLimitsExpected;
     private static CarrierRevenueResponse servicesSalesTestExpected;
     private static CarrierRevenueResponse servicesSalesTestWithTimeLimitsExpected;
+
     @Autowired
     private StatisticsService statisticsService;
 
     @BeforeClass
     public static void init() {
         tripsSalesTestExpected = new CarrierRevenueResponse();
-        tripsSalesTestExpected.setSold(45L);
-        tripsSalesTestExpected.setRevenue(127128L);
+        tripsSalesTestExpected.setSold(6L);
+        tripsSalesTestExpected.setRevenue(14092L);
 
         tripsSalesTestWithTimeLimitsExpected = new CarrierRevenueResponse();
         tripsSalesTestWithTimeLimitsExpected.setSold(6L);
@@ -56,6 +56,8 @@ public class StatisticsServiceTest {
     @Test
     public void getTripsSalesStatisticsTest() {
         CarrierRevenueResponse cres = statisticsService.getTripsSalesStatistics(7);
+        System.out.println(cres.getRevenue());
+        System.out.println(cres.getSold());
         assertThat(cres, equalTo(tripsSalesTestExpected));
     }
 
