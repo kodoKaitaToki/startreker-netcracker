@@ -99,12 +99,6 @@ public class ServiceServiceTest {
     public void addServiceException() {
         expectedEx.expect(RequestException.class);
         expectedEx.expectMessage("Status of new service must be draft or open");
-
-        User user = new User();
-        user.setUserId(2);
-
-        when(securityContext.getUser()).thenReturn(user);
-
         serviceService.addService(serviceCreateForm);
     }
 
@@ -131,7 +125,6 @@ public class ServiceServiceTest {
 
         when(securityContext.getUser()).thenReturn(user);
         when(serviceDAO.findByCarrierId(any(), any(), any(), eq(2))).thenReturn(ret);
-        when(serviceReplyDAO.getLastReply(any())).thenReturn(Optional.empty());
 
         String actualStatus = serviceService.getServicesOfCarrier(0, 1, ServiceStatus.OPEN.toString())
                 .get(0).getServiceStatus();
