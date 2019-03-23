@@ -1,11 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { clone } from 'ramda';
-import { HttpResponse } from '@angular/common/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 import {Service} from '../shared/model/service';
 import { ServiceService } from '../shared/service/service.service';
 import { checkToken } from '../../../../modules/api';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-assigned',
@@ -25,6 +26,18 @@ export class AssignedComponent implements OnInit {
   currentServiceForReply: Service;
 
   loadingService: Service;
+
+  constructor(
+    private serviceService: ServiceService,
+    private messageService: MessageService) {
+  }
+
+  
+  ngOnInit() {
+    this.pageFrom = 0;
+    this.setFormInDefault();
+    this.getServices();
+  }
 
   setFormInDefault() {
     this.form = new FormGroup(
@@ -55,10 +68,10 @@ export class AssignedComponent implements OnInit {
     .subscribe((resp: HttpResponse<any>) => {
       checkToken(resp.headers);
       this.getServices();
-      alert(service.service_name + ' is now published');
-    }, () => {
+      this.showMessage(this.createMessage('success', `Service was reviewed`, `${service.service_name} is now published`));
+    }, (error: HttpErrorResponse) => {
       this.resetLoading();
-      alert('Something went wrong');
+      this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.message));
     });
   }
 
@@ -72,10 +85,10 @@ export class AssignedComponent implements OnInit {
     .subscribe((resp: HttpResponse<any>) => {
       checkToken(resp.headers);
       this.getServices();
-      alert(service.service_name + ' is now under clarification');
-    }, () => {
+      this.showMessage(this.createMessage('success', `Service was reviewed`, `${service.service_name} is now under clarification`));
+    }, (error: HttpErrorResponse) => {
       this.resetLoading();
-      alert('Something went wrong');
+      this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.message));
     });
   }
 
@@ -95,20 +108,28 @@ export class AssignedComponent implements OnInit {
             item.reply_text
         );
       });
+      this.showMessage(this.createMessage('success', 'service list', 'The list was updated'));
+    }, (error: HttpErrorResponse) => {
+      this.resetLoading();
+      this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.message));
     });
-  }
-
-  constructor(private serviceService: ServiceService) { }
-
-  ngOnInit() {
-    this.pageFrom = 0;
-    this.setFormInDefault();
-    this.getServices();
   }
 
   onPageUpdate(from: number) {
     this.pageFrom = from;
     this.getServices();
+  }
+
+  createMessage(severity: string, summary: string, detail: string): any {
+    return {
+      severity: severity,
+      summary: summary,
+      detail: detail
+    };
+  }
+
+  showMessage(msgObj: any) {
+    this.messageService.add(msgObj);
   }
 
 }

@@ -167,9 +167,9 @@ public class ServiceServiceImpl implements ServiceService {
                 && serviceDTO.getReplyText()
                 .length() > 0);
 
-        if (reviewOnAssigned) {
+        if (!reviewOnAssigned) {
             log.error("ServiceService.reviewService(ServiceCRUDDTO serviceDTO, Integer approverId)." +
-                            "Reviews can only be on under clarification services, the current status is {}, review is",
+                            "Reviews can only be on under clarification services, the current status is {}, review is {}",
                     state, serviceDTO.getReplyText());
             throw new RequestException("Reviews can only be on under clarification services", HttpStatus.BAD_REQUEST);
         }
