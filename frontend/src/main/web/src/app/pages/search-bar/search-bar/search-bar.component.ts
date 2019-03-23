@@ -31,9 +31,9 @@ export class SearchBarComponent implements OnInit {
   @Output() onGetTripsNotifier = new EventEmitter();
 
   constructor(private landingService: LandingService,
-             private router: Router,
-             private dataService: DataService,
-             private location: Location) {
+              private router: Router,
+              private dataService: DataService,
+              private location: Location) {
     this.searchForm = new FormGroup({
       startPlanet: new FormControl({value: 'Choose a planet', disabled: true}, Validators.required),
       finishPlanet: new FormControl({value: 'Choose a planet', disabled: true}, Validators.required),
@@ -42,88 +42,75 @@ export class SearchBarComponent implements OnInit {
       startDate: new FormControl('', Validators.required),
       finishDate: new FormControl({value: '', disabled: false})
     });
-   }
+  }
 
   ngOnInit() {
-    this.dataService.getPlanets().subscribe(message => {this.planets = message});
-    this.dataService.getSpaceports().subscribe(message => {
-      this.spaceportsFrom = message.startPorts;
-      this.spaceportsTo = message.finishPorts;
+    this.enablePlanets();
+    this.searchForm.get('startSpaceport').enable();
+    this.searchForm.get('finishSpaceport').enable();
+
+    this.dataService.getMessage().subscribe(message => {
+      this.searchForm.patchValue(message);
     });
-    if(!this.location.isCurrentPathEqualTo('/')){
-      this.enablePlanets();
-      this.searchForm.get('startSpaceport').enable();
-      this.searchForm.get('finishSpaceport').enable();
-
-
-      this.dataService.getMessage().subscribe(message => {
-        this.searchForm.patchValue(message);
-      });
-
-      this.onGetTripsNotifier.emit(this.searchForm.value);
-    }else{
-      this.getPlanets();
-    }
+    this.onGetTripsNotifier.emit(this.searchForm.value);
+    this.getPlanets();
   }
 
-  getPlanets(){
+
+  getPlanets() {
     this.landingService.getPlanets()
-        .subscribe((resp: Response) => {
-          this.planets = clone(resp);
-          this.enablePlanets();
-        })
+      .subscribe((resp: Response) => {
+        this.planets = clone(resp);
+        this.enablePlanets();
+      })
   }
 
-  setPoint(point){
+  setPoint(point) {
     setPoint(point);
   }
 
-  onSubmit(){
-    if(this.location.isCurrentPathEqualTo('/')){
-      this.dataService.sendFormData(this.searchForm.value);
-      this.dataService.sendPlanetsData(this.planets);
-      this.dataService.sendSpaceportsData({startPorts: this.spaceportsFrom,
-                                          finishPorts: this.spaceportsTo});
+  onSubmit() {
+    if (this.location.isCurrentPathEqualTo('/')) {
       this.router.navigate(['/flights']);
-    }else{
+    } else {
       this.onGetTripsNotifier.emit(this.searchForm.value);
     }
   }
 
-  getSpaceports(point: boolean){
+  getSpaceports(point: boolean) {
     let planetName;
-    if(point){
+    if (point) {
       this.searchForm.get('startSpaceport').disable();
       planetName = this.searchForm.get('startPlanet').value;
-    }else{
+    } else {
       this.searchForm.get('finishSpaceport').disable();
       planetName = this.searchForm.get('finishPlanet').value;
     }
-    for(let planet of this.planets){
-      if(planet.planetName == planetName.toString().toUpperCase()){
+    for (let planet of this.planets) {
+      if (planet.planetName == planetName.toString().toUpperCase()) {
         this.landingService.getSpaceports(planet.planetId)
           .subscribe((resp: Response) => {
-            if(point){
+            if (point) {
               this.spaceportsFrom = clone(resp);
               this.searchForm.get('startSpaceport').enable();
-            }else{
+            } else {
               this.spaceportsTo = clone(resp);
               this.searchForm.get('finishSpaceport').enable();
             }
-        });
+          });
       }
     }
 
   }
 
-  onSelect(event){
-    if(this.searchForm.get('finishDate').value < event){
+  onSelect(event) {
+    if (this.searchForm.get('finishDate').value < event) {
       this.searchForm.patchValue({finishDate: ''});
     }
     this.minFinishDate.setDate(event.getDate() + 1);
   }
 
-  enablePlanets(){
+  enablePlanets() {
     this.searchForm.get('startPlanet').enable();
     this.searchForm.get('finishPlanet').enable();
   }
