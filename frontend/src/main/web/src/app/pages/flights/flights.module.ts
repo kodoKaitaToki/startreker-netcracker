@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, DatePipe} from '@angular/common';
 import {FlightsComponent} from './flights.component';
 import {FlightsRoutingModule} from "./flights-routing.module";
 import {AppHeaderComponent} from './header/app-header.component';
@@ -34,7 +34,11 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     NgbModule
   ],
   providers: [
-    SearchService
+    SearchService,
+    DatePipe
+  ],
+  entryComponents: [
+    TicketClassInfoComponent
   ]
 })
 export class FlightsModule {

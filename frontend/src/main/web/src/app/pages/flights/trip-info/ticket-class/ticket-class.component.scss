@@ -40,9 +40,9 @@ span.price {
   font-size: 20pt;
 }
 
-button {
+.btn {
   display: inline-block;
-  border: none;
+  border: 1px solid #007bff;
   border-radius: 25px;
   padding: 13px 30px;
   margin-left: 16px;
@@ -58,17 +58,17 @@ button {
   -moz-appearance: none;
 }
 
-button:hover {
+.btn:hover {
   transform: translateY(-2px);
   -webkit-box-shadow: 0 15px 25px rgba(0,0,0,.12);
   box-shadow: 0 15px 25px rgba(0,0,0,.12);
 }
 
-button:focus {
+.btn:focus, .close:focus {
   outline: none;
 }
 
-button:active {
+.btn:active {
   box-shadow: none;
   -webkit-transition: all .14s cubic-bezier(.55,0,.1,1);
   transition: all .14s cubic-bezier(.55,0,.1,1);

@@ -1,1 +1,26 @@
-<p>{{ticket_class.class_name}}</p>
+<div class="container -font-awesome">
+  <div class="modal-header">
+    <h4 class="modal-title">{{ticket_class.class_name}}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="service__item" *ngFor="let service of services">
+      <h6 class="service-name">{{service.service_name}}</h6>
+      <p>{{service.service_description}}</p>
+      <div class="row">
+        <h1 class="col">{{service.service_price}}$</h1>
+        <button *ngIf="!service.isAdded" class="btn btn-outline-primary mb-2 mr-2" (click)="addService(service)">ADD
+        </button>
+        <button *ngIf="service.isAdded" class="btn btn-light mb-2 mr-2" (click)="removeService(service)">Remove</button>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <p>Total price: {{total_price}}$</p>
+    <button type="button" class="btn">BUY</button>
+    <button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Close</button>
+  </div>
+</div>
