@@ -25,11 +25,11 @@ import java.util.List;
 @PropertySource("classpath:sql/ticketdao.properties")
 public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
 
+    private NamedParameterJdbcTemplate namedTemplate;
+
     public TicketDAOImpl(NamedParameterJdbcTemplate namedTemplate) {
         this.namedTemplate = namedTemplate;
     }
-
-    private NamedParameterJdbcTemplate namedTemplate;
 
     @Value("${FIND_ALL_BY_CLASS}")
     private String FIND_ALL_BY_CLASS;
@@ -106,7 +106,6 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
                      limit,
                      offset,
                      user_id);
-
 
         SqlParameterSource params = new MapSqlParameterSource().addValue("id", user_id)
                                                                .addValue("limit", limit)
