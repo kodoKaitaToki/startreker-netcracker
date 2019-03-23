@@ -1,9 +1,6 @@
 package edu.netcracker.backend.service;
 
-import edu.netcracker.backend.message.response.CarrierRevenueResponse;
-import edu.netcracker.backend.message.response.CarrierViewsResponse;
-import edu.netcracker.backend.message.response.ServiceDistributionElement;
-import edu.netcracker.backend.message.response.TripDistributionElement;
+import edu.netcracker.backend.message.response.*;
 import edu.netcracker.backend.model.User;
 
 import java.time.LocalDate;
@@ -12,6 +9,7 @@ import java.util.List;
 public interface StatisticsService {
 
     List<ServiceDistributionElement> getServiceStatistics();
+
     List<TripDistributionElement> getTripsStatistics();
 
     CarrierRevenueResponse getTripsSalesStatistics(long id);
@@ -57,4 +55,8 @@ public interface StatisticsService {
                                                                          long serviceId,
                                                                          LocalDate from,
                                                                          LocalDate to);
+
+    ReportStatisticsResponse getTroubleTicketStatistics();
+
+    ReportStatisticsResponse getTroubleTicketStatisticsByApprover(Long approverId);
 }
