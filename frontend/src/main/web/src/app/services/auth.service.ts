@@ -33,7 +33,6 @@ export class ApiUserService {
     private location: Location
     ) {}
 
-
     get userInfo() {
       return this.userData;
     }
