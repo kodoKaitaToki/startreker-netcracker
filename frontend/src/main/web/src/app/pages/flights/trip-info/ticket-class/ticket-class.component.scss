@@ -4,7 +4,7 @@
   border-top: 1px dashed #7f7f7f;
 }
 
-.col-1, .col-6, .col-4 {
+.col {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -21,12 +21,12 @@
   margin-left: auto;
 }
 
-.col-1 {
+.col-lg-1 {
   min-width: 50px;
   font-size: 14pt;
 }
 
-.col-6 {
+.col-lg-6 {
   justify-content: start;
 }
 
