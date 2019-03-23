@@ -66,7 +66,7 @@ public class ServiceControllerUnitTest {
 
         ServiceController controller = new ServiceController(statisticsService, securityContext, serviceService);
 
-        Assert.assertEquals(controller.getServicesForApprover(1, 10, ServiceStatus.OPEN.toString()), ret);
+        Assert.assertEquals(controller.getServices(1, 10, ServiceStatus.OPEN.toString()), ret);
     }
 
     @Test(expected = RequestException.class)
@@ -75,6 +75,6 @@ public class ServiceControllerUnitTest {
 
         ServiceController controller = new ServiceController(statisticsService, securityContext, serviceService);
 
-        controller.getServicesForApprover(1, 10, illegalStatus);
+        controller.getServices(1, 10, illegalStatus);
     }
 }

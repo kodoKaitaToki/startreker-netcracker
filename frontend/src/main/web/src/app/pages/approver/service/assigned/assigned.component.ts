@@ -84,7 +84,17 @@ export class AssignedComponent implements OnInit {
     .subscribe((resp: HttpResponse<any>) => {
       checkToken(resp.headers);
       this.resetLoading();
-      this.services = clone(resp.body);
+      this.services = resp.body.map(item => {
+        return new Service(
+            item.id,
+            item.approver_name,
+            item.service_name,
+            item.service_descr,
+            item.service_status,
+            new Date(item.creation_date),
+            item.reply_text
+        );
+      });
     });
   }
 
