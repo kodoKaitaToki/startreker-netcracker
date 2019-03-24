@@ -36,7 +36,7 @@ export class DashboardDeltaService {
       return this.http.get<any>(this.actionUrl + "/" + type, {
         headers: HttpOptionsAuthorized.headers,
         params: params,
-        observe: 'response'
+        observe: HttpOptionsAuthorized.observe
       })
       /*resp = resp
         .pipe(map(res => {

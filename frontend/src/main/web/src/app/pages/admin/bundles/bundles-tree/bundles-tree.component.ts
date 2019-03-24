@@ -1,10 +1,10 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { TreeNode, MessageService } from 'primeng/api';
 import { Trip } from '../shared/model/trip';
-import { CarrierCrudService } from '../../carrier/carrier-crud.service';
+import { CarrierCrudService } from '../../carrier/shared/service/carrier-crud.service';
 import { TripsService } from 'src/app/services/trips.service';
 import { PossibleServiceService } from 'src/app/services/possible-service.service';
-import { Carrier } from '../../carrier/carrier';
+import { Carrier } from '../../carrier/shared/model/carrier.model';
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { TicketClass } from '../shared/model/ticket-class';
 import { Service } from '../shared/model/service';

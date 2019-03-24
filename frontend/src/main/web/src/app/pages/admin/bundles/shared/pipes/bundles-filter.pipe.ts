@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {Bundle} from "../model/bundle";
+import { Bundle } from '../../../../../shared/model/bundle';
 
 @Pipe({
         name: 'bundlesFilter',

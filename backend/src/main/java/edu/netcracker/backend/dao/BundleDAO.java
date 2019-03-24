@@ -9,6 +9,8 @@ public interface BundleDAO {
 
     List<Bundle> findAll(Number limit, Number offset);
 
+    List<Bundle> findAll();
+
     Optional<Bundle> find(Number id);
 
     void save(Bundle bundle);

@@ -4,6 +4,7 @@ import edu.netcracker.backend.message.request.UserCreateForm;
 import edu.netcracker.backend.message.request.UserUpdateForm;
 import edu.netcracker.backend.message.response.UserDTO;
 import edu.netcracker.backend.service.CarrierService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +23,7 @@ import java.util.List;
 
 @RestController
 @Validated
+@Slf4j
 public class    CarrierController {
 
     private CarrierService carrierService;
@@ -47,6 +49,13 @@ public class    CarrierController {
     @PreAuthorize("hasRole('ADMIN')")
     public UserDTO getCarrierById(@PathVariable Integer userId) {
         return carrierService.getCarrierById(userId);
+    }
+
+    @GetMapping(path = "/api/v1/admin/carrier/amount")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Integer getCarrierAmount() {
+        log.debug("CarrierController.getCarrierAmount() was invoked");
+        return carrierService.getCarrierAmount();
     }
 
     @GetMapping(path = "/api/v1/admin/carrier")

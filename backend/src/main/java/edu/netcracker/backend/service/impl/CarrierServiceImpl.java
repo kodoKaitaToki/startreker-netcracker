@@ -9,6 +9,7 @@ import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.CarrierService;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.utils.AuthorityUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class CarrierServiceImpl implements CarrierService {
 
     @Autowired
@@ -80,6 +82,14 @@ public class CarrierServiceImpl implements CarrierService {
         }
 
         return users.stream().map(UserDTO::from).collect(Collectors.toList());
+    }
+
+
+
+    @Override
+    public Integer getCarrierAmount(){
+        log.debug("CarrierService.getCarrierAmount() was invoked");
+        return userService.getUserAmount(AuthorityUtils.ROLE_CARRIER);
     }
 
     @Override

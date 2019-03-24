@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -40,20 +41,18 @@ public class TripServiceImplTest {
     private TripDAO tripDAOMock;
 
     @Autowired
-    private TripStateRegistry tripStateRegistry;
-
-    @Autowired
-    private TripReplyDAO tripReplyDAO;
-
-    @Autowired
     private PlanetDAO planetDAO;
 
     @Autowired
     private SpaceportDAO spaceportDAO;
 
-    private TripService tripService;
+    @Autowired
+    private ApplicationContext applicationContext;
 
+    @Autowired
     private SecurityContext securityContext;
+
+    private TripService tripService;
 
     private User approver;
     private User carrier;
@@ -99,43 +98,43 @@ public class TripServiceImplTest {
         draftTrip.setTripId(1L);
         draftTrip.setApprover(approver);
         draftTrip.setOwner(carrier);
-        draftTrip.setTripState(tripStateRegistry.getState(Draft.DATABASE_VALUE));
+        draftTrip.setTripState(TripState.DRAFT);
 
         openTrip = new Trip();
         openTrip.setTripId(1L);
         openTrip.setApprover(approver);
         openTrip.setOwner(carrier);
-        openTrip.setTripState(tripStateRegistry.getState(Open.DATABASE_VALUE));
+        openTrip.setTripState(TripState.OPEN);
 
         assignedTrip = new Trip();
         assignedTrip.setTripId(1L);
         assignedTrip.setApprover(approver);
         assignedTrip.setOwner(carrier);
-        assignedTrip.setTripState(tripStateRegistry.getState(Assigned.DATABASE_VALUE));
+        assignedTrip.setTripState(TripState.ASSIGNED);
 
         publishedTrip = new Trip();
         publishedTrip.setTripId(1L);
         publishedTrip.setApprover(approver);
         publishedTrip.setOwner(carrier);
-        publishedTrip.setTripState(tripStateRegistry.getState(Published.DATABASE_VALUE));
+        publishedTrip.setTripState(TripState.PUBLISHED);
 
         archivedTrip = new Trip();
         archivedTrip.setTripId(1L);
         archivedTrip.setApprover(approver);
         archivedTrip.setOwner(carrier);
-        archivedTrip.setTripState(tripStateRegistry.getState(Archived.DATABASE_VALUE));
+        archivedTrip.setTripState(TripState.ARCHIVED);
 
         underClarificationTrip = new Trip();
         underClarificationTrip.setTripId(1L);
         underClarificationTrip.setApprover(approver);
         underClarificationTrip.setOwner(carrier);
-        underClarificationTrip.setTripState(tripStateRegistry.getState(UnderClarification.DATABASE_VALUE));
+        underClarificationTrip.setTripState(TripState.UNDER_CLARIFICATION);
 
         removedTrip = new Trip();
         removedTrip.setTripId(1L);
         removedTrip.setApprover(approver);
         removedTrip.setOwner(carrier);
-        removedTrip.setTripState(tripStateRegistry.getState(Removed.DATABASE_VALUE));
+        removedTrip.setTripState(TripState.REMOVED);
 
         draftTripDTO = TripRequest.from(draftTrip);
         openTripDTO = TripRequest.from(openTrip);
@@ -156,7 +155,7 @@ public class TripServiceImplTest {
         tripService = new TripServiceImpl(tripDAOMock,
                                           planetDAO,
                                           spaceportDAO,
-                                          tripStateRegistry,
+                                          applicationContext,
                                           null,
                                           null,
                                           securityContext);
@@ -200,10 +199,10 @@ public class TripServiceImplTest {
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
-    @Test(expected = RequestException.class)
+    @Test
     public void draftToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(draftTrip));
-        tripService.updateTrip(approver, removedTripDTO);
+        tripService.updateTrip(carrier, removedTripDTO);
     }
 
 
@@ -246,10 +245,10 @@ public class TripServiceImplTest {
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
-    @Test(expected = RequestException.class)
+    @Test
     public void openToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(openTrip));
-        tripService.updateTrip(approver, removedTripDTO);
+        tripService.updateTrip(carrier, removedTripDTO);
     }
 
 
@@ -292,10 +291,10 @@ public class TripServiceImplTest {
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
-    @Test(expected = RequestException.class)
+    @Test
     public void assignedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(assignedTrip));
-        tripService.updateTrip(approver, removedTripDTO);
+        tripService.updateTrip(carrier, removedTripDTO);
     }
 
 
@@ -338,10 +337,10 @@ public class TripServiceImplTest {
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
-    @Test(expected = RequestException.class)
+    @Test
     public void publishedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(publishedTrip));
-        tripService.updateTrip(approver, removedTripDTO);
+        tripService.updateTrip(carrier, removedTripDTO);
     }
 
 
@@ -384,10 +383,10 @@ public class TripServiceImplTest {
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
-    @Test(expected = RequestException.class)
+    @Test
     public void archivedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(archivedTrip));
-        tripService.updateTrip(approver, removedTripDTO);
+        tripService.updateTrip(carrier, removedTripDTO);
     }
 
 
@@ -479,7 +478,7 @@ public class TripServiceImplTest {
     @Test
     public void removedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(removedTrip));
-        tripService.updateTrip(approver, removedTripDTO);
+        tripService.updateTrip(carrier, removedTripDTO);
     }
 
 
@@ -495,7 +494,7 @@ public class TripServiceImplTest {
     @Test(expected = RequestException.class)
     public void illegalDraftToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(draftTrip));
-        tripService.updateTrip(illegalApprover, removedTripDTO);
+        tripService.updateTrip(illegalCarrier, removedTripDTO);
     }
 
     @Test(expected = RequestException.class)
@@ -507,7 +506,7 @@ public class TripServiceImplTest {
     @Test(expected = RequestException.class)
     public void illegalOpenToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(openTrip));
-        tripService.updateTrip(illegalApprover, removedTripDTO);
+        tripService.updateTrip(illegalCarrier, removedTripDTO);
     }
 
     @Test(expected = RequestException.class)
@@ -525,13 +524,13 @@ public class TripServiceImplTest {
     @Test(expected = RequestException.class)
     public void illegalAssignedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(assignedTrip));
-        tripService.updateTrip(illegalApprover, removedTripDTO);
+        tripService.updateTrip(illegalCarrier, removedTripDTO);
     }
 
     @Test(expected = RequestException.class)
     public void illegalPublishedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(publishedTrip));
-        tripService.updateTrip(illegalApprover, removedTripDTO);
+        tripService.updateTrip(illegalCarrier, removedTripDTO);
     }
 
     @Test(expected = RequestException.class)
@@ -555,7 +554,7 @@ public class TripServiceImplTest {
     @Test(expected = RequestException.class)
     public void illegalArchivedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(archivedTrip));
-        tripService.updateTrip(illegalApprover, removedTripDTO);
+        tripService.updateTrip(illegalCarrier, removedTripDTO);
     }
 
     @Test(expected = RequestException.class)

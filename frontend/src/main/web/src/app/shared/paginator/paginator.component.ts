@@ -12,10 +12,18 @@ export class PaginatorComponent {
   @Input() number: number;
   @Output() update = new EventEmitter<number>();
 
+  nextBtn: boolean = false;
+
   pageArray = Array;
 
   count() : number {
     return Math.floor(this.amount/this.number)
+  }
+
+  checkLastPage(){
+    if(this.amount > -1){
+      this.nextBtn = (Math.floor(this.amount/this.from) <= 1) ? true:false;
+    }
   }
 
   first() {
@@ -26,11 +34,15 @@ export class PaginatorComponent {
   next() {
     this.from += this.number;
     this.update.emit(this.from);
+    this.checkLastPage();
   }
 
   previous() {
     this.from -= this.number;
-    if (this.from < 0) this.from = 0;
+    this.nextBtn = false;
+    if (this.from < 0) {
+      this.from = 0;
+    }
     this.update.emit(this.from);
   }
 

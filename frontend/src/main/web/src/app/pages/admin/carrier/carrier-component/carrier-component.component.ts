@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Carrier} from '../carrier';
-import {CarrierCrudService} from '../carrier-crud.service';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Carrier } from '../shared/model/carrier.model';
+import { CarrierCrudService } from '../shared/service/carrier-crud.service';
 import { clone } from 'ramda';
-import {checkToken} from "../../../../modules/api/index";
+import { checkToken } from "../../../../modules/api/index";
 import { HttpResponse } from '@angular/common/http';
+import { MessageService } from "primeng/api";
+import { ShowMessageService } from '../../approver/shared/service/show-message.service';
 
 @Component({
   selector: 'app-carrier-component',
   templateUrl: './carrier-component.component.html',
-  styleUrls: ['./carrier-component.component.scss']
+  styleUrls: ['./carrier-component.component.scss'],
+  providers: [ShowMessageService]
 })
 export class CarrierComponentComponent implements OnInit {
 
@@ -18,157 +21,133 @@ export class CarrierComponentComponent implements OnInit {
   usernameMinLength = 3;
   usernameMaxLength = 24;
 
-  carriers;
-  allCarriers;
+  carriers: Carrier[] = [];
   currentCarrierForUpdate: Carrier;
-  addBut: boolean = false;
-  curPage: number = 1;
-
-  filterCriteria = [
-    {name: 'id'},
-    {name: 'name'},
-    {name: 'status'},
-  ];
+  pageFrom: number = 0;
+  carrierNumber: number = 0;
 
   butGroup = {
     editBut: false,
     updateBut: false,
-    deleteBut: false
+    deleteBut: false,
+    addBut: false,
+    cancelBut: false
   };
 
   filterContent = '';
-
-  currentFilter = this.filterCriteria[0].name;
-  currentFilterPlaceholder = `Search by ${this.currentFilter}`;
-
   form: FormGroup;
+  editForm: FormGroup;
 
-  dataAvailable: boolean = false;
-
-  errorText:string = '';
-  updateError = '';
-
-  constructor(private carCrudService: CarrierCrudService) {
-
-  }
+  constructor(private carCrudService: CarrierCrudService,
+              private messageService: MessageService,
+              private showMsgSrvc: ShowMessageService) {}
 
   ngOnInit(): void {
-
-    this.getCarriers();
-    //this.getCarriersPagin();
-
+    this.getCarriersPagin();
+    this.getCarrierNumber();
     this.createNewForm();
   }
 
-  chooseNewFilter(chosenFilterName) {
+  onDelete(id: number) {
+    this.butGroup.deleteBut = true;
+    this.butGroup.editBut = true;
+    this.carCrudService.deleteCarrier(id)
+                      .subscribe(
+                        (resp: HttpResponse<any>) => {
+                          checkToken(resp.headers);
+                          this.butGroup.deleteBut = false;
+                          this.butGroup.editBut = false;
+                          this.getCarriersPagin();
+                          this.showMsgSrvc.showMessage(this.messageService, 
+                            'success', 
+                            'Success', 
+                            'The carrier was deleted');
+                         },
+                        error => {
+                          this.butGroup.deleteBut = false;
+                          this.butGroup.editBut = false;
+                          this.showMsgSrvc.showMessage(this.messageService, 
+                            'error', 
+                            'Error', 
+                            error.error.message);
+                        }
+                      );
 
-    this.currentFilter = chosenFilterName.value;
-
-    this.currentFilterPlaceholder = `Search by ${this.currentFilter}`;
   }
 
-  processUpdateEvent(event) {
+  onSubmit() {
     this.butGroup.updateBut = true;
-    this.butGroup.editBut = true;
-    this.updateError = '';
-    this.currentCarrierForUpdate = event;
-    this.carCrudService.updateCarrier(event)
+    this.carCrudService.updateCarrier(this.editForm.value, this.currentCarrierForUpdate.id)
                       .subscribe(
                         (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
                           this.butGroup.updateBut = false;
                           this.butGroup.editBut = false;
-                          //this.getCarriersPagin();
+                          this.getCarriersPagin();
+                          this.showMsgSrvc.showMessage(this.messageService, 
+                                                      'success', 
+                                                      'Success', 
+                                                      'The carrier was updated');
                          },
                         error => {
-                          if(error.error.message = 'Username already exist'){
-                            this.updateError = 'The user with this name alredy exists';
-                          }else{
-                            this.updateError = 'The user with this email alredy exists';
-                          }
+                          this.butGroup.updateBut = false;
+                          this.showMsgSrvc.showMessage(this.messageService, 
+                                                      'error', 
+                                                      'Error', 
+                                                      error.error.message);
                         }
                       );
   }
 
-  processDeleteNotification(event) {
-    this.butGroup.deleteBut = true;
-    this.butGroup.editBut = true;
-    this.carCrudService.deleteCarrier(event)
-                      .subscribe(
-                        (resp: HttpResponse<any>) => {
-                          checkToken(resp.headers);
-                          this.butGroup.deleteBut = false;
-                          this.butGroup.editBut = false;
-                          this.getCarriers();
-                          //this.getCarriersPagin();
-                         },
-                        error => {
-                          this.butGroup.deleteBut = false;
-                          this.butGroup.editBut = false;
-                        }
-                      );
-
-  }
-
-  processChangePage(event){
-    this.curPage = event;
-    //this.getCarriersPagin();
-  }
-
-  getCarriers(){
-    this.carCrudService.getAllCarriers()
-                      .subscribe(
-                        (resp: HttpResponse<any>) => {
-                          checkToken(resp.headers);
-                          this.allCarriers = clone(resp.body);
-                          this.dataAvailable = true;
-                        }
-                      );
+  onChange(event: number){
+    this.pageFrom = event;
+    window.scrollTo(0, 0);
+    this.getCarriersPagin();
   }
 
   getCarriersPagin(){
-    let from = (this.curPage*this.carPerPage)-(this.carPerPage-1);
-    this.carCrudService.getCarriersPagin(from, this.carPerPage)
+    this.carCrudService.getCarriersPagin(this.pageFrom, this.carPerPage)
                       .subscribe(
                         (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
                           this.carriers = clone(resp.body);
-                          this.dataAvailable = true;
+                          window.scrollTo(0, 0);
                          }
                       );
    }
 
-   getAddingUser(){
-     let status: boolean;
-     status = this.form.value['status'] == 'activated';
-     let newUser = {username: this.form.value['name'],
-                password: '1111111',
-                email: this.form.value['email'],
-                telephone_number: this.form.value['tel'],
-                is_activated: status};
-      return newUser;
+   getCarrierNumber(){
+    this.carCrudService.getCarrierNumber().subscribe((response: number) => this.carrierNumber = response);
   }
 
   addCarrier(){
-    this.addBut = true;
-    let newCar = this.form.value;
-    this.carCrudService.addCarrier(newCar)
+    this.butGroup.addBut = true;
+    this.carCrudService.addCarrier(this.form.value)
                       .subscribe(
                         (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
-                          this.getCarriers();
-                          //this.getCarriersPagin();
-                          this.clearform();
+                          this.getCarriersPagin();
+                          this.form.reset({is_activated: true});
+                          this.butGroup.addBut = false;
+                          this.showMsgSrvc.showMessage(this.messageService, 
+                                                      'success', 
+                                                      'New carrier', 
+                                                      'The new carrier was added');
                          },
                         error => {
-                          this.addBut = false;
-                          if(error.error.message = 'Username already exist'){
-                            this.errorText = 'The user with this name alredy exists';
-                          }else{
-                            this.errorText = 'The user with this email alredy exists';
-                          }
+                          this.butGroup.addBut = false;
+                          this.showMsgSrvc.showMessage(this.messageService, 
+                                                      'error', 
+                                                      'Error', 
+                                                      error.error.message);
                         }
                       );
+  }
+
+  onUpdate(event) {
+    this.currentCarrierForUpdate = event;
+    this.editForm.patchValue(event);
+    this.butGroup.editBut = true;
   }
 
   createNewForm(){
@@ -176,18 +155,19 @@ export class CarrierComponentComponent implements OnInit {
       {
         email: new FormControl('', [Validators.required, Validators.email]),
         username: new FormControl('', [Validators.required, Validators.minLength(this.usernameMinLength), Validators.maxLength(this.usernameMaxLength)]),
-        telephone_number: new FormControl('', Validators.required),
+        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[\\s\\d+(d+)-\\s]+')]),
         password: new FormControl('', [Validators.required, Validators.minLength(this.passwordMinLength)]),
         is_activated: new FormControl(true, Validators.required)
       }
     );
-  }
 
-  clearform(){
-    this.errorText = '';
-    this.form.reset();
-    this.createNewForm();
-    this.addBut = false;
+    this.editForm = new FormGroup(
+      {
+        email: new FormControl('', [Validators.required, Validators.email]),
+        username: new FormControl('', [Validators.required, Validators.minLength(this.usernameMinLength), Validators.maxLength(this.usernameMaxLength)]),
+        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[\\s\\d+(d+)-\\s]+')]),
+        is_activated: new FormControl(true, Validators.required)
+      }
+    );
   }
-
 }

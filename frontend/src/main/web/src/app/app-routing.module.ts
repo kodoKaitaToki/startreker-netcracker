@@ -21,9 +21,6 @@ const routes: Routes = [
   { path: 'in-design', component: ComingSoonComponent },
   { path: 'admin',
     loadChildren: './pages/admin/admin.module#AdminModule',
-
-    //IMPORTANT! Lines below should be uncommented later to activate Auth guard
-
     canActivate: [AuthGuard],
     data: {roles: Role.Admin}
   },
@@ -32,17 +29,11 @@ const routes: Routes = [
   },
   { path: 'carrier',
     loadChildren: './pages/carrier/carrier.module#CarrierModule',
-
-    //IMPORTANT! Lines below should be uncommented later to activate Auth guard
-
     canActivate: [AuthGuard],
     data: {roles: Role.Carrier}
   },
   { path: 'approver',
     loadChildren: './pages/approver/approver.module#ApproverModule',
-
-    //IMPORTANT! Lines below should be uncommented later to activate Auth guard
-
     canActivate: [AuthGuard],
     data: {roles: Role.Approver}
   },

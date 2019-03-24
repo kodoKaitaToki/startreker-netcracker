@@ -1,5 +1,4 @@
-import {Component, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {Component, OnInit, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -12,9 +11,7 @@ export class AppComponent implements OnInit {
 
   user: any = {};
 
-  constructor(private http: HttpClient) {}
+  constructor() {}
 
-  ngOnInit()  {
-
-  }
+  ngOnInit()  {}
 }

@@ -5,6 +5,7 @@ import edu.netcracker.backend.dao.RoleDAO;
 import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.model.Role;
 import edu.netcracker.backend.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
+@Slf4j
 public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
 
     private final RoleDAO roleDAO;
@@ -59,6 +61,11 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
                                                + "INNER JOIN assigned_role ON assigned_role.user_id = user_a.user_id "
                                                + "INNER JOIN role_a ON assigned_role.role_id = role_a.role_id "
                                                + "WHERE role_a.role_id = ? AND user_created BETWEEN ? AND ?";
+
+    private final String USER_AMOUNT = "SELECT COUNT(user_a.user_id) FROM user_a\n"
+                                        + "INNER JOIN assigned_role ON assigned_role.user_id = user_a.user_id\n"
+                                        + "INNER JOIN role_a ON assigned_role.role_id = role_a.role_id \n"
+                                        + "WHERE role_a.role_name = ?";
 
     @Autowired
     public UserDAOImpl(RoleDAO roleDAO) {
@@ -176,6 +183,12 @@ public class UserDAOImpl extends CrudDAOImpl<User> implements UserDAO {
     public void delete(User user) {
         getJdbcTemplate().update(removeAllUserRolesSql, user.getUserId());
         super.delete(user);
+    }
+
+    @Override
+    public Integer getUserAmount(Role role){
+        log.debug("UserDAO.getUserAmount(Role role) was invoked with role={}", role.getRoleName());
+        return getJdbcTemplate().queryForObject(USER_AMOUNT, new Object[]{role.getRoleName()}, Integer.class);
     }
 
     private Optional<User> executeSqlWithParam(String sql, Object[] params) {

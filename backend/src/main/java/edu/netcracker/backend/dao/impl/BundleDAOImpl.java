@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,13 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
         logger.debug("Setting bundle trip to bundles");
         bundles.forEach(bundle -> bundle.setBundleTrips(attachBundleTrips(bundle)));
         return bundles;
+    }
+
+    @Override
+    public List<Bundle> findAll() {
+        logger.debug("BundleDAO.findAll was invoked");
+        return getJdbcTemplate().query(BundleQueries.GET_FRESH_BUNDLES.toString(),
+                getGenericMapper());
     }
 
     @Override

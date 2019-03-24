@@ -24,11 +24,15 @@ export class CommonChartComponent implements OnInit{
 
 	title: string;
 
-  dateFrom:Data;
+  	dateFrom:Data;
 	dateTo:Data;
 
 	startDate;
 	finishDate;
+
+	curStartDate: Date;
+	curFinishDate: Date;
+	minDate: Date;
 
   constructor(private datePipe: DatePipe, private dashCostService: DashCostService) {
   }
@@ -88,15 +92,11 @@ export class CommonChartComponent implements OnInit{
 	getInterStat(){
 		this.buttons.butWeek = false;
 		this.buttons.butMonth = false;
-		let firstDateTitle = this.datePipe.transform(this.dateFrom);
-		let secondDateTitle = this.datePipe.transform(this.dateTo);
-
-		let dateFrom = this.setDate(this.startDate);
-		let dateTo = this.setDate(this.finishDate);
-
-		this.getCosts(dateFrom, dateTo);
-
+		let firstDateTitle = this.datePipe.transform(this.curStartDate);
+		let secondDateTitle = this.datePipe.transform(this.curFinishDate);
 		this.title = firstDateTitle + ' - ' + secondDateTitle;
+
+		this.getCosts(this.setDate(this.curStartDate), this.setDate(this.curFinishDate));
 	}
 
 
@@ -106,33 +106,6 @@ export class CommonChartComponent implements OnInit{
 					+ date.getMonth()
 					+ '-' + date.getDate();
 	}
-
-	  parseDate(dateString: string, flag: boolean): Date {
-		if (dateString) {
-
-			if(flag){
-				this.startDate = new Date(dateString);
-			}else{
-				this.finishDate = new Date(dateString);
-			}
-
-			if(this.finishDate < this.startDate){
-				this.dateInvalid = true;
-				this.buttons.checkBut = true;
-			}else{
-				this.dateInvalid = false;
-				if((this.startDate !== undefined) && (this.finishDate !== undefined)){
-					this.buttons.checkBut = false;
-				}
-			}
-
-			return new Date(dateString);
-		} else {
-			return null;
-		}
-	}
-
-
 
 	private getCosts(from, to){
     	this.dashCostService.getCosts(from, to)
@@ -144,5 +117,19 @@ export class CommonChartComponent implements OnInit{
 							this.getStatistics(tickets);
                           }
                         );
+  }
+
+  onSelect(event){
+    if(this.curFinishDate < event){
+		this.curFinishDate = undefined;
+    }
+	this.minDate = event;
+	this.checkBtn();
+  }
+
+  checkBtn(){
+	if((this.curFinishDate !== undefined) && (this.curStartDate !== undefined)){
+		this.buttons.checkBut = false;
+	}
   }
 }

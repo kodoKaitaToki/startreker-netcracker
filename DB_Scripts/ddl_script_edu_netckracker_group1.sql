@@ -427,10 +427,14 @@ insert into VEHICLE (OWNER_ID, VEHICLE_NAME, VEHICLE_SEATS) values (16, 'leo', 1
 insert into VEHICLE (OWNER_ID, VEHICLE_NAME, VEHICLE_SEATS) values (8, 'proin at', 10);
 
 insert into PLANET (PLANET_NAME) values ('EARTH');
-insert into PLANET (PLANET_NAME) values ('MOON');
 insert into PLANET (PLANET_NAME) values ('VENUS');
 insert into PLANET (PLANET_NAME) values ('MARS');
-insert into PLANET (PLANET_NAME) values ('NIBIRU');
+insert into PLANET (PLANET_NAME) values ('MERCURY');
+insert into PLANET (PLANET_NAME) values ('JUPITER');
+insert into PLANET (PLANET_NAME) values ('SATURN');
+insert into PLANET (PLANET_NAME) values ('URANUS');
+insert into PLANET (PLANET_NAME) values ('NEPTUNE');
+insert into PLANET (PLANET_NAME) values ('PLUTO');
 
 insert into SPACEPORT (SPACEPORT_NAME, CREATION_DATE, PLANET_ID) values ('laoreet', '2017-07-06', 5);
 insert into SPACEPORT (SPACEPORT_NAME, CREATION_DATE, PLANET_ID) values ('elementum', '2017-10-04', 4);

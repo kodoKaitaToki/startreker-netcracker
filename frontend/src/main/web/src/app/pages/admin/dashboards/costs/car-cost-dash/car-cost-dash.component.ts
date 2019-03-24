@@ -1,8 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import * as CanvasJS from '../../../../../../assets/js/canvasjs.min';
 import { Data } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import {CarrierCrudService} from '../../../carrier/carrier-crud.service';
+import {CarrierCrudService} from '../../../carrier/shared/service/carrier-crud.service';
 import { clone } from 'ramda'
 import { DashCostService } from '../dashCostService';
 import {checkToken} from "../../../../../modules/api/index";
@@ -35,9 +35,14 @@ export class CarCostDashComponent implements OnInit {
   curName: string = '';
   curDateFrom: string;
   curDateTo: string;
-  emptyResp: boolean = true;
+  emptyResp: boolean = false;
+
+  curStartDate: Date;
+	curFinishDate: Date;
+	minDate: Date;
 
   title: string = '';
+  chart: boolean = false;
 
   constructor(private datePipe: DatePipe,
 				private carCrudService: CarrierCrudService,
@@ -50,6 +55,7 @@ export class CarCostDashComponent implements OnInit {
 
 	getStatistics(costs){
 		if(costs.length > 0){
+			this.chart = true;
 			this.emptyResp = false;
 			let chart = new CanvasJS.Chart("chartContainerCar", {
 				animationEnabled: true,
@@ -62,7 +68,6 @@ export class CarCostDashComponent implements OnInit {
 					dataPoints: costs
 				}]
 			});
-
 			chart.render();
 		}else{
 			this.emptyResp = true;
@@ -100,12 +105,12 @@ export class CarCostDashComponent implements OnInit {
 		this.buttons.butWeek = false;
 		this.buttons.butMonth = false;
 
-		let firstDateTitle = this.datePipe.transform(this.dateFrom);
-		let secondDateTitle = this.datePipe.transform(this.dateTo);
-
-		this.setDate(this.startDate, this.finishDate);
-
+		let firstDateTitle = this.datePipe.transform(this.curStartDate);
+		let secondDateTitle = this.datePipe.transform(this.curFinishDate);
 		this.title = firstDateTitle + ' - ' + secondDateTitle;
+
+		this.setDate(this.curStartDate, this.curFinishDate);
+
 	}
 
 	setDate(dateFrom: Date, dateTo: Date){
@@ -119,31 +124,6 @@ export class CarCostDashComponent implements OnInit {
 							+ '-' + dateTo.getDate();
 	}
 
-	parseDate(dateString: string, flag): Date {
-		if (dateString) {
-
-			if(flag){
-				this.startDate = new Date(dateString);
-			}else{
-				this.finishDate = new Date(dateString);
-			}
-
-			if(this.finishDate < this.startDate){
-				this.dateInvalid = true;
-				this.buttons.checkBut = true;
-			}else{
-				this.dateInvalid = false;
-				if((this.startDate !== undefined) && (this.finishDate !== undefined)){
-					this.buttons.checkBut = false;
-				}
-			}
-
-			return new Date(dateString);
-		} else {
-			return null;
-		}
-	}
-
 	getCarriers(){
 		this.carCrudService.getAllCarriers()
                       .subscribe(
@@ -155,17 +135,15 @@ export class CarCostDashComponent implements OnInit {
 	}
 
 	getCarCosts(){
-		if(this.curCarrier !== undefined){
-
+		if((this.curCarrier !== undefined) && (this.curCarrier !== 'Choose a carrier')){
+			this.chart = false;
 			this.dashCostService.getCarCosts(this.curId, this.curDateFrom, this.curDateTo)
-													.subscribe(
-														(resp: HttpResponse<any>) => {
-                              								checkToken(resp.headers);
-															let response = clone(resp.body);
-															let tickets = this.dashCostService.parseResponse(response);
-															this.getStatistics(tickets);
-														}
-													);
+								.subscribe((resp: HttpResponse<any>) => {
+                              		checkToken(resp.headers);
+									let response = clone(resp.body);
+									let tickets = this.dashCostService.parseResponse(response);
+									this.getStatistics(tickets);
+								});
 		}
 	}
 
@@ -185,4 +163,18 @@ export class CarCostDashComponent implements OnInit {
 		this.curId = this.curCarrier.id;
 		this.getCarCosts();
 	}
+
+	onSelect(event){
+		if(this.curFinishDate < event){
+			this.curFinishDate = undefined;
+		}
+		this.minDate = event;
+		this.checkBtn();
+	  }
+	
+	  checkBtn(){
+		if((this.curFinishDate !== undefined) && (this.curStartDate !== undefined)){
+			this.buttons.checkBut = false;
+		}
+	  }
 }
