@@ -1,9 +1,6 @@
 package edu.netcracker.backend.dao;
 
-import edu.netcracker.backend.message.response.CarrierRevenueResponse;
-import edu.netcracker.backend.message.response.CarrierViewsResponse;
-import edu.netcracker.backend.message.response.ServiceDistributionElement;
-import edu.netcracker.backend.message.response.TripDistributionElement;
+import edu.netcracker.backend.message.response.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,8 +18,10 @@ public interface StatisticsDAO {
     CarrierRevenueResponse getTripsSalesStatistics(long carrierId);
 
     CarrierRevenueResponse getTripsSalesStatistics(long carrierId, LocalDate from, LocalDate to);
-    Map<String, Double> getTroubleTicketStatistics();
-    Map<String, Double> getTroubleTicketStatisticsByApprover(Long approverId);
+
+    ReportStatisticsResponse getTroubleTicketStatistics();
+
+    ReportStatisticsResponse getTroubleTicketStatisticsByApprover(Long approverId);
 
     List<CarrierRevenueResponse> getTripsSalesStatisticsByWeek(long carrierId, LocalDate from, LocalDate to);
 

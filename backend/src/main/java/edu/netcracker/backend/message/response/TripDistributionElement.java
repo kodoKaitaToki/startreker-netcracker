@@ -8,18 +8,10 @@ import lombok.Setter;
 @Setter
 public class TripDistributionElement {
 
-    @JsonProperty("departure_id")
-    private Long departureId;
-    @JsonProperty("arrival_id")
-    private Long arrivalId;
     @JsonProperty("departure_planet_id")
     private Long departurePlanetId;
     @JsonProperty("arrival_planet_id")
     private Long arrivalPlanetId;
-    @JsonProperty("departure_spaceport_name")
-    private String departureSpaceportName;
-    @JsonProperty("arrival_spaceport_name")
-    private String arrivalSpaceportName;
     @JsonProperty("departure_planet_name")
     private String departurePlanetName;
     @JsonProperty("arrival_planet_name")

@@ -1,7 +1,7 @@
 package edu.netcracker.backend.controller;
 
 import edu.netcracker.backend.message.response.ReportStatisticsResponse;
-import edu.netcracker.backend.service.ReportStatisticsBuilder;
+import edu.netcracker.backend.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,34 +11,20 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TroubleTicketController {
 
-    private ReportStatisticsBuilder reportStatisticsBuilder;
+    private final StatisticsService statisticsService;
 
     @Autowired
-    public TroubleTicketController(ReportStatisticsBuilder reportStatisticsBuilder) {
-        this.reportStatisticsBuilder = reportStatisticsBuilder;
-    }
+    public TroubleTicketController(StatisticsService statisticsService) {this.statisticsService = statisticsService;}
 
     @GetMapping("api/v1/trouble/statistics")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ReportStatisticsResponse getStatistics() {
-        return fullStatBuilder().build();
+        return statisticsService.getTroubleTicketStatistics();
     }
 
-    @GetMapping("api/v1/trouble/statistics/{id}")
+    @GetMapping("api/v1/approver/{id}/trouble/statistics")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ReportStatisticsResponse getStatistics(@PathVariable Long id) {
-        return fullStatBuilder().forUser(id)
-                                .build();
-    }
-
-    private ReportStatisticsBuilder fullStatBuilder() {
-        return reportStatisticsBuilder.addTotalAnsweredCount()
-                                      .addTotalCount()
-                                      .addTotalFinishedCount()
-                                      .addTotalOpenedCount()
-                                      .addTotalRatedCount()
-                                      .addTotalReOpenedCount()
-                                      .addTotalInProgressCount()
-                                      .addAverageRate();
+        return statisticsService.getTroubleTicketStatisticsByApprover(id);
     }
 }
