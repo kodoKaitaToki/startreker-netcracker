@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequestMapping("api/v1/history")
 @RestController
 public class PurchaseHistoryController {
 
@@ -20,7 +21,7 @@ public class PurchaseHistoryController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    @GetMapping("api/v1/history/user/ticket")
+    @GetMapping("/user/ticket")
     public List<HistoryTicketDTO> getPurchaseHistory(@RequestParam("limit") Number limit,
                                                      @RequestParam("offset") Number offset,
                                                      @RequestParam(name = "start-date", required = false)
@@ -32,7 +33,7 @@ public class PurchaseHistoryController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    @GetMapping("api/v1/history/ticket/{id}/service")
+    @GetMapping("/ticket/{id}/service")
     public List<HistoryServiceDTO> getServiceNamesByTicket(@PathVariable("id") Number id) {
         return phs.getServiceNamesByTicket(id);
     }

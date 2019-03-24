@@ -2,6 +2,7 @@ package edu.netcracker.backend.service;
 
 import edu.netcracker.backend.message.response.CarrierRevenueResponse;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,15 @@ public class StatisticsServiceTest {
     private static CarrierRevenueResponse tripsSalesTestWithTimeLimitsExpected;
     private static CarrierRevenueResponse servicesSalesTestExpected;
     private static CarrierRevenueResponse servicesSalesTestWithTimeLimitsExpected;
+
     @Autowired
     private StatisticsService statisticsService;
 
     @BeforeClass
     public static void init() {
         tripsSalesTestExpected = new CarrierRevenueResponse();
-        tripsSalesTestExpected.setSold(45L);
-        tripsSalesTestExpected.setRevenue(127128L);
+        tripsSalesTestExpected.setSold(6L);
+        tripsSalesTestExpected.setRevenue(14092L);
 
         tripsSalesTestWithTimeLimitsExpected = new CarrierRevenueResponse();
         tripsSalesTestWithTimeLimitsExpected.setSold(6L);
