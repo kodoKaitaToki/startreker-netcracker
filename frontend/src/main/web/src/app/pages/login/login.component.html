@@ -4,11 +4,11 @@
         <div class="card login-form__bg">
           <div class="card-body register-body">
             <h1 class="card-title text-center login-form__header">Log In</h1>
-            
+            <h6 card-title text-center login-form__message *ngIf="message !== ''">{{message}}</h6>
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-              
+
               <hr class="hr-xs">
-              
+
               <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -32,9 +32,9 @@
                     </div>
                   </div>
                 </div>
-              
+
               <hr class="hr-xs">
-              
+
               <div class="form-group">
                 <div class="input-group">
                   <div class="input-group-prepend">
@@ -56,9 +56,9 @@
                   <div *ngIf="f.password.errors.required">This field is required</div>
                 </div>
               </div>
-              
+
               <hr class="hr-xs">
-              
+
               <button
                 type="submit"
                 class="btn btn-primary btn-block"
@@ -66,7 +66,7 @@
               >
                 Log In
               </button>
-              
+
               <div class="row login-form__redirect">
                 <div class="text-left ">or
                   <a routerLink="/">Cancel</a>
@@ -76,7 +76,7 @@
                 </div>
               </div>
             </form>
-            
+
             <hr class="hr-xs">
             <p class="text-left">Want to create a new account?
               <a routerLink="/sign-up">Sign up</a>.</p>
