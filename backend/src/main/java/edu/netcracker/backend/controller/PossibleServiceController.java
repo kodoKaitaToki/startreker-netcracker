@@ -1,8 +1,10 @@
 package edu.netcracker.backend.controller;
 
 import edu.netcracker.backend.message.response.PossibleServiceDTO;
+import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.PossibleServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -10,11 +12,14 @@ import java.util.List;
 
 @RestController
 public class PossibleServiceController {
+
     private PossibleServiceService possibleServiceService;
+    private final SecurityContext securityContext;
 
     @Autowired
-    public PossibleServiceController(PossibleServiceService possibleServiceService) {
+    public PossibleServiceController(PossibleServiceService possibleServiceService, SecurityContext securityContext) {
         this.possibleServiceService = possibleServiceService;
+        this.securityContext = securityContext;
     }
 
     @GetMapping("/api/v1/possible-services")
@@ -41,5 +46,11 @@ public class PossibleServiceController {
     @DeleteMapping("/api/v1/possible-services/{possibleServiceId}")
     public void deletePossibleService(@PathVariable Integer possibleServiceId) {
         possibleServiceService.deletePossibleService(possibleServiceId);
+    }
+
+    @GetMapping("/api/v1/carrier/possible-services")
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<PossibleServiceDTO> getCarrierPossibleServices() {
+        return possibleServiceService.getCarrierPossibleServices(securityContext.getUser());
     }
 }
