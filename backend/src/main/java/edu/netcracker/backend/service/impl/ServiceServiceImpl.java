@@ -50,6 +50,13 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public Integer getCarrierServicesAmount(String status){
+        log.debug("ServiceServiceImpl.getCarrierServicesAmount(String status) was invoked with status={}", status);
+
+        return serviceDAO.carrierServicesAmount(setCurUser(), getStatusValue(status));
+    }
+
+    @Override
     public ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm){
         log.debug("ServiceService.addService(ServiceCreateForm serviceCreateForm) was invoked " +
                 "to add a new service with name={}, status={}",

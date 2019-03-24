@@ -120,6 +120,9 @@ const service = {
   },
   servicesByStatus(){
     return `${baseUrl}api/v1/carrier/service/by-status`;
+  },
+  servicesAmount(){
+    return `${baseUrl}api/v1/carrier/carrier/service/amount`;
   }
 }
 

@@ -136,10 +136,17 @@
 </div>
 <div class="row justify-content-center">
   <div class="col-8">
-    <pagination-controls class="listing-pagination"
+    <!-- <pagination-controls class="listing-pagination"
                          maxSize=5
                          (pageChange)="onChangePage($event)">
-    </pagination-controls>
+    </pagination-controls> -->
+    <app-paginator
+          [page]="services"
+          [from]="pageFrom"
+          [number]="servicesPerPage"
+          [amount]="serviceNumber"
+          (update)="onChange($event)">
+      </app-paginator>
   </div>
 </div>
 

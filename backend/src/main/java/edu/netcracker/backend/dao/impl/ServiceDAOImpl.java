@@ -46,12 +46,15 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     @Value("${UPDATE_SERVICE_BY_CARRIER}")
     private String UPDATE_SERVICE_BY_CARRIER;
 
+    @Value("${SERVICE_AMOUNT_BY_STATUS}")
+    private String SERVICE_AMOUNT_BY_STATUS;
+
     private ServiceMapper mapper = new ServiceMapper();
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public Optional<ServiceDescr> find(Number id) {
+    public Optional<ServiceDescr> find(Long id) {
         log.debug("ServiceDAO.find(Number id) was invoked with parameters id={}", id);
         Optional<ServiceDescr> serviceOpt = super.find(id);
 
@@ -84,7 +87,7 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     }
 
     @Override
-    public Optional<ServiceDescr> findByName(String name, Number id) {
+    public Optional<ServiceDescr> findByName(String name, Integer id) {
         log.debug("ServiceDAO.findByName(String name, Number id) was invoked with parameters name={}, id={}", name, id);
 
         try {
@@ -98,7 +101,7 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     }
 
     @Override
-    public List<ServiceCRUDDTO> findByCarrierId(Number id, Integer offset, Integer limit, Integer status) {
+    public List<ServiceCRUDDTO> findByCarrierId(Integer id, Integer offset, Integer limit, Integer status) {
         log.debug("ServiceDAO.findPaginByCarrierId(Number id, Integer status) was invoked with parameters id={}, " +
                 "offset={}, limit={}, status={}", id, offset, limit, status);
 
@@ -106,6 +109,13 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
         result.addAll(getJdbcTemplate().query(FIND_PAGIN_SERVICES, new Object[]{id ,status, limit, offset}, mapper));
 
         return result;
+    }
+
+    @Override
+    public Integer carrierServicesAmount(Integer id, Integer status){
+        log.debug("ServiceDAO.carrierServicesAmount(Integer id, Integer status) was invoked " +
+                "with parameters id={}, status={}");
+        return getJdbcTemplate().queryForObject(SERVICE_AMOUNT_BY_STATUS, new Object[]{id, status}, Integer.class);
     }
 
     @Override

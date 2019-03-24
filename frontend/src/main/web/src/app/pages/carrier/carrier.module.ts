@@ -3,7 +3,6 @@ import {CommonModule} from '@angular/common';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {GrowlModule, MessageService, ProgressBarModule} from "primeng/primeng";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import {CarrierRoutingModule} from './carrier-routing.module';
 import {NavbarComponent} from './navbar/navbar.component';
@@ -37,6 +36,7 @@ import { SuggestionsTreeComponent } from './suggestions/suggestions-tree/suggest
 import { SuggestionsTableComponent } from './suggestions/suggestions-table/suggestions-table.component';
 import { TripsTicketClassComponent } from './trips/trips-ticket-class/trips-ticket-class.component';
 import {DialogModule} from 'primeng/dialog';
+import { SharedModule } from '../../shared/shared.module';
 
 @NgModule({
             declarations:
@@ -76,7 +76,8 @@ import {DialogModule} from 'primeng/dialog';
               MessageModule,
               MessagesModule,
               TreeModule,
-              DialogModule
+              DialogModule,
+              SharedModule
             ],
             providers: [
               MessageService,

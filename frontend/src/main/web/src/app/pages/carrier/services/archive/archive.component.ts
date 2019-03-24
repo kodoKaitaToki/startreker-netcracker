@@ -1,30 +1,38 @@
 import {Component, OnInit} from '@angular/core';
 import {clone} from 'ramda';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {MessageService} from 'primeng/components/common/messageservice';
+import { MessageService } from "primeng/api";
 import { HttpResponse } from '@angular/common/http';
 
 import {Service} from '../shared/model/service.model';
 import {ServiceService} from '../shared/service/service.service';
 import {checkToken} from "../../../../modules/api/index";
+import { ShowMessageService } from '../../../admin/approver/shared/service/show-message.service';
 
 @Component({
   selector: 'app-archive',
   templateUrl: './archive.component.html',
-  styleUrls: ['./archive.component.scss']
+  styleUrls: ['./archive.component.scss'],
+  providers: [ShowMessageService]
 })
 export class ArchiveComponent implements OnInit {
 
+  status: string = 'ARCHIVED';
+
   services: Service[] = [];
+  servicesPerPage = 10;
 
   currentServiceForUpdate: Service;
   form: FormGroup;
   isForUpdateAlertMessage = false;
   filterContent = '';
-  page: number = 1;
+
+  pageFrom: number = 0;
+  serviceNumber: number = 0;
 
   constructor(private serviceService: ServiceService,
-    private messageService: MessageService) {
+              private messageService: MessageService,
+              private showMsgSrvc: ShowMessageService) {
   }
 
   ngOnInit() {
@@ -44,14 +52,13 @@ export class ArchiveComponent implements OnInit {
   }
 
   getArchievedServices(){
-    this.serviceService.getServiceByStatus('ARCHIVED')
-        .subscribe(
-                        (resp: HttpResponse<any>) => {
-                          checkToken(resp.headers);
-                          this.services = clone(resp.body);
-                        },
-                        error => console.log(error)
-                      );
+    this.serviceService.getServiceByStatus(this.status, this.pageFrom, this.servicesPerPage)
+        .subscribe((resp: HttpResponse<any>) => {
+                      checkToken(resp.headers);
+                      this.services = clone(resp.body);
+                    },
+                      error => console.log(error)
+                  );
   }
 
   updateService(service: Service, message: String) {
@@ -60,14 +67,17 @@ export class ArchiveComponent implements OnInit {
                       .subscribe(
                         (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
-                          this.showMessage(this.createMessage('success',
-                                                              'The service ' + service.service_name + ' was ' + message,
-                                                              'It was sent for approvement'));
+                          this.showMsgSrvc.showMessage(this.messageService, 
+                                                        'success',
+                                                        'The service was updated',
+                                                        'It was sent for approvement');
                           this.getArchievedServices();
                           this.isForUpdateAlertMessage = false;
                         },
-                        error => console.log(error)
-                      );
+                        error => this.showMsgSrvc.showMessage(this.messageService, 
+                                                              'error',
+                                                              'Error', 
+                                                              error.error.message));
   }
 
   editService(service: Service){
@@ -90,10 +100,6 @@ export class ArchiveComponent implements OnInit {
     this.isForUpdateAlertMessage = false;
   }
 
-  showMessage(msgObj: any) {
-    this.messageService.add(msgObj);
-  }
-
   createMessage(severity: string, summary: string, detail: string): any {
     return {
       severity: severity,
@@ -102,8 +108,17 @@ export class ArchiveComponent implements OnInit {
     };
   }
 
-  onChangePage(event: number) {
-    this.page = event;
+  onChange(event: number){
+    this.pageFrom = event;
+    window.scrollTo(0, 0);
+    this.getArchievedServices();
   }
 
+  getServicesAmount(){
+    this.serviceService.getServicesAmount(this.status)
+                      .subscribe((resp: HttpResponse<any>) => {
+                        checkToken(resp.headers);
+                        this.serviceNumber = clone(resp.body);
+                      });
+  }
 }

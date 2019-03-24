@@ -18,11 +18,13 @@ public interface ServiceDAO {
 
     Integer updateServiceByCarrier(ServiceDescr service);
 
-    Optional<ServiceDescr> find(Number id);
+    Optional<ServiceDescr> find(Long id);
 
-    Optional<ServiceDescr> findByName(String name, Number id);
+    Optional<ServiceDescr> findByName(String name, Integer id);
 
-    List<ServiceCRUDDTO> findByCarrierId(Number id, Integer offset, Integer limit, Integer status);
+    List<ServiceCRUDDTO> findByCarrierId(Integer id, Integer offset, Integer limit, Integer status);
+
+    Integer carrierServicesAmount(Integer id, Integer status);
 
     List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, Integer status);
 

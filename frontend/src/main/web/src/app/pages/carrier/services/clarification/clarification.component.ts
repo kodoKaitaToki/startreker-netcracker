@@ -17,6 +17,11 @@ export class ClarificationComponent implements OnInit {
 
   services: Service[] = [];
 
+  status: string = 'UNDER_CLARIFICATION';
+  servicesPerPage = 10;
+  pageFrom: number = 0;
+  serviceNumber: number = 0;
+
   currentServiceForUpdate: Service;
   form: FormGroup;
   isForUpdateAlertMessage = false;
@@ -44,14 +49,13 @@ export class ClarificationComponent implements OnInit {
   }
 
   getClarificationServices(){
-    this.serviceService.getServiceByStatus('UNDER_CLARIFICATION')
-        .subscribe(
-                        (resp: HttpResponse<any>) => {
-                          checkToken(resp.headers);
-                          this.services = clone(resp.body);
-                        },
-                        error => console.log(error)
-                      );
+    this.serviceService.getServiceByStatus(this.status, this.pageFrom, this.servicesPerPage)
+        .subscribe((resp: HttpResponse<any>) => {
+                    checkToken(resp.headers);
+                    this.services = clone(resp.body);
+                  },
+                    error => console.log(error)
+                  );
   }
 
   updateService(service: Service){
@@ -115,6 +119,20 @@ export class ClarificationComponent implements OnInit {
 
   onChangePage(event: number) {
     this.page = event;
+  }
+
+  onChange(event: number){
+    this.pageFrom = event;
+    window.scrollTo(0, 0);
+    this.getClarificationServices();
+  }
+
+  getServicesAmount(){
+    this.serviceService.getServicesAmount(this.status)
+                      .subscribe((resp: HttpResponse<any>) => {
+                        checkToken(resp.headers);
+                        this.serviceNumber = clone(resp.body);
+                      });
   }
 
 }

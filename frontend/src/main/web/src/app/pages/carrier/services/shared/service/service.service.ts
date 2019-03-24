@@ -1,4 +1,4 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Api, HttpOptionsAuthorized} from '../../../../../modules/api';
@@ -13,18 +13,27 @@ export class ServiceService{
     constructor(private http: HttpClient) {
     }
 
-    public getAllServices(){
-        return this.http.get<any>(Api.service.services(), HttpOptionsAuthorized);
+    // public getAllServices(){
+    //     return this.http.get<any>(Api.service.services(), HttpOptionsAuthorized);
+    // }
+
+    // public getPaginServices(from:Number, number: Number){
+    //     let url = Api.service.paginServices() + '?from=' + from + '&number=' + number;
+    //     return this.http.get<any>(url, HttpOptionsAuthorized);
+    // }
+
+    public getServiceByStatus(status: string, from: number, amount: number){
+        let params = new HttpParams().set('status', status)
+                                    .set('from', from.toString())
+                                    .set('number', amount.toString());
+        return this.http.get<any>(Api.service.services(), {params: params,
+                                                            headers: HttpOptionsAuthorized.headers,
+                                                           observe: HttpOptionsAuthorized.observe});
     }
 
-    public getPaginServices(from:Number, number: Number){
-        let url = Api.service.paginServices() + '?from=' + from + '&number=' + number;
-        return this.http.get<any>(url, HttpOptionsAuthorized);
-    }
-
-  public getServiceByStatus(status: String){
-        let url = Api.service.servicesByStatus() + '?status=' + status;
-        return this.http.get<any>(url, HttpOptionsAuthorized);
+    public getServicesAmount(status: string){
+        let url = Api.service.servicesAmount() + '?status=' + status;
+        return this.http.get(url, Api.HttpOptionsAuthorized);
     }
 
     public addService(service: Service){

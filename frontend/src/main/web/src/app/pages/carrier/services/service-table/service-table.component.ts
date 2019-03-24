@@ -23,8 +23,13 @@ export class ServiceTableComponent implements OnInit {
   filterContent = '';
   page: number = 1;
 
+  status: string = 'PUBLISHED';
+  servicesPerPage = 10;
+  pageFrom: number = 0;
+  serviceNumber: number = 0;
+
   constructor(private serviceService: ServiceService,
-    private messageService: MessageService) {
+              private messageService: MessageService) {
   }
 
   ngOnInit() {
@@ -44,14 +49,13 @@ export class ServiceTableComponent implements OnInit {
   }
 
   getApprovedServices(){
-    this.serviceService.getServiceByStatus('PUBLISHED')
-        .subscribe(
-                        (resp: HttpResponse<any>) => {
-                          checkToken(resp.headers);
-                          this.services = clone(resp.body);
-                        },
-                        error => console.log(error)
-                      );
+    this.serviceService.getServiceByStatus('PUBLISHED', this.pageFrom, this.servicesPerPage)
+        .subscribe((resp: HttpResponse<any>) => {
+                      checkToken(resp.headers);
+                      this.services = clone(resp.body);
+                  },
+                      error => console.log(error)
+                  );
   }
 
   updateService(service: Service){
@@ -105,5 +109,19 @@ export class ServiceTableComponent implements OnInit {
 
   onChangePage(event: number) {
     this.page = event;
+  }
+
+  onChange(event: number){
+    this.pageFrom = event;
+    window.scrollTo(0, 0);
+    this.getApprovedServices();
+  }
+
+  getServicesAmount(){
+    this.serviceService.getServicesAmount(this.status)
+                      .subscribe((resp: HttpResponse<any>) => {
+                        checkToken(resp.headers);
+                        this.serviceNumber = clone(resp.body);
+                      });
   }
 }

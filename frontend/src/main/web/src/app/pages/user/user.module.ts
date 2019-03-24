@@ -6,18 +6,22 @@ import {UserRoutingModule} from "./user-routing.module";
 import {HistoryComponent} from './history/history.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {NgxPaginationModule} from "ngx-pagination";
+import {CheckboxModule} from 'primeng/checkbox';
+import { PurchasePageComponent } from './purchase-page/purchase-page.component';
 
 @NgModule({
   declarations: [
     UserComponent,
     NavbarComponent,
-    HistoryComponent
+    HistoryComponent,
+    PurchasePageComponent
   ],
   imports: [
     CommonModule,
     UserRoutingModule,
     ReactiveFormsModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    CheckboxModule
   ]
 })
 export class UserModule {
