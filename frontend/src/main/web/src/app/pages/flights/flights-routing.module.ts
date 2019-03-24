@@ -9,8 +9,8 @@ const routes: Routes = [
   },
   {
     path: 'login',
-    loadChildren: './pages/app.module#AppModule'
-  }
+    redirectTo: './login',
+  },
 ];
 
 @NgModule({

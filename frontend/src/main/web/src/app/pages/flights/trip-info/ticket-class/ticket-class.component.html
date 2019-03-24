@@ -4,7 +4,8 @@
   </div>
   <div class="col col-2">
     <form [formGroup]="amountForm">
-      <input formControlName="amount" class="tickets-amount-input" type="number" min="1" (change)="onAmountChanged()">
+      <input formControlName="amount" class="tickets-amount-input" type="number" min="1" placeholder="1"
+             (change)="onAmountChanged()">
     </form>
   </div>
   <div class="col col-2">

@@ -64,7 +64,8 @@ export class TicketClassInfoComponent implements OnInit {
     } else {
       console.log("Non authorized user");
       this.activeModal.close('Close click');
-      this.router.navigate(["login"]);
+
+      this.router.navigate(["login"], {state: {message: 'Please, log in or sign up to proceed!'}});
     }
   }
 }
