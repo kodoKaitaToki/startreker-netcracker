@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ApiUserService} from '../../services/auth.service';
 import {LoginFormData} from '../../services/interfaces/login-form.interface';
@@ -14,7 +14,7 @@ import {Subscription} from "rxjs/internal/Subscription";
   styleUrls: ['./login.component.scss'],
   providers: [ShowMessageService]
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   formData: LoginFormData;
@@ -77,10 +77,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-  }
-
-
-  ngOnDestroy() {
   }
 
 }
