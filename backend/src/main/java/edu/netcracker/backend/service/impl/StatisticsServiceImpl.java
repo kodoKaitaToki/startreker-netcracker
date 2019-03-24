@@ -4,10 +4,7 @@ import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.dao.StatisticsDAO;
 import edu.netcracker.backend.dao.TripDAO;
-import edu.netcracker.backend.message.response.CarrierRevenueResponse;
-import edu.netcracker.backend.message.response.CarrierViewsResponse;
-import edu.netcracker.backend.message.response.ServiceDistributionElement;
-import edu.netcracker.backend.message.response.TripDistributionElement;
+import edu.netcracker.backend.message.response.*;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.User;
@@ -128,6 +125,16 @@ public class StatisticsServiceImpl implements StatisticsService {
                                                                                 LocalDate to) {
         ensureCallerIsServiceOwner(caller, serviceId);
         return statisticsDAO.getServiceViewsStatisticsByServiceByMonth(serviceId, from, to);
+    }
+
+    @Override
+    public ReportStatisticsResponse getTroubleTicketStatistics() {
+        return statisticsDAO.getTroubleTicketStatistics();
+    }
+
+    @Override
+    public ReportStatisticsResponse getTroubleTicketStatisticsByApprover(Long approverId) {
+        return statisticsDAO.getTroubleTicketStatisticsByApprover(approverId);
     }
 
     private void ensureCallerIsTripOwner(User caller, long tripId) {

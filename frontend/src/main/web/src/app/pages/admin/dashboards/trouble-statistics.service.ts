@@ -30,6 +30,6 @@ export class TroubleStatisticsService {
       /*let headers = new HttpHeaders();
       headers = headers.append('Content-Type', 'application/json');*/
 
-      return this.http.get<any>(this.actionUrl + "/" + id, HttpOptionsAuthorized);
+      return this.http.get<any>(Api.baseUrl + "api/v1/approver/" + id + "/trouble/statistics", HttpOptionsAuthorized);
   }
 }
