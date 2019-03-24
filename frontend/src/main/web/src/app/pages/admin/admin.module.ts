@@ -31,7 +31,6 @@ import {CommonChartComponent} from './dashboards/costs/common-chart/common-chart
 import {CarCostDashComponent} from './dashboards/costs/car-cost-dash/car-cost-dash.component';
 
 import {CarrierComponentComponent} from './carrier/carrier-component/carrier-component.component';
-import {CarrierTableComponent} from './carrier/carrier-table/carrier-table.component';
 
 import {TroubleStatisticsService} from './dashboards/trouble-statistics.service';
 import {ApproverService} from "./approver/shared/service/approver.service";
@@ -50,7 +49,6 @@ import {TreeModule} from 'primeng/tree';
 import {FieldsetModule} from 'primeng/fieldset';
 import {AccordionModule} from 'primeng/accordion';
 
-//import { SharedModule } from 'src/app/shared/shared.module';
 import { BundlesTreeComponent } from './bundles/bundles-tree/bundles-tree.component';
 import { BundlesFormComponent } from './bundles/bundles-form/bundles-form.component';
 import { PaginatorComponent } from '../../shared/paginator/paginator.component';
@@ -78,7 +76,6 @@ import { PaginatorComponent } from '../../shared/paginator/paginator.component';
     DashboardDeltaComponent,
     TroubleStatisticsComponent,
     CarrierComponentComponent,
-    CarrierTableComponent,
     CarrierShowStatusPipe,
     CommonChartComponent,
     CarCostDashComponent,
@@ -97,14 +94,14 @@ import { PaginatorComponent } from '../../shared/paginator/paginator.component';
     ToastModule,
     ProgressBarModule,
     TreeModule,
-    //SharedModule,
     ScrollPanelModule,
     ToggleButtonModule,
     FieldsetModule,
     AccordionModule,
     CalendarModule,
     TabViewModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    GrowlModule
   ],
   providers: [
     FilterPipePipe,
