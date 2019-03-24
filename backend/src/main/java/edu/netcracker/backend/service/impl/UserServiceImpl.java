@@ -92,6 +92,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String changePasswordForUser(User user) {
+        log.debug("UserServiceImpl.changePasswordForUser(User user) was invoked");
         String newPassword = PasswordGeneratorUtils.generatePassword();
 
         user.setUserPassword(passwordEncoder.encode(newPassword));
@@ -102,7 +103,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePasswordForUser(User user, ChangePasswordForm changePasswordForm) {
+        log.debug("UserServiceImpl.changePasswordForUser(User user, ChangePasswordForm changePasswordForm) was invoked");
         if (oldPasswordNotMatched(user.getUserPassword(), changePasswordForm.getOldPassword())) {
+            log.debug("Invalid password {}", changePasswordForm.getOldPassword());
             throw new RequestException("invalid password", HttpStatus.BAD_REQUEST);
         }
 
@@ -111,6 +114,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(SignUpForm signUpForm, boolean isActivated, List<Role> roles) {
+        log.debug("UserServiceImpl.createUser(SignUpForm signUpForm, boolean isActivated, List<Role> roles) was invoked");
         User user = new User(signUpForm.getUsername(),
                              passwordEncoder.encode(signUpForm.getPassword()),
                              signUpForm.getEmail());
@@ -124,6 +128,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(UserCreateForm userCreateForm, List<Role> roles) {
+        log.debug("UserServiceImpl.createUser(UserCreateForm userCreateForm, List<Role> roles) was invoked");
         User user = new User(userCreateForm.getUsername(),
                              passwordEncoder.encode(userCreateForm.getPassword()),
                              userCreateForm.getEmail());

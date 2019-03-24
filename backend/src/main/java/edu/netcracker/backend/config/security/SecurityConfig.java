@@ -31,8 +31,6 @@ import java.util.Collections;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    //private AuthFilter authFilter;
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf()
@@ -95,15 +93,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-    //    @Bean
-    //    public FilterRegistrationBean corsFilterRegistration() {
-    //        FilterRegistrationBean registrationBean = new FilterReЗgistrationBean(new CORSFilter());
-    //        registrationBean.setName("CORS Filter");
-    //        registrationBean.addUrlPatterns("/*");
-    //        registrationBean.setOrder(1);
-    //        return registrationBean;
-    //    }
 
     @Bean
     public AuthFilter setAuthFilter() {
