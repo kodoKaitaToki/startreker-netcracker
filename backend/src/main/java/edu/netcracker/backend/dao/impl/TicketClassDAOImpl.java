@@ -175,10 +175,6 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
     @Override
     public void update(TicketClass ticketClass) {
         super.update(ticketClass);
-//        getJdbcTemplate().update(UPDATE_TICKET_CLASS,
-//                                 ticketClass.getClassSeats(),
-//                                 ticketClass.getTicketPrice(),
-//                                 ticketClass.getClassId());
     }
 
     /**
