@@ -8,3 +8,12 @@ export const periodError = (from: string, to: string): ValidatorFn => (control: 
         return { periodError: true };
     return null;
 }
+
+export const notEarlierThanCurrentDate = (control: FormControl): { [key: string]: any } => {
+    const startDate = new Date(control.value);
+    const currentDate = new Date();
+    if (+startDate < +currentDate)
+        return { "notEarlierThanCurrentDate": true };
+
+    return null;
+}

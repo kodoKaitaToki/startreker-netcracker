@@ -1,190 +1,188 @@
 <p-toast></p-toast>
 
-<div class="list-group">
-  <ul>
-    <li class="list-group-item"
-      *ngFor="let bundle of bundles"
-    >
-      <div
-      [hidden]="currentBundleForUpdate == bundle || currentBundleToHideId == bundle.id">
-        <div class="row">
+<div>
+  <div class="container card"
+    *ngFor="let bundle of bundles"
+  >
+    <div
+    [hidden]="currentBundleForUpdate == bundle || currentBundleToHideId == bundle.id">    
+      <div class="row">
+        <div class="col">
+          <div class="row">
+            <h5 class="col-12">From:</h5>
+          </div>
+          <div class="row">
+            <p class="col-12 date">
+              {{bundle.start_date | date}}
+            </p>
+          </div>
+        </div>
 
-          <div class="row col-5 offset-6"
-               *ngIf="!isForUpdateAlertMessage"
-          >
-            <div class="col-1 offset-4 offset-lg-8">
-              <p data-placement="top"
-                 data-toggle="tooltip"
-                 title="Edit"
-                 (click)="onBundleUpdate(bundle)"
-                 class="updatePrgph"
-              >
-                <button class="btn btn-primary btn-md">
-                  <i class="fa fa-edit"></i>
-                </button>
-              </p>
-            </div>
-  
-            <div class="col-1 offset-1">
-              <p data-placement="top"
-                 data-toggle="tooltip"
-                 title="Delete"
-                 (click)="onDelete(bundle)"
-                 class="deletePrgph"
-              >
-                <button class="btn btn-danger btn-md"
-                        data-title="Delete"
-                        data-toggle="modal"
-                        data-target="#delete">
-                  <i class="fa fa-trash"></i>
-                </button>
-              </p>
-            </div>
+        <div class="col">
+          <div class="row">
+            <h5 class="col-12">To:</h5>
+          </div>
+          <div class="row">
+            <p class="col-12 date">
+              {{bundle.finish_date | date}}
+            </p>
           </div>
         </div>
-        
-        <div class="row">
-          <div class="col-md-2">
-            <div class="row">
-              <h5 class="col-12">From:</h5>
-            </div>
-            <div class="row">
-              <p class="col-12">
-                {{bundle.start_date | date}}
-              </p>
-            </div>
-  
-            <div class="row">
-              <h5 class="col-12">To:</h5>
-            </div>
-            <div class="row">
-              <p class="col-12">
-                {{bundle.finish_date | date}}
-              </p>
-            </div>
-  
-            <div class="row">
-              <h5 class="col-12">Discount price:</h5>
-            </div>
-            <div class="row">
-              <p class="col-12">
-                {{bundle.bundle_price}}
-              </p>
-            </div>
-  
-            <div class="row">
-              <h5 class="col-12">Total price:</h5>
-            </div>
-            <div class="row">
-              <p class="col-12">
-                {{getBundlePrice(bundle)}}
-              </p>
-            </div>
-  
+
+        <div class="col">
+          <div class="row">
+            <h5 class="col-12">Discount price:</h5>
           </div>
-  
-          <div class="col-md-10">
-            <div class="row">
-              <h3 class="col-12"
-                *ngIf="true">
-                {{bundle.bundle_description}}
-              </h3>
-            </div>
+          <div class="row">
+            <p class="col-12">
+              <span class="price">{{bundle.bundle_price}}</span> $
+            </p>
           </div>
         </div>
-  
-        <div class="row">
-          <div class="col-12">
-            <h5>Trips:</h5>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Name</th>
-                  <th scope="col">Price</th>
-                  <th scope="col">Amount</th>
-                  <th scope="col">Total Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                <ng-container
-                *ngFor="let trip of bundle.bundle_trips; let i=index">
-                  <tr>
-                    <td scope="row">
-                      <i class="fa fa-rocket" aria-hidden="true"></i>
-                      {{trip.departure_spaceport_name}}({{trip.departure_planet}}) - 
-                      {{trip.arrival_spaceport_name}}({{trip.arrival_planet}})
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                      {{getTripPrice(trip)}}
-                    </td>
-                  </tr>
-                  <ng-container
-                  *ngFor="let ticket_class of trip.ticket_classes; let i=index">
-                    <tr>
-                      <td scope="row" style="padding-left: 1.25rem;">
-                        <i class="fa fa-ticket" aria-hidden="true"></i>
-                        {{ticket_class.class_name}}
-                      </td>
-                      <td>
-                        {{ticket_class.ticket_price}}
-                      </td>
-                      <td>
-                        {{ticket_class.item_number}}
-                      </td>
-                      <td>
-                        {{getTicketPrice(ticket_class)}}
-                      </td>
-                    </tr>
-                    <ng-container
-                    *ngFor="let service of ticket_class.services; let i=index">
-                      <tr>
-                        <td scope="row" style="padding-left: 1.75rem;">
-                          <i class="fa fa-list-alt" aria-hidden="true"></i>
-                          {{service.service_name}}
-                        </td>
-                        <td>
-                          {{service.service_price}}
-                        </td>
-                        <td>
-                          {{service.item_number}}
-                        </td>
-                        <td>
-                          {{getServicePrice(service)}}
-                        </td>
-                      </tr>
-                    </ng-container>
-                  </ng-container>
-                </ng-container>
-              </tbody>
-            </table>
+
+        <div class="col">
+          <div class="row">
+            <h5 class="col-12">Original price:</h5>
+          </div>
+          <div class="row">
+            <p class="col-12">
+              <span class="price">{{getBundlePrice(bundle)}}</span> $
+            </p>
           </div>
         </div>
       </div>
 
-      <div
-      [hidden]="currentBundleForUpdate != bundle || currentBundleToHideId == bundle.id">
-        <app-bundles-form
-        [bundleId]="bundle.id"
-        (bundleForm)="onPut($event)">
-        </app-bundles-form>
+      <div class="row table-header">
+        <div class="col">
+          <pre class="description">{{bundle.bundle_description}}</pre>
+        </div>
+      </div>
+
+      <div class="row table-container">
+        <div class="col-12">
+          <h5>Trips:</h5>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Amount</th>
+                <th scope="col">Total Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container
+              *ngFor="let trip of bundle.bundle_trips; let i=index">
+                <tr>
+                  <td scope="row">
+                    <i class="fa fa-rocket" aria-hidden="true"></i>
+                    {{trip.departure_spaceport_name}}({{trip.departure_planet}}) - 
+                    {{trip.arrival_spaceport_name}}({{trip.arrival_planet}})
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                    {{getTripPrice(trip)}} $
+                  </td>
+                </tr>
+                <ng-container
+                *ngFor="let ticket_class of trip.ticket_classes; let i=index">
+                  <tr>
+                    <td scope="row" style="padding-left: 1.25rem;">
+                      <i class="fa fa-ticket" aria-hidden="true"></i>
+                      {{ticket_class.class_name}} class
+                    </td>
+                    <td>
+                      {{ticket_class.ticket_price}} $
+                    </td>
+                    <td>
+                      {{ticket_class.item_number}}
+                    </td>
+                    <td>
+                      {{getTicketPrice(ticket_class)}} $
+                    </td>
+                  </tr>
+                  <ng-container
+                  *ngFor="let service of ticket_class.services; let i=index">
+                    <tr>
+                      <td scope="row" style="padding-left: 1.75rem;">
+                        <i class="fa fa-list-alt" aria-hidden="true"></i>
+                        {{service.service_name}}
+                      </td>
+                      <td>
+                        {{service.service_price}} $
+                      </td>
+                      <td>
+                        {{service.item_number}}
+                      </td>
+                      <td>
+                        {{getServicePrice(service)}} $
+                      </td>
+                    </tr>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <footer class="row table-footer justify-content-end">
         <hr>
-        <div class="row justify-content-around">
+
+        <div class="col-sm-auto">
+          <p data-placement="top"
+              data-toggle="tooltip"
+              title="Edit"
+              (click)="onBundleUpdate(bundle)"
+              class="updatePrgph"
+          >
+            <button class="btn btn-xs btn-secondary">
+              Edit
+            </button>
+          </p>
+        </div>
+
+        <div class="col-sm-auto">
+          <p data-placement="top"
+              data-toggle="tooltip"
+              title="Delete"
+              (click)="onDelete(bundle)"
+              class="deletePrgph"
+          >
+            <button class="btn btn-xs btn-danger"
+                    data-title="Delete"
+                    data-toggle="modal"
+                    data-target="#delete">
+              Delete
+            </button>
+          </p>
+        </div>
+      </footer>
+    </div>
+
+    <div
+    [hidden]="currentBundleForUpdate != bundle || currentBundleToHideId == bundle.id">
+      <app-bundles-form
+      [bundleId]="bundle.id"
+      (bundleForm)="onPut($event)">
+      </app-bundles-form>
+      <div class="row form-footer justify-content-around">
+        <div class="col-md-4">
           <button class="btn-danger btn col-md-4"
           (click)="cancelUpdate()">
             Cancel
           </button>
         </div>
       </div>
+    </div>
 
-      <ng-container *ngIf="currentBundleToHideId == bundle.id">
-      <p-progressSpinner></p-progressSpinner>
-      </ng-container>
-    </li>
-  </ul>
+    <ng-container *ngIf="currentBundleToHideId == bundle.id">
+    <p-progressSpinner></p-progressSpinner>
+    </ng-container>
+  </div>
   <app-paginator
     [page]="bundles"
     [amount]="pageAmount"
@@ -194,5 +192,3 @@
   >
   </app-paginator>
 </div>
-
-<hr>
