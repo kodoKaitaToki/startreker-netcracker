@@ -19,8 +19,7 @@ export class DashCostService {
     }
 
     public getCarCosts(id: number, from: string, to: string){
-        let url = Api.costDash.getCosts() + '/' + id + '?' + 'from=' + from + '&to=' + to;
-        console.log(url);
+        let url = Api.costDash.getCosts() + '/' + id + '?' + 'from=' + from + '&to=' + to; 
         return this.http.get(url, HttpOptionsAuthorized);
     }
 
