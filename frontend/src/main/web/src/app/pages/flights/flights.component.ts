@@ -1,17 +1,20 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Trip} from "./shared/models/trip.model";
 import {SearchService} from "./shared/services/search.service";
 import {FlightClass} from "./shared/models/flight-class.model";
 import {DatePipe} from "@angular/common";
+import {Subscription} from "rxjs/internal/Subscription";
 
 @Component({
   selector: 'app-flights',
   templateUrl: './flights.component.html',
   styleUrls: ['./flights.component.scss'],
 })
-export class FlightsComponent implements OnInit {
+export class FlightsComponent implements OnInit, OnDestroy {
 
   trips: Trip[] = [];
+
+  private sub: Subscription;
 
   constructor(private searchSvc: SearchService,
               datePipe: DatePipe) {
@@ -54,6 +57,10 @@ export class FlightsComponent implements OnInit {
 
   getUrl() {
     return "url('assets/images/bg.jpg')";
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
 }
