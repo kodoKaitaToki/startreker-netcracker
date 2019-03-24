@@ -16,11 +16,9 @@ export class SearchService {
            departure_date: string,
            arrival_planet: string,
            arrival_spaceport: string): Observable<any> {
-
-
     let params = new HttpParams()
       .set("departure_planet", departure_planet.toUpperCase())
-        .set("departure_spaceport", departure_spaceport)
+      .set("departure_spaceport", departure_spaceport)
       .set("departure_date", this.datePipe.transform(departure_date, "yyyy-MM-dd"))
       .set("arrival_planet", arrival_planet.toUpperCase())
       .set("arrival_spaceport", arrival_spaceport);

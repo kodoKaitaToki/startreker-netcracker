@@ -3,7 +3,7 @@ import {FlightClass} from "../../shared/models/flight-class.model";
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SearchService} from "../../shared/services/search.service";
 import {TicketClassInfoComponent} from "./ticket-class-info/ticket-class-info.component";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-ticket-class',
@@ -15,12 +15,12 @@ export class TicketClassComponent implements OnInit {
   @Input('ticket_class') ticket_class: FlightClass;
   amountForm: FormGroup;
 
-  private amount: number;
+  private amount: number = 1;
 
   constructor(private searchSvc: SearchService,
               private modalService: NgbModal) {
     this.amountForm = new FormGroup({
-      amount: new FormControl({value: 1}, [Validators.required, Validators.min(1)])
+      amount: new FormControl({value: 1})
     })
   }
 
@@ -31,11 +31,11 @@ export class TicketClassComponent implements OnInit {
   openVerticallyCentered() {
     const modalRef = this.modalService.open(TicketClassInfoComponent, {centered: true, size: 'lg'});
     modalRef.componentInstance.ticket_class = this.ticket_class;
+    modalRef.componentInstance.amount = this.amount;
   }
 
   onAmountChanged() {
     this.amount = this.amountForm.get('amount').value;
-
     if (this.amount < 1) {
       this.amount = 1;
     }

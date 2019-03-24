@@ -7,10 +7,15 @@ const routes: Routes = [
     path: '',
     component: FlightsComponent
   },
+  {
+    path: 'login',
+    loadChildren: './pages/app.module#AppModule'
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class FlightsRoutingModule { }
+export class FlightsRoutingModule {
+}

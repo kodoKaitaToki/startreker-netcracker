@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Trip} from "./shared/models/trip.model";
 import {SearchService} from "./shared/services/search.service";
 import {FlightClass} from "./shared/models/flight-class.model";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-flights',
@@ -12,12 +13,13 @@ export class FlightsComponent implements OnInit {
 
   trips: Trip[] = [];
 
-  constructor(private searchSvc: SearchService) {
+  constructor(private searchSvc: SearchService,
+              datePipe: DatePipe) {
     let trip: Trip = new Trip();
-    trip.departure_date = "20-02-2020 12:20:00";
+    trip.departure_date = "20-02-2020 12:20";
     trip.departure_spaceport_name = "SpaceX";
     trip.departure_planet_name = "EARTH";
-    trip.arrival_date = "28-02-2020 22:28:00";
+    trip.arrival_date = "28-02-2020 22:30";
     trip.arrival_spaceport_name = "Blackhole";
     trip.arrival_planet_name = "MOON";
     trip.ticket_classes = [];

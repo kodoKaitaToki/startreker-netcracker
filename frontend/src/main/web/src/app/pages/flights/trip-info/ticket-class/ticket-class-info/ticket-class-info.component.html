@@ -16,11 +16,19 @@
         <button *ngIf="service.isAdded" class="btn btn-light mb-2 mr-2" (click)="removeService(service)">Remove</button>
       </div>
     </div>
-
   </div>
   <div class="modal-footer">
-    <p>Total price: {{total_price}}$</p>
-    <button type="button" class="btn">BUY</button>
-    <button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Close</button>
+    <div class="col-lg-3">
+      <p>Total price: {{total_price}}$</p>
+    </div>
+    <div class="col-lg-5">
+      <p>Price is displayed for each ticket separately</p>
+    </div>
+    <div class="col-lg2">
+      <button type="button" class="btn" (click)="onBuyClick()">BUY</button>
+    </div>
+    <div class="col-lg2">
+      <button type="button" class="btn btn-light" (click)="activeModal.close('Close click')">Close</button>
+    </div>
   </div>
 </div>
