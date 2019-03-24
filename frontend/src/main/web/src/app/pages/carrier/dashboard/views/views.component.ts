@@ -69,9 +69,15 @@ export class ViewsComponent implements OnInit {
   }
 
   onSubmit() {
+    let fromDateFormatted: string;
+    let toDateFormatted: string;
+    try {
+      fromDateFormatted = formatDate(this.fromDate, 'yyyy-MM-dd', 'en');
+      toDateFormatted = formatDate(this.toDate, 'yyyy-MM-dd', 'en');
+    } catch (e) {
+      return;
+    }
     this.showChart = true;
-    let fromDateFormatted: string = formatDate(this.fromDate, 'yyyy-MM-dd', 'en');
-    let toDateFormatted: string = formatDate(this.toDate, 'yyyy-MM-dd', 'en');
 
     if (this.form.value.forWhat == "forTrips") {
       return this.loadForTrips(fromDateFormatted, toDateFormatted);
