@@ -6,7 +6,6 @@ import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.state.trip.TripState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +36,9 @@ public class BundleTripRowMapper implements RowMapper<Trip> {
 
         t.setDepartureSpaceport(mapSpaceport(rs, "departure"));
         t.setArrivalSpaceport(mapSpaceport(rs, "arrival"));
+
+        t.setDeparturePlanet(t.getDepartureSpaceport().getPlanet());
+        t.setArrivalPlanet(t.getArrivalSpaceport().getPlanet());
 
         return t;
     }

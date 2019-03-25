@@ -34,13 +34,9 @@ public class BundleCrudController {
     @ResponseBody
     public List<BundleDTO> getAllBundles(@RequestParam("limit") Number limit, @RequestParam("offset") Number offset) {
         log.info("Getting {} bundles with offset {}.", limit, offset);
-        long startTime = System.nanoTime();
-
         List<Bundle> bundles = bcs.getAll(limit, offset);
 
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime) / 1000000;
-        log.info("Got {} bundles in {} ms", bundles.size(), duration);
+        log.info("Got {} bundles", bundles.size());
 
         return bundles.stream()
                       .map(this::convertToDTO)
