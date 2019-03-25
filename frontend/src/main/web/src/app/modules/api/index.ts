@@ -58,6 +58,9 @@ const carrier = {
   },
   getCarrierByUsername(){
     return `${baseUrl}api/v1/admin/carrier-by-username?username=`;
+  },
+  getCarrierNumber(){
+    return `${baseUrl}api/v1/admin/carrier/amount`;
   }
 }
 

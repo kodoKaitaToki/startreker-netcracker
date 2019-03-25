@@ -1,26 +1,42 @@
 <div class="row justify-content-center">
-    <div class="col-md-12 my-auto">
-      <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
+    <div class="col-12 my-auto">
+      <div class="card" style="background-color: rgba(240, 248, 255, 0.9);">
         <div class="card-body">
           <h1 class='title'>All costs</h1>
           <div id="chartContainer" style="height: 370px; width: 100%;"></div>
           <div class="row">
-              <div class="col-md-4 chart-btn">
+              <div class="col-2 chart-btn">
                 <button class="btn btn-primary" (click)='getWeakStat()' id='perWeak' [disabled]="buttons.butWeek">Per weak</button>
               </div>
-              <div class="col-md-4 chart-btn">
+              <div class="col-2 offset-1 chart-btn">
                 <button class="btn btn-primary" (click)='getMonthStat()' id='perMonth' [disabled]="buttons.butMonth">Per month</button>
               </div>
-              <div class="col-md-4 chart-btn">
-
-                  <form method="POST" action="">
-                    <div>
-                      <p style="color: red" *ngIf='dateInvalid'>The second date must be less than the first one</p>
-                      <input class="fromInput" type="date" [value]="dateFrom | date:'yyyy-MM-dd'" (input)="dateFrom=parseDate($event.target.value, true)" />
-                      <input type="date" [value]="dateTo | date:'yyyy-MM-dd'" (input)="dateTo=parseDate($event.target.value, false)" />
+              <div class="col-7 chart-btn">
+                  <form>
+                    <div class="row">
+                      <div class='col-6'>
+                      <p-calendar dateFormat="dd.mm.yy"
+                                readonlyInput="true"
+                                [showIcon]="true"
+                                placeholder="dd.mm.yyyy"
+                                name='curStartDate'
+                                [(ngModel)]="curStartDate"
+                                (onSelect)="onSelect($event)"></p-calendar>
+                      </div>
+                      <div class='col-6'>
+                      <p-calendar dateFormat="dd.mm.yy"
+                                name='curFinishDate'
+                                readonlyInput="true"
+                                [showIcon]="true"
+                                [(ngModel)]="curFinishDate"
+                                placeholder="dd.mm.yyyy"
+                                [minDate]="minDate"
+                                (onSelect)="checkBtn()"></p-calendar>
+                      </div>
                     </div>
                     <div>
-                      <button type="submit" class="btn btn-primary btnSet" (click)='getInterStat()' [disabled]='buttons.checkBut'>Check</button>
+                      <button class="btn btn-primary btnSet" (click)='getInterStat()' 
+                              [disabled]='buttons.checkBut'>Check</button>
                     </div>
                   </form>
 
