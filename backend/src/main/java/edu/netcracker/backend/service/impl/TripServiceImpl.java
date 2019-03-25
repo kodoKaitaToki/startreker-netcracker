@@ -16,6 +16,7 @@ import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.SuggestionService;
 import edu.netcracker.backend.service.TicketClassService;
 import edu.netcracker.backend.service.TripService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class TripServiceImpl implements TripService {
 
     private TripDAO tripDAO;
@@ -47,8 +49,6 @@ public class TripServiceImpl implements TripService {
     private final SecurityContext securityContext;
 
     private static final String DATE_PATTERN = "dd-MM-yyyy HH:mm";
-
-    private static final Logger logger = LoggerFactory.getLogger(TripServiceImpl.class);
 
     @Autowired
     public TripServiceImpl(TripDAO tripDAO,
@@ -69,7 +69,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<ReadTripsDTO> getAllTripsForCarrier() {
-        logger.debug("Getting all trips for carrier from TripDAO");
+        log.debug("Getting all trips for carrier from TripDAO");
         Long carrierId = Long.valueOf(securityContext.getUser()
                                                      .getUserId());
         List<Trip> trips = tripDAO.allCarriersTrips(carrierId);
@@ -79,7 +79,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<ReadTripsDTO> getAllTripsForCarrier(Long carrierId) {
-        logger.debug("Getting all trips for carrier from TripDAO");
+        log.debug("Getting all trips for carrier from TripDAO");
         List<Trip> trips = tripDAO.allCarriersTrips(carrierId);
 
         return getAllTripsDTO(trips);
@@ -87,7 +87,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<ReadTripsDTO> getAllTripsForCarrierWithPagination(Integer limit, Integer offset) {
-        logger.debug("Getting {} trips for carrier from TripDAO with pagination starting from {}", limit, offset);
+        log.debug("Getting {} trips for carrier from TripDAO with pagination starting from {}", limit, offset);
         Long carrierId = Long.valueOf(securityContext.getUser()
                                                      .getUserId());
         List<Trip> trips = tripDAO.paginationForCarrier(limit, offset, carrierId);
@@ -103,7 +103,7 @@ public class TripServiceImpl implements TripService {
                                                  String arrivalSpaceport,
                                                  Integer limit,
                                                  Integer offset) {
-        logger.debug("Getting all trips for user from TripDAO");
+        log.debug("Getting all trips for user from TripDAO");
         List<Trip> trips = tripDAO.getAllTripsForUser(departurePlanet,
                                                       departureSpaceport,
                                                       departureDate,
@@ -112,13 +112,13 @@ public class TripServiceImpl implements TripService {
                                                       limit,
                                                       offset);
 
-        logger.debug("Remove ticket classes where all tickets are sold");
+        log.debug("Remove ticket classes where all tickets are sold");
         for (Trip trip : trips) {
             trip.getTicketClasses()
                 .removeIf(ticketClass -> ticketClass.getRemainingSeats() == 0);
         }
 
-        logger.debug("Remove trip where all tickets are sold");
+        log.debug("Remove trip where all tickets are sold");
         trips.removeIf(trip -> trip.getTicketClasses()
                                    .isEmpty());
 
@@ -127,7 +127,7 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public void saveTrip(TripCreation tripCreation) {
-        logger.debug("Saving trip from request DTO");
+        log.debug("Saving trip from request DTO");
         Trip trip = parseTripFromTripCreation(tripCreation);
         tripDAO.add(trip);
     }
@@ -136,7 +136,7 @@ public class TripServiceImpl implements TripService {
     public void updateTripForCarrier(TripCreation tripToUpdate, Long tripId) {
         Trip trip = parseTripFromTripCreation(tripToUpdate);
         trip.setTripId(tripId);
-        logger.debug("Updating trip info");
+        log.debug("Updating trip info");
         tripDAO.updateTripInfo(trip);
     }
 
@@ -168,11 +168,17 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithTicketClassAndDiscountsBelongToCarrier(Number carrierId) {
-        logger.debug("get all trips with related ticket classes and discounts that belong to carrier with id "
-                     + carrierId);
+        log.debug("get all trips with related ticket classes and discounts that belong to carrier with id "
+                  + carrierId);
 
         List<TripWithArrivalAndDepartureData> trips =
                 tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
+
+        if (trips.isEmpty()) {
+            log.error("No trips for carrier {}", carrierId);
+            throw new RequestException("Carrier " + carrierId +" does not have any trips", HttpStatus.NOT_FOUND);
+        }
+
         List<DiscountTicketClassDTO> ticketClassDTOs = ticketClassService.getTicketClassesRelatedToCarrier(carrierId);
 
         return createTripWithArrivalAndDepartureDataAndTicketClassesDTOs(trips, ticketClassDTOs);
@@ -180,10 +186,15 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithSuggestionAndDiscountsBelongToCarrier(Number carrierId) {
-        logger.debug("get all trips with related suggestion and discounts that belong to carrier with id " + carrierId);
+        log.debug("get all trips with related suggestion and discounts that belong to carrier with id " + carrierId);
 
         List<TripWithArrivalAndDepartureData> trips =
                 tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
+
+        if (trips.isEmpty()) {
+            log.error("No trips for carrier {}", carrierId);
+            throw new RequestException("Carrier " + carrierId +" does not have any trips", HttpStatus.NOT_FOUND);
+        }
 
         Map<Long, List<DiscountSuggestionDTO>> suggestionsRelatedToTrip =
                 suggestionService.getSuggestionsRelatedToTicketClasses(ticketClassService.getAllTicketClassesBelongToTrips(
@@ -285,7 +296,7 @@ public class TripServiceImpl implements TripService {
     }
 
     private Trip parseTripFromTripCreation(TripCreation tripCreation) {
-        logger.debug("Converting DTO to Trip");
+        log.debug("Converting DTO to Trip");
         Trip trip = new Trip();
         trip.setDepartureDate(tripCreation.getDepartureDateTime());
         trip.setArrivalDate(tripCreation.getArrivalDateTime());
@@ -320,7 +331,7 @@ public class TripServiceImpl implements TripService {
     }
 
     private List<ReadTripsDTO> getAllTripsDTO(List<Trip> trips) {
-        logger.debug("Converting trips to DTO");
+        log.debug("Converting trips to DTO");
         List<ReadTripsDTO> tripsDTO = new ArrayList<>();
         for (Trip trip : trips) {
             tripsDTO.add(ReadTripsDTO.from(trip));

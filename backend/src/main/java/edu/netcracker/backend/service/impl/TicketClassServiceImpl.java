@@ -8,6 +8,7 @@ import edu.netcracker.backend.message.request.DiscountTicketClassDTO;
 import edu.netcracker.backend.model.TicketClass;
 import edu.netcracker.backend.service.DiscountService;
 import edu.netcracker.backend.service.TicketClassService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class TicketClassServiceImpl implements TicketClassService {
-
-    private static final Logger logger = LoggerFactory.getLogger(TicketClassService.class);
 
     private final TicketClassDAO ticketClassDAO;
 
@@ -40,11 +40,11 @@ public class TicketClassServiceImpl implements TicketClassService {
 
     @Override
     public TicketClass find(Number ticketClassId) {
-        logger.debug("find TicketClass with id " + ticketClassId);
+        log.debug("TicketClassServiceImpl.find(Number ticketClassId) was invoked");
         Optional<TicketClass> optionalTicketClass = ticketClassDAO.find(ticketClassId);
 
         if (!optionalTicketClass.isPresent()) {
-            logger.error("No such ticket class with id " + ticketClassId);
+            log.error("No such ticket class with id {}", ticketClassId);
             throw new RequestException("No such ticket class", HttpStatus.NOT_FOUND);
         }
 
@@ -53,7 +53,8 @@ public class TicketClassServiceImpl implements TicketClassService {
 
     @Override
     public List<DiscountTicketClassDTO> getTicketClassesRelatedToCarrier(Number userId) {
-        logger.debug("get ticket classes that belong to carrier with id " + userId);
+        log.debug("TicketClassServiceImpl.getTicketClassesRelatedToCarrier(Number userId) was invoked");
+        log.debug("get ticket classes that belong to carrier with id {}", userId);
         List<TicketClass> ticketClasses = ticketClassDAO.getAllTicketClassesRelatedToCarrier(userId);
         List<DiscountDTO> discountsDTO = discountService.getDiscountDTOs(ticketClasses.stream()
                                                                                       .map(TicketClass::getDiscountId)
@@ -64,7 +65,8 @@ public class TicketClassServiceImpl implements TicketClassService {
 
     @Override
     public DiscountTicketClassDTO createDiscountForTicketClass(DiscountTicketClassDTO ticketClassDTO, Number userId) {
-        logger.debug("create discount for ticket class with id " + ticketClassDTO.getClassId());
+        log.debug("TicketClassServiceImpl.createDiscountForTicketClass(DiscountTicketClassDTO ticketClassDTO, Number userId) was invoked");
+        log.debug("create discount for ticket class with id " + ticketClassDTO.getClassId());
 
         TicketClass ticketClass = getTicketClass(ticketClassDTO, userId);
 
@@ -78,11 +80,13 @@ public class TicketClassServiceImpl implements TicketClassService {
 
     @Override
     public DiscountTicketClassDTO deleteDiscountForTicketClass(Number discountId, Number userId) {
-        logger.debug("delete discount with id " + discountId + " from ticket class");
+        log.debug("TicketClassServiceImpl.deleteDiscountForTicketClass(Number discountId, Number userId) was invoked");
+        log.debug("delete discount with id {} from ticket class", discountId);
 
         Optional<TicketClass> optionalTicketClass = ticketClassDAO.getTicketClassByDiscount(userId, discountId);
 
         if (!optionalTicketClass.isPresent()) {
+            log.error("No discount with id {} for user {}", discountId, userId);
             throw new RequestException("No such discount", HttpStatus.NOT_FOUND);
         }
 
@@ -102,38 +106,38 @@ public class TicketClassServiceImpl implements TicketClassService {
 
     @Override
     public void deleteTicketClass(Long id) {
-        logger.debug("Deleting all ticket which belong to ticket class with id {}", id);
+        log.debug("Deleting all ticket which belong to ticket class with id {}", id);
         this.ticketDAO.deleteAllTicketsOfTicketClass(id);
-        logger.debug("Deleting class with id {}", id);
+        log.debug("Deleting class with id {}", id);
         this.ticketClassDAO.deleteTicketClassById(id);
     }
 
     @Override
     public void createOrUpdate(TicketClass ticketClass) {
-        logger.debug("Checking whether ticket class with name {} and trip id {} exists",
-                     ticketClass.getClassName(),
-                     ticketClass.getTripId());
+        log.debug("Checking whether ticket class with name {} and trip id {} exists",
+                  ticketClass.getClassName(),
+                  ticketClass.getTripId());
         if (this.ticketClassDAO.exists(ticketClass.getTripId(), ticketClass.getClassName())) {
-            logger.debug("Ticket class exists in database: updating...");
+            log.debug("Ticket class exists in database: updating...");
             updateTicketClass(ticketClass);
         } else {
-            logger.debug("Ticket class is absent in database: creating...");
+            log.debug("Ticket class is absent in database: creating...");
             createNewTicketClass(ticketClass);
         }
     }
 
     private void updateTicketClass(TicketClass ticketClass) {
-        logger.debug("Getting existing ticket class from database");
+        log.debug("Getting existing ticket class from database");
         TicketClass existingTicketClass =
                 this.ticketClassDAO.getTicketClassByNameAndTripId(ticketClass.getTripId(), ticketClass.getClassName());
-        logger.debug("Copying class id value to new version of ticket class");
+        log.debug("Copying class id value to new version of ticket class");
         ticketClass.setClassId(existingTicketClass.getClassId());
-        logger.debug("Updating ticket class info");
+        log.debug("Updating ticket class info");
         this.ticketClassDAO.update(ticketClass);
-        logger.debug("Checking whether number of seats has changed");
+        log.debug("Checking whether number of seats has changed");
         if (!existingTicketClass.getClassSeats()
                                 .equals(ticketClass.getClassSeats())) {
-            logger.debug("Number of seats has changed - deleting all tickets and create new ones");
+            log.debug("Number of seats has changed - deleting all tickets and create new ones");
             this.ticketDAO.deleteAllTicketsOfTicketClass(ticketClass.getClassId());
             this.createTicketsForTicketClass(ticketClass);
 
@@ -141,17 +145,17 @@ public class TicketClassServiceImpl implements TicketClassService {
     }
 
     private void createNewTicketClass(TicketClass ticketClass) {
-        logger.debug("Creating ticket class");
+        log.debug("Creating ticket class");
         ticketClassDAO.create(ticketClass);
 
-        logger.debug("Getting id of created ticket class by its class name and trip id");
+        log.debug("Getting id of created ticket class by its class name and trip id");
         ticketClass.setClassId(ticketClassDAO.getTicketClassId(ticketClass.getClassName(), ticketClass.getTripId()));
 
         this.createTicketsForTicketClass(ticketClass);
     }
 
     private void createTicketsForTicketClass(TicketClass ticketClass) {
-        logger.debug("Adding {} new empty tickets for ticket class", ticketClass.getClassSeats());
+        log.debug("Adding {} new empty tickets for ticket class", ticketClass.getClassSeats());
         for (int i = 1; i <= ticketClass.getClassSeats(); i++) {
             ticketDAO.createEmptyTicketForTicketClass(ticketClass.getClassId(), ticketClass.getClassId() * 1000 + i);
         }
@@ -162,7 +166,7 @@ public class TicketClassServiceImpl implements TicketClassService {
                 ticketClassDAO.findTicketClassBelongToCarrier(ticketClassDTO.getClassId(), userId);
 
         if (!optionalTicketClass.isPresent()) {
-            logger.error("No such ticket class with id " + ticketClassDTO.getClassId());
+            log.error("No such ticket class with id " + ticketClassDTO.getClassId());
 
             throw new RequestException("No such ticket class with id " + ticketClassDTO.getClassId(),
                                        HttpStatus.NOT_FOUND);
@@ -171,7 +175,7 @@ public class TicketClassServiceImpl implements TicketClassService {
         TicketClass ticketClass = optionalTicketClass.get();
 
         if (ticketClass.getDiscountId() != null) {
-            logger.error("Discount already exist for ticket class with id" + ticketClass.getClassId());
+            log.error("Discount already exist for ticket class with id" + ticketClass.getClassId());
 
             throw new RequestException("Discount already exist", HttpStatus.CONFLICT);
         }
