@@ -60,10 +60,6 @@ public class ServiceControllerUnitTest {
         when(serviceService.getServices(1, 10, ServiceStatus.OPEN.toString()))
                 .thenReturn(ret);
 
-        User usr = new User();
-        usr.setUserId(3);
-        when(securityContext.getUser()).thenReturn(usr);
-
         ServiceController controller = new ServiceController(statisticsService, securityContext, serviceService);
 
         List<ServiceCRUDDTO> actual = controller.getServices(1, 10, ServiceStatus.OPEN.toString());
