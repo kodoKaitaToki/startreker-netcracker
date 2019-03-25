@@ -19,4 +19,6 @@ public interface PossibleServiceDAO {
     List<PossibleService> findAllPossibleServicesBySuggestionId(Number suggestionId);
 
     void buyService(Ticket ticket, PossibleService possibleService);
+
+    List<PossibleService> findAllPossibleServicesByCarrier(Integer id);
 }
