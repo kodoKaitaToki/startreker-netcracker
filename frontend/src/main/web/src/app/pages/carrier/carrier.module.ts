@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {GrowlModule, MessageService, ProgressBarModule} from "primeng/primeng";
+import {GrowlModule, MessageService, ProgressBarModule, CalendarModule} from "primeng/primeng";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import {CarrierRoutingModule} from './carrier-routing.module';
@@ -76,7 +76,8 @@ import {DialogModule} from 'primeng/dialog';
               MessageModule,
               MessagesModule,
               TreeModule,
-              DialogModule
+              DialogModule,
+              CalendarModule
             ],
             providers: [
               MessageService,

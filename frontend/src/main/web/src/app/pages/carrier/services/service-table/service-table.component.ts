@@ -44,7 +44,7 @@ export class ServiceTableComponent implements OnInit {
   }
 
   getApprovedServices(){
-    this.serviceService.getServiceByStatus('PUBLISHED')
+    this.serviceService.getServices(0, 100, 'PUBLISHED')
         .subscribe(
                         (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);

@@ -1,4 +1,4 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Api, HttpOptionsAuthorized} from '../../../../../modules/api';
@@ -22,9 +22,18 @@ export class ServiceService{
         return this.http.get<any>(url, HttpOptionsAuthorized);
     }
 
-  public getServiceByStatus(status: String){
-        let url = Api.service.servicesByStatus() + '?status=' + status;
-        return this.http.get<any>(url, HttpOptionsAuthorized);
+  public getServices(from: number, number: number, status: string){
+        let url = Api.service.services();
+        let params = new HttpParams()
+            .set("from", from.toString())
+            .set("number", number.toString())
+            .set("status", status.toString());
+
+        return this.http.get<any>(url, {
+            headers: HttpOptionsAuthorized.headers, 
+            params: params,
+            observe: HttpOptionsAuthorized.observe
+        });
     }
 
     public addService(service: Service){

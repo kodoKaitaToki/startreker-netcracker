@@ -20,7 +20,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: IndexComponent
+        redirectTo: 'dashboards',
       },
       {
         path: 'trips',
@@ -56,6 +56,10 @@ const routes: Routes = [
         path: 'dashboards',
         component: DashboardsComponent,
         children: [
+          {
+            path: '',
+            redirectTo: 'sales',
+          },
           {
             path: 'sales',
             component: SalesComponent
