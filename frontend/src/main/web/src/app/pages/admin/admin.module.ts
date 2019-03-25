@@ -51,7 +51,7 @@ import {AccordionModule} from 'primeng/accordion';
 
 import { BundlesTreeComponent } from './bundles/bundles-tree/bundles-tree.component';
 import { BundlesFormComponent } from './bundles/bundles-form/bundles-form.component';
-import { PaginatorComponent } from '../../shared/paginator/paginator.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -82,8 +82,7 @@ import { PaginatorComponent } from '../../shared/paginator/paginator.component';
     CostsComponent,
     ApproverFilterPipe,
     BundlesTreeComponent,
-    BundlesFormComponent,
-    PaginatorComponent
+    BundlesFormComponent
   ],
   imports: [
     CommonModule,
@@ -100,6 +99,7 @@ import { PaginatorComponent } from '../../shared/paginator/paginator.component';
     AccordionModule,
     CalendarModule,
     TabViewModule,
+    SharedModule,
     ProgressSpinnerModule,
     GrowlModule
   ],
