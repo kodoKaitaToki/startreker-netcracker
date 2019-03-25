@@ -1,0 +1,81 @@
+.modal-body > :not(:last-child) {
+  border-bottom: 1px solid #eaeaea
+}
+
+.modal-footer p {
+  padding: 0;
+  text-align: center;
+}
+
+.btn {
+  display: inline-block;
+  border: 1px solid #007bff;
+  border-radius: 25px;
+  padding: 13px 30px;
+  text-decoration: none;
+  background: #007bff;
+  color: #f5f5f5;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 250ms ease-in-out,
+  transform 150ms ease;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  -webkit-box-shadow: 0 15px 25px rgba(0, 0, 0, .12);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, .12);
+}
+
+.btn:focus, .close:focus {
+  outline: none;
+}
+
+.btn:active {
+  box-shadow: none;
+  -webkit-transition: all .14s cubic-bezier(.55, 0, .1, 1);
+  transition: all .14s cubic-bezier(.55, 0, .1, 1);
+  will-change: transform;
+  transform: translateY(0);
+}
+
+.btn-light {
+  background: transparent;
+  border: 1px solid #007bff;
+  color: #007bff;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.modal-header .close {
+  padding: 0;
+}
+
+.modal-body {
+  padding: 0 1rem;
+}
+
+.modal-body button {
+  border-radius: 10px;
+}
+
+.modal-footer > :first-child {
+  padding: 15px;
+  margin: auto auto auto 0;
+  background: rgba(0, 133, 255, 0.5);
+  border-radius: 5px;
+}
+
+.close {
+  font-size: 2rem;
+  width: 42px;
+  height: 42px;
+  background: lightgray;
+  border-radius: 50px;
+}
+
+.close:hover {
+  background: darkgray;
+}

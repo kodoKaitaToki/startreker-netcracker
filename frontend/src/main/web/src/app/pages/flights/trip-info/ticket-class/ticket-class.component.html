@@ -1,15 +1,20 @@
 <div class="row class-item">
-  <div class="col-6 class-name">
-    {{"TICKET_CLASS_NAME"}}
+  <div class="col col-5">
+    <h4>{{ticket_class.class_name}}</h4>
   </div>
-  <div class="col-1">
-      <input class="tickets-amount-input" type="number" min="1" value="1" >
+  <div class="col col-2">
+    <form [formGroup]="amountForm">
+      <input formControlName="amount" class="tickets-amount-input" type="number" min="1" placeholder="1"
+             (change)="onAmountChanged()">
+    </form>
   </div>
-  <div class="col-1">
-    {{20}}
+  <div class="col col-2">
+    {{ticket_class.remaining_seats}}
   </div>
-  <div class="col-4 ticket-price">
-    <span class="price">{{"2000"}}</span>$
-    <button>CHOOSE</button>
+  <div class="col-3 ticket-price">
+    <span class="price">{{ticket_class.ticket_price}}</span>$
+    <button class="btn btn-outline-primary mb-2 mr-2" (click)="openVerticallyCentered()">
+      CHOOSE
+    </button>
   </div>
 </div>
