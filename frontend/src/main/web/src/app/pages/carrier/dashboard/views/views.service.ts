@@ -7,6 +7,7 @@ import {map} from 'rxjs/operators';
 import {Api, checkToken, HttpOptionsAuthorized} from "../../../../modules/api";
 import {ViewsModel} from "./viewsmodel.model";
 import {TripEntry} from "./tripentry.class";
+import {ServiceEntry} from "./serviceentry.class";
 
 @Injectable({
   providedIn: 'root'
@@ -90,6 +91,26 @@ export class ViewsService {
                      item.trip_id,
                      item.departure_spaceport.planet.planet_name,
                      item.arrival_spaceport.planet.planet_name
+                   );
+                 });
+               }))
+  }
+
+  public getCarrierServices() {
+
+    return this.http.get<any>(this.actionUrl + "/carrier/services/preload",
+      {
+        headers: HttpOptionsAuthorized.headers,
+        observe: HttpOptionsAuthorized.observe
+      }
+    )
+               .pipe(map(res => {
+                 checkToken(res.headers);
+
+                 return res.body.map(item => {
+                   return new ServiceEntry(
+                     item.service_id,
+                     item.service_name
                    );
                  });
                }))

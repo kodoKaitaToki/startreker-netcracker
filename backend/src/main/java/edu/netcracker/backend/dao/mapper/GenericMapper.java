@@ -26,9 +26,9 @@ import static java.lang.Math.toIntExact;
 @AllArgsConstructor
 public class GenericMapper<T> implements RowMapper<T> {
 
-    private Class<T> entityClass;
-    private Map<Field, PrimaryKey> fieldPrimaryKeyMap = new HashMap<>();
-    private Map<Field, Attribute> fieldAttributeMap = new HashMap<>();
+    private final Class<T> entityClass;
+    private final Field primaryKeyField;
+    private final Map<Field, Attribute> fieldAttributeMap;
 
     @Override
     public T mapRow(ResultSet rs, int rowNum) {
@@ -42,23 +42,20 @@ public class GenericMapper<T> implements RowMapper<T> {
 
     private T map(ResultSet rs) throws Exception {
         T entity = entityClass.getConstructor()
-                        .newInstance();
+                              .newInstance();
 
-        for (Map.Entry<Field, PrimaryKey> entry : fieldPrimaryKeyMap.entrySet()) {
-            Field field = entry.getKey();
-            PrimaryKey primaryKey = entry.getValue();
+        PrimaryKey primaryKey = primaryKeyField.getAnnotation(PrimaryKey.class);
 
-            String dbColumn = primaryKey.value();
-            Object attr = castTypes(rs.getObject(dbColumn), field.getType());
-            field.set(entity, attr);
-        }
+        String dbColumn = primaryKey.value();
+        Object attr = castTypes(rs.getObject(dbColumn), primaryKeyField.getType());
+        primaryKeyField.set(entity, attr);
 
         for (Map.Entry<Field, Attribute> entry : fieldAttributeMap.entrySet()) {
             Field field = entry.getKey();
             Attribute attribute = entry.getValue();
 
-            String dbColumn = attribute.value();
-            Object attr = castTypes(rs.getObject(dbColumn), field.getType());
+            dbColumn = attribute.value();
+            attr = castTypes(rs.getObject(dbColumn), field.getType());
             field.set(entity, attr);
         }
 
