@@ -3,11 +3,7 @@ package edu.netcracker.backend.dao.mapper;
 import edu.netcracker.backend.dao.annotations.Attribute;
 import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.lang.reflect.Field;
@@ -17,12 +13,11 @@ import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.Math.toIntExact;
 
-@Log4j2
+@Slf4j(topic = "log")
 @AllArgsConstructor
 public class GenericMapper<T> implements RowMapper<T> {
 
@@ -35,7 +30,7 @@ public class GenericMapper<T> implements RowMapper<T> {
         try {
             return map(rs);
         } catch (Exception e) {
-            log.error(e.toString());
+            log.error(e.getMessage());
             return null;
         }
     }

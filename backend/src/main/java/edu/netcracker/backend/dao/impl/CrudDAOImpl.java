@@ -6,7 +6,7 @@ import edu.netcracker.backend.dao.sql.EntityProcessor;
 import edu.netcracker.backend.dao.sql.EntityProcessorImpl;
 import edu.netcracker.backend.dao.sql.PostgresSqlBuilder;
 import edu.netcracker.backend.dao.sql.SQLBuilder;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,15 +20,15 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.*;
 
-@Log4j2
+@Slf4j(topic = "log")
 public abstract class CrudDAOImpl<T> implements CrudDAO<T> {
 
     private JdbcTemplate jdbcTemplate;
 
-    private SQLBuilder sql;
+    private final SQLBuilder sql;
 
-    private GenericMapper<T> genericMapper;
-    private EntityProcessor<T> entityProcessor;
+    private final GenericMapper<T> genericMapper;
+    private final EntityProcessor<T> entityProcessor;
 
     @Autowired
     public CrudDAOImpl() {
@@ -85,7 +85,7 @@ public abstract class CrudDAOImpl<T> implements CrudDAO<T> {
         try {
             entityProcessor.putGeneratedPrimaryKey(holder, entity);
         } catch (IllegalAccessException e) {
-            log.error(e);
+            log.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }

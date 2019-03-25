@@ -12,11 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.PostConstruct;
-
 @Service
 @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
-@Getter
 public class SecurityContext {
 
     private final UserService userService;
@@ -27,10 +24,13 @@ public class SecurityContext {
         this.userService = userService;
     }
 
-    @PostConstruct
-    public void init(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        user = userService.findByUsername(userDetails.getUsername());
+    public User getUser() {
+        if (user == null) {
+            Authentication authentication = SecurityContextHolder.getContext()
+                                                                 .getAuthentication();
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            user = userService.findByUsername(userDetails.getUsername());
+        }
+        return user;
     }
 }
