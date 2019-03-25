@@ -1,14 +1,18 @@
-<div  class="main" [ngStyle]="{'background-image': getUrl()}">
+<div class="main" [ngStyle]="{'background-image': getUrl()}">
 
-<app-header></app-header>
-<main>
-  <app-search-bar (onGetTripsNotifier)="getTripsByCriteria($event)"></app-search-bar>
-  <div class="trip-list">
-    <app-trip-info *ngFor="let trip of trips" 
-                    [trip]="trip"></app-trip-info>
-    <div class="row not-found" *ngIf="trips.length == 0"></div>
-  </div>
-</main>
-<app-footer></app-footer>
-<router-outlet></router-outlet>
+  <app-header></app-header>
+  <main>
+    <div class="container-fluid">
+      <app-search-bar (onGetTripsNotifier)="getTripsByCriteria($event)"></app-search-bar>
+    </div>
+    <div class="trip-list">
+      <app-trip-info *ngFor="let trip of trips"
+                     [trip]="trip"></app-trip-info>
+      <div class="row custom-font not-found" *ngIf="trips.length == 0">
+        <h1>Unfortunately, your search returned no results</h1>
+      </div>
+    </div>
+  </main>
+  <app-footer></app-footer>
+  <router-outlet></router-outlet>
 </div>

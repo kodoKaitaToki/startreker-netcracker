@@ -95,7 +95,7 @@ public class JwtProvider {
                 .parseClaimsJws(jwt);
             return true;
         } catch (ExpiredJwtException e) {
-            logger.error("Expired JWT token -> Message: {}", e.getMessage());
+            logger.debug("Expired JWT token -> Message: {}", e.getMessage());
             if (request != null) {
                 request.setAttribute("isExpired", true);
             }

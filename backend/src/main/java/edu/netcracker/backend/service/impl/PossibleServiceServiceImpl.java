@@ -6,6 +6,7 @@ import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.message.response.PossibleServiceDTO;
 import edu.netcracker.backend.model.PossibleService;
 import edu.netcracker.backend.model.ServiceDescr;
+import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.PossibleServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -85,6 +86,14 @@ public class PossibleServiceServiceImpl implements PossibleServiceService {
 
         return PossibleServiceDTO.from(possibleServiceDAO.find(possibleServiceDTO.getId())
                                                          .get());
+    }
+
+    @Override
+    public List<PossibleServiceDTO> getCarrierPossibleServices(User user) {
+        return possibleServiceDAO.findAllPossibleServicesByCarrier(user.getUserId())
+                                 .stream()
+                                 .map(PossibleServiceDTO::from)
+                                 .collect(Collectors.toList());
     }
 
     private PossibleService from(PossibleServiceDTO possibleServiceDTO) {

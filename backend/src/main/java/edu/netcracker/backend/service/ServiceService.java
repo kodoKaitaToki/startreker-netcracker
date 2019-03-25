@@ -2,7 +2,9 @@ package edu.netcracker.backend.service;
 
 import edu.netcracker.backend.message.request.ServiceCreateForm;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
+import edu.netcracker.backend.message.response.ServicePreload;
 import edu.netcracker.backend.model.ServiceDescr;
+import edu.netcracker.backend.model.User;
 
 import java.util.List;
 
@@ -19,4 +21,6 @@ public interface ServiceService {
     List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, String status, Integer approverId);
 
     ServiceCRUDDTO reviewService(ServiceCRUDDTO serviceDTO, Integer approverId);
+
+    List<ServicePreload> preloadForCarrier(User carrier);
 }
