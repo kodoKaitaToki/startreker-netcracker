@@ -1,16 +1,22 @@
 <div class="container-fluid">
-  <div class="row">
-    <div class="col-12">
-      <p-fieldset
-      legend="Create bundle"
-      [toggleable]="true"
-      [collapsed]="true"
-      >
-        <app-bundles-form
-        (bundleForm)="onPost($event)">
-        </app-bundles-form>
-      </p-fieldset>
+
+  <header class="page-header">
+    <div class="container header-container">
+      <div class="col-12">
+        <h1 class="text-center">Manage bundles</h1>
+        <p class="lead text-center">Bundling joins tickets and services together in order to sell them as a single combined unit. Here you can edit or delete bundles, or even add a new one.</p>
+      </div>
     </div>
+  </header>
+
+  <div class="container">
+    <p-accordion>
+        <p-accordionTab header="Add new bundle">
+            <app-bundles-form
+            (bundleForm)="onPost($event)">
+            </app-bundles-form>
+        </p-accordionTab>
+    </p-accordion>
   </div>
 
   <div class="row">

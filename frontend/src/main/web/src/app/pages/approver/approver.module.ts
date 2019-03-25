@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {GrowlModule} from "primeng/primeng";
+import {GrowlModule, MessageModule, MessagesModule} from "primeng/primeng";
 import {MessageService} from 'primeng/components/common/messageservice';
 
 import {ApproverRoutingModule} from './approver-routing.module';
@@ -24,6 +24,7 @@ import {ItemsFilter} from './dashboard/shared/pipes/trip-filter.pipe';
 import {NgxPaginationModule} from "ngx-pagination";
 import {SelectServiceInfoPipe} from './dashboard/shared/pipes/select-service-info.pipe';
 import {StatePipe} from "./dashboard/shared/pipes/StatePipe";
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
   declarations: [ServiceComponent,
@@ -47,6 +48,9 @@ import {StatePipe} from "./dashboard/shared/pipes/StatePipe";
     ReactiveFormsModule,
     SharedModule,
     GrowlModule,
+    ToastModule,
+    MessageModule,
+    MessagesModule,
     NgxPaginationModule
   ],
   providers: [

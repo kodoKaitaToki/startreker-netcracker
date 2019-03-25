@@ -5,9 +5,7 @@ import edu.netcracker.backend.dao.mapper.history.HistoryTicketMapper;
 import edu.netcracker.backend.model.history.HistoryTicket;
 import edu.netcracker.backend.model.Ticket;
 import edu.netcracker.backend.model.User;
-import lombok.extern.log4j.Log4j2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -16,15 +14,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-@Log4j2
+@Slf4j
 @PropertySource("classpath:sql/ticketdao.properties")
 public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
 
@@ -46,11 +41,11 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
 
     private final String DELETE_ALL_TICKETS_OF_TICKET_CLASS = "DELETE FROM ticket WHERE class_id = ?";
 
-    private static final Logger logger = LoggerFactory.getLogger(TicketDAOImpl.class);
-
     @Value("${FIND_ALL_BY_USER}")
     private String FIND_ALL_BY_USER;
 
+    @Value("${COUNT_ALL_BY_USER}")
+    private String COUNT_ALL_BY_USER;
 
     public List<Ticket> findAllByClass(Number id) {
         ArrayList<Ticket> tickets = new ArrayList<>();
@@ -83,7 +78,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
      */
     @Override
     public void createEmptyTicketForTicketClass(Long classId, Long seat) {
-        logger.debug("Adding to database empty ticket with seat number {} for ticket class with id {}", seat, classId);
+        log.debug("Adding to database empty ticket with seat number {} for ticket class with id {}", seat, classId);
         getJdbcTemplate().update(CREATE_EMPTY_TICKET_FOR_TICKET_CLASS, classId, seat);
     }
 
@@ -95,7 +90,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
      **/
     @Override
     public Integer getRemainingSeatsForClass(Long classId) {
-        logger.debug("Getting amount of remaining seats for ticket class with id {}", classId);
+        log.debug("Getting amount of remaining seats for ticket class with id {}", classId);
         return getJdbcTemplate().queryForObject(FIND_REMAINING_SEATS, new Object[]{classId}, Integer.class);
     }
 
@@ -105,10 +100,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
                                                       Number offset,
                                                       LocalDate startDate,
                                                       LocalDate endDate) {
-        logger.debug("Querying {} purchased tickets from {} for user {} after {} and before {}",
-                     limit,
-                     offset,
-                     user_id);
+        log.debug("Querying {} purchased tickets from {} for user {} after {} and before {}", limit, offset, user_id);
 
 
         SqlParameterSource params = new MapSqlParameterSource().addValue("id", user_id)
@@ -117,6 +109,15 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
                                                                .addValue("start_date", startDate)
                                                                .addValue("end_date", endDate);
         return namedTemplate.query(FIND_ALL_BY_USER, params, new HistoryTicketMapper());
+    }
+
+    @Override
+    public Integer countTicketByUser(Number user_id, LocalDate startDate, LocalDate endDate) {
+        log.debug("Counting purchased tickets for user {} after {} and before {}");
+        SqlParameterSource params = new MapSqlParameterSource().addValue("id", user_id)
+                                                               .addValue("start_date", startDate)
+                                                               .addValue("end_date", endDate);
+        return namedTemplate.queryForObject(COUNT_ALL_BY_USER, params, Integer.class);
     }
 
     @Override

@@ -44,7 +44,7 @@ export class ClarificationComponent implements OnInit {
   }
 
   getClarificationServices(){
-    this.serviceService.getServiceByStatus('UNDER_CLARIFICATION')
+    this.serviceService.getServices(0, 100, 'UNDER_CLARIFICATION')
         .subscribe(
                         (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);

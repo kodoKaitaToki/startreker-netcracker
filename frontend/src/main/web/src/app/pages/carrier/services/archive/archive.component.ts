@@ -44,7 +44,7 @@ export class ArchiveComponent implements OnInit {
   }
 
   getArchievedServices(){
-    this.serviceService.getServiceByStatus('ARCHIVED')
+    this.serviceService.getServices(0, 100, 'ARCHIVED')
         .subscribe(
                         (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);

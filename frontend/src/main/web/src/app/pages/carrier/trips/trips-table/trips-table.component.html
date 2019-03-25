@@ -243,19 +243,28 @@
           </form>
         </div>
         <div class="col-md-5">
-          <app-suggestions
-          [trip]="trip">
-          </app-suggestions>
+          
         </div>
       </div>
-      <div class="row">
-        <button
-          class="btn btn-success col-4 modal-buttons"
+      <div class="row form-footer justify-content-around">
+        <div class="col-md-4">
+          <button
+          class="btn btn-secondary modal-buttons"
           type="button"
           (click)="toggleShowTicketClass(trip.ticket_classes)"
-        >
-          Manage ticket classes
-        </button>
+          >
+            Manage ticket classes
+          </button>
+        </div>
+        <div class="col-md-4">
+          <button
+          class="btn btn-secondary modal-buttons"
+          type="button"
+          (click)="toggleShowSuggestions(trip)"
+          >
+            Manage suggestions
+          </button>
+        </div>
       </div>
       <p-dialog
         [(visible)]="showTicketClass"
@@ -271,6 +280,19 @@
           (deleteFormEventEmitter$)="deleteTicketClass($event)"
           [uneditTicketClasses]="isUneditAble(trip.trip_status_id)"
         ></app-trips-ticket-class>
+      </p-dialog>
+      <p-dialog
+        [(visible)]="showSuggestions"
+        *ngIf="currentTripForSuggestionEdit === trip"
+        modal="true"
+        [style]="{width: '600px'}"
+      >
+        <p-header>
+          Suggestions
+        </p-header>
+        <app-suggestions
+        [trip]="trip">
+        </app-suggestions>
       </p-dialog>
     </li>
   </ul>

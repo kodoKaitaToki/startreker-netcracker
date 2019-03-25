@@ -39,7 +39,7 @@ import {ApproverFilterPipe} from './approver/shared/pipes/approver-filter.pipe';
 
 import {ScrollPanelModule} from 'primeng/scrollpanel';
 import {ToggleButtonModule} from 'primeng/togglebutton';
-import {GrowlModule, MessageService, ProgressBarModule} from "primeng/primeng";
+import {GrowlModule, MessageService, ProgressBarModule, TabViewModule} from "primeng/primeng";
 import {ToastModule} from "primeng/toast";
 import {CalendarModule} from 'primeng/calendar';
 import {NgxPaginationModule} from 'ngx-pagination';
@@ -47,12 +47,11 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
 
 import {TreeModule} from 'primeng/tree';
 import {FieldsetModule} from 'primeng/fieldset';
+import {AccordionModule} from 'primeng/accordion';
 
 import { BundlesTreeComponent } from './bundles/bundles-tree/bundles-tree.component';
 import { BundlesFormComponent } from './bundles/bundles-form/bundles-form.component';
-import { PaginatorComponent } from '../../shared/paginator/paginator.component';
-
-import {TabViewModule} from 'primeng/tabview';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -83,8 +82,7 @@ import {TabViewModule} from 'primeng/tabview';
     CostsComponent,
     ApproverFilterPipe,
     BundlesTreeComponent,
-    BundlesFormComponent,
-    PaginatorComponent
+    BundlesFormComponent
   ],
   imports: [
     CommonModule,
@@ -98,10 +96,12 @@ import {TabViewModule} from 'primeng/tabview';
     ScrollPanelModule,
     ToggleButtonModule,
     FieldsetModule,
+    AccordionModule,
     CalendarModule,
+    TabViewModule,
+    SharedModule,
     ProgressSpinnerModule,
-    GrowlModule,
-    TabViewModule
+    GrowlModule
   ],
   providers: [
     FilterPipePipe,

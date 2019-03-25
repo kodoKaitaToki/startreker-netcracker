@@ -2,12 +2,13 @@ import {Component, Input, OnInit} from '@angular/core';
 
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { clone } from 'ramda';
-import { HttpResponse } from '@angular/common/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 import { Service } from '../shared/model/service';
 import { MOCK_DATA } from '../shared/model/mock-data';
 import { ServiceService } from '../shared/service/service.service';
 import { checkToken } from '../../../../modules/api';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-open',
@@ -24,7 +25,10 @@ export class OpenComponent implements OnInit {
 
   loadingService: Service;
 
-  constructor(private serviceService: ServiceService) { }
+  constructor(
+    private serviceService: ServiceService,
+    private messageService: MessageService) {
+  }
 
   resetLoading() {
     this.loadingService = null;
@@ -39,10 +43,10 @@ export class OpenComponent implements OnInit {
     .subscribe((resp: HttpResponse<any>) => {
       checkToken(resp.headers);
       this.getServices();
-      alert(service.service_name + ' is now assigned to you');
-    }, () => {
+      this.showMessage(this.createMessage('success', `Service was assigned`, `${service.service_name} is now assigned to you`));
+    }, (error: HttpErrorResponse) => {
       this.resetLoading();
-      alert('Something went wrong');
+      this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.message));
     });
   }
 
@@ -51,7 +55,21 @@ export class OpenComponent implements OnInit {
     .subscribe((resp: HttpResponse<any>) => {
       checkToken(resp.headers);
       this.resetLoading();
-      this.services = clone(resp.body);
+      this.services = resp.body.map(item => {
+        return new Service(
+            item.id,
+            item.approver_name,
+            item.service_name,
+            item.service_descr,
+            item.service_status,
+            new Date(item.creation_date),
+            item.reply_text
+        );
+      });
+      this.showMessage(this.createMessage('success', 'service list', 'The list was updated'));
+    }, (error: HttpErrorResponse) => {
+      this.resetLoading();
+      this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.message));
     });
   }
 
@@ -63,5 +81,17 @@ export class OpenComponent implements OnInit {
   onPageUpdate(from: number) {
     this.pageFrom = from;
     this.getServices();
+  }
+
+  createMessage(severity: string, summary: string, detail: string): any {
+    return {
+      severity: severity,
+      summary: summary,
+      detail: detail
+    };
+  }
+
+  showMessage(msgObj: any) {
+    this.messageService.add(msgObj);
   }
 }

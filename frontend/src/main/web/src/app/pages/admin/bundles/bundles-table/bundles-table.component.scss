@@ -1,14 +1,68 @@
 $tableContent: center;
 
-.fa-edit {
-  font-size: 14px;
-  color: white;
+.container {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 5px;
+  font-family: "bahnschrift", sans-serif;
+  padding: 1rem 1rem 0;
+  margin: 16px auto;
+  box-shadow: 0 2px 50px rgba(0,0,0,.25);
+  -webkit-box-shadow: 0 2px 50px rgba(0,0,0,.25);
 }
 
-ul {
-  padding-inline-start: 5px;
+p {
+  margin-bottom: 0;
 }
 
-.idBadge {
-  margin-top: 10px;
+.price {
+  font-size: 20pt;
+}
+
+.date {
+  font-size: 20pt;
+}
+
+.description {
+  font-size: 18px;
+  line-height: 30px;
+}
+
+.table-header {
+  background: #f5f5f5;
+  border-top: 1px solid #007bff;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.table-container {
+  background: #f5f5f5;
+  padding: 0.5rem 0.3rem;
+  border-top: 1px dashed #7f7f7f;
+}
+
+.table-footer {
+  border-top: 1px dashed #7f7f7f;
+  padding-top: 14px;
+  padding-bottom: 14px
+}
+
+.btn-xs {
+  height: 24px;
+  line-height: 24px;
+  padding: 0 12px;
+  font-size: 11px;
+}
+
+.form-footer {
+  padding-top: 14px;
+  padding-bottom: 14px
+}
+
+pre {
+  white-space: pre-wrap;       /* Since CSS 2.1 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+  font-family: "bahnschrift", sans-serif;
 }
