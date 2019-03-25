@@ -26,7 +26,7 @@ export class SearchBarComponent implements OnInit {
   spaceportsTo: Spaceport[] = [];
 
   minimumDate = new Date();
-  minFinishDate = new Date();
+  // minFinishDate = new Date();
 
   @Output() onGetTripsNotifier = new EventEmitter();
 
@@ -39,8 +39,8 @@ export class SearchBarComponent implements OnInit {
       finishPlanet: new FormControl({value: 'Choose a planet', disabled: true}, Validators.required),
       startSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}, Validators.required),
       finishSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}, Validators.required),
-      startDate: new FormControl('', Validators.required),
-      finishDate: new FormControl({value: '', disabled: false})
+      startDate: new FormControl('', Validators.required)
+      // finishDate: new FormControl({value: '', disabled: false})
     });
   }
 
@@ -103,12 +103,12 @@ export class SearchBarComponent implements OnInit {
 
   }
 
-  onSelect(event) {
-    if (this.searchForm.get('finishDate').value < event) {
-      this.searchForm.patchValue({finishDate: ''});
-    }
-    this.minFinishDate.setDate(event.getDate() + 1);
-  }
+  // onSelect(event) {
+  //   if (this.searchForm.get('finishDate').value < event) {
+  //     this.searchForm.patchValue({finishDate: ''});
+  //   }
+  //   this.minFinishDate.setDate(event.getDate() + 1);
+  // }
 
   enablePlanets() {
     this.searchForm.get('startPlanet').enable();

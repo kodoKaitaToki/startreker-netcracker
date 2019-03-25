@@ -4,6 +4,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SearchService} from "../../shared/services/search.service";
 import {TicketClassInfoComponent} from "./ticket-class-info/ticket-class-info.component";
 import {FormControl, FormGroup} from "@angular/forms";
+import {Trip} from "../../../../shared/model/trip.model";
 
 @Component({
   selector: 'app-ticket-class',
@@ -12,6 +13,7 @@ import {FormControl, FormGroup} from "@angular/forms";
 })
 export class TicketClassComponent implements OnInit {
 
+  @Input('trip') trip: Trip;
   @Input('ticket_class') ticket_class: FlightClass;
   amountForm: FormGroup;
 
@@ -24,14 +26,13 @@ export class TicketClassComponent implements OnInit {
     })
   }
 
-  ngOnInit() {
+  ngOnInit() {}
 
-  }
-
-  openVerticallyCentered() {
+  openVerticallyCentered(trip: Trip) {
     const modalRef = this.modalService.open(TicketClassInfoComponent, {centered: true, size: 'lg'});
     modalRef.componentInstance.ticket_class = this.ticket_class;
     modalRef.componentInstance.amount = this.amount;
+    modalRef.componentInstance.trip = trip;
   }
 
   onAmountChanged() {

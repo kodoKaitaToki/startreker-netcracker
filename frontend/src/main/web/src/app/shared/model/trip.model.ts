@@ -1,4 +1,4 @@
-import {FlightClass} from "./flight-class.model";
+import {FlightClass} from "../../pages/flights/shared/models/flight-class.model";
 
 
 export class Trip {

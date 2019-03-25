@@ -1,40 +1,64 @@
-<div class="container">
-  <div class="row">
-  <div class="card col-10 offset-1">
-    <p class="header">About trip</p>
-    <hr>
-    <div class="row">
-      <div class="col-4" style="text-align: right">
-        <p>13.10.1898</p>
-        <p>Planet</p>
-        <p>Spaceport</p>
-      </div>
-      <div class="col-4">
-        <div class="icon">
-            <div class="arrow"></div>
-        </div>
-      </div>
-      <div class="col-4">
-        <p>13.10.1898</p>
-        <p>Planet</p>
-        <p>Spaceport</p>
+<div class="container-fluid">
+  <div class="row" *ngIf="tickets===null || tickets.length===0">
+    <div class="card col-8 offset-2 window-card" style="text-align:center;">
+      <span style="font-size: 2em;">Now you don't have any tickets.<br>Go on your dream trip right now!</span>
+      <div class="row">
+        <button class="col-4 offset-4" (click)="router.navigate(['flights']);">Go!</button>
       </div>
     </div>
-    <hr>
-    <ul>
-      <!-- <li *ngFor="let service of services">{{}}</li> -->
-      <li>text</li>
-      <li>text</li>
-    </ul>
-    <hr>
-    <div class="row header">
-        <p class="col-4">To pay</p>
-        <p class="col-4 offset-4" style="text-align: right;">555 $</p>
+  </div>
+  <div class="row" *ngIf="tickets!==null && tickets.length>0">
+    <div class="card col-8 offset-2 table-card" *ngFor="let ticket of tickets; index as i;">
+      <p class="header">About trip</p>
+      <hr>
+      <div class="row">
+        <div class="col-4" style="text-align: right">
+          <p>{{ticket.trip.departure_date}}</p>
+          <p>{{ticket.trip.departure_planet_name}}</p>
+          <p>{{ticket.trip.departure_spaceport_name}}</p>
+        </div>
+        <div class="col-4">
+          <div class="icon">
+            <div class="arrow"></div>
+          </div>
+        </div>
+        <div class="col-4">
+          <p>{{ticket.trip.arrival_date}}</p>
+          <p>{{ticket.trip.arrival_planet_name}}</p>
+          <p>{{ticket.trip.arrival_spaceport_name}}</p>
+        </div>
+      </div>
+      <div *ngIf="ticket.services.length > 0">
+        <hr>
+        <ul>
+          <li *ngFor="let service of ticket.services">
+            <div>{{service.service_name}}</div>
+            <div>{{service.service_description}}</div>
+            <div>{{service.service_price}}</div>
+          </li>
+        </ul>
       </div>
       <hr>
       <div class="row">
-          <button class="btn-del col-4 offset-1">Delete</button>
-          <button class="btn-buy col-4 offset-2">Buy</button>
+        <p class="col-4">Amount</p>
+        <p class="col-4 offset-4" style="text-align: right;">{{ticket.amount}}</p>
+      </div>
+      <hr>
+      <div class="row header">
+        <p class="col-4">To pay</p>
+        <p class="col-4 offset-4" style="text-align: right;">{{ticket.totalPrice}} $</p>
+      </div>
+      <hr>
+      <div class="row" *ngIf="ticket.is_bought">
+          <a class="nav-link col-4 offset-4" routerLink="/user/history" style="text-align: center">You can find your ticket in  history</a>
+          <svg class="checkmark" viewBox="0 0 52 52" style="margin-bottom: 1.5%">
+            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+          </svg>
+      </div>
+      <div class="row" *ngIf="!ticket.is_bought">
+          <button class="btn-del col-4 offset-1" (click)="delete(ticket)">Delete</button>
+          <button class="btn-buy col-4 offset-2" (click)="buy(ticket)">Buy</button>
       </div>
     </div>
   </div>

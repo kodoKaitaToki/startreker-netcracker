@@ -11,17 +11,15 @@
     <div class="navbar-collapse collapse" id="navbarsExample04">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+          <a class="nav-link" [routerLink]="['/user/history']">History</a>
+        </li>        
+        <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
           <a class="nav-link" [routerLink]="['/user/cart']">Cart</a>
         </li>
-        <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-          <a class="nav-link" [routerLink]="['/user/history']">History</a>
-        </li>
         <li class="nav-item">
-          <div class="d-inline-block">
             <a class="slide-btn" routerLink="">
               <span>Log out</span>
             </a>
-          </div>
         </li>
       </ul>
     </div>

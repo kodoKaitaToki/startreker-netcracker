@@ -7,7 +7,7 @@ import { PurchasePageComponent } from './purchase-page/purchase-page.component';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/cart',
+    component: UserComponent,
     children: [
       {
         path: 'history',
@@ -18,8 +18,7 @@ const routes: Routes = [
         component: PurchasePageComponent
       }
     ]
-  },
-
+  }
 ];
 
 @NgModule({

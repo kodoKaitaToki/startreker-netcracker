@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Trip} from "./shared/models/trip.model";
+import {Trip} from "../../shared/model/trip.model";
 import {SearchService} from "./shared/services/search.service";
 import {FlightClass} from "./shared/models/flight-class.model";
 import {DatePipe} from "@angular/common";

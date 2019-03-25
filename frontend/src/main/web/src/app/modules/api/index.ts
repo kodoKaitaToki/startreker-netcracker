@@ -150,6 +150,12 @@ const landing = {
   }
 }
 
+const user = {
+  buyTicket(){
+    return `${baseUrl}api/v1/user/bought-tickets`;
+  }
+}
+
 export const Api = {
   HttpOptions,
   HttpOptionsAuthorized,
@@ -162,7 +168,8 @@ export const Api = {
   possibleServices,
   trip,
   trips,
-  landing
+  landing,
+  user
 }
 
 export const options = {
