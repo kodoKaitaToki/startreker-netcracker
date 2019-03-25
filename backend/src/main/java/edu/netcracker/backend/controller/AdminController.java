@@ -45,7 +45,7 @@ public class AdminController {
     }
 
     @GetMapping("/api/v1/admin/increasing/users")
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String getUsersIncreasingPerPeriod(@RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
                                               @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
 
@@ -57,7 +57,7 @@ public class AdminController {
     }
 
     @GetMapping("/api/v1/admin/increasing/carriers")
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String getCarriersIncreasingPerPeriod(
             @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
             @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
@@ -69,7 +69,7 @@ public class AdminController {
     }
 
     @GetMapping("/api/v1/admin/increasing/locations")
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String getLocationsIncreasingPerPeriod(
             @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
             @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
