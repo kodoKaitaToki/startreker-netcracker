@@ -12,22 +12,10 @@ import java.util.Map;
 @Service
 public class AdminServiceImpl implements AdminService {
 
-    private TicketDAO ticketDAO;
-    private UserDAO userDAO;
-    private SpaceportDAO spaceportDAO;
-    private TripDAO tripDAO;
     private StatisticsDAO statisticsDAO;
 
     @Autowired
-    public AdminServiceImpl(TicketDAO ticketDAO,
-                            UserDAO userDAO,
-                            SpaceportDAO spaceportDAO,
-                            TripDAO tripDAO,
-                            StatisticsDAO statisticsDAO) {
-        this.ticketDAO = ticketDAO;
-        this.userDAO = userDAO;
-        this.spaceportDAO = spaceportDAO;
-        this.tripDAO = tripDAO;
+    public AdminServiceImpl(StatisticsDAO statisticsDAO) {
         this.statisticsDAO = statisticsDAO;
     }
 
@@ -42,29 +30,17 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Map<LocalDateTime, Integer> getUsersIncreasingPerPeriod(LocalDateTime from, LocalDateTime to) {
-        HashMap<LocalDateTime, Integer> inc = new HashMap<>();
-
-        userDAO.findPerPeriod(from, to).forEach(user -> inc.merge(user.getRegistrationDate(), 1, (a, b) -> a + b));
-
-        return inc;
+    public Map<LocalDateTime, Long> getUsersIncreasingPerPeriod(LocalDateTime from, LocalDateTime to) {
+        return statisticsDAO.getUsersIncreasingPerPeriod(from, to);
     }
 
     @Override
-    public Map<LocalDateTime, Integer> getCarriersIncreasingPerPeriod(LocalDateTime from, LocalDateTime to) {
-        HashMap<LocalDateTime, Integer> inc = new HashMap<>();
-
-        userDAO.findPerPeriodByRole(3, from, to).forEach(user -> inc.merge(user.getRegistrationDate(), 1, (a, b) -> a + b));
-
-        return inc;
+    public Map<LocalDateTime, Long> getCarriersIncreasingPerPeriod(LocalDateTime from, LocalDateTime to) {
+        return statisticsDAO.getUsersIncreasingByRoleIdPerPeriod(3, from, to);
     }
 
     @Override
-    public Map<LocalDateTime, Integer> getLocationsIncreasingPerPeriod(LocalDateTime from, LocalDateTime to) {
-        HashMap<LocalDateTime, Integer> inc = new HashMap<>();
-
-        spaceportDAO.findPerPeriod(from, to).forEach(spaceport -> inc.merge(spaceport.getCreationDate(), 1, (a, b) -> a + b));
-
-        return inc;
+    public Map<LocalDateTime, Long> getLocationsIncreasingPerPeriod(LocalDateTime from, LocalDateTime to) {
+        return statisticsDAO.getLocationsIncreasingPerPeriod(from, to);
     }
 }

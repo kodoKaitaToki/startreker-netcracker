@@ -15,6 +15,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -90,6 +91,15 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     @Value("${FIND_COSTS_BY_CARRIER}")
     private String FIND_COSTS_BY_CARRIER;
 
+    @Value("${GET_USERS_INCREASING_PER_PERIOD_BY_ROLE}")
+    private String GET_USERS_INCREASING_PER_PERIOD_BY_ROLE;
+
+    @Value("${GET_LOCATIONS_INCREASING_PER_PERIOD}")
+    private String GET_LOCATIONS_INCREASING_PER_PERIOD;
+
+    @Value("${GET_USERS_INCREASING_PER_PERIOD}")
+    private String GET_USERS_INCREASING_PER_PERIOD;
+
     @Autowired
     public StatisticsDAOImpl(JdbcTemplate jdbcTemplate,
                              NamedParameterJdbcTemplate namedJdbcTemplate,
@@ -126,6 +136,54 @@ public class StatisticsDAOImpl implements StatisticsDAO {
 
         return map;
     }
+
+    @Override
+    public Map<LocalDateTime, Long> getUsersIncreasingByRoleIdPerPeriod(Number id,
+                                                                        LocalDateTime from,
+                                                                        LocalDateTime to) {
+        Map<LocalDateTime, Long> increasing = new HashMap<>();
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(GET_USERS_INCREASING_PER_PERIOD_BY_ROLE,
+                                                                   id,
+                                                                   from,
+                                                                   to);
+
+        for (Map<String, Object> row : rows) {
+            increasing.put(((Timestamp) row.get("user_created")).toLocalDateTime(),
+                           (Long) row.get("user_created_count"));
+        }
+
+        return increasing;
+    }
+
+    @Override
+    public Map<LocalDateTime, Long> getUsersIncreasingPerPeriod(LocalDateTime from, LocalDateTime to) {
+        Map<LocalDateTime, Long> increasing = new HashMap<>();
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(GET_USERS_INCREASING_PER_PERIOD, from, to);
+
+        for (Map<String, Object> row : rows) {
+            increasing.put(((Timestamp) row.get("user_created")).toLocalDateTime(),
+                           (Long) row.get("user_created_count"));
+        }
+
+        return increasing;
+    }
+
+    @Override
+    public Map<LocalDateTime, Long> getLocationsIncreasingPerPeriod(LocalDateTime from, LocalDateTime to) {
+        Map<LocalDateTime, Long> increasing = new HashMap<>();
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(GET_LOCATIONS_INCREASING_PER_PERIOD, from, to);
+
+        for (Map<String, Object> row : rows) {
+            increasing.put(((Timestamp) row.get("creation_date")).toLocalDateTime(),
+                           (Long) row.get("creation_date_count"));
+        }
+
+        return increasing;
+    }
+
 
     public List<TripDistributionElement> getTripsStatistics() {
         return jdbcTemplate.query(SELECT_ROUTES_DISTRIBUTION, (rs, rowNum) -> {

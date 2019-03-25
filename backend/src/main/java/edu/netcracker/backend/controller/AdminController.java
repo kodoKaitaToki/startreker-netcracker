@@ -45,11 +45,11 @@ public class AdminController {
     }
 
     @GetMapping("/api/v1/admin/increasing/users")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String getUsersIncreasingPerPeriod(@RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
                                               @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
 
-        Map<LocalDateTime, Integer> map
+        Map<LocalDateTime, Long> map
                 = adminService.getUsersIncreasingPerPeriod(convertToLocalDateTimeViaInstant(from),
                                                            convertToLocalDateTimeViaInstant(to));
 
@@ -57,24 +57,24 @@ public class AdminController {
     }
 
     @GetMapping("/api/v1/admin/increasing/carriers")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String getCarriersIncreasingPerPeriod(
             @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
             @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
 
-        Map<LocalDateTime, Integer> map = adminService.getCarriersIncreasingPerPeriod(convertToLocalDateTimeViaInstant(
+        Map<LocalDateTime, Long> map = adminService.getCarriersIncreasingPerPeriod(convertToLocalDateTimeViaInstant(
                 from), convertToLocalDateTimeViaInstant(to));
 
         return new Gson().toJson(map);
     }
 
     @GetMapping("/api/v1/admin/increasing/locations")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String getLocationsIncreasingPerPeriod(
             @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
             @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
 
-        Map<LocalDateTime, Integer> map = adminService.getLocationsIncreasingPerPeriod(convertToLocalDateTimeViaInstant(
+        Map<LocalDateTime, Long> map = adminService.getLocationsIncreasingPerPeriod(convertToLocalDateTimeViaInstant(
                 from), convertToLocalDateTimeViaInstant(to));
 
         return new Gson().toJson(map);

@@ -53,4 +53,11 @@ public interface StatisticsDAO {
 
     Map<Float, Long> getCostsByCarrier(Number carrierId, LocalDateTime from, LocalDateTime to);
 
+    Map<LocalDateTime, Long> getUsersIncreasingByRoleIdPerPeriod(Number id,
+                                                                 LocalDateTime from,
+                                                                 LocalDateTime to);
+
+    Map<LocalDateTime, Long> getLocationsIncreasingPerPeriod(LocalDateTime from, LocalDateTime to);
+
+    Map<LocalDateTime, Long> getUsersIncreasingPerPeriod(LocalDateTime from, LocalDateTime to);
 }

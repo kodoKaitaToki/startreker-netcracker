@@ -8,7 +8,7 @@ public interface AdminService {
     Map<Float, Long> getCostsPerPeriodPerCarrier(Number id, LocalDateTime from, LocalDateTime to);
     Map<Float, Long> getCostsPerPeriod(LocalDateTime from, LocalDateTime to);
 
-    Map<LocalDateTime, Integer> getUsersIncreasingPerPeriod(LocalDateTime from, LocalDateTime to);
-    Map<LocalDateTime, Integer> getCarriersIncreasingPerPeriod(LocalDateTime from, LocalDateTime to);
-    Map<LocalDateTime, Integer> getLocationsIncreasingPerPeriod(LocalDateTime from, LocalDateTime to);
+    Map<LocalDateTime, Long> getUsersIncreasingPerPeriod(LocalDateTime from, LocalDateTime to);
+    Map<LocalDateTime, Long> getCarriersIncreasingPerPeriod(LocalDateTime from, LocalDateTime to);
+    Map<LocalDateTime, Long> getLocationsIncreasingPerPeriod(LocalDateTime from, LocalDateTime to);
 }
