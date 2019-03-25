@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 public interface AdminService {
-    Map<Integer, Integer> getCostsPerPeriodPerCarrier(Number id, LocalDateTime from, LocalDateTime to);
-    Map<Integer, Integer> getCostsPerPeriod(LocalDateTime from, LocalDateTime to);
+    Map<Float, Long> getCostsPerPeriodPerCarrier(Number id, LocalDateTime from, LocalDateTime to);
+    Map<Float, Long> getCostsPerPeriod(LocalDateTime from, LocalDateTime to);
 
     Map<LocalDateTime, Integer> getUsersIncreasingPerPeriod(LocalDateTime from, LocalDateTime to);
     Map<LocalDateTime, Integer> getCarriersIncreasingPerPeriod(LocalDateTime from, LocalDateTime to);

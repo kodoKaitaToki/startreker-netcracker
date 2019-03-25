@@ -142,7 +142,6 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
 
             ticketClasses.add(createSuggestion(row));
         }
-
         return relatedSuggestion;
     }
 

@@ -1,16 +1,11 @@
 package edu.netcracker.backend.service.impl;
 
-import edu.netcracker.backend.dao.SpaceportDAO;
-import edu.netcracker.backend.dao.TicketDAO;
-import edu.netcracker.backend.dao.TripDAO;
-import edu.netcracker.backend.dao.UserDAO;
+import edu.netcracker.backend.dao.*;
 import edu.netcracker.backend.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,45 +16,29 @@ public class AdminServiceImpl implements AdminService {
     private UserDAO userDAO;
     private SpaceportDAO spaceportDAO;
     private TripDAO tripDAO;
+    private StatisticsDAO statisticsDAO;
 
     @Autowired
-    public AdminServiceImpl(TicketDAO ticketDAO, UserDAO userDAO, SpaceportDAO spaceportDAO, TripDAO tripDAO) {
+    public AdminServiceImpl(TicketDAO ticketDAO,
+                            UserDAO userDAO,
+                            SpaceportDAO spaceportDAO,
+                            TripDAO tripDAO,
+                            StatisticsDAO statisticsDAO) {
         this.ticketDAO = ticketDAO;
         this.userDAO = userDAO;
         this.spaceportDAO = spaceportDAO;
         this.tripDAO = tripDAO;
+        this.statisticsDAO = statisticsDAO;
     }
 
     @Override
-    public Map<Integer, Integer> getCostsPerPeriodPerCarrier(Number id, LocalDateTime from, LocalDateTime to) {
-        HashMap<Integer, Integer> prices = new HashMap<>();
-
-        tripDAO.findByCarrierId(id).stream()
-                .filter(trip -> trip.getDepartureDate().isAfter(from)
-                        && trip.getDepartureDate().isBefore(to))
-                .flatMap(trip -> trip.getTicketClasses().stream())
-                .forEach(ticketClass -> {
-                    int count = ticketDAO.findAllByClass(ticketClass.getClassId()).size();
-                    prices.merge(ticketClass.getTicketPrice(), count, (a, b) -> a + b);
-                });
-
-        return prices;
+    public Map<Float, Long> getCostsPerPeriodPerCarrier(Number id, LocalDateTime from, LocalDateTime to) {
+        return statisticsDAO.getCostsByCarrier(id, from, to);
     }
 
     @Override
-    public Map<Integer, Integer> getCostsPerPeriod(LocalDateTime from, LocalDateTime to) {
-        HashMap<Integer, Integer> prices = new HashMap<>();
-
-        tripDAO.findAll().stream()
-                .filter(trip -> trip.getDepartureDate().isAfter(from)
-                        && trip.getDepartureDate().isBefore(to))
-                .flatMap(trip -> trip.getTicketClasses().stream())
-                .forEach(ticketClass -> {
-                    int count = ticketDAO.findAllByClass(ticketClass.getClassId()).size();
-                    prices.merge(ticketClass.getTicketPrice(), count, (a, b) -> a + b);
-                });
-
-        return prices;
+    public Map<Float, Long> getCostsPerPeriod(LocalDateTime from, LocalDateTime to) {
+        return statisticsDAO.getCosts(from, to);
     }
 
     @Override
