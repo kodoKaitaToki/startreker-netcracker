@@ -5,8 +5,10 @@ import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.dao.ServiceReplyDAO;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
+import edu.netcracker.backend.message.response.ServicePreload;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.ServiceReply;
+import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.ServiceService;
 import edu.netcracker.backend.utils.ServiceStatus;
@@ -160,6 +162,11 @@ public class ServiceServiceImpl implements ServiceService {
         }
 
         return serviceDTO;
+    }
+
+    @Override
+    public List<ServicePreload> preloadForCarrier(User carrier) {
+        return serviceDAO.preloadForCarrier(carrier.getUserId());
     }
 
     private Integer getStatusValue(String status) {

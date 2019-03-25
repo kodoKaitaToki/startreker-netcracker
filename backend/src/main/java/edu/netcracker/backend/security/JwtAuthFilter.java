@@ -4,6 +4,7 @@ import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.service.impl.UserInformationHolderServiceImpl;
 import edu.netcracker.backend.utils.JwtUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -23,15 +23,16 @@ import java.io.IOException;
 
 @Service
 @Qualifier("ProductionAuthFilter")
+@Slf4j
 public class JwtAuthFilter extends AuthFilter {
-
-    private static final Logger logger = LoggerFactory.getLogger(JwtProvider.class);
 
     private JwtProvider jwtProvider;
 
     private UserInformationHolderServiceImpl userInformationHolderService;
 
     private UserService userService;
+
+    private User user;
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
@@ -58,7 +59,7 @@ public class JwtAuthFilter extends AuthFilter {
         }
 
         httpServletResponse.setHeader("New-Access-Token", newAccessToken);
-        handleToken(newAccessToken, httpServletRequest);
+        createAuthentication(user, httpServletRequest);
     }
 
     private String createNewAccessTokenIfRefreshTokenIsValid(HttpServletRequest request) {
@@ -67,7 +68,7 @@ public class JwtAuthFilter extends AuthFilter {
             return null;
         }
 
-        User user = userService.findByUsername(jwtProvider.retrieveSubject(refreshToken));
+        user = userService.findByUsername(jwtProvider.retrieveSubject(refreshToken));
         if (isNotMatchedWithUsersRefreshToken(refreshToken, user)) {
             return null;
         }
@@ -82,9 +83,9 @@ public class JwtAuthFilter extends AuthFilter {
         createAuthentication(userDetails, request);
     }
 
-    protected void createAuthentication(UserDetails userDetails, HttpServletRequest request) {
+    void createAuthentication(UserDetails userDetails, HttpServletRequest request) {
         if (userDetails == null) {
-            logger.error("User send invalid token");
+            log.error("User send invalid token");
             return;
         }
 

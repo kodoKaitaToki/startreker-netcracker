@@ -45,13 +45,8 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService {
         Number user_id = securityContext.getUser()
                                         .getUserId();
         LocalDate startLocal, endLocal;
-        try {
-            startLocal = (startDate == null) ? null : LocalDate.parse(startDate);
-            endLocal = (endDate == null) ? null : LocalDate.parse(endDate);
-        } catch (DateTimeParseException e) {
-            log.error("Date could not be parsed");
-            throw new RequestException("Date could not be parsed", HttpStatus.BAD_REQUEST);
-        }
+        startLocal = parseNullableDate(startDate);
+        endLocal = parseNullableDate(endDate);
         return ticketDAO.findAllPurchasedByUser(user_id, limit, offset, startLocal, endLocal)
                         .stream()
                         .map(HistoryTicketDTO::from)
@@ -68,5 +63,24 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService {
                          .stream()
                          .map(HistoryServiceDTO::from)
                          .collect(Collectors.toList());
+    }
+
+    @Override
+    public Integer countTicketByUser(String startDate, String endDate) {
+        Number user_id = securityContext.getUser()
+                                        .getUserId();
+        LocalDate startLocal, endLocal;
+        startLocal = parseNullableDate(startDate);
+        endLocal = parseNullableDate(endDate);
+        return ticketDAO.countTicketByUser(user_id, startLocal, endLocal);
+    }
+
+    private LocalDate parseNullableDate(String date) {
+        try {
+            return (date == null) ? null : LocalDate.parse(date);
+        } catch (DateTimeParseException e) {
+            log.error("Date could not be parsed");
+            throw new RequestException("Date " + date + " could not be parsed", HttpStatus.BAD_REQUEST);
+        }
     }
 }

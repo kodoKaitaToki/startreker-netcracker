@@ -4,6 +4,7 @@ import edu.netcracker.backend.dao.ServiceDAO;
 import edu.netcracker.backend.dao.mapper.history.HistoryServiceMapper;
 import edu.netcracker.backend.dao.mapper.ServiceMapper;
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
+import edu.netcracker.backend.message.response.ServicePreload;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.history.HistoryService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +49,9 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
 
     @Value("${UPDATE_SERVICE_BY_CARRIER}")
     private String UPDATE_SERVICE_BY_CARRIER;
+
+    @Value("${PRELOAD_SERVICE_BY_CARRIER}")
+    private String PRELOAD_SERVICE_BY_CARRIER;
 
     @Value("${SERVICE_AMOUNT_BY_STATUS}")
     private String SERVICE_AMOUNT_BY_STATUS;
@@ -77,13 +84,14 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     }
 
     @Override
-    public Integer updateServiceByCarrier(ServiceDescr service){
+    public Integer updateServiceByCarrier(ServiceDescr service) {
         log.debug("ServiceDAO.update(ServiceDescr service) was invoked with parameters service={}", service);
-        return getJdbcTemplate().update(UPDATE_SERVICE_BY_CARRIER, service.getServiceName(),
-                service.getServiceDescription(),
-                service.getServiceStatus(),
-                service.getCarrierId(),
-                service.getServiceId());
+        return getJdbcTemplate().update(UPDATE_SERVICE_BY_CARRIER,
+                                        service.getServiceName(),
+                                        service.getServiceDescription(),
+                                        service.getServiceStatus(),
+                                        service.getCarrierId(),
+                                        service.getServiceId());
     }
 
     @Override
@@ -101,12 +109,12 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     }
 
     @Override
-    public List<ServiceCRUDDTO> findByCarrierId(Integer id, Integer offset, Integer limit, Integer status) {
-        log.debug("ServiceDAO.findPaginByCarrierId(Number id, Integer status) was invoked with parameters id={}, " +
-                "offset={}, limit={}, status={}", id, offset, limit, status);
+    public List<ServiceCRUDDTO> findByCarrierId(Number id, Integer offset, Integer limit, Integer status) {
+        log.debug("ServiceDAO.findPaginByCarrierId(Number id, Integer status) was invoked with parameters id={}, "
+                  + "offset={}, limit={}, status={}", id, offset, limit, status);
 
         List<ServiceCRUDDTO> result = new ArrayList<>();
-        result.addAll(getJdbcTemplate().query(FIND_PAGIN_SERVICES, new Object[]{id ,status, limit, offset}, mapper));
+        result.addAll(getJdbcTemplate().query(FIND_PAGIN_SERVICES, new Object[]{id, status, limit, offset}, mapper));
 
         return result;
     }
@@ -150,9 +158,9 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
                                                                                          "suggestionIds",
                                                                                          suggestionIds));
         for (Map<String, Object> row : rows) {
-            List<ServiceDescr> ticketClasses
-                    = relatedServices.computeIfAbsent(((Number) row.get("suggestion_id")).longValue(),
-                                                      aLong -> new ArrayList<>());
+            List<ServiceDescr> ticketClasses =
+                    relatedServices.computeIfAbsent(((Number) row.get("suggestion_id")).longValue(),
+                                                    aLong -> new ArrayList<>());
 
             ticketClasses.add(createService(row));
         }
@@ -164,6 +172,16 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     public List<HistoryService> getServiceNamesByTicket(Number id) {
         log.info("Querying purchased services for ticket {}", id);
         return getJdbcTemplate().query(GET_SERVICE_NAMES_BY_TICKET, new Object[]{id}, new HistoryServiceMapper());
+    }
+
+    @Override
+    public List<ServicePreload> preloadForCarrier(Integer id) {
+        return getJdbcTemplate().query(PRELOAD_SERVICE_BY_CARRIER, new Object[]{id}, (rs, rowNum) -> {
+            ServicePreload preload = new ServicePreload();
+            preload.setServiceId(rs.getLong("service_id"));
+            preload.setServiceName(rs.getString("service_name"));
+            return preload;
+        });
     }
 
     private ServiceDescr createService(Map<String, Object> row) {

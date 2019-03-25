@@ -7,33 +7,33 @@
 
           <hr class="hr-xs">
 
-          <div id="viewsChartContainer" style="height: 370px; width: 100%;"></div>
+          <div [style.display]="showChart == true ? 'block' : 'none'" id="viewsChartContainer"
+               style="height: 370px; width: 100%;"></div>
 
-          <hr class="hr-xs">
+          <hr *ngIf="showChart" class="hr-xs">
+
+          <div class="form-row justify-content-center">
+            <div class="col-lg-6">
+              <h6 class="search-bar__heading">From:</h6>
+              <input
+                type="date"
+                [ngModel]="fromDate | date:'yyyy-MM-dd'"
+                (ngModelChange)="fromDate = $event"
+                class="form-control datepicker"
+              >
+            </div>
+            <div class="col-lg-6">
+              <h6 class="search-bar__heading">To:</h6>
+              <input
+                type="date"
+                [ngModel]="toDate | date:'yyyy-MM-dd'"
+                (ngModelChange)="toDate = $event"
+                class="form-control datepicker"
+              >
+            </div>
+          </div>
 
           <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            <div class="form-row justify-content-center">
-              <div class="col-lg-6">
-                <h6 class="search-bar__heading">From:</h6>
-                <input
-                  type="date"
-                  id="fromDate"
-                  [value]="form.value.fromDate | date:'yyyy-MM-dd'"
-                  (input)="form.value.fromDate = $event.target.valueAsDate"
-                  class="form-control datepicker"
-                >
-              </div>
-              <div class="col-lg-6">
-                <h6 class="search-bar__heading">To:</h6>
-                <input
-                  type="date"
-                  id="toDate"
-                  [value]="form.value.toDate | date:'yyyy-MM-dd'"
-                  (input)="form.value.toDate = $event.target.valueAsDate"
-                  class="form-control datepicker"
-                >
-              </div>
-            </div>
 
             <hr class="hr-xs">
 
@@ -113,8 +113,10 @@
                 </div>
 
                 <div *ngIf="form.value.forWhat == 'forServices'" class="form-group">
-                  <select class="form-control"  formControlName="selectedServiceId">
+                  <select class="form-control" formControlName="selectedServiceId">
                     <option [value]="null">All services</option>
+                    <option *ngFor="let service of carrierServices" [value]="service.service_id">
+                      {{service.service_name}}</option>
                   </select>
                 </div>
               </div>

@@ -4,10 +4,7 @@ import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.message.request.MandatoryTimeInterval;
 import edu.netcracker.backend.message.request.OptionalTimeInterval;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
-import edu.netcracker.backend.message.response.CarrierRevenueResponse;
-import edu.netcracker.backend.message.response.CarrierViewsResponse;
-import edu.netcracker.backend.message.response.ServiceCRUDDTO;
-import edu.netcracker.backend.message.response.ServiceDistributionElement;
+import edu.netcracker.backend.message.response.*;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.ServiceService;
 import edu.netcracker.backend.service.StatisticsService;
@@ -119,9 +116,15 @@ public class ServiceController {
     public List<ServiceCRUDDTO> getPaginServices(@RequestParam("status") String status,
                                                  @RequestParam("from") Integer from,
                                                  @RequestParam("number") Integer number) {
-        log.debug("ServiceController.getPaginServices(String status, Integer from, Integer number) was invoked " +
-                "with parameters status={}, from={}, number={}", status, from, number);
+        log.debug("ServiceController.getPaginServices(String status, Integer from, Integer number) was invoked "
+                  + "with parameters status={}, from={}, number={}", status, from, number);
         return serviceService.getServicesOfCarrier(from, number, status);
+    }
+
+    @RequestMapping(value = "/carrier/services/preload", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public List<ServicePreload> preloadServices() {
+        return serviceService.preloadForCarrier(securityContext.getUser());
     }
 
     @RequestMapping(value = "/carrier/service/amount", method = RequestMethod.GET)
@@ -134,17 +137,18 @@ public class ServiceController {
     @RequestMapping(value = "/carrier/service", method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public ServiceCRUDDTO updateService(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO) {
-        log.debug("ServiceController.updateService(ServiceCRUDDTO serviceCRUDDTO) was invoked " +
-                "to update a service with id={}", serviceCRUDDTO.getId());
+        log.debug("ServiceController.updateService(ServiceCRUDDTO serviceCRUDDTO) was invoked "
+                  + "to update a service with id={}", serviceCRUDDTO.getId());
         return serviceService.updateService(serviceCRUDDTO);
     }
 
     @RequestMapping(value = "/carrier/service", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public ServiceCRUDDTO addService(@Valid @RequestBody ServiceCreateForm serviceCreateForm) {
-        log.debug("ServiceController.addService(ServiceCreateForm serviceCreateForm) was invoked " +
-                "to add a new service with name={}, status={}",
-                serviceCreateForm.getServiceName(), serviceCreateForm.getServiceStatus());
+        log.debug("ServiceController.addService(ServiceCreateForm serviceCreateForm) was invoked "
+                  + "to add a new service with name={}, status={}",
+                  serviceCreateForm.getServiceName(),
+                  serviceCreateForm.getServiceStatus());
         return serviceService.addService(serviceCreateForm);
     }
 
