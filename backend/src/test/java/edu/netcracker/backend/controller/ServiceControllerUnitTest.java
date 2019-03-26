@@ -50,31 +50,20 @@ public class ServiceControllerUnitTest {
                         DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 ).atStartOfDay());
         ServiceCRUDDTO testService = ServiceCRUDDTO.form(serviceDescr, null);
-        List<ServiceCRUDDTO> ret = new ArrayList<>();
+        ret = new ArrayList<>();
         ret.add(testService);
     }
 
 
     @Test
     public void shouldPassServices() {
-        when(serviceService.getServicesForApprover(1, 10, ServiceStatus.OPEN.toString(), 3))
+        when(serviceService.getServices(1, 10, ServiceStatus.OPEN.toString()))
                 .thenReturn(ret);
 
-        User usr = new User();
-        usr.setUserId(3);
-        when(securityContext.getUser()).thenReturn(usr);
-
         ServiceController controller = new ServiceController(statisticsService, securityContext, serviceService);
 
-        Assert.assertEquals(controller.getServicesForApprover(1, 10, ServiceStatus.OPEN.toString()), ret);
-    }
+        List<ServiceCRUDDTO> actual = controller.getServices(1, 10, ServiceStatus.OPEN.toString());
 
-    @Test(expected = RequestException.class)
-    public void shouldRejectIllegalStatus() {
-        String illegalStatus = ServiceStatus.DRAFT.toString();
-
-        ServiceController controller = new ServiceController(statisticsService, securityContext, serviceService);
-
-        controller.getServicesForApprover(1, 10, illegalStatus);
+        Assert.assertEquals(actual, ret);
     }
 }

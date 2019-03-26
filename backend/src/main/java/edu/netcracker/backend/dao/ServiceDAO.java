@@ -2,6 +2,7 @@ package edu.netcracker.backend.dao;
 
 
 import edu.netcracker.backend.message.response.ServiceCRUDDTO;
+import edu.netcracker.backend.message.response.ServicePreload;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.history.HistoryService;
 
@@ -31,4 +32,6 @@ public interface ServiceDAO {
     Map<Long, List<ServiceDescr>> getAllServicesBelongToSuggestions(List<Number> suggestionIds);
 
     List<HistoryService> getServiceNamesByTicket(Number id);
+
+    List<ServicePreload> preloadForCarrier(Integer id);
 }

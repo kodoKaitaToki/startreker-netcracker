@@ -12,10 +12,10 @@ public class BundleTripDTO {
     private Long tripId;
 
     @JsonProperty("departure_spaceport_name")
-    private String departurePortName;
+    private String departureSpaceportName;
 
     @JsonProperty("arrival_spaceport_name")
-    private String arrivalPortName;
+    private String arrivalSpaceportName;
 
     @JsonProperty("departure_planet")
     private String departurePlanetName;

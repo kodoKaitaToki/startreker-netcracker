@@ -6,9 +6,14 @@
 }
 
 .trip-list {
-  margin: auto;
+  margin: 50px auto auto;
   background: rgba(240, 248, 255, 0.9);
   padding: 1rem;
+}
+
+.not-found {
+  padding: 8rem 2rem;
+  justify-content: center;
 }
 
 a {

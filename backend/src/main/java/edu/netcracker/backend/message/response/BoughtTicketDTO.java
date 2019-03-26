@@ -11,9 +11,6 @@ public class BoughtTicketDTO {
     @JsonProperty("ticket_id")
     private Long ticketId;
 
-    @JsonProperty("passenger_id")
-    private Integer passengerId;
-
     @JsonProperty("p_services_ids")
     private List<Long> pServicesIds;
 }

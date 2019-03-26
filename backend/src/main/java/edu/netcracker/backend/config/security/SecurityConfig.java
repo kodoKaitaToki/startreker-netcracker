@@ -31,8 +31,6 @@ import java.util.Collections;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    //private AuthFilter authFilter;
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf()
@@ -66,8 +64,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider auth = new DaoAuthenticationProvider();
-        auth.setUserDetailsService(userService()); //set the custom user details service
-        auth.setPasswordEncoder(passwordEncoder()); //set the password encoder - bcrypt
+        auth.setUserDetailsService(userService());
+        auth.setPasswordEncoder(passwordEncoder());
         return auth;
     }
 
@@ -88,22 +86,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                                       "Accept",
                                                       "Authorization",
                                                       "Authorization-Refresh",
-                                                      "New-Access-Token"));
+                                                      "New-Access-Token",
+                                                      "X-Total-Count"));
         configuration.setAllowCredentials(false);
         configuration.addExposedHeader("New-Access-Token");
+        configuration.addExposedHeader("X-Total-Count");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-    //    @Bean
-    //    public FilterRegistrationBean corsFilterRegistration() {
-    //        FilterRegistrationBean registrationBean = new FilterReЗgistrationBean(new CORSFilter());
-    //        registrationBean.setName("CORS Filter");
-    //        registrationBean.addUrlPatterns("/*");
-    //        registrationBean.setOrder(1);
-    //        return registrationBean;
-    //    }
 
     @Bean
     public AuthFilter setAuthFilter() {

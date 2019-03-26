@@ -23,6 +23,9 @@ export class TripsTableComponent implements OnInit {
   @Input() exisitngDirections: any;
 
   currentTripForUpdate: Trip;
+
+  currentTripForSuggestionEdit: Trip;
+
   currentTicketClassForUpdate: any;
 
   isForUpdateAlertMessage = false;
@@ -57,6 +60,8 @@ export class TripsTableComponent implements OnInit {
 
   showTicketClass: boolean = false;
 
+  showSuggestions: boolean = false;
+
   constructor() {
 
   }
@@ -83,6 +88,11 @@ export class TripsTableComponent implements OnInit {
   toggleShowTicketClass(ticketClassforUpdate) {
     this.showTicketClass = !this.showTicketClass;
     this.currentTicketClassForUpdate = ticketClassforUpdate;
+  }
+
+  toggleShowSuggestions(trip) {
+    this.showSuggestions = !this.showSuggestions;
+    this.currentTripForSuggestionEdit = trip;
   }
 
   setFormInDefault() {

@@ -10,6 +10,8 @@ import { BundlesService } from '../shared/service/bundles.service';
 import { MessageService } from 'primeng/api';
 import { BundlesTreeComponent } from '../bundles-tree/bundles-tree.component';
 import { DatePipe, formatDate } from '@angular/common';
+import { periodError, notEarlierThanCurrentDate } from 'src/app/shared/dateValidator';
+import { emptyTable } from '../shared/validators/table-validator';
 
 @Component({
   selector: 'app-bundles-form',
@@ -28,13 +30,16 @@ export class BundlesFormComponent implements OnInit {
   form: FormGroup =  this.fb.group(
     {
       id: [''],
-      start_date: ['', Validators.required],
-      finish_date: ['', Validators.required],
+      start_date: ['', [Validators.required, notEarlierThanCurrentDate]],
+      finish_date: ['', [Validators.required, notEarlierThanCurrentDate]],
       bundle_price: ['', [Validators.required, Validators.min(0)]],
       bundle_description: ['', Validators.required],
       photo_uri: [''],
       bundle_trips: this.fb.array([])
     }
+    , {validator: Validators.compose([
+      periodError("start_date", "finish_date"),
+      emptyTable])}
   );
 
   constructor(
@@ -49,8 +54,8 @@ export class BundlesFormComponent implements OnInit {
   onBundleUpdate(bundle: Bundle) {
     this.form.patchValue({
       id: bundle.id,
-      start_date: bundle.start_date,
-      finish_date: bundle.finish_date,
+      start_date: this.datepipe.transform(bundle.start_date, 'yyyy-MM-dd'),
+      finish_date: this.datepipe.transform(bundle.finish_date, 'yyyy-MM-dd'),
       bundle_price: bundle.bundle_price,
       bundle_description: bundle.bundle_description,
     });

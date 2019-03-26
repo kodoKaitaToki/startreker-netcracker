@@ -31,4 +31,6 @@ public interface TicketDAO {
                                                Number offset,
                                                LocalDate startDate,
                                                LocalDate endDate);
+
+    Integer countTicketByUser(Number user_id, LocalDate startDate, LocalDate endDate);
 }

@@ -1,70 +1,72 @@
-<div class="container-fluid"
+<div class="card text-center"
      *ngFor="let ticketClass of trip.ticket_classes"
 >
-
-  <div class="row justify-content-center">
-    <div class="row col-md-5 text-center">
-      <div class="col-5">
+  <div class="row justify-content-center card-header">
+    <div class="row col-md-5 align-items-center justify-content-center">
+      <div class="col-5 card-body">
         <h4>{{trip.departure_planet_name}} (spaceport {{trip.departure_spaceport_name}})</h4>
         <br>
         <h6>at {{trip.departure_date}}</h6>
       </div>
-      <div class="col-2">
+      <div class="col-2 text-center">
         <h4>-></h4>
       </div>
-      <div class="col-5">
-        <h4>{{trip.arrival_planet_name}} (spaceport {{trip.arrival_spaceport_name}})</h4>
+      <div class="col-5 card-body">
+        <h4 class="card-text">{{trip.arrival_planet_name}} (spaceport {{trip.arrival_spaceport_name}})</h4>
         <br>
         <h6>at {{trip.arrival_date}}</h6>
       </div>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row card-body align-items-center justify-content-center">
     <div class="col-md-3">
       <h5>Name</h5>
     </div>
-    <div class="col-md-6">
-      <h6>{{ticketClass.class_name}}</h6>
-    </div>
-  </div>
-
-  <div class="row">
     <div class="col-md-3">
       <h5>Seats amount</h5>
     </div>
-    <div class="col-md-6 ">
-      <h6>{{ticketClass.class_seats}}</h6>
-    </div>
-  </div>
-
-  <div class="row">
     <div class="col-md-3">
       <h5>Price</h5>
     </div>
-    <div class="col-md-6">
+  </div>
+
+  <div class="row card-body align-items-center justify-content-center">
+    <div class="col-md-3 card-body">
+      <h6>{{ticketClass.class_name}}</h6>
+    </div>
+    <div class="col-md-3 card-body ">
+      <h6>{{ticketClass.class_seats}}</h6>
+    </div>
+    <div class="col-md-3 card-body">
       <h6>{{ticketClass.ticket_price}}</h6>
     </div>
   </div>
 
   <hr>
 
-  <div class="row justify-content-center align-items-center">
-    <div class="col-md-6 text-center">
-      <h6>Discount</h6>
-    </div>
-  </div>
-
-  <div class="container"
+  <div class="card-body"
        *ngIf="ticketClass.discount !== null"
   >
-    <hr>
-
     <div class="row justify-content-center">
-      <div class="col-md-6 text-center">
+      <div class="col-md-2">
         <h5>Type</h5>
       </div>
-      <div class="col-md-6 text-center">
+      <div class="col-md-2">
+        <h5>Rate</h5>
+      </div>
+      <div class="col-md-2">
+        <h5>Price with discount</h5>
+      </div>
+      <div class="col-md-2">
+        <h5>From</h5>
+      </div>
+      <div class="col-md-2">
+        <h5>To</h5>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-2">
         <h6 *ngIf="ticketClass.discount.is_percent">
           By percent
         </h6>
@@ -73,75 +75,38 @@
           By value
         </h6>
       </div>
-    </div>
-
-    <div class="row justify-content-center">
-      <div class="col-md-6 text-center">
-        <h5>Rate</h5>
-      </div>
-      <div class="col-md-6 text-center">
+      <div class="col-md-2">
         <h6>
           {{ticketClass.discount.discount_rate}}
         </h6>
       </div>
-    </div>
+      <div class="col-md-2">
+        <h6 *ngIf="ticketClass.discount.is_percent">
+          {{(ticketClass.ticket_price * (1 - ticketClass.discount.discount_rate / 100)) | number}}
+        </h6>
 
-    <div class="row justify-content-center">
-      <div class="col-md-6 text-center">
-        <h5>Start date</h5>
+        <h6 *ngIf="!ticketClass.discount.is_percent">
+          {{(ticketClass.ticket_price - ticketClass.discount.discount_rate) | number}}
+        </h6>
       </div>
-      <div class="col-md-6 text-center">
+      <div class="col-md-2">
         <h6>
           {{ticketClass.discount.start_date}}
         </h6>
       </div>
-    </div>
-
-    <div class="row justify-content-center">
-      <div class="col-md-6 text-center">
-        <h5>Finish date</h5>
-      </div>
-      <div class="col-md-6 text-center">
+      <div class="col-md-2">
         <h6>
           {{ticketClass.discount.finish_date}}
         </h6>
       </div>
     </div>
-
-    <div class="row justify-content-center"
-         *ngIf="ticketClass.discount !== null"
-    >
-      <div class="col-md-6 text-center">
-        <h5>Price with discount</h5>
-      </div>
-      <div class="col-md-6 text-center">
-        <h6 *ngIf="ticketClass.discount.is_percent">
-          {{(ticketClass.ticket_price * (1 - ticketClass.discount.discount_rate / 100))}}
-        </h6>
-
-        <h6 *ngIf="!ticketClass.discount.is_percent">
-          {{(ticketClass.ticket_price - ticketClass.discount.discount_rate)}}
-        </h6>
-      </div>
-    </div>
-
     <div class="row justify-content-center">
-      <div class="col-md-6 text-center">
-        <h5>Expired</h5>
-      </div>
-      <div class="col-md-6 text-center">
-        <h4 *ngIf="ticketClass.discount.is_expired === true"
-            style="color: red"
-        >
-          Expired
-        </h4>
-
-        <h4 *ngIf="ticketClass.discount.is_expired !== true"
-            style="color: green"
-        >
-          Not expired
-        </h4>
-      </div>
+      <h4 *ngIf="ticketClass.discount.is_expired === true"
+          style="color: red"
+          class="text-center"
+      >
+        Expired
+      </h4>
     </div>
 
     <div class="row justify-content-center">
@@ -152,14 +117,16 @@
         Delete
       </button>
     </div>
-
   </div>
 
   <div class="container"
        *ngIf="ticketClass.discount === null"
   >
     <div class="row justify-content-center">
-      <h4>None</h4>
+      <h4>Discount</h4>
+    </div>
+    <div class="row justify-content-center">
+      <h6>None</h6>
     </div>
     <div class="row justify-content-center">
       <button type="button"
@@ -169,9 +136,8 @@
         Add
       </button>
     </div>
+    <br>
   </div>
-
-  <hr>
 
   <discount-form
     [obj]="ticketClass"
@@ -181,3 +147,4 @@
     *ngIf="currentTicketClass === ticketClass"
   ></discount-form>
 </div>
+<br>

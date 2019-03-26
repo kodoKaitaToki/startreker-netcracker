@@ -10,4 +10,6 @@ public interface PurchaseHistoryService {
     List<HistoryTicketDTO> getPurchaseHistory(Number limit, Number offset, String startDate, String endDate);
 
     List<HistoryServiceDTO> getServiceNamesByTicket(Number id);
+
+    Integer countTicketByUser(String startDate, String endDate);
 }

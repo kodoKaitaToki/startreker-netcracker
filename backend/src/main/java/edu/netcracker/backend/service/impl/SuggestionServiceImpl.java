@@ -14,8 +14,7 @@ import edu.netcracker.backend.model.TicketClass;
 import edu.netcracker.backend.service.DiscountService;
 import edu.netcracker.backend.service.SuggestionService;
 import edu.netcracker.backend.service.TicketClassService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,9 +23,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class SuggestionServiceImpl implements SuggestionService {
-
-    private static final Logger logger = LoggerFactory.getLogger(SuggestionServiceImpl.class);
 
     private SuggestionDAO suggestionDAO;
 
@@ -53,9 +51,11 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public List<SuggestionDTO> getAllWithClassId(Number id) {
+        log.debug("SuggestionServiceImpl.getAllWithClassId(Number id) was invoked");
         List<Suggestion> suggestions = suggestionDAO.findAllWithClassId(id);
 
         if (suggestions.size() == 0) {
+            log.error("No suggestions yet for ticket class with id {}", id);
             throw new RequestException("No suggestions yet", HttpStatus.NOT_FOUND);
         }
 
@@ -69,9 +69,11 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public SuggestionDTO getById(Number id) {
+        log.debug("SuggestionServiceImpl.getById(Number id) was invoked");
         Optional<Suggestion> optSuggestion = suggestionDAO.find(id);
 
         if (!optSuggestion.isPresent()) {
+            log.error("Suggestion with id {} not found", id);
             throw new RequestException("Suggestion with id " + id + " not found", HttpStatus.NOT_FOUND);
         }
 
@@ -82,8 +84,10 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public SuggestionDTO createSuggestion(SuggestionDTO suggestionDTO) {
+        log.debug("SuggestionServiceImpl.createSuggestion(SuggestionDTO suggestionDTO) was invoked");
         if (suggestionDTO.getPServiceIds()
                          .size() == 0) {
+            log.error("Ticket class with id: {} has no services yet", suggestionDTO.getClassId());
             throw new RequestException("No services attached", HttpStatus.BAD_REQUEST);
         }
 
@@ -95,6 +99,7 @@ public class SuggestionServiceImpl implements SuggestionService {
                          Optional<PossibleService> optPossibleService = possibleServiceDAO.find(item);
 
                          if (!optPossibleService.isPresent()) {
+                             log.error("Possible service with id: {} not found", item);
                              throw new RequestException("Possible service with id " + item + " not found",
                                                         HttpStatus.NOT_FOUND);
                          }
@@ -107,9 +112,11 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public SuggestionDTO updateSuggestion(SuggestionDTO suggestionDTO) {
+        log.debug("SuggestionServiceImpl.updateSuggestion(SuggestionDTO suggestionDTO) was invoked");
         Optional<Suggestion> optSuggestion = suggestionDAO.find(suggestionDTO.getId());
 
         if (!optSuggestion.isPresent()) {
+            log.error("Suggestion with id: {} not found", suggestionDTO.getId());
             throw new RequestException("Suggestion with id " + suggestionDTO.getId() + " not found",
                                        HttpStatus.NOT_FOUND);
         }
@@ -121,14 +128,18 @@ public class SuggestionServiceImpl implements SuggestionService {
                                 suggestionDTO.getPServiceIds(),
                                 toIdList(getAttachedPServices(optSuggestion.get())));
 
+        log.debug("Suggestion with id: {} is updated", suggestionDTO.getId());
+
         return SuggestionDTO.from(suggestion, toIdList(getAttachedPServices(suggestion)));
     }
 
     @Override
     public void deleteSuggestion(Number id) {
+        log.debug("SuggestionServiceImpl.deleteSuggestion(Number id) was invoked");
         Optional<Suggestion> optSuggestion = suggestionDAO.find(id);
 
         if (!optSuggestion.isPresent()) {
+            log.error("Suggestion with id: {} not found", id);
             throw new RequestException("Suggestion with id " + id + " not found", HttpStatus.NOT_FOUND);
         }
 
@@ -136,6 +147,8 @@ public class SuggestionServiceImpl implements SuggestionService {
         toIdList(getAttachedPServices(suggestion)).forEach(i -> suggestionDAO.deletePossibleService(id, i));
 
         suggestionDAO.delete(suggestion);
+
+        log.debug("Suggestion with id: {} is deleted", id);
     }
 
     private List<PossibleService> getAttachedPServices(Suggestion suggestion) {
@@ -143,6 +156,8 @@ public class SuggestionServiceImpl implements SuggestionService {
     }
 
     private void updateAttachedPServices(Number suggestionId, List<Long> newServices, List<Long> oldServices) {
+        log.debug(
+                "SuggestionServiceImpl.updateAttachedPServices(Number suggestionId, List<Long> newServices, List<Long> oldServices) was invoked");
         for (Long id : newServices) {
             if (!oldServices.contains(id)) {
                 suggestionDAO.addPossibleService(suggestionId, id);
@@ -174,8 +189,10 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public Map<Long, List<DiscountSuggestionDTO>> getSuggestionsRelatedToTicketClasses(Map<Long, List<TicketClass>> relatedToTripsTicketClasses) {
-        logger.debug("get all suggestion that belong to ticket classes that relates to trips "
-                     + relatedToTripsTicketClasses.keySet());
+        log.debug(
+                "SuggestionServiceImpl.getSuggestionsRelatedToTicketClasses(Map<Long, List<TicketClass>> relatedToTripsTicketClasses was invoked");
+        log.debug("get all suggestion that belong to ticket classes that relates to trips "
+                  + relatedToTripsTicketClasses.keySet());
 
         Map<Long, List<Suggestion>> relatedSuggestions = getAllSuggestionBelongToTicketClasses(
                 relatedToTripsTicketClasses);
@@ -198,17 +215,16 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public DiscountSuggestionDTO createDiscountForSuggestion(DiscountSuggestionDTO suggestionDTO, Number userId) {
-        logger.debug("Create discount for suggestion " + suggestionDTO.getSuggestionId());
+        log.debug(
+                "SuggestionServiceImpl.createDiscountForSuggestion(DiscountSuggestionDTO suggestionDTO, Number userId) was invoked");
+        log.debug("Create discount for suggestion " + suggestionDTO.getSuggestionId());
 
         Suggestion suggestion = getSuggestion(suggestionDTO, userId);
-
         DiscountDTO discountDTO = discountService.saveDiscount(suggestionDTO.getDiscountDTO());
-
         suggestion.setDiscountId(discountDTO.getDiscountId());
         suggestionDAO.save(suggestion);
 
         TicketClass ticketClass = ticketClassService.find(suggestion.getClassId());
-
         List<ServiceDescr> serviceDescrs = serviceDAO.getAllServicesBelongToSuggestions(Collections.singletonList(
                 suggestion.getSuggestionId()))
                                                      .get(suggestion.getSuggestionId());
@@ -223,18 +239,16 @@ public class SuggestionServiceImpl implements SuggestionService {
 
     @Override
     public DiscountSuggestionDTO deleteDiscountForSuggestion(Number discountId, Number userId) {
+        log.debug("SuggestionServiceImpl.deleteDiscountForSuggestion(Number discountId, Number userId) was invoked");
         Optional<Suggestion> optionalSuggestion = suggestionDAO.getSuggestionByDiscount(userId, discountId);
 
         if (!optionalSuggestion.isPresent()) {
-            logger.error("No such discount with id " + discountId);
-
+            log.error("No such discount with id {}", discountId);
             throw new RequestException("No such discount", HttpStatus.NOT_FOUND);
         }
 
         Suggestion suggestion = optionalSuggestion.get();
-
         TicketClass ticketClass = ticketClassService.find(suggestion.getClassId());
-
         List<ServiceDescr> serviceDescrs = serviceDAO.getAllServicesBelongToSuggestions(Collections.singletonList(
                 suggestion.getSuggestionId()))
                                                      .get(suggestion.getSuggestionId());
@@ -258,6 +272,13 @@ public class SuggestionServiceImpl implements SuggestionService {
                                                   List<DiscountDTO> discountsDTO,
                                                   Map<Long, List<DiscountSuggestionDTO>> relatedToTripSuggestion,
                                                   Long tripId) {
+        log.debug(
+                "SuggestionServiceImpl.createSuggestionDTOsBelongToTrip(Map<Long, List<TicketClass>> relatedToTripsTicketClasses,\n"
+                + "                                                  Map<Long, List<Suggestion>> relatedSuggestions,\n"
+                + "                                                  Map<Long, List<ServiceDescr>> relationServices,\n"
+                + "                                                  List<DiscountDTO> discountsDTO,\n"
+                + "                                                  Map<Long, List<DiscountSuggestionDTO>> relatedToTripSuggestion,\n"
+                + "                                                  Long tripId) was invoked");
         List<TicketClass> ticketClasses = relatedToTripsTicketClasses.get(tripId);
         List<DiscountSuggestionDTO> allDiscountSuggestionDTOsRelatedToTrip = relatedToTripSuggestion.computeIfAbsent(
                 tripId,
@@ -281,6 +302,7 @@ public class SuggestionServiceImpl implements SuggestionService {
     }
 
     private List<DiscountDTO> getDiscountDTOs(Map<Long, List<Suggestion>> relatedSuggestions) {
+        log.debug("SuggestionServiceImpl.getDiscountDTOs(Map<Long, List<Suggestion>> relatedSuggestion) was invoked");
         return discountService.getDiscountDTOs(relatedSuggestions.values()
                                                                  .stream()
                                                                  .flatMap(Collection::stream)
@@ -305,12 +327,13 @@ public class SuggestionServiceImpl implements SuggestionService {
     }
 
     private Suggestion getSuggestion(DiscountSuggestionDTO simpleSuggestionDTO, Number userId) {
+        log.debug(
+                "SuggestionServiceImpl.getSuggestion(DiscountSuggestionDTO simpleSuggestionDTO, Number userId) was invoked");
         Optional<Suggestion> optionalSuggestion
                 = suggestionDAO.findSuggestionBelongToCarrier(simpleSuggestionDTO.getSuggestionId(), userId);
 
         if (!optionalSuggestion.isPresent()) {
-            logger.error("No such suggestion with id " + simpleSuggestionDTO.getSuggestionId());
-
+            log.error("No such suggestion with id {}", simpleSuggestionDTO.getSuggestionId());
             throw new RequestException("No such suggestion with id " + simpleSuggestionDTO.getSuggestionId(),
                                        HttpStatus.NOT_FOUND);
         }
@@ -318,8 +341,7 @@ public class SuggestionServiceImpl implements SuggestionService {
         Suggestion suggestion = optionalSuggestion.get();
 
         if (suggestion.getDiscountId() != null) {
-            logger.error("Discount already exist for suggestion " + suggestion.getSuggestionId());
-
+            log.error("Discount already exists for suggestion with id{}", suggestion.getSuggestionId());
             throw new RequestException("Discount already exist", HttpStatus.CONFLICT);
         }
         return suggestion;
