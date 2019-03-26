@@ -102,6 +102,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
      */
     @Override
     public void deleteAllTicketsOfTicketClass(Long id) {
+        log.debug("Deleting all tickets of ticket class (id = {})", id);
         getJdbcTemplate().update(DELETE_ALL_TICKETS_OF_TICKET_CLASS, id);
     }
 
@@ -157,6 +158,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
 
     @Override
     public void buyTicket(Ticket ticket, User user) {
+        log.debug("Buying ticket with id = {}, passenger id = {}", ticket.getTicketId(), user.getUserId());
         ticket.setPassengerId(user.getUserId());
         update(ticket);
     }

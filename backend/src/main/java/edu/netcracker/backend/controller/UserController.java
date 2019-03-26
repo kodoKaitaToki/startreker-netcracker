@@ -19,7 +19,7 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @PreAuthorize("hasAuthority('ROLE_USER')")
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/api/v1/user/bought-tickets")
     public BoughtTicketDTO buyTicket(@Valid @RequestBody BoughtTicketDTO boughtTicketDTO) {
         return userService.buyTicket(boughtTicketDTO);
