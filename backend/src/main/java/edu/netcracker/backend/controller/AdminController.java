@@ -49,7 +49,7 @@ public class AdminController {
     public String getUsersIncreasingPerPeriod(@RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
                                               @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
 
-        Map<LocalDateTime, Integer> map
+        Map<LocalDateTime, Long> map
                 = adminService.getUsersIncreasingPerPeriod(convertToLocalDateTimeViaInstant(from),
                                                            convertToLocalDateTimeViaInstant(to));
 
@@ -62,7 +62,7 @@ public class AdminController {
             @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
             @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
 
-        Map<LocalDateTime, Integer> map = adminService.getCarriersIncreasingPerPeriod(convertToLocalDateTimeViaInstant(
+        Map<LocalDateTime, Long> map = adminService.getCarriersIncreasingPerPeriod(convertToLocalDateTimeViaInstant(
                 from), convertToLocalDateTimeViaInstant(to));
 
         return new Gson().toJson(map);
@@ -74,7 +74,7 @@ public class AdminController {
             @RequestParam("from") @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
             @RequestParam("to") @DateTimeFormat(pattern = "yyyy-MM-dd") Date to) {
 
-        Map<LocalDateTime, Integer> map = adminService.getLocationsIncreasingPerPeriod(convertToLocalDateTimeViaInstant(
+        Map<LocalDateTime, Long> map = adminService.getLocationsIncreasingPerPeriod(convertToLocalDateTimeViaInstant(
                 from), convertToLocalDateTimeViaInstant(to));
 
         return new Gson().toJson(map);

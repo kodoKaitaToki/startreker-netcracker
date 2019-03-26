@@ -3,12 +3,14 @@ package edu.netcracker.backend.dao;
 import edu.netcracker.backend.message.response.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 public interface StatisticsDAO {
 
     List<TripDistributionElement> getTripsStatistics();
+
     List<ServiceDistributionElement> getServicesDistribution();
 
     CarrierRevenueResponse getServiceSalesStatistics(long carrierId);
@@ -46,4 +48,16 @@ public interface StatisticsDAO {
     List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByWeek(long serviceId, LocalDate from, LocalDate to);
 
     List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByMonth(long serviceId, LocalDate from, LocalDate to);
+
+    Map<Float, Long> getCosts(LocalDateTime from, LocalDateTime to);
+
+    Map<Float, Long> getCostsByCarrier(Number carrierId, LocalDateTime from, LocalDateTime to);
+
+    Map<LocalDateTime, Long> getUsersIncreasingByRoleIdPerPeriod(Number id,
+                                                                 LocalDateTime from,
+                                                                 LocalDateTime to);
+
+    Map<LocalDateTime, Long> getLocationsIncreasingPerPeriod(LocalDateTime from, LocalDateTime to);
+
+    Map<LocalDateTime, Long> getUsersIncreasingPerPeriod(LocalDateTime from, LocalDateTime to);
 }
