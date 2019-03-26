@@ -53,7 +53,7 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
   }
 
   buy(ticket: BookedTicket){
-    ticket.is_bought = true;
-    // this.cartService.buyTicket().subscribe((resp: HttpResponse<any>) => ticket.is_bought = true)
+    this.cartService.buyTicket(ticket).subscribe((resp: HttpResponse<any>) => ticket.is_bought = true),
+    error => console.log(error.error.message);
   }
 }
