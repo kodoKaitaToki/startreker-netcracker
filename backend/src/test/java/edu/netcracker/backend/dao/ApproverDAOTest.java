@@ -1,5 +1,6 @@
 package edu.netcracker.backend.dao;
 
+import edu.netcracker.backend.dao.impl.ApproverDAOImpl;
 import edu.netcracker.backend.model.User;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class ApproverDAOTest {
     private final int ROLE_APPROVER_ID = 4;
 
     @Autowired
-    ApproverDAO approverDAO;
+    ApproverDAOImpl approverDAO;
 
     @Autowired
     RoleDAO roleDAO;
