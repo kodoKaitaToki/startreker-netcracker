@@ -67,16 +67,16 @@ export class ArchiveComponent implements OnInit {
                       .subscribe(
                         (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
-                          this.showMsgSrvc.showMessage(this.messageService, 
+                          this.showMsgSrvc.showMessage(this.messageService,
                                                         'success',
                                                         'The service was updated',
                                                         'It was sent for approvement');
                           this.getArchievedServices();
                           this.isForUpdateAlertMessage = false;
                         },
-                        error => this.showMsgSrvc.showMessage(this.messageService, 
+                        error => this.showMsgSrvc.showMessage(this.messageService,
                                                               'error',
-                                                              'Error', 
+                                                              'Error',
                                                               error.error.message));
   }
 

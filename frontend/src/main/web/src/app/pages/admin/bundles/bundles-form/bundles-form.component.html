@@ -16,38 +16,56 @@
           <span>
             From:
           </span>
-            <p-calendar
-            dateFormat="yy-mm-dd"
-            [ngClass]="{
-              'is-invalid':form.get('start_date').touched && form.get('start_date').invalid,
-              'is-valid': form.get('start_date').valid}"
-            formControlName="start_date"
-            placeholder="Start Date">
-            </p-calendar>
+            <input
+              type="date"
+              id="start_date"
+              class="form-control datepicker"
+              formControlName="start_date"
+              [ngClass]="{
+                'is-invalid':form.get('start_date').touched && form.get('start_date').invalid,
+                'is-valid': form.get('start_date').valid
+              }"
+            >
 
           <span *ngIf="form.get('start_date').touched && form.get('start_date').invalid"
                 class="invalid-feedback">
             Input the correct date
           </span>
+          <span *ngIf="form.get('start_date').hasError('notEarlierThanCurrentDate')"
+                class="invalid-feedback">
+            Date can't be earlier than today
+          </span>
         </div>
 
         <div class="form-group col-md-6">
-            <span>
-              To:
-            </span>
-            <p-calendar
-            dateFormat="yy-mm-dd"
+          <span>
+            To:
+          </span>
+          <input
+            type="date"
+            id="finish_date"
+            class="form-control datepicker"
+            formControlName="finish_date"
             [ngClass]="{
               'is-invalid':form.get('finish_date').touched && form.get('finish_date').invalid,
-              'is-valid': form.get('finish_date').valid}"
-            formControlName="finish_date"
-            placeholder="Finish Date">
-            </p-calendar>
-            <span *ngIf="form.get('finish_date').touched && form.get('finish_date').invalid"
-                  class="invalid-feedback">
-              Input the correct date
-            </span>
-          </div>
+              'is-valid': form.get('finish_date').valid
+            }"
+          >
+          <span *ngIf="form.get('finish_date').touched && form.get('finish_date').invalid"
+                class="invalid-feedback">
+            Input the correct date
+          </span>
+          <span *ngIf="form.get('finish_date').hasError('notEarlierThanCurrentDate')"
+                class="invalid-feedback">
+            Date can't be earlier than today
+          </span>
+        </div>
+
+        <div *ngIf="form.hasError('periodError')">
+          <span style="color: red">
+              To date must be greater than from date
+          </span>
+        </div>
       </div>
       
       <div class="form-row">
@@ -196,16 +214,23 @@
             </ng-container>
           </tbody>
         </table>
+
+        <div *ngIf="form.hasError('emptyTable')">
+          <span style="color: red">
+              The table must not be empty
+          </span>
+        </div>
       </ng-container>
     </div>
   </div>
 
-
-  <div class="row justify-content-around">
-      <button class="btn-success btn col-md-4"
+  <footer class="row form-footer justify-content-around">
+    <div class="col-md-4">
+      <button class="btn-success btn btn-block"
       type="submit"
       [disabled]="form.invalid">
         Add
       </button>
-  </div>
+    </div>
+  </footer>
 </form>

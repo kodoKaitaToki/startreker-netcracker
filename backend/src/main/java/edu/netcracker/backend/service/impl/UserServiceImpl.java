@@ -13,6 +13,7 @@ import edu.netcracker.backend.model.PossibleService;
 import edu.netcracker.backend.model.Role;
 import edu.netcracker.backend.model.Ticket;
 import edu.netcracker.backend.model.User;
+import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.security.UserInformationHolder;
 import edu.netcracker.backend.service.UserService;
 import edu.netcracker.backend.utils.PasswordGeneratorUtils;
@@ -49,6 +50,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private PossibleServiceDAO possibleServiceDAO;
+
+    @Autowired
+    private SecurityContext securityContext;
 
     @Override
     public void save(User user) {
@@ -203,7 +207,7 @@ public class UserServiceImpl implements UserService {
         Optional<Ticket> optTicket = ticketDAO.find(boughtTicketDTO.getTicketId());
 
         log.debug("Getting user with id {} from UserDAO");
-        Optional<User> optUser = userDAO.find(boughtTicketDTO.getPassengerId());
+        Optional<User> optUser = userDAO.find(setCurUser());
 
         List<PossibleService> possibleServices = new ArrayList<>();
 
@@ -215,7 +219,7 @@ public class UserServiceImpl implements UserService {
 
         if (!optUser.isPresent()) {
             log.error("User with id {} not found", boughtTicketDTO.getTicketId());
-            throw new RequestException(String.format("User with id %s not found", boughtTicketDTO.getPassengerId()),
+            throw new RequestException(String.format("User with id %s not found", setCurUser()),
                                        HttpStatus.NOT_FOUND);
         }
 
@@ -227,7 +231,7 @@ public class UserServiceImpl implements UserService {
                            if (!optPossibleService.isPresent()) {
                                log.error("User with id {} not found", boughtTicketDTO.getTicketId());
                                throw new RequestException(String.format("Possible service with id %s not found",
-                                                                        boughtTicketDTO.getPassengerId()),
+                                                                        setCurUser()),
                                                           HttpStatus.NOT_FOUND);
                            }
 
@@ -258,5 +262,9 @@ public class UserServiceImpl implements UserService {
 
     private boolean oldPasswordNotMatched(String userPassword, String oldPassword) {
         return !passwordEncoder.matches(oldPassword, userPassword);
+    }
+
+    private Integer setCurUser(){
+        return securityContext.getUser().getUserId();
     }
 }

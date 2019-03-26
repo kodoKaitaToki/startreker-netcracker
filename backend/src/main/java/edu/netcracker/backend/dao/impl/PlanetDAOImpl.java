@@ -2,6 +2,7 @@ package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.PlanetDAO;
 import edu.netcracker.backend.model.Planet;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -21,9 +22,11 @@ public class PlanetDAOImpl extends CrudDAOImpl<Planet> implements PlanetDAO {
 
     private final String FIND_ID_BY_PlANET_NAME = "SELECT planet_id FROM planet WHERE planet_name = UPPER(?)";
     private final String FIND_ALL_PLANETS = "SELECT planet_id, planet_name FROM planet ORDER BY planet_name";
+    private static final Logger logger = LoggerFactory.getLogger(ServiceDAOImpl.class);
 
     @Override
     public List<Planet> findAllPlanets() {
+        logger.debug("Getting all planets");
 
         return getJdbcTemplate().query(FIND_ALL_PLANETS,
                 new BeanPropertyRowMapper(Planet.class));
@@ -31,10 +34,10 @@ public class PlanetDAOImpl extends CrudDAOImpl<Planet> implements PlanetDAO {
 
     @Override
     public Long getIdByPlanetName(String planet) {
+        logger.debug("Getting planet by name {}", planet);
+
         return getJdbcTemplate().queryForObject(FIND_ID_BY_PlANET_NAME, new Object[]{planet}, Long.class);
     }
-
-    private static final Logger logger = LoggerFactory.getLogger(ServiceDAOImpl.class);
 
     @Override
     public List<Planet> getAllPlanets() {

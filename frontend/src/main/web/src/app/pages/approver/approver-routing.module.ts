@@ -18,6 +18,10 @@ const routes: Routes = [
     component: ApproverComponent,
     children: [
       {
+        path: '',
+        redirectTo: 'dashboard',
+      },
+      {
         path: 'dashboard',
         component: DashboardComponent,
         children: [
@@ -38,7 +42,6 @@ const routes: Routes = [
           {
             path: '',
             redirectTo: 'open',
-            pathMatch: 'full',
           },
           {
             path: 'open',
@@ -56,8 +59,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            redirectTo: 'open',
-            pathMatch: 'full',
+            redirectTo: 'opened',
           },
           {
             path: 'opened',
@@ -68,10 +70,6 @@ const routes: Routes = [
             component: AssignedComponent
           },
         ]
-      },
-      {
-        path: 'notifications',
-        component: NotificationsComponent
       },
     ]
   },

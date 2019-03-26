@@ -17,13 +17,13 @@ public class SpaceportDAOImpl extends CrudDAOImpl<Spaceport> implements Spacepor
     private final String FIND_BY_PLANET_SQL = "SELECT * FROM spaceport AS s "
                                               + "INNER JOIN planet AS p ON s.planet_id = p.planet_id "
                                               + "WHERE planet_name = ?";
-    private final String FIND_ID_BY_SPACEPORT_NAME =
-            "SELECT spaceport_id FROM spaceport WHERE spaceport_name = LOWER(?) AND planet_id = ?";
+    private final String FIND_ID_BY_SPACEPORT_NAME
+            = "SELECT spaceport_id FROM spaceport WHERE spaceport_name = LOWER(?) AND planet_id = ?";
 
     private final String FIND_SPACEPORTS_OF_PLANET = "SELECT spaceport_id, spaceport_name, creation_date, planet_id\n"
-                                                        + "FROM spaceport\n"
-                                                        + "WHERE planet_id = ?\n"
-                                                        + "ORDER BY spaceport_name";
+                                                     + "FROM spaceport\n"
+                                                     + "WHERE planet_id = ?\n"
+                                                     + "ORDER BY spaceport_name";
 
     @Override
     public List<Spaceport> findByPlanet(String planet) {
@@ -51,15 +51,14 @@ public class SpaceportDAOImpl extends CrudDAOImpl<Spaceport> implements Spacepor
                                                 new Object[]{spaceport, planetId},
                                                 Long.class);
     }
-    
-    public List<Spaceport> findSpaceportsOfPlanet(Integer planetId){
+
+    public List<Spaceport> findSpaceportsOfPlanet(Integer planetId) {
         logger.debug("Querying spaceports for planet_id={}", planetId);
         List<Spaceport> spaceports = new ArrayList<>();
 
-        spaceports.addAll(getJdbcTemplate().query(
-                FIND_SPACEPORTS_OF_PLANET,
-                new Object[]{planetId},
-                getGenericMapper()));
+        spaceports.addAll(getJdbcTemplate().query(FIND_SPACEPORTS_OF_PLANET,
+                                                  new Object[]{planetId},
+                                                  getGenericMapper()));
 
         return spaceports;
     }

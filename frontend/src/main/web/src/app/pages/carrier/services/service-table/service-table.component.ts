@@ -83,7 +83,7 @@ export class ServiceTableComponent implements OnInit {
                         error => console.log(error)
                       );
   }
-  
+
   changeService(service: Service){
     service['service_name'] = this.form.get('service_name').value;
     service['service_descr'] = this.form.get('service_descr').value;

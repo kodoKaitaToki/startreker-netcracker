@@ -113,16 +113,19 @@ const possibleServices = {
 
 const service = {
   services(){
-    return `${baseUrl}api/v1/carrier/service`;
+    return `${baseUrl}api/v1/service`;
   },
   paginServices(){
-    return `${baseUrl}api/v1/carrier/service/pagin`;
+    return `${baseUrl}api/v1/service/pagin`;
   },
   servicesByStatus(){
     return `${baseUrl}api/v1/carrier/service/by-status`;
   },
   servicesAmount(){
     return `${baseUrl}api/v1/carrier/carrier/service/amount`;
+  },
+  reviewService(id: number) {
+    return `${baseUrl}api/v1/service/${id}/review`;
   }
 }
 

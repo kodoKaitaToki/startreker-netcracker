@@ -2,7 +2,8 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {GrowlModule, MessageService, ProgressBarModule} from "primeng/primeng";
+import {GrowlModule, MessageService, ProgressBarModule, CalendarModule} from "primeng/primeng";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import {CarrierRoutingModule} from './carrier-routing.module';
 import {NavbarComponent} from './navbar/navbar.component';
@@ -77,7 +78,8 @@ import { SharedModule } from '../../shared/shared.module';
               MessagesModule,
               TreeModule,
               DialogModule,
-              SharedModule
+              SharedModule,
+              CalendarModule
             ],
             providers: [
               MessageService,

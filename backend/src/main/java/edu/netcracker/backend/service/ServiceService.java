@@ -13,7 +13,9 @@ public interface ServiceService {
     ServiceCRUDDTO addService(ServiceCreateForm serviceCreateForm);
 
     ServiceCRUDDTO updateService(ServiceCRUDDTO serviceDTO);
-    
+
+    List<ServiceCRUDDTO> getServices(Integer from, Integer amount, String status);
+
     List<ServiceCRUDDTO> getServicesOfCarrier(Integer from, Integer amount, String status);
 
     Integer getCarrierServicesAmount(String status);
