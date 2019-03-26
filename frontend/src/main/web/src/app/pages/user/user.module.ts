@@ -28,7 +28,7 @@ import { PurchasePageComponent } from './purchase-page/purchase-page.component';
   ],
   providers: [
     ShowMessageService,
-    MessageService
+    MessageService,
     NgxPaginationModule,
     CheckboxModule
   ]
