@@ -199,8 +199,8 @@ public class TripServiceImpl implements TripService {
                 tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
 
         if (trips.isEmpty()) {
-            log.error("No trips for carrier {}", carrierId);
-            throw new RequestException("Carrier " + carrierId + " does not have any trips", HttpStatus.NOT_FOUND);
+            log.warn("No trips for carrier {}", carrierId);
+            return new ArrayList<>();
         }
 
         List<DiscountTicketClassDTO> ticketClassDTOs = ticketClassService.getTicketClassesRelatedToCarrier(carrierId);
@@ -216,8 +216,8 @@ public class TripServiceImpl implements TripService {
                 tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
 
         if (trips.isEmpty()) {
-            log.error("No trips for carrier {}", carrierId);
-            throw new RequestException("Carrier " + carrierId + " does not have any trips", HttpStatus.NOT_FOUND);
+            log.warn("No trips for carrier {}", carrierId);
+            return new ArrayList<>();
         }
 
         Map<Long, List<DiscountSuggestionDTO>> suggestionsRelatedToTrip =
@@ -305,6 +305,10 @@ public class TripServiceImpl implements TripService {
 
     private List<TripWithArrivalAndDepartureDataDTO> createTripWithArrivalAndDepartureDataAndSuggestionDTOs(List<TripWithArrivalAndDepartureData> trips,
                                                                                                             Map<Long, List<DiscountSuggestionDTO>> suggestionsRelatedToTrips) {
+        if (suggestionsRelatedToTrips.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         List<TripWithArrivalAndDepartureDataDTO> tripDTOs = new ArrayList<>();
 
         for (TripWithArrivalAndDepartureData trip : trips) {
