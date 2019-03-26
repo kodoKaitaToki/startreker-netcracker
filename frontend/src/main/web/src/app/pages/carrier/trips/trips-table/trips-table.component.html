@@ -270,9 +270,20 @@
           <button
           class="btn btn-secondary modal-buttons"
           type="button"
+          [disabled]="trip.ticket_classes === undefined || trip.ticket_classes.length == 0"
           (click)="toggleShowSuggestions(trip)"
           >
             Manage suggestions
+          </button>
+        </div>
+        <div class="col-md-4">
+          <button
+          class="btn btn-secondary modal-buttons"
+          type="button"
+          [disabled]="trip.ticket_classes === undefined || trip.ticket_classes.length == 0"
+          (click)="toggleShowServices(trip)"
+          >
+            Manage possible services
           </button>
         </div>
       </div>
@@ -303,6 +314,20 @@
         <app-suggestions
         [trip]="trip">
         </app-suggestions>
+      </p-dialog>
+      <p-dialog
+        [(visible)]="showPossibleServices"
+        *ngIf="currentServicesTrip === trip"
+        [modal]="true"
+        [style]="{width: '970px'}"
+        [breakpoint]="970"
+        [blockScroll]="true"
+      >
+        <p-header>
+          Possible services
+        </p-header>
+        <app-possible-services>
+        </app-possible-services>
       </p-dialog>
     </li>
   </ul>
