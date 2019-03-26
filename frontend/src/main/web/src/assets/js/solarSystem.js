@@ -10,47 +10,47 @@ var curve, startName, startPoint, sizePoint, finishName, finishPoint;
 
 var planetsInfo =
 {
-  sun: { texture: "https://preview.ibb.co/gADrB7/sol.jpg",
+  sun: { texture: "assets/images/planets/sol.jpg",
     position: 0,
     size: 25
 },
 
-  mercury: { texture: "https://preview.ibb.co/g8ZpjS/mercurio.jpg",
+  mercury: { texture: "assets/images/planets/mercurio.jpg",
     position: -40,
     size: 1
 },
 
-  venus: { texture: "https://preview.ibb.co/i1uE17/venus.jpg",
+  venus: { texture: "assets/images/planets/venus.jpg",
     position: 50,
     size: 2
 },
 
-  earth: { texture: "https://preview.ibb.co/fwZWg7/tierra4.jpg",
+  earth: { texture: "assets/images/planets/tierra4.jpg",
     position: -60,
     size: 2
 },
 
-  mars: { texture: "https://preview.ibb.co/gQLOB7/marte.jpg",
+  mars: { texture: "assets/images/planets/marte.jpg",
     position: 70,
     size: 1
 },
-  jupiter: { texture: "https://preview.ibb.co/hAAjJn/jupiter.jpg",
+  jupiter: { texture: "assets/images/planets/jupiter.jpg",
     position: -100,
     size: 10
 },
-  saturn: { texture: "https://image.ibb.co/j2r8dn/Saturn.jpg",
+  saturn: { texture: "assets/images/planets/Saturn.jpg",
     position: 125,
     size: 9
 },
-  uranus: { texture: "https://preview.ibb.co/kthWyn/uranus.jpg",
+  uranus: { texture: "assets/images/planets/uranus.jpg",
     position: -155,
     size: 9
 },
-  neptune: { texture: "https://preview.ibb.co/cZ1DB7/Neptune.jpg",
+  neptune: { texture: "assets/images/planets/Neptune.jpg",
     position: 180,
     size: 9
 },
-  pluto: { texture: "https://preview.ibb.co/cZ1DB7/Neptune.jpg",
+  pluto: { texture: "assets/images/planets/Neptune.jpg",
     position: -200,
     size: 2
 } };

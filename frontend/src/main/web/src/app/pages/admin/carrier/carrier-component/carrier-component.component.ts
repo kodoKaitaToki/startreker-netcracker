@@ -129,6 +129,7 @@ export class CarrierComponentComponent implements OnInit {
                           this.getCarriersPagin();
                           this.form.reset({is_activated: true});
                           this.butGroup.addBut = false;
+                          this.carrierNumber += 1;
                           this.showMsgSrvc.showMessage(this.messageService, 
                                                       'success', 
                                                       'New carrier', 

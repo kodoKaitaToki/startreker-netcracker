@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { ApiUserService } from '../services/auth.service';
+import { ApiUserService } from '../../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
@@ -9,7 +9,6 @@ export class AuthGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot){
       const currentUser = JSON.parse(localStorage.getItem('userdata'));
-      let result = false;
       if (currentUser) {
           for(let role of currentUser.roles){
             if(route.data.roles == role) return true;

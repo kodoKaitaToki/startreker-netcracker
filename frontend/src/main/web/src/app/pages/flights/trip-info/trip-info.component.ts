@@ -1,5 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Trip} from "../shared/models/trip.model";
+import {Trip} from "../../../shared/model/trip.model";
 
 @Component({
   selector: 'app-trip-info',

@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {map} from "rxjs/operators";
-import {Api, checkToken, HttpOptionsAuthorized} from "../../../modules/api";
-import {HistoryElement} from "./historyelement.model";
-import {Triphistorymodel} from "./triphistorymodel.model";
-import {Servicehistorymodel} from "./servicehistorymodel.model";
+import {Api, checkToken, HttpOptionsAuthorized} from "../../../../modules/api";
+import { HistoryElement } from '../model/historyelement.model';
+import { Triphistorymodel } from '../model/triphistorymodel.model';
+import { Servicehistorymodel } from '../model/servicehistorymodel.model';
 
 @Injectable({
   providedIn: 'root'

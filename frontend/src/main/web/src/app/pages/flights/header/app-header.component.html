@@ -14,17 +14,24 @@
           <a class="nav-link" routerLink="/">
             <!--<span class="sr-only">(current)</span>-->
           </a>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="btn">
           <div class="d-inline-block">
             <a class="slide-btn" routerLink="/login">
               <span>Log in</span>
             </a>
           </div>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="btn">
           <div class="d-inline-block">
             <a class="slide-btn" routerLink="/sign-up">
               <span>Sign up</span>
+            </a>
+          </div>
+        </li>
+        <li class="nav-item" *ngIf="!btn">
+          <div class="d-inline-block">
+            <a class="slide-btn" (click)="logOut()">
+              <span>Log out</span>
             </a>
           </div>
         </li>

@@ -95,8 +95,7 @@ export class CommonChartComponent implements OnInit{
 		let firstDateTitle = this.datePipe.transform(this.curStartDate);
 		let secondDateTitle = this.datePipe.transform(this.curFinishDate);
 		this.title = firstDateTitle + ' - ' + secondDateTitle;
-
-		this.getCosts(this.setDate(this.curStartDate), this.setDate(this.curFinishDate));
+		this.getCosts(this.curStartDate.toISOString(), this.curFinishDate.toISOString());
 	}
 
 
@@ -121,10 +120,10 @@ export class CommonChartComponent implements OnInit{
 
   onSelect(event){
     if(this.curFinishDate < event){
-		this.curFinishDate = undefined;
+			this.curFinishDate = undefined;
     }
-	this.minDate = event;
-	this.checkBtn();
+		this.minDate = event;
+		this.checkBtn();
   }
 
   checkBtn(){
