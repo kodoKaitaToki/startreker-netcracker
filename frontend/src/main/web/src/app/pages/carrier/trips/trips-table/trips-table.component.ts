@@ -2,6 +2,8 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Trip} from '../shared/model/trip';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { DateValidator } from '../trips.helper';
+import { TripTransfer } from '../../trip-transfer';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-trips-table',
@@ -21,6 +23,8 @@ export class TripsTableComponent implements OnInit {
   currentTripForUpdate: Trip;
 
   currentTripForSuggestionEdit: Trip;
+
+  currentServicesTrip: Trip;
 
   currentTicketClassForUpdate: any;
 
@@ -56,7 +60,11 @@ export class TripsTableComponent implements OnInit {
 
   showSuggestions: boolean = false;
 
-  constructor() {
+  showPossibleServices: boolean = false;
+
+  constructor(
+    private router: Router,
+    private tripTransfer: TripTransfer) {
 
   }
 
@@ -80,6 +88,11 @@ export class TripsTableComponent implements OnInit {
   toggleShowSuggestions(trip) {
     this.showSuggestions = !this.showSuggestions;
     this.currentTripForSuggestionEdit = trip;
+  }
+
+  toggleShowServices(trip: Trip) {
+    this.tripTransfer.storage = trip;
+    this.router.navigate(["carrier/possible-services", trip.trip_id]);
   }
 
   setFormInDefault() {
