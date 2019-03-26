@@ -4,7 +4,7 @@ import edu.netcracker.backend.dao.annotations.Attribute;
 import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.dao.impl.CrudDAOImpl;
 import lombok.Getter;
-import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanInstantiationException;
 import org.springframework.jdbc.support.KeyHolder;
 
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Math.toIntExact;
 
-@Log4j2
+@Slf4j(topic = "log")
 @Getter
 public class EntityProcessorImpl<T> implements EntityProcessor<T> {
 
@@ -67,7 +67,7 @@ public class EntityProcessorImpl<T> implements EntityProcessor<T> {
                                      try {
                                          return var.get(entity);
                                      } catch (IllegalAccessException e) {
-                                         log.error(e);
+                                         log.error(e.getMessage());
                                          return null;
                                      }
                                  })
@@ -78,7 +78,7 @@ public class EntityProcessorImpl<T> implements EntityProcessor<T> {
         try {
             objects.add(field.get(entity));
         } catch (IllegalAccessException e) {
-            log.error(e);
+            log.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }

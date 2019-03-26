@@ -17,18 +17,13 @@ import edu.netcracker.backend.service.SuggestionService;
 import edu.netcracker.backend.service.TicketClassService;
 import edu.netcracker.backend.service.TripService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -145,6 +140,9 @@ public class TripServiceImpl implements TripService {
         Optional<Trip> optionalTrip = tripDAO.find(tripRequest.getTripId());
 
         if (!optionalTrip.isPresent()) {
+            log.warn("Carrier [id: {}] trying to patch non-existing trip [id: {}]",
+                     requestUser.getUserId(),
+                     tripRequest.getTripId());
             throw new RequestException("Illegal operation", HttpStatus.NOT_FOUND);
         } else {
             return updateTrip(requestUser, optionalTrip.get(), tripRequest);
@@ -158,11 +156,20 @@ public class TripServiceImpl implements TripService {
             return new ArrayList<>();
         }
 
+        log.info("Carrier [id: {}] trying to find own's trips by status [{}], paginate offset [{}], limit [{}]",
+                 requestUser.getUserId(),
+                 status,
+                 offset,
+                 limit);
         return tripDAO.findAllByCarrierAndStatus(requestUser.getUserId(), state.getDatabaseValue(), offset, limit);
     }
 
     @Override
     public List<Trip> findCarrierTrips(User requestUser, Long offset, Long limit) {
+        log.info("Carrier [id: {}] trying to find own's trips, paginate offset [{}], limit [{}]",
+                 requestUser.getUserId(),
+                 offset,
+                 limit);
         return tripDAO.findAllByCarrier(requestUser.getUserId(), TripState.REMOVED.getDatabaseValue(), offset, limit);
     }
 
@@ -176,7 +183,7 @@ public class TripServiceImpl implements TripService {
 
         if (trips.isEmpty()) {
             log.error("No trips for carrier {}", carrierId);
-            throw new RequestException("Carrier " + carrierId +" does not have any trips", HttpStatus.NOT_FOUND);
+            throw new RequestException("Carrier " + carrierId + " does not have any trips", HttpStatus.NOT_FOUND);
         }
 
         List<DiscountTicketClassDTO> ticketClassDTOs = ticketClassService.getTicketClassesRelatedToCarrier(carrierId);
@@ -193,7 +200,7 @@ public class TripServiceImpl implements TripService {
 
         if (trips.isEmpty()) {
             log.error("No trips for carrier {}", carrierId);
-            throw new RequestException("Carrier " + carrierId +" does not have any trips", HttpStatus.NOT_FOUND);
+            throw new RequestException("Carrier " + carrierId + " does not have any trips", HttpStatus.NOT_FOUND);
         }
 
         Map<Long, List<DiscountSuggestionDTO>> suggestionsRelatedToTrip =
@@ -208,12 +215,24 @@ public class TripServiceImpl implements TripService {
     @Override
     public List<Trip> findApproverTrips(User requestUser, String status, Long offset, Long limit) {
         TripState state = TripState.getState(status);
+        log.info("Approver [id: {}] trying to find trips in status [{}], paginate offset [{}], limit [{}]",
+                 requestUser.getUserId(),
+                 status,
+                 offset,
+                 limit);
         if (state == TripState.OPEN) {
             return tripDAO.findAllByStatus(state.getDatabaseValue(), offset, limit);
         }
         if (state == TripState.ASSIGNED) {
             return tripDAO.findAllByApproverByStatus(requestUser.getUserId(), state.getDatabaseValue(), offset, limit);
         }
+
+        log.warn("Approver [id: {}] trying to find trips in illegal status [{}], paginate offset [{}], limit [{}]",
+                 requestUser.getUserId(),
+                 status,
+                 offset,
+                 limit);
+
         throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
     }
 
@@ -221,6 +240,12 @@ public class TripServiceImpl implements TripService {
         TripState desiredState = TripState.getState(tripRequest.getStatus());
 
         if (!desiredState.equals(trip.getTripState())) {
+            log.info("Carrier [id: {}] trying to switch trip [id: {}] state from {} to {}",
+                     requestUser.getUserId(),
+                     trip.getTripId(),
+                     trip.getTripState()
+                         .getName(),
+                     tripRequest.getStatus());
             startStatusChange(requestUser, trip, desiredState, tripRequest);
         }
 
@@ -231,6 +256,13 @@ public class TripServiceImpl implements TripService {
 
     private void startStatusChange(User requestUser, Trip trip, TripState tripState, TripRequest tripRequest) {
         if (!changeStatus(requestUser, tripState, tripRequest, trip)) {
+            log.warn("Carrier [id: {}] trying illegally to switch trip [id: {}] state from {} to {}",
+                     Objects.requireNonNull(requestUser)
+                            .getUserId(),
+                     trip.getTripId(),
+                     trip.getTripState()
+                         .getName(),
+                     tripRequest.getStatus());
             throw new RequestException("Illegal operation", HttpStatus.FORBIDDEN);
         }
     }
@@ -240,9 +272,17 @@ public class TripServiceImpl implements TripService {
             || newTripState == null
             || trip.getTripState() == null
             || !newTripState.isStateChangeAllowed(trip, requestUser)) {
+
             return false;
         }
 
+        log.info("Carrier [id: {}] switching trip [id: {}] state from {} to {}",
+                 Objects.requireNonNull(requestUser)
+                        .getUserId(),
+                 trip.getTripId(),
+                 trip.getTripState()
+                     .getName(),
+                 tripRequest.getStatus());
         return newTripState.switchTo(applicationContext, trip, tripRequest, requestUser);
     }
 

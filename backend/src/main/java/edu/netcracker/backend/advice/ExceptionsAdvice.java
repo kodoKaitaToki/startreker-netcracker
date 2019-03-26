@@ -3,6 +3,7 @@ package edu.netcracker.backend.advice;
 import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.message.response.RequestExceptionMessage;
 import edu.netcracker.backend.message.response.ValidationExceptionMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -19,60 +20,68 @@ import javax.validation.ConstraintViolationException;
 import java.util.List;
 
 @RestControllerAdvice
+@Slf4j(topic = "log")
 public class ExceptionsAdvice {
 
     @ExceptionHandler(RequestException.class)
-    public ResponseEntity<RequestExceptionMessage> handleException(RequestException ex){
-        return  ResponseEntity.
-                status(ex.getHttpStatus()).
-                body(RequestExceptionMessage.createRequestExceptionMessage(ex));
+    public ResponseEntity<RequestExceptionMessage> handleException(RequestException ex) {
+        return ResponseEntity.
+                                     status(ex.getHttpStatus())
+                             .
+                                     body(RequestExceptionMessage.createRequestExceptionMessage(ex));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<RequestExceptionMessage> handleException(MethodArgumentNotValidException ex){
+    public ResponseEntity<RequestExceptionMessage> handleException(MethodArgumentNotValidException ex) {
 
-        Class errorClass = ex.getParameter().getNestedParameterType();
+        Class errorClass = ex.getParameter()
+                             .getNestedParameterType();
 
         BindingResult result = ex.getBindingResult();
         List<FieldError> fieldErrors = result.getFieldErrors();
 
-        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ValidationExceptionMessage.
-                createValidationExceptionMessage(fieldErrors, errorClass));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(ValidationExceptionMessage.
+                                                                     createValidationExceptionMessage(fieldErrors,
+                                                                                                      errorClass));
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<RequestExceptionMessage> handleException(ConstraintViolationException ex){
-        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(requestExceptionMessage(ex,
-                HttpStatus.BAD_REQUEST));
+    public ResponseEntity<RequestExceptionMessage> handleException(ConstraintViolationException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                             .body(requestExceptionMessage(ex, HttpStatus.BAD_REQUEST));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<RequestExceptionMessage> handleException(BadCredentialsException ex){
-        return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(requestExceptionMessage(ex,
-                HttpStatus.UNAUTHORIZED));
+    public ResponseEntity<RequestExceptionMessage> handleException(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                             .body(requestExceptionMessage(ex, HttpStatus.UNAUTHORIZED));
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<RequestExceptionMessage> handleException(AccessDeniedException ex){
-        return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(requestExceptionMessage(ex,
-                HttpStatus.UNAUTHORIZED));
+    public ResponseEntity<RequestExceptionMessage> handleException(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                             .body(requestExceptionMessage(ex, HttpStatus.UNAUTHORIZED));
     }
 
     @ExceptionHandler(LockedException.class)
-    public ResponseEntity<RequestExceptionMessage> handleException(LockedException ex){
-        return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(requestExceptionMessage(ex,
-                HttpStatus.UNAUTHORIZED));
+    public ResponseEntity<RequestExceptionMessage> handleException(LockedException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                             .body(requestExceptionMessage(ex, HttpStatus.UNAUTHORIZED));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<RequestExceptionMessage> handleException(Exception ex){
+    public ResponseEntity<RequestExceptionMessage> handleException(Exception ex) {
         RequestExceptionMessage message = new RequestExceptionMessage();
         message.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         message.setError(HttpStatus.INTERNAL_SERVER_ERROR.name());
         message.setTimestamp(System.currentTimeMillis());
         message.setMessage("Something went wrong");
 
-        return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+        log.error(ex.getMessage(), ex);
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                             .body(message);
     }
 
     private RequestExceptionMessage requestExceptionMessage(Exception e, HttpStatus httpStatus) {
