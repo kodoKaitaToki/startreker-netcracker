@@ -73,8 +73,12 @@ public class ReadTripsDTO {
         dto.arrivalDate = getStringFromDate(trip.getArrivalDate());
         dto.creationDate = getStringFromDate(trip.getCreationDate());
         dto.reply = "";
-        if (!trip.getReplies().isEmpty()) {
-            dto.reply = trip.getReplies().get(trip.getReplies().size() - 1).getReportText();
+        if (trip.getReplies() != null && !trip.getReplies()
+                                              .isEmpty()) {
+            dto.reply = trip.getReplies()
+                            .get(trip.getReplies()
+                                     .size() - 1)
+                            .getReportText();
         }
         dto.ticketClasses = new ArrayList<>();
 
