@@ -169,7 +169,7 @@ public class ServiceServiceImpl implements ServiceService {
     public ServiceCRUDDTO reviewService(ServiceCRUDDTO serviceDTO, Integer approverId) {
         String state = serviceDTO.getServiceStatus();
 
-        boolean reviewOnIllegalState = (state != ServiceStatus.UNDER_CLARIFICATION.toString()
+        boolean reviewOnIllegalState = (!Objects.equals(state, ServiceStatus.UNDER_CLARIFICATION.toString())
                 && serviceDTO.getReplyText() != null
                 && serviceDTO.getReplyText()
                 .length() > 0);
