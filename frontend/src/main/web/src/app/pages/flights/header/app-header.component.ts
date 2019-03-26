@@ -7,9 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppHeaderComponent implements OnInit {
 
+  btn: boolean = true;
+
   constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {this.btn = (localStorage.getItem('rt') === null ? true : false);}
 
 }

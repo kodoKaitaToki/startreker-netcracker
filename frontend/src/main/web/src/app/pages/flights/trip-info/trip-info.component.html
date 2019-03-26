@@ -25,7 +25,9 @@
       </div>
       <div class="col col-3">Price</div>
     </div>
-  <app-ticket-class *ngFor="let ticket_class of trip.ticket_classes" [ticket_class]="ticket_class"></app-ticket-class>
+  <app-ticket-class *ngFor="let ticket_class of trip.ticket_classes" 
+                    [ticket_class]="ticket_class"
+                    [trip]="trip"></app-ticket-class>
 </div>
 
 

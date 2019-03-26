@@ -245,7 +245,7 @@ public class TripServiceImplTest {
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
-    @Test
+    @Test(expected = RequestException.class)
     public void openToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(openTrip));
         tripService.updateTrip(carrier, removedTripDTO);
@@ -291,7 +291,7 @@ public class TripServiceImplTest {
         tripService.updateTrip(approver, underClarificationTripDTO);
     }
 
-    @Test
+    @Test(expected = RequestException.class)
     public void assignedToRemovedTest() {
         when(tripDAOMock.find(1L)).thenReturn(Optional.of(assignedTrip));
         tripService.updateTrip(carrier, removedTripDTO);

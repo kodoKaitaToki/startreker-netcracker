@@ -28,8 +28,8 @@ public class PlanetDAOImplTest {
     List<Planet> planets = new ArrayList<>();
 
     @Test
-    public void findAllPlanets() {
-        planets = planetDAO.findAllPlanets();
+    public void getAllPlanets() {
+        planets = planetDAO.getAllPlanets();
         assertFalse(planets.isEmpty());
     }
 }

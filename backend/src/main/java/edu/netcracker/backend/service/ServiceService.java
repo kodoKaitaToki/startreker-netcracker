@@ -18,6 +18,8 @@ public interface ServiceService {
 
     List<ServiceCRUDDTO> getServicesOfCarrier(Integer from, Integer amount, String status);
 
+    Integer getCarrierServicesAmount(String status);
+
     List<ServiceCRUDDTO> getServicesForApprover(Integer from, Integer number, String status, Integer approverId);
 
     ServiceCRUDDTO reviewService(ServiceCRUDDTO serviceDTO, Integer approverId);

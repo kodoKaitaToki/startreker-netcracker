@@ -77,7 +77,7 @@ export class ViewsService {
 
   public getCarrierTrips() {
 
-    return this.http.get<any>(this.actionUrl + "/carrier/trip",
+    return this.http.get<any>(Api.carrier.getCarrierTrips(),
       {
         headers: HttpOptionsAuthorized.headers,
         observe: HttpOptionsAuthorized.observe
@@ -98,7 +98,7 @@ export class ViewsService {
 
   public getCarrierServices() {
 
-    return this.http.get<any>(this.actionUrl + "/carrier/services/preload",
+    return this.http.get<any>(Api.service.preloadServices(),
       {
         headers: HttpOptionsAuthorized.headers,
         observe: HttpOptionsAuthorized.observe

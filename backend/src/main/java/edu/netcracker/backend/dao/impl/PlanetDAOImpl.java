@@ -2,7 +2,8 @@ package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.PlanetDAO;
 import edu.netcracker.backend.model.Planet;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -18,24 +19,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@PropertySource("classpath:sql/planetdao.properties")
 public class PlanetDAOImpl extends CrudDAOImpl<Planet> implements PlanetDAO {
 
-    private final String FIND_ID_BY_PlANET_NAME = "SELECT planet_id FROM planet WHERE planet_name = UPPER(?)";
-    private final String FIND_ALL_PLANETS = "SELECT planet_id, planet_name FROM planet ORDER BY planet_name";
-    private static final Logger logger = LoggerFactory.getLogger(ServiceDAOImpl.class);
+    @Value("${FIND_ID_BY_PlANET_NAME}")
+    private String FIND_ID_BY_PlANET_NAME;
 
-    @Override
-    public List<Planet> findAllPlanets() {
-        logger.debug("Getting all planets");
+    @Value("${FIND_ALL_PLANETS}")
+    private String FIND_ALL_PLANETS;
 
-        return getJdbcTemplate().query(FIND_ALL_PLANETS,
-                new BeanPropertyRowMapper(Planet.class));
-    }
+    private static final Logger logger = LoggerFactory.getLogger(PlanetDAOImpl.class);
 
     @Override
     public Long getIdByPlanetName(String planet) {
-        logger.debug("Getting planet by name {}", planet);
-
+        logger.debug("Getting id of {}", planet);
         return getJdbcTemplate().queryForObject(FIND_ID_BY_PlANET_NAME, new Object[]{planet}, Long.class);
     }
 

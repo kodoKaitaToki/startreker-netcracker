@@ -41,6 +41,8 @@ import { PossibleServicesComponent } from './possible-services/possible-services
 import { PossibleServicesListComponent } from './possible-services/possible-services-list/possible-services-list.component';
 import { PossibleServicesFormComponent } from './possible-services/possible-services-form/possible-services-form.component';
 import { TripTransfer } from './trip-transfer';
+import { SharedModule } from '../../shared/shared.module';
+import {ShowMessageService} from "../admin/approver/shared/service/show-message.service";
 
 @NgModule({
             declarations:
@@ -85,12 +87,14 @@ import { TripTransfer } from './trip-transfer';
               TreeModule,
               DialogModule,
               TabViewModule,
+              SharedModule,
               CalendarModule
             ],
             providers: [
               MessageService,
               CarrierDiscountsService,
-              TripTransfer
+              TripTransfer,
+              ShowMessageService
             ]
           })
 export class CarrierModule {

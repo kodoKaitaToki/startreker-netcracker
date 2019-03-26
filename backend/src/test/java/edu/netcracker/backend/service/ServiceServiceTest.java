@@ -62,11 +62,11 @@ public class ServiceServiceTest {
         serviceDescr.setServiceStatus(2);
         serviceDescr.setCreationDate(LocalDate.parse("2015-11-16", DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                                               .atStartOfDay());
-        ServiceCRUDDTO testService = ServiceCRUDDTO.form(serviceDescr, null);
+        ServiceCRUDDTO testService = ServiceCRUDDTO.form(serviceDescr);
         ret = new ArrayList<>();
         ret.add(testService);
 
-        serviceCRUDDTO = ServiceCRUDDTO.form(serviceDescr, "");
+        serviceCRUDDTO = ServiceCRUDDTO.form(serviceDescr);
     }
 
     @Before

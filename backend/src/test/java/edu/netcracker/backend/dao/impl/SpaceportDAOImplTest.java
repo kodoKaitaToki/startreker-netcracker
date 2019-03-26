@@ -33,9 +33,9 @@ public class SpaceportDAOImplTest {
     @Test
     public void findByPlanet() {
         spaceports = new ArrayList<>();
-        spaceports = spaceportDAO.findByPlanet(planetDAO.findAllPlanets().get(0).getPlanetName());
+        spaceports = spaceportDAO.findByPlanet(planetDAO.getAllPlanets().get(0).getPlanetName());
         for (Spaceport port: spaceports) {
-            Assert.assertEquals(port.getPlanetId(), planetDAO.findAllPlanets().get(0).getPlanetId());
+            Assert.assertEquals(port.getPlanetId(), planetDAO.getAllPlanets().get(0).getPlanetId());
         }
     }
 }

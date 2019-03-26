@@ -14,6 +14,10 @@ export class TripsTableComponent implements OnInit {
 
   @Input() trips: Trip[];
 
+  readonly pageNumber: number = 10;
+
+  pageFrom: number;
+
   @Input() filterCriteria: string;
 
   @Input() filterContent: string;
@@ -56,6 +60,8 @@ export class TripsTableComponent implements OnInit {
 
   @Output() restoreTripEmitter$ = new EventEmitter();
 
+  @Output() getTripsAfterChanges$ = new EventEmitter();
+
   showTicketClass: boolean = false;
 
   showSuggestions: boolean = false;
@@ -68,8 +74,15 @@ export class TripsTableComponent implements OnInit {
 
   }
 
-  ngOnInit() {
+  onPageUpdate(from: number) {
+    this.pageFrom = from;
+    // console.log(this.pageFrom)
+    this.getTripsAfterChanges$.emit(from);
+    // this.getServices();
+  }
 
+  ngOnInit() {
+    this.pageFrom = 0;
     this.setFormInDefault();
     this.totalRec = this.trips.length;
   }

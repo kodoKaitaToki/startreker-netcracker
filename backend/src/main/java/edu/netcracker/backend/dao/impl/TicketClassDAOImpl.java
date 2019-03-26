@@ -7,6 +7,9 @@ import edu.netcracker.backend.model.TicketClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -15,94 +18,44 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
+@PropertySource("classpath:sql/ticketclassdao.properties")
 public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements TicketClassDAO {
 
-    private static final String SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER = "SELECT "
-                                                                     + "tc.class_id, "
-                                                                     + "class_name, "
-                                                                     + "trip_id, "
-                                                                     + "ticket_price, "
-                                                                     + "bc.item_number "
-                                                                     + "FROM ticket_class tc "
-                                                                     + "INNER JOIN bundle_class bc on tc.class_id = bc.class_id "
-                                                                     + "WHERE bc.bundle_id = ? AND trip_id = ?;";
+    @Value("${SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER}")
+    private String SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER;
 
-    private final String SELECT_BY_TRIP_ID = "SELECT class_id, "
-                                             + "class_name, "
-                                             + "trip_id, "
-                                             + "ticket_price, "
-                                             + "discount_id, "
-                                             + "class_seats "
-                                             + "FROM ticket_class "
-                                             + "WHERE trip_id = ?";
+    @Value("${SELECT_BY_TRIP_ID}")
+    private String SELECT_BY_TRIP_ID;
 
-    private static final String GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER = "SELECT "
-                                                                            + "ticket_class.class_id, "
-                                                                            + "ticket_class.class_name, "
-                                                                            + "ticket_class.trip_id, "
-                                                                            + "ticket_class.ticket_price, "
-                                                                            + "ticket_class.discount_id, "
-                                                                            + "ticket_class.class_seats "
-                                                                            + "FROM user_a "
-                                                                            + "INNER JOIN trip ON trip.carrier_id = user_a.user_id "
-                                                                            + "INNER JOIN ticket_class ON ticket_class.trip_id = trip.trip_id "
-                                                                            + "WHERE user_a.user_id = ? "
-                                                                            + "ORDER BY class_id DESC";
+    @Value("${GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER}")
+    private String GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER;
 
-    private static final String GET_TICLET_CLASS_WITH_DISCOUNT = "SELECT "
-                                                                 + "ticket_class.class_id, "
-                                                                 + "ticket_class.class_name, "
-                                                                 + "ticket_class.trip_id, "
-                                                                 + "ticket_class.ticket_price, "
-                                                                 + "ticket_class.discount_id, "
-                                                                 + "ticket_class.class_seats "
-                                                                 + "FROM user_a "
-                                                                 + "INNER JOIN trip ON trip.carrier_id = user_a.user_id "
-                                                                 + "INNER JOIN ticket_class ON ticket_class.trip_id = trip.trip_id "
-                                                                 + "WHERE user_a.user_id = ? AND ticket_class.discount_id = ? "
-                                                                 + "ORDER BY class_id DESC";
+    @Value("${GET_TICKET_CLASS_WITH_DISCOUNT}")
+    private String GET_TICKET_CLASS_WITH_DISCOUNT;
 
-    private static final String GET_ALL_TICKET_CLASSES_BELONG_TO_TRIPS_BELONG_TO_CARRIER = "SELECT "
-                                                                                           + "ticket_class.class_id, "
-                                                                                           + "ticket_class.class_name, "
-                                                                                           + "ticket_class.trip_id, "
-                                                                                           + "ticket_class.ticket_price, "
-                                                                                           + "ticket_class.discount_id, "
-                                                                                           + "ticket_class.class_seats "
-                                                                                           + "FROM ticket_class "
-                                                                                           + "WHERE ticket_class.trip_id IN (:tripIds) "
-                                                                                           + "ORDER BY class_id DESC";
+    @Value("${GET_ALL_TICKET_CLASSES_BELONG_TO_TRIPS_BELONG_TO_CARRIER}")
+    private String GET_ALL_TICKET_CLASSES_BELONG_TO_TRIPS_BELONG_TO_CARRIER;
 
-    private static final String GET_TICKET_CLASSES_BELONG_TO_CARRIER = "SELECT "
-                                                                       + "  ticket_class.class_id, "
-                                                                       + "  ticket_class.class_name,"
-                                                                       + "  ticket_class.trip_id, "
-                                                                       + "  ticket_class.ticket_price, "
-                                                                       + "  ticket_class.discount_id, "
-                                                                       + "  ticket_class.class_seats "
-                                                                       + "FROM user_a "
-                                                                       + "INNER JOIN trip on user_a.user_id = trip.carrier_id "
-                                                                       + "INNER JOIN ticket_class on trip.trip_id = ticket_class.trip_id "
-                                                                       + "WHERE user_a.user_id = ? AND ticket_class.class_id = ?";
+    @Value("${GET_TICKET_CLASSES_BELONG_TO_CARRIER}")
+    private String GET_TICKET_CLASSES_BELONG_TO_CARRIER;
 
+    @Value("${INSERT_TICKET_CLASS}")
+    private String INSERT_TICKET_CLASS;
 
-    private final String INSERT_TICKET_CLASS =
-            "INSERT INTO ticket_class (class_name, trip_id, class_seats, ticket_price) VALUES (?, ?, ?, ?)";
+    @Value("${UPDATE_TICKET_CLASS}")
+    private String UPDATE_TICKET_CLASS;
 
-    private final String UPDATE_TICKET_CLASS =
-            "UPDATE ticket_class SET class_seats = ?, ticket_price = ? WHERE class_id = ?";
+    @Value("${FIND_ID_BY_CLASS_NAME_AND_TRIP_ID}")
+    private String FIND_ID_BY_CLASS_NAME_AND_TRIP_ID;
 
-    private final String FIND_ID_BY_CLASS_NAME_AND_TRIP_ID =
-            "SELECT class_id FROM ticket_class WHERE LOWER(class_name) = ? AND trip_id = ?";
+    @Value("${DELETE_TICKET_CLASS_BY_ID}")
+    private String DELETE_TICKET_CLASS_BY_ID;
 
-    private final String DELETE_TICKET_CLASS_BY_ID = "DELETE FROM ticket_class WHERE class_id = ?";
+    @Value("${GET_NUMBER_OF_TICKET_CLASSES_BY_NAME_AND_TRIP_ID}")
+    private String GET_NUMBER_OF_TICKET_CLASSES_BY_NAME_AND_TRIP_ID;
 
-    private final String GET_NUMBER_OF_TICKET_CLASSES_BY_NAME_AND_TRIP_ID =
-            "SELECT COUNT(class_id) FROM ticket_class WHERE trip_id = ? AND LOWER(class_name) = ?";
-
-    private final String GET_TICKET_CLASS_BY_NAME_AND_TRIP_ID =
-            "SELECT class_id, class_name, trip_id, ticket_price, discount_id, class_seats "
-            + "FROM ticket_class WHERE trip_id = ? AND LOWER(class_name) = ? ";
+    @Value("${GET_TICKET_CLASS_BY_NAME_AND_TRIP_ID}")
+    private String GET_TICKET_CLASS_BY_NAME_AND_TRIP_ID;
 
     private final TicketDAO ticketDAO;
 
@@ -132,8 +85,10 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
     public List<TicketClass> findByTripId(Number id) {
         List<TicketClass> ticketClasses = new ArrayList<>();
 
+        logger.debug("Getting all ticket classes for trip with id {}", id);
         ticketClasses.addAll(getJdbcTemplate().query(SELECT_BY_TRIP_ID, new Object[]{id}, getGenericMapper()));
 
+        logger.debug("Counting number of remaining seats for each ticket class");
         ticketClasses.forEach(ticketClass -> ticketClass.setRemainingSeats(ticketDAO.getRemainingSeatsForClass(
                 ticketClass.getClassId())));
 
@@ -141,13 +96,14 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
     }
 
     /**
-     * Method for updating of ticket classes
+     * Method for getting ticket class by its name and id of trip
      *
      * @param tripId - id of trip ticket class belongs to
      * @param name   - name of ticket class
      */
     @Override
     public TicketClass getTicketClassByNameAndTripId(Long tripId, String name) {
+        logger.debug("Getting ticket class by its with name {} and id of trip {}", name, tripId);
         return getJdbcTemplate().queryForObject(GET_TICKET_CLASS_BY_NAME_AND_TRIP_ID,
                                                 new Object[]{tripId, name.toLowerCase()},
                                                 getGenericMapper());
@@ -160,6 +116,7 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
      */
     @Override
     public void create(TicketClass ticketClass) {
+        logger.debug("Adding new ticket class for trip with id {}", ticketClass.getTripId());
         getJdbcTemplate().update(INSERT_TICKET_CLASS,
                                  ticketClass.getClassName(),
                                  ticketClass.getTripId(),
@@ -174,6 +131,7 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
      */
     @Override
     public void update(TicketClass ticketClass) {
+        logger.debug("Updating ticket class with id {}", ticketClass.getClassId());
         super.update(ticketClass);
     }
 
@@ -185,13 +143,16 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
      */
     @Override
     public boolean exists(Long tripId, String className) {
+        logger.debug("Counting number of ticket classes with name {} for trip with id {}", className, tripId);
         Integer amount = getJdbcTemplate().queryForObject(GET_NUMBER_OF_TICKET_CLASSES_BY_NAME_AND_TRIP_ID,
                                                           new Object[]{tripId, className.toLowerCase()},
                                                           Integer.class);
         if (amount.equals(new Integer(0))) {
+            logger.debug("0 ticket classes found, ticket class doesn't exist");
             return false;
         }
 
+        logger.debug("Ticket class with name {} exists for trip with id {}", className, tripId);
         return true;
     }
 
@@ -225,7 +186,7 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
 
     public Optional<TicketClass> getTicketClassByDiscount(Number userId, Number discountId) {
         try {
-            TicketClass ticketClass = getJdbcTemplate().queryForObject(GET_TICLET_CLASS_WITH_DISCOUNT,
+            TicketClass ticketClass = getJdbcTemplate().queryForObject(GET_TICKET_CLASS_WITH_DISCOUNT,
                                                                        new Object[]{userId, discountId},
                                                                        getGenericMapper());
             return ticketClass != null ? Optional.of(ticketClass) : Optional.empty();
@@ -242,9 +203,9 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
                 GET_ALL_TICKET_CLASSES_BELONG_TO_TRIPS_BELONG_TO_CARRIER,
                 new MapSqlParameterSource("tripIds", tripIds));
         for (Map<String, Object> row : rows) {
-            List<TicketClass> ticketClasses =
-                    relatedTicketClasses.computeIfAbsent((((Number) row.get("trip_id")).longValue()),
-                                                         aLong -> new ArrayList<>());
+            List<TicketClass> ticketClasses
+                    = relatedTicketClasses.computeIfAbsent((((Number) row.get("trip_id")).longValue()),
+                                                           aLong -> new ArrayList<>());
 
             ticketClasses.add(createTicketClass(row));
         }
