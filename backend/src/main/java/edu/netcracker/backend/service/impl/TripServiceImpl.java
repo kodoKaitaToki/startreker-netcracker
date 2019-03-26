@@ -194,15 +194,12 @@ public class TripServiceImpl implements TripService {
     public List<TripWithArrivalAndDepartureDataDTO> getAllTripsWithTicketClassAndDiscountsBelongToCarrier(Number carrierId) {
         log.debug("get all trips with related ticket classes and discounts that belong to carrier with id "
                   + carrierId);
-
         List<TripWithArrivalAndDepartureData> trips =
                 tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
-
         if (trips.isEmpty()) {
             log.warn("No active trips for carrier {}", carrierId);
             return new ArrayList<>();
         }
-
         List<DiscountTicketClassDTO> ticketClassDTOs = ticketClassService.getTicketClassesRelatedToCarrier(carrierId);
 
         return createTripWithArrivalAndDepartureDataAndTicketClassesDTOs(trips, ticketClassDTOs);
@@ -214,17 +211,16 @@ public class TripServiceImpl implements TripService {
 
         List<TripWithArrivalAndDepartureData> trips =
                 tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
-
         if (trips.isEmpty()) {
             log.warn("No active trips for carrier {}", carrierId);
             return new ArrayList<>();
         }
-
         Map<Long, List<DiscountSuggestionDTO>> suggestionsRelatedToTrip =
                 suggestionService.getSuggestionsRelatedToTicketClasses(ticketClassService.getAllTicketClassesBelongToTrips(
                         trips.stream()
                              .map(TripWithArrivalAndDepartureData::getTripId)
                              .collect(Collectors.toList())));
+
         return createTripWithArrivalAndDepartureDataAndSuggestionDTOs(trips, suggestionsRelatedToTrip);
     }
 
