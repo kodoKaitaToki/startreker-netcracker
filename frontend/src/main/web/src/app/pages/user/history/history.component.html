@@ -1,3 +1,5 @@
+<p-toast></p-toast>
+
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-lg-3 col-xs-12">
@@ -23,7 +25,7 @@
     <div class="col-lg-9" style="margin-top: 2%">
       <ng-container *ngIf="ticketData?.length > 0">
         <ng-container
-          *ngFor="let ticket of ticketData | paginate: {id: 'tickets-pagination', itemsPerPage: ticketsPerPage, currentPage: page, totalItems: 10000}">
+          *ngFor="let ticket of ticketData | paginate: {id: 'tickets-pagination', itemsPerPage: ticketsPerPage, currentPage: page, totalItems: totalItems}">
 
           <div class="card historycard ticketcard-padding">
             <div class="row">
@@ -98,10 +100,10 @@
       </ng-container>
 
       <div class="row">
-        <div class="col-md-6 offset-md-6 col-sm-9 offset-sm-3 col-xs-11 offset-xs-1">
-          <div class="historycard text-center" *ngIf="ticketData != undefined">
-            <pagination-controls class="pagination center hide-page-numbers" id="tickets-pagination"
-                                 (pageChange)="onPageChange($event)" maxSize='1'>
+        <div class="col-lg-7 offset-lg-5 col-md-9 offset-md-3 col-sm-9 offset-sm-3 col-xs-11 offset-xs-1">
+          <div class="historycard text-center" *ngIf="ticketData != undefined && ticketData?.length != 0">
+            <pagination-controls class="pagination center" id="tickets-pagination"
+                                 (pageChange)="onPageChange($event)" maxSize='5'>
             </pagination-controls>
           </div>
         </div>

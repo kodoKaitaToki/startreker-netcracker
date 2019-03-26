@@ -102,6 +102,8 @@ public enum TripState {
             tripReply.setReportText(replyText);
             tripReply.setTripId(trip.getTripId());
             tripReply.setWriterId(requestUser.getUserId());
+
+            trip.setTripState(this);
             tripReplyDAO.save(tripReply);
             return true;
         }

@@ -6,6 +6,9 @@ import {UserRoutingModule} from "./user-routing.module";
 import {HistoryComponent} from './history/history.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {NgxPaginationModule} from "ngx-pagination";
+import {ShowMessageService} from "../admin/approver/shared/service/show-message.service";
+import {MessageService} from "primeng/api";
+import {ToastModule} from "primeng/toast";
 
 @NgModule({
   declarations: [
@@ -17,7 +20,12 @@ import {NgxPaginationModule} from "ngx-pagination";
     CommonModule,
     UserRoutingModule,
     ReactiveFormsModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    ToastModule,
+  ],
+  providers: [
+    ShowMessageService,
+    MessageService
   ]
 })
 export class UserModule {

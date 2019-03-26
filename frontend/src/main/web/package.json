@@ -20,6 +20,7 @@
     "@angular/platform-browser": "~7.2.0",
     "@angular/platform-browser-dynamic": "~7.2.0",
     "@angular/router": "~7.2.0",
+    "@ng-bootstrap/ng-bootstrap": "^4.1.0",
     "@ngx-loading-bar/core": "^4.2.0",
     "@ngx-loading-bar/http-client": "^4.2.0",
     "@types/three": "^0.93.20",
@@ -38,8 +39,7 @@
     "rxjs": "~6.3.3",
     "three": "^0.101.1",
     "tslib": "^1.9.0",
-    "zone.js": "~0.8.26",
-    "@ng-bootstrap/ng-bootstrap": "latest"
+    "zone.js": "~0.8.26"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.13.6",

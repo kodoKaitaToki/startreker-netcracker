@@ -99,14 +99,6 @@ public class PossibleServiceServiceImpl implements PossibleServiceService {
                                  .collect(Collectors.toList());
     }
 
-    @Override
-    public List<PossibleServiceDTO> getCarrierPossibleServices(User user) {
-        return possibleServiceDAO.findAllPossibleServicesByCarrier(user.getUserId())
-                                 .stream()
-                                 .map(PossibleServiceDTO::from)
-                                 .collect(Collectors.toList());
-    }
-
     private PossibleService from(PossibleServiceDTO possibleServiceDTO) {
         PossibleService possibleService = new PossibleService();
 

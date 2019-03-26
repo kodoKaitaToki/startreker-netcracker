@@ -1,3 +1,5 @@
+<p-toast></p-toast>
+
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-12 my-auto">
@@ -7,10 +9,10 @@
 
           <hr class="hr-xs">
 
-          <div [style.display]="showChart == true ? 'block' : 'none'" id="viewsChartContainer"
+          <div [hidden]="hideChart" id="viewsChartContainer"
                style="height: 370px; width: 100%;"></div>
 
-          <hr *ngIf="showChart" class="hr-xs">
+          <hr [hidden]="hideChart" class="hr-xs">
 
           <div class="form-row justify-content-center">
             <div class="col-lg-6">
