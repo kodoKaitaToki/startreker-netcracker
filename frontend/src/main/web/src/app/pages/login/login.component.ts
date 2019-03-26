@@ -61,8 +61,6 @@ export class LoginComponent implements OnInit {
       .subscribe((userData) => {
           this.apiService.getLoggedUser(userData);
           this.submitBut = false;
-          let role = userData.roles[0];
-          this.router.navigateByUrl(LoginLocations[role]);
         },
         error => {
           if (error.error.error == 'UNAUTHORIZED') {
@@ -75,8 +73,6 @@ export class LoginComponent implements OnInit {
         });
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
 }

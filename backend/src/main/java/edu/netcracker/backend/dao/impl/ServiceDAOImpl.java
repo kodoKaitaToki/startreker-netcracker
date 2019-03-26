@@ -109,7 +109,7 @@ public class ServiceDAOImpl extends CrudDAOImpl<ServiceDescr> implements Service
     }
 
     @Override
-    public List<ServiceCRUDDTO> findByCarrierId(Number id, Integer offset, Integer limit, Integer status) {
+    public List<ServiceCRUDDTO> findByCarrierId(Integer id, Integer offset, Integer limit, Integer status) {
         log.debug("ServiceDAO.findPaginByCarrierId(Number id, Integer status) was invoked with parameters id={}, "
                   + "offset={}, limit={}, status={}", id, offset, limit, status);
 

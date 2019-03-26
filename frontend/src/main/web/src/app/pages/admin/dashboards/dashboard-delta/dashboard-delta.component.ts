@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterContentInit } from '@angular/core';
 import * as CanvasJS from '../../canvasjs.min';
 
 import { FormGroup, FormControl } from '@angular/forms';
@@ -14,7 +14,7 @@ import { HttpResponse } from '@angular/common/http';
   templateUrl: './dashboard-delta.component.html',
   styleUrls: ['./dashboard-delta.component.scss']
 })
-export class DashboardDeltaComponent implements OnInit {
+export class DashboardDeltaComponent implements OnInit{
 
   userMap: Map<Date, number> = new Map();
   userChart: CanvasJS.Chart;
@@ -35,7 +35,7 @@ export class DashboardDeltaComponent implements OnInit {
   onSubmit() {
     let fromDateFormatted: string = formatDate(this.form.value.fromDate, 'yyyy-MM-dd', 'en');
     let toDateFormatted: string = formatDate(this.form.value.toDate, 'yyyy-MM-dd', 'en');
-
+    
     this.dashboardDeltaService.getUsersIncreasingPerPeriod(fromDateFormatted, toDateFormatted)
       .subscribe((resp: HttpResponse<any>) => {
         checkToken(resp.headers);
@@ -110,7 +110,7 @@ export class DashboardDeltaComponent implements OnInit {
     }
     this.locationsChart.render();
   }
-
+  
   ngOnInit() {
     this.userChart = new CanvasJS.Chart("userChartContainer", {
       animationEnabled: true,

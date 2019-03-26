@@ -12,10 +12,10 @@ export class ServiceTripPendingService {
   }
 
   public getAllPendingTrips(): Observable<any> {
-    return this.http.get(this.api + 'all-pending-trips');
+    return this.http.get(this.api + 'all-pending-trips', Api.HttpOptionsAuthorized);
   }
 
   public getAllPendingServices(): Observable<any> {
-    return this.http.get(this.api + 'all-pending-services');
+    return this.http.get(this.api + 'all-pending-services', Api.HttpOptionsAuthorized);
   }
 }

@@ -5,11 +5,11 @@ import { NotFoundPageComponent } from './pages/not-found-page/not-found-page.com
 import { LoginComponent } from './pages/login/login.component';
 import { RegistrationComponent } from './pages/registration/registration.component';
 import { RecoveryComponent } from './pages/recovery/recovery.component';
-import { Role } from './guards/role';
 import { ConfirmMessageComponent } from './pages/confirm-message/confirm-message.component';
 import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
 
-import { AuthGuard } from './guards/auth.guard';
+import { Role } from './shared/guards/role';
+import { AuthGuard } from './shared/guards/auth.guard';
 
 const routes: Routes = [
   { path: '', component: LandingComponent},

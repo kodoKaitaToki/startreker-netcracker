@@ -46,8 +46,8 @@ export class SearchBarComponent implements OnInit {
 
   ngOnInit() {
     this.enablePlanets();
-    this.searchForm.get('startSpaceport').enable();
-    this.searchForm.get('finishSpaceport').enable();
+    // this.searchForm.get('startSpaceport').enable();
+    // this.searchForm.get('finishSpaceport').enable();
 
     this.dataService.getMessage().subscribe(message => {
       this.searchForm.patchValue(message);
