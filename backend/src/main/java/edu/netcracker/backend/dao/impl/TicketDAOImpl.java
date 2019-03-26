@@ -24,11 +24,11 @@ import java.util.Optional;
 @PropertySource("classpath:sql/ticketdao.properties")
 public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
 
+    private NamedParameterJdbcTemplate namedTemplate;
+
     public TicketDAOImpl(NamedParameterJdbcTemplate namedTemplate) {
         this.namedTemplate = namedTemplate;
     }
-
-    private NamedParameterJdbcTemplate namedTemplate;
 
     @Value("${FIND_ALL_BY_CLASS}")
     private String FIND_ALL_BY_CLASS;
@@ -102,7 +102,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
      */
     @Override
     public void deleteAllTicketsOfTicketClass(Long id) {
-        log.debug("Deleting all tickets of ticket class (id = {})", id);
+        log.debug("Deleting all tickets of ticket class with id {}", id);
         getJdbcTemplate().update(DELETE_ALL_TICKETS_OF_TICKET_CLASS, id);
     }
 

@@ -62,11 +62,7 @@ export class TripsComponent implements OnInit {
         arrival_date: new FormControl('', [Validators.required, DateValidator.notEarlierThanCurrentDate]),
         arrival_time: new FormControl('', Validators.required),
         departure_time: new FormControl('', Validators.required),
-      },
-      // {
-      //   validators: Validators.compose([
-      //     DateValidator.dateLessThan('arrival_date', 'departure_date', { 'arrival_date': true })])
-      // }
+      }
     );
   }
 
@@ -82,14 +78,18 @@ export class TripsComponent implements OnInit {
     // this.defaultTrips = this.getDefaultTrips();
   }
 
-  getTrips() {
-    this.tripsApi.getAllTrips()
+  getTrips(limit = 10, offset = 0) {
+    this.tripsApi.getAllTrips(limit, offset)
      .subscribe((resp: HttpResponse<Trip>) => {
         checkToken(resp.headers);
         this.defaultTrips = clone(resp.body);
         },
         error => console.log(error)
       );
+  }
+
+  getTripsAfterChanges(num) {
+    this.getTrips(10, num);
   }
 
   choosePlanet(direction) {
@@ -103,21 +103,21 @@ export class TripsComponent implements OnInit {
     this.currentFilterPlaceholder = `Search by ${this.currentFilter}`;
   }
 
-  // validateDate() {
-  //   const startDate = new Date(this.form.value.departure_date);
-  //   const endDate = new Date(this.form.value.arrival_date);
-  //   const currentDate = new Date();
-  //   // + will then compare the dates' millisecond values
-  //   if (+startDate < +currentDate) {
-  //     this.currentDateError = true;
-  //     setTimeout(() => this.currentDateError = false, 3000);
-  //     // console.log('yes')
-  //   } else if (+startDate > +endDate) {
-  //     // console.log('Start date is less than current date');
-  //     this.departureDateError = true;
-  //     setTimeout(() => this.departureDateError = false, 3000);
-  //   }
-  // }
+  validateDate() {
+    const startDate = new Date(this.form.value.departure_date);
+    const endDate = new Date(this.form.value.arrival_date);
+    const currentDate = new Date();
+    // + will then compare the dates' millisecond values
+    if (+startDate < +currentDate) {
+      this.currentDateError = true;
+      setTimeout(() => this.currentDateError = false, 3000);
+      // console.log('yes')
+    } else if (+startDate > +endDate) {
+      // console.log('Start date is less than current date');
+      this.departureDateError = true;
+      setTimeout(() => this.departureDateError = false, 5000);
+    }
+  }
 
   getTripForUpdate(trip) {
     const id = trip.id;
@@ -200,12 +200,16 @@ export class TripsComponent implements OnInit {
     delete trip.arrival_planet;
     delete trip.arrival_spaceport;
     delete trip.ticket_classes;
+    delete trip.trip_reply;
     return trip;
   }
 
   onSubmit() {
     // method to send data to server
-    // this.validateDate();
+    this.validateDate();
+    if (this.currentDateError || this.departureDateError) {
+      return;
+    }
     this.submitData = this.form.value;
     this.submitData.departure_date = `${this.submitData.departure_date} ${this.submitData.departure_time}:00`;
     this.submitData.arrival_date = `${this.submitData.arrival_date} ${this.submitData.arrival_time}:00`;

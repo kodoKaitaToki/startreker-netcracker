@@ -4,6 +4,8 @@ import edu.netcracker.backend.dao.SpaceportDAO;
 import edu.netcracker.backend.model.Spaceport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -11,35 +13,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
+@PropertySource("classpath:sql/spaceportdao.properties")
 public class SpaceportDAOImpl extends CrudDAOImpl<Spaceport> implements SpaceportDAO {
 
-    private final String FIND_BY_PERIOD_SQL = "SELECT * FROM spaceport WHERE creation_date BETWEEN ? AND ?";
-    private final String FIND_BY_PLANET_SQL = "SELECT * FROM spaceport AS s "
-                                              + "INNER JOIN planet AS p ON s.planet_id = p.planet_id "
-                                              + "WHERE planet_name = ?";
-    private final String FIND_ID_BY_SPACEPORT_NAME
-            = "SELECT spaceport_id FROM spaceport WHERE spaceport_name = LOWER(?) AND planet_id = ?";
+    @Value("${FIND_BY_PERIOD_SQL}")
+    private String FIND_BY_PERIOD_SQL;
 
-    private final String FIND_SPACEPORTS_OF_PLANET = "SELECT spaceport_id, spaceport_name, creation_date, planet_id\n"
-                                                     + "FROM spaceport\n"
-                                                     + "WHERE planet_id = ?\n"
-                                                     + "ORDER BY spaceport_name";
+    @Value("${FIND_BY_PLANET_NAME}")
+    private String FIND_BY_PLANET_NAME;
+
+    @Value("${FIND_BY_PLANET_ID}")
+    private String FIND_BY_PLANET_ID;
+
+    @Value("${FIND_ID_BY_SPACEPORT_NAME}")
+    private String FIND_ID_BY_SPACEPORT_NAME;
+
+    private static final Logger logger = LoggerFactory.getLogger(SpaceportDAOImpl.class);
 
     @Override
     public List<Spaceport> findByPlanet(String planet) {
         List<Spaceport> spaceports = new ArrayList<>();
-
-        spaceports.addAll(getJdbcTemplate().query(FIND_BY_PLANET_SQL, new Object[]{planet}, getGenericMapper()));
+        logger.debug("Querying all spaceports of {}", planet);
+        spaceports.addAll(getJdbcTemplate().query(FIND_BY_PLANET_NAME, new Object[]{planet}, getGenericMapper()));
 
         return spaceports;
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(ServiceDAOImpl.class);
-
     @Override
     public List<Spaceport> findPerPeriod(LocalDateTime from, LocalDateTime to) {
         List<Spaceport> spaceports = new ArrayList<>();
-
+        logger.debug("Querying all spaceports created in period from {} to {}", from, to);
         spaceports.addAll(getJdbcTemplate().query(FIND_BY_PERIOD_SQL, new Object[]{from, to}, getGenericMapper()));
 
         return spaceports;
@@ -47,6 +50,7 @@ public class SpaceportDAOImpl extends CrudDAOImpl<Spaceport> implements Spacepor
 
     @Override
     public Long getIdBySpaceportName(String spaceport, Long planetId) {
+        logger.debug("Getting id of {} spaceport situated on planet with id {}", spaceport, planetId);
         return getJdbcTemplate().queryForObject(FIND_ID_BY_SPACEPORT_NAME,
                                                 new Object[]{spaceport, planetId},
                                                 Long.class);
@@ -56,9 +60,7 @@ public class SpaceportDAOImpl extends CrudDAOImpl<Spaceport> implements Spacepor
         logger.debug("Querying spaceports for planet_id={}", planetId);
         List<Spaceport> spaceports = new ArrayList<>();
 
-        spaceports.addAll(getJdbcTemplate().query(FIND_SPACEPORTS_OF_PLANET,
-                                                  new Object[]{planetId},
-                                                  getGenericMapper()));
+        spaceports.addAll(getJdbcTemplate().query(FIND_BY_PLANET_ID, new Object[]{planetId}, getGenericMapper()));
 
         return spaceports;
     }

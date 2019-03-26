@@ -16,12 +16,6 @@ public interface TripDAO {
 
     List<Trip> paginationForCarrier(Integer limit, Integer offset, Long carrierId);
 
-    List<Trip> findByStatusForCarrier(Integer status, Long carrierId);
-
-    List<Trip> findByStatusForCarrierPagination(Integer status, Long carrierId, Integer limit, Integer offset);
-
-    List<Trip> findByPlanetsForCarrier(String departurePlanet, String arrivalPlanet, Long carrierId);
-
     List<Trip> getAllTripsForUser(String departurePlanet,
                                   String departureSpaceport,
                                   String departureDate,

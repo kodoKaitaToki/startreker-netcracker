@@ -66,7 +66,7 @@
           </div>
         </div>
         <div
-            *ngIf="trip.trip_status_id === 1"
+            *ngIf="trip.trip_status_id === 1 || trip.trip_status_id === 6"
             class="col-12 top-button"
             [ngClass]="{
               'disabled': !trip.ticket_classes.length > 0
@@ -229,6 +229,16 @@
                 {{trip.creation_date}}
               </p>
             </div>
+
+            <hr>
+            
+            <div class="row"
+              *ngIf="trip.trip_status_id === 6">
+              <h5 class="col-5">Reply from approver</h5>
+              <p class="col-6 offset-1">
+                {{trip.trip_reply}}
+              </p>
+            </div>
   
             <div class="row"
               *ngIf="currentTripForUpdate === trip && isEditButtonBlockedAfterSubmit && !isForUpdateAlertMessage">
@@ -296,8 +306,15 @@
       </p-dialog>
     </li>
   </ul>
-  <pagination-controls id="listing_pagination" maxSize=5 (pageChange)="onChangePage($event)" class="text-center">
-  </pagination-controls>
+  <!-- <pagination-controls id="listing_pagination" maxSize=5 (pageChange)="onChangePage($event)" class="text-center">
+  </pagination-controls> -->
+  <app-paginator
+    [page]="trips"
+    [from]="pageFrom"
+    [number]="pageNumber"
+    (update)="onPageUpdate($event)"
+  >
+  </app-paginator>
 </div>
 
 <hr>

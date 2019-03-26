@@ -8,10 +8,7 @@ import edu.netcracker.backend.message.request.*;
 import edu.netcracker.backend.message.request.trips.TripCreation;
 import edu.netcracker.backend.message.response.trips.ReadTripsDTO;
 import edu.netcracker.backend.model.*;
-import edu.netcracker.backend.model.Trip;
-import edu.netcracker.backend.model.TripWithArrivalAndDepartureData;
-import edu.netcracker.backend.model.User;
-import edu.netcracker.backend.model.state.trip.*;
+import edu.netcracker.backend.model.state.trip.TripState;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.SuggestionService;
 import edu.netcracker.backend.service.TicketClassService;
@@ -69,6 +66,11 @@ public class TripServiceImpl implements TripService {
                                                      .getUserId());
         List<Trip> trips = tripDAO.allCarriersTrips(carrierId);
 
+        if (trips.size() == 0) {
+            log.error("No trips were found for carrier with id {}", carrierId);
+            throw new RequestException("No trips found", HttpStatus.NOT_FOUND);
+        }
+
         return getAllTripsDTO(trips);
     }
 
@@ -76,6 +78,11 @@ public class TripServiceImpl implements TripService {
     public List<ReadTripsDTO> getAllTripsForCarrier(Long carrierId) {
         log.debug("Getting all trips for carrier from TripDAO");
         List<Trip> trips = tripDAO.allCarriersTrips(carrierId);
+
+        if (trips.size() == 0) {
+            log.error("No trips found for carrier with id {}", carrierId);
+            throw new RequestException("No trips found", HttpStatus.NOT_FOUND);
+        }
 
         return getAllTripsDTO(trips);
     }
@@ -86,6 +93,11 @@ public class TripServiceImpl implements TripService {
         Long carrierId = Long.valueOf(securityContext.getUser()
                                                      .getUserId());
         List<Trip> trips = tripDAO.paginationForCarrier(limit, offset, carrierId);
+
+        if (trips.size() == 0) {
+            log.error("No trips were found for carrier with id {} starting from {}", carrierId, offset);
+            throw new RequestException("No trips found", HttpStatus.NOT_FOUND);
+        }
 
         return getAllTripsDTO(trips);
     }
@@ -116,6 +128,11 @@ public class TripServiceImpl implements TripService {
         log.debug("Remove trip where all tickets are sold");
         trips.removeIf(trip -> trip.getTicketClasses()
                                    .isEmpty());
+
+        if (trips.size() == 0) {
+            log.error("No trips were found with specified criteria");
+            throw new RequestException("No trips found", HttpStatus.NOT_FOUND);
+        }
 
         return getAllTripsDTO(trips);
     }

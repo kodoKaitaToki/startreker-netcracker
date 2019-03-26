@@ -25,8 +25,8 @@ export class TripsService {
     return this.http.put<any>(Api.trips.updateTrip(id), payload, HttpOptionsAuthorized);
   }
 
-  getAllTrips(): Observable<any> {
-    return this.http.get<any>(Api.trips.getAllTrips(), HttpOptionsAuthorized)
+  getAllTrips(limit = 10, offset = 0): Observable<any> {
+    return this.http.get<any>(Api.trips.getAllTrips(limit, offset), HttpOptionsAuthorized)
   }
 
   getTripsForCarrier(carrierId: number): Observable<any> {
