@@ -38,6 +38,7 @@ import { SuggestionsTableComponent } from './suggestions/suggestions-table/sugge
 import { TripsTicketClassComponent } from './trips/trips-ticket-class/trips-ticket-class.component';
 import {DialogModule} from 'primeng/dialog';
 import { SharedModule } from '../../shared/shared.module';
+import {ShowMessageService} from "../admin/approver/shared/service/show-message.service";
 
 @NgModule({
             declarations:
@@ -83,7 +84,8 @@ import { SharedModule } from '../../shared/shared.module';
             ],
             providers: [
               MessageService,
-              CarrierDiscountsService
+              CarrierDiscountsService,
+              ShowMessageService
             ]
           })
 export class CarrierModule {

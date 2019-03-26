@@ -6,6 +6,9 @@ import {UserRoutingModule} from "./user-routing.module";
 import {HistoryComponent} from './history/history.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {NgxPaginationModule} from "ngx-pagination";
+import {ShowMessageService} from "../admin/approver/shared/service/show-message.service";
+import {MessageService} from "primeng/api";
+import {ToastModule} from "primeng/toast";
 import {CheckboxModule} from 'primeng/checkbox';
 import { PurchasePageComponent } from './purchase-page/purchase-page.component';
 
@@ -20,6 +23,12 @@ import { PurchasePageComponent } from './purchase-page/purchase-page.component';
     CommonModule,
     UserRoutingModule,
     ReactiveFormsModule,
+    NgxPaginationModule,
+    ToastModule,
+  ],
+  providers: [
+    ShowMessageService,
+    MessageService
     NgxPaginationModule,
     CheckboxModule
   ]

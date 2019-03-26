@@ -1,18 +1,12 @@
 package edu.netcracker.backend.service.impl;
 
 import edu.netcracker.backend.controller.exception.RequestException;
-import edu.netcracker.backend.dao.PossibleServiceDAO;
-import edu.netcracker.backend.dao.TicketDAO;
-import edu.netcracker.backend.dao.TripDAO;
-import edu.netcracker.backend.dao.UserDAO;
+import edu.netcracker.backend.dao.*;
 import edu.netcracker.backend.message.request.ChangePasswordForm;
 import edu.netcracker.backend.message.request.SignUpForm;
 import edu.netcracker.backend.message.request.UserCreateForm;
 import edu.netcracker.backend.message.response.BoughtTicketDTO;
-import edu.netcracker.backend.model.PossibleService;
-import edu.netcracker.backend.model.Role;
-import edu.netcracker.backend.model.Ticket;
-import edu.netcracker.backend.model.User;
+import edu.netcracker.backend.model.*;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.security.UserInformationHolder;
 import edu.netcracker.backend.service.UserService;
@@ -53,6 +47,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private SecurityContext securityContext;
+
+    @Autowired
+    private TicketClassDAO ticketClassDAO;
 
     @Override
     public void save(User user) {
@@ -196,32 +193,44 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer getUserAmount(Role role){
+    public Integer getUserAmount(Role role) {
         log.debug("UserService.getUserAmount(Role role) was invoked with parameter role={}", role);
         return userDAO.getUserAmount(role);
     }
 
     @Override
     public BoughtTicketDTO buyTicket(BoughtTicketDTO boughtTicketDTO) {
-        log.debug("Getting ticket with id {} from TicketDAO", boughtTicketDTO.getTicketId());
-        Optional<Ticket> optTicket = ticketDAO.find(boughtTicketDTO.getTicketId());
+        log.debug("Getting ticket class with id {} from TicketClassDAO", boughtTicketDTO.getClassId());
+        Optional<TicketClass> optTicketClass = ticketClassDAO.find(boughtTicketDTO.getClassId());
 
-        log.debug("Getting user with id {} from UserDAO");
+        if (!optTicketClass.isPresent()) {
+            log.error("Ticket class with id {} not found", boughtTicketDTO.getClassId());
+            throw new RequestException(String.format("Ticket class with id %s not found", boughtTicketDTO.getClassId()),
+                                       HttpStatus.NOT_FOUND);
+        }
+
+        TicketClass ticketClass = optTicketClass.get();
+
+        log.debug("Getting user with id {} from UserDAO", setCurUser());
         Optional<User> optUser = userDAO.find(setCurUser());
 
-        List<PossibleService> possibleServices = new ArrayList<>();
+        if (!optUser.isPresent()) {
+            log.error("User with id {} not found", setCurUser());
+            throw new RequestException(String.format("User with id %s not found", setCurUser()), HttpStatus.NOT_FOUND);
+        }
+
+        Optional<Ticket> optTicket = ticketDAO.findNotBoughtTicketByClass(ticketClass.getClassId());
 
         if (!optTicket.isPresent()) {
-            log.error("Ticket with id {} not found", boughtTicketDTO.getTicketId());
-            throw new RequestException(String.format("Ticket with id %s not found", boughtTicketDTO.getTicketId()),
-                                       HttpStatus.NOT_FOUND);
+            log.error("Not bought ticket of class with id {} not found", boughtTicketDTO.getClassId());
+            throw new RequestException(String.format("Not bought ticket of class with id %s not found",
+                                                     boughtTicketDTO.getClassId()), HttpStatus.NOT_FOUND);
         }
 
-        if (!optUser.isPresent()) {
-            log.error("User with id {} not found", boughtTicketDTO.getTicketId());
-            throw new RequestException(String.format("User with id %s not found", setCurUser()),
-                                       HttpStatus.NOT_FOUND);
-        }
+        Ticket ticket = optTicket.get();
+        User user = optUser.get();
+
+        List<PossibleService> possibleServices = new ArrayList<>();
 
         log.debug("Getting services by id");
         boughtTicketDTO.getPServicesIds()
@@ -229,17 +238,14 @@ public class UserServiceImpl implements UserService {
                            Optional<PossibleService> optPossibleService = possibleServiceDAO.find(id);
 
                            if (!optPossibleService.isPresent()) {
-                               log.error("User with id {} not found", boughtTicketDTO.getTicketId());
+                               log.error("User with id {} not found", ticket.getTicketId());
                                throw new RequestException(String.format("Possible service with id %s not found",
-                                                                        setCurUser()),
-                                                          HttpStatus.NOT_FOUND);
+                                                                        setCurUser()), HttpStatus.NOT_FOUND);
                            }
 
                            possibleServices.add(optPossibleService.get());
                        });
 
-        Ticket ticket = optTicket.get();
-        User user = optUser.get();
 
         if (ticket.getPassengerId() != null) {
             log.error("Ticket with id {} has already been purchased.", ticket.getTicketId());
@@ -250,6 +256,8 @@ public class UserServiceImpl implements UserService {
 
         ticketDAO.buyTicket(ticket, user);
         possibleServices.forEach(possibleService -> possibleServiceDAO.buyService(ticket, possibleService));
+
+        boughtTicketDTO.setBoughtTicketId(ticket.getTicketId());
 
         return boughtTicketDTO;
     }
@@ -264,7 +272,8 @@ public class UserServiceImpl implements UserService {
         return !passwordEncoder.matches(oldPassword, userPassword);
     }
 
-    private Integer setCurUser(){
-        return securityContext.getUser().getUserId();
+    private Integer setCurUser() {
+        return securityContext.getUser()
+                              .getUserId();
     }
 }
