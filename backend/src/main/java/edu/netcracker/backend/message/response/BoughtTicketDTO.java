@@ -8,8 +8,11 @@ import java.util.List;
 @Data
 public class BoughtTicketDTO {
 
-    @JsonProperty("ticket_id")
-    private Long ticketId;
+    @JsonProperty("class_id")
+    private Long classId;
+
+    @JsonProperty("bought_ticket_id")
+    private Long boughtTicketId;
 
     @JsonProperty("p_services_ids")
     private List<Long> pServicesIds;
