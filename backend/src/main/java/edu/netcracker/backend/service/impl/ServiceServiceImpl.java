@@ -106,9 +106,7 @@ public class ServiceServiceImpl implements ServiceService {
 
         serviceDAO.save(serviceDescr);
 
-        ServiceDescr result = serviceDAO.findByName(serviceDescr.getServiceName(), setCurUser()).orElse(null);
-
-        return ServiceCRUDDTO.form(result, "");
+        return ServiceCRUDDTO.form(serviceDescr);
     }
 
     @Override

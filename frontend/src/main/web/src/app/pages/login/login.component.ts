@@ -34,9 +34,7 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private messageService: MessageService,
     private showMsgSrvc: ShowMessageService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
+    private router: Router) {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(this.usernameMinLength), Validators.maxLength(this.usernameMaxLength)]],
       password: ['', [Validators.required, Validators.minLength(this.passwrodMinLength), Validators.maxLength(this.passwrodMaxLength)]]
@@ -44,6 +42,11 @@ export class LoginComponent implements OnInit {
 
     if (this.router.getCurrentNavigation().extras.state !== undefined)
       this.message = this.router.getCurrentNavigation().extras.state.message;
+
+    if(localStorage.getItem('userdata') !== null){
+      let role = JSON.parse(localStorage.getItem('userdata')).roles[0];
+      this.router.navigateByUrl(LoginLocations[role]);
+    }
   }
 
   get f() {
@@ -61,6 +64,7 @@ export class LoginComponent implements OnInit {
       .subscribe((userData) => {
           this.apiService.getLoggedUser(userData);
           this.submitBut = false;
+          location.reload();
         },
         error => {
           if (error.error.error == 'UNAUTHORIZED') {

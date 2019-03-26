@@ -11,13 +11,30 @@
   margin-top: 10%;
 }
 
+a {
+  display: inline-block;
+  transition: .3s;
+  font-weight:bold;
+  text-decoration:none;
+  }
+  a:hover {
+  -webkit-transform: scale(1.2);
+  transform: scale(1.2);
+  }
+
 .header{
-  margin-top: 2%;
-  margin-bottom: 1%; 
   font-size: 1.8em;
 }
 
-button{
+.service-btn {
+  height: 24px;
+  font-size: 15px;
+  text-align: center;
+  line-height: 11px;
+  opacity: 0.6;
+}
+
+.controlBtn{
     display: inline-block;
     border: none;
     border-radius: 25px;
@@ -44,17 +61,17 @@ button{
       background: #007bff;
   }
 
-  button:hover {
+  .controlBtn:hover {
     transform: translateY(-2px);
     -webkit-box-shadow: 0 15px 25px rgba(0,0,0,.12);
     box-shadow: 0 15px 25px rgba(0,0,0,.12);
   }
   
-  button:focus {
+  .controlBtn:focus {
     outline: none;
   }
   
-  button:active {
+  .controlBtn:active {
     box-shadow: none;
     -webkit-transition: all .14s cubic-bezier(.55,0,.1,1);
     transition: all .14s cubic-bezier(.55,0,.1,1);
@@ -123,6 +140,7 @@ button{
     stroke-miterlimit: 10;
     box-shadow: inset 0px 0px 0px #7ac142;
     animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+    margin-left: 5%;
   }
   
   .checkmark__check {

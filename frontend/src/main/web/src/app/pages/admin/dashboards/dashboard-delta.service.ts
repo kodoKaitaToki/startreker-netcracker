@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 
 import {Api, HttpOptionsAuthorized} from '../../../modules/api/index';
+import { ApiUserService } from '../../../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,8 @@ export class DashboardDeltaService {
   private actionUrl: string;
   private tokens;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private api: ApiUserService) {
     this.actionUrl = Api.baseUrl + 'api/v1/admin/increasing';
   }
 
@@ -32,14 +34,9 @@ export class DashboardDeltaService {
       headers = headers.append('Content-Type', 'application/json');*/
 
       let params = new HttpParams().set("from", from).set("to", to);
-      let headers = new HttpHeaders({
-        'Content-Type':  'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('at')}`,
-        'Authorization-Refresh': `Bearer ${localStorage.getItem('rt')}`
-      })
 
       return this.http.get<any>(this.actionUrl + "/" + type, {
-          headers: headers,
+          headers: HttpOptionsAuthorized.headers,
           params: params,
           observe: 'response' as 'response'
         })

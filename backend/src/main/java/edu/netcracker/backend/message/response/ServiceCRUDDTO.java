@@ -47,12 +47,12 @@ public class ServiceCRUDDTO {
         this.creationDate = creationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
-    public static ServiceCRUDDTO form(ServiceDescr serviceDescr, String approver_name) {
+    public static ServiceCRUDDTO form(ServiceDescr serviceDescr) {
         int status = serviceDescr.getServiceStatus();
         String statusVal = ServiceStatus.values()[status - 1].toString();
         return new ServiceCRUDDTO(
                 serviceDescr.getServiceId(),
-                approver_name,
+                "",
                 serviceDescr.getServiceName(),
                 serviceDescr.getServiceDescription(),
                 statusVal,

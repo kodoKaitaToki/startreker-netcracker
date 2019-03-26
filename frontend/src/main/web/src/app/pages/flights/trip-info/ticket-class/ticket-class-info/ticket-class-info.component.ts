@@ -60,7 +60,7 @@ export class TicketClassInfoComponent implements OnInit {
       //redirect to buy page
       console.log("Authorized user");
       this.activeModal.close('Close click');
-      this.router.navigate(['user']);
+      this.router.navigate(['user/cart']);
     } else {
       console.log("Non authorized user");
       this.activeModal.close('Close click');

@@ -10,6 +10,10 @@ const routes: Routes = [
     component: UserComponent,
     children: [
       {
+        path: '',
+        redirectTo: 'history'
+      },
+      {
         path: 'history',
         component: HistoryComponent
       },

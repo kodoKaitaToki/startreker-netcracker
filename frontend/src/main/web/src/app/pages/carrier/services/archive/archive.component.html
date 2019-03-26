@@ -9,21 +9,14 @@
   <ul>
     <li class="list-group-item"
         *ngFor="let service of services 
-                | serviceFilter: filterContent
-                | paginate: { itemsPerPage: 5, currentPage: page}"
+                | serviceFilter: filterContent"
         style="margin-top:1.5%;"
     >
       <div class="row">
-        <div class="col-1"
-             title="id"
-        >
-
-        </div>
         <div class="row col-6 offset-6"
-             *ngIf="!isForUpdateAlertMessage"
-        >
+             *ngIf="!isForUpdateAlertMessage">
 
-          <div class="col-1 offset-6 offset-lg-6">
+          <div class="col-1 offset-6">
             <p data-placement="top"
                data-toggle="tooltip"
                title="Restore"
@@ -36,7 +29,7 @@
             </p>
           </div>
 
-          <div class="col-1 offset-1 offset-lg-1">
+          <div class="col-1 offset-1">
             <p data-placement="top"
                data-toggle="tooltip"
                title="Edit"
@@ -71,7 +64,7 @@
       <form [formGroup]="form"
             (ngSubmit)="changeService(service)">
         <div class="row">
-          <div class="col-md-8">
+          <div class="col-8">
             <div class="row">
               <h3 class="col-2">Name</h3>
               <h3 class="offset-3"

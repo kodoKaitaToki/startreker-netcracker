@@ -1,15 +1,15 @@
 <div class="container-fluid">
   <div class="row" *ngIf="tickets===null || tickets.length===0">
     <div class="card col-8 offset-2 window-card" style="text-align:center;">
-      <span style="font-size: 2em;">Now you don't have any tickets.<br>Go on your dream trip right now!</span>
+      <span style="font-size: 2em;">Cart is empty.<br>Choose a ticket on your dream trip right now!</span>
       <div class="row">
-        <button class="col-4 offset-4" (click)="router.navigate(['flights']);">Go!</button>
+        <button class="col-4 offset-4 controlBtn" (click)="router.navigate(['flights']);">Go!</button>
       </div>
     </div>
   </div>
   <div class="row" *ngIf="tickets!==null && tickets.length>0">
     <div class="card col-8 offset-2 table-card" *ngFor="let ticket of tickets; index as i;">
-      <p class="header">About trip</p>
+      <span class="header">About trip</span>
       <hr>
       <div class="row">
         <div class="col-4" style="text-align: right">
@@ -28,25 +28,42 @@
           <p>{{ticket.trip.arrival_spaceport_name}}</p>
         </div>
       </div>
-      <div *ngIf="ticket.services.length > 0">
-        <hr>
-        <ul>
-          <li *ngFor="let service of ticket.services">
-            <div>{{service.service_name}}</div>
-            <div>{{service.service_description}}</div>
-            <div>{{service.service_price}}</div>
-          </li>
-        </ul>
-      </div>
+      <div>
+          <button class="btn btn-primary service-btn" type="button" data-toggle="collapse"
+                  [attr.data-target]="'#btncollapse' + ticket.id"
+                  aria-expanded="false" aria-controls="Collapse"
+                  *ngIf="ticket.services.length > 0">
+            Show services
+          </button>
+          <div class="collapse date-width" 
+              [attr.id]="'btncollapse' + ticket.id" 
+              *ngIf="ticket.services.length > 0">
+            <div class="card" style="background-color: rgba(240, 248, 255, 0.25);">
+              <ul type="disc" style="background-color: transparent; margin-top: 1rem;">
+                <li *ngFor="let service of ticket.services" style="background-color: transparent;">
+                  <div class="row">
+                    <div class="col-4">
+                      {{service.service_name}}
+                    </div>
+                    <div class="col-2 offset-6">
+                      {{service.service_price}} $
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
       <hr>
+
       <div class="row">
-        <p class="col-4">Amount</p>
-        <p class="col-4 offset-4" style="text-align: right;">{{ticket.amount}}</p>
+        <span class="col-4">Amount:</span>
+        <span class="col-4 offset-4" style="text-align: right;">{{ticket.amount}}</span>
       </div>
       <hr>
       <div class="row header">
-        <p class="col-4">To pay</p>
-        <p class="col-4 offset-4" style="text-align: right;">{{ticket.totalPrice}} $</p>
+        <span class="col-4">To pay</span>
+        <span class="col-4 offset-4" style="text-align: right;">{{ticket.totalPrice}} $</span>
       </div>
       <hr>
       <div class="row" *ngIf="ticket.is_bought">
@@ -57,9 +74,10 @@
           </svg>
       </div>
       <div class="row" *ngIf="!ticket.is_bought">
-          <button class="btn-del col-4 offset-1" (click)="delete(ticket)">Delete</button>
-          <button class="btn-buy col-4 offset-2" (click)="buy(ticket)">Buy</button>
+          <button class="btn-del col-4 offset-1 controlBtn" (click)="delete(ticket)">Delete</button>
+          <button class="btn-buy col-4 offset-2 controlBtn" (click)="buy(ticket)">Buy</button>
       </div>
+
     </div>
   </div>
 </div>

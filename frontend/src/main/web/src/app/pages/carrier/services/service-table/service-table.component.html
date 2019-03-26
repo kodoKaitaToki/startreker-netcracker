@@ -14,14 +14,10 @@
         style="margin-top:1.5%;"
     >
       <div class="row">
-        <div class="col-1">
+        <div class="row col-6 offset-6"
+             *ngIf="!isForUpdateAlertMessage">
 
-        </div>
-        <div class="row col-5 offset-6"
-             *ngIf="!isForUpdateAlertMessage"
-        >
-
-          <div class="col-1 offset-4 offset-lg-8">
+          <div class="col-1 offset-10">
             <p data-placement="top"
                data-toggle="tooltip"
                title="Archive"
