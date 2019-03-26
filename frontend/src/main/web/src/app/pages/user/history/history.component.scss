@@ -18,10 +18,6 @@
   background-color: rgba(240, 248, 255, 0.3);
 }
 
-.hide-page-numbers /deep/ .ngx-pagination li:not(.pagination-previous):not(.pagination-next) {
-  display: none;
-}
-
 .center {
   margin-left: auto;
   margin-right: auto;

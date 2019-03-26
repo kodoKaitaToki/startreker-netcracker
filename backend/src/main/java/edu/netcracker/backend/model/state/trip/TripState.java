@@ -7,12 +7,14 @@ import edu.netcracker.backend.model.TripReply;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.utils.AuthorityUtils;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Getter
+@Slf4j(topic = "log")
 public enum TripState {
 
     DRAFT(1, "DRAFT") {
@@ -82,6 +84,12 @@ public enum TripState {
 
         @Override
         public boolean switchTo(ApplicationContext ctx, Trip trip, TripRequest tripDTO, User requestUser) {
+            String replyText = tripDTO.getReplies()
+                                      .get(0)
+                                      .getReplyText();
+
+            log.info("User [id: {}] creating trip reply [text: {}]", requestUser.getUserId(), replyText);
+
             TripReplyDAO tripReplyDAO = ctx.getBean(TripReplyDAO.class);
 
             if (tripDTO.getReplies()
@@ -91,11 +99,11 @@ public enum TripState {
 
             TripReply tripReply = new TripReply();
             tripReply.setCreationDate(LocalDateTime.now());
-            tripReply.setReportText(tripDTO.getReplies()
-                                           .get(0)
-                                           .getReplyText());
+            tripReply.setReportText(replyText);
             tripReply.setTripId(trip.getTripId());
             tripReply.setWriterId(requestUser.getUserId());
+
+            trip.setTripState(this);
             tripReplyDAO.save(tripReply);
             return true;
         }

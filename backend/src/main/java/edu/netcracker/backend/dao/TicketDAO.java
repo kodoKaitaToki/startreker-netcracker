@@ -33,4 +33,8 @@ public interface TicketDAO {
                                                LocalDate endDate);
 
     Integer countTicketByUser(Number user_id, LocalDate startDate, LocalDate endDate);
+
+    List<Ticket> findNotBoughtByClass(Number id, int count);
+
+    Optional<Ticket> findNotBoughtTicketByClass(Long id);
 }

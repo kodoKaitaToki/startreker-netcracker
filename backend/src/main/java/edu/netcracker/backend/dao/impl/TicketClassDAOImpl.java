@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -21,25 +22,25 @@ import java.util.*;
 public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements TicketClassDAO {
 
     @Value("${SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER}")
-    private String SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER;
+    private static String SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER;
 
     @Value("${SELECT_BY_TRIP_ID}")
-    private String SELECT_BY_TRIP_ID;
+    private static String SELECT_BY_TRIP_ID;
 
     @Value("${GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER}")
-    private String GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER;
+    private static String GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER;
 
-    @Value("${GET_TICLET_CLASS_WITH_DISCOUNT}")
-    private String GET_TICLET_CLASS_WITH_DISCOUNT;
+    @Value("${GET_TICKET_CLASS_WITH_DISCOUNT}")
+    private static String GET_TICKET_CLASS_WITH_DISCOUNT;
 
     @Value("${GET_ALL_TICKET_CLASSES_BELONG_TO_TRIPS_BELONG_TO_CARRIER}")
-    private String GET_ALL_TICKET_CLASSES_BELONG_TO_TRIPS_BELONG_TO_CARRIER;
+    private static String GET_ALL_TICKET_CLASSES_BELONG_TO_TRIPS_BELONG_TO_CARRIER;
 
     @Value("${GET_TICKET_CLASSES_BELONG_TO_CARRIER}")
-    private String GET_TICKET_CLASSES_BELONG_TO_CARRIER;
+    private static String GET_TICKET_CLASSES_BELONG_TO_CARRIER;
 
     @Value("${INSERT_TICKET_CLASS}")
-    private String INSERT_TICKET_CLASS;
+    private static String INSERT_TICKET_CLASS;
 
     @Value("${UPDATE_TICKET_CLASS}")
     private String UPDATE_TICKET_CLASS;
@@ -185,7 +186,7 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
 
     public Optional<TicketClass> getTicketClassByDiscount(Number userId, Number discountId) {
         try {
-            TicketClass ticketClass = getJdbcTemplate().queryForObject(GET_TICLET_CLASS_WITH_DISCOUNT,
+            TicketClass ticketClass = getJdbcTemplate().queryForObject(GET_TICKET_CLASS_WITH_DISCOUNT,
                                                                        new Object[]{userId, discountId},
                                                                        getGenericMapper());
             return ticketClass != null ? Optional.of(ticketClass) : Optional.empty();
@@ -202,9 +203,9 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
                 GET_ALL_TICKET_CLASSES_BELONG_TO_TRIPS_BELONG_TO_CARRIER,
                 new MapSqlParameterSource("tripIds", tripIds));
         for (Map<String, Object> row : rows) {
-            List<TicketClass> ticketClasses =
-                    relatedTicketClasses.computeIfAbsent((((Number) row.get("trip_id")).longValue()),
-                                                         aLong -> new ArrayList<>());
+            List<TicketClass> ticketClasses
+                    = relatedTicketClasses.computeIfAbsent((((Number) row.get("trip_id")).longValue()),
+                                                           aLong -> new ArrayList<>());
 
             ticketClasses.add(createTicketClass(row));
         }

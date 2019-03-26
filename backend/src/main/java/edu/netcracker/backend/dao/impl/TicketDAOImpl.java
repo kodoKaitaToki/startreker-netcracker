@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Slf4j
@@ -47,8 +48,42 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
     @Value("${COUNT_ALL_BY_USER}")
     private String COUNT_ALL_BY_USER;
 
+    @Value("${FIND_NOT_BOUGHT_BY_CLASS}")
+    private String FIND_NOT_BOUGHT_BY_CLASS;
+
+    @Override
+    public Optional<Ticket> findNotBoughtTicketByClass(Long id) {
+        log.debug("Getting 1 not bought ticket by class with id = {}", id);
+
+        List<Ticket> tickets = new ArrayList<>();
+        tickets.addAll(findNotBoughtByClass(id, 1));
+
+        if (tickets.size() == 1) {
+            return Optional.of(tickets.get(0));
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Ticket> findNotBoughtByClass(Number id, int count) {
+        log.debug("Getting all not bought tickets by class with id {} (count = {})", id, count);
+        List<Ticket> tickets = new ArrayList<>();
+
+        try {
+            tickets.addAll(getJdbcTemplate().query(FIND_NOT_BOUGHT_BY_CLASS,
+                                                   new Object[]{id, count},
+                                                   getGenericMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            log.error(e.getMessage());
+        }
+
+        return tickets;
+    }
+
+    @Override
     public List<Ticket> findAllByClass(Number id) {
-        ArrayList<Ticket> tickets = new ArrayList<>();
+        List<Ticket> tickets = new ArrayList<>();
 
         try {
             tickets.addAll(getJdbcTemplate().query(FIND_ALL_BY_CLASS, new Object[]{id}, getGenericMapper()));
@@ -123,6 +158,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
 
     @Override
     public void buyTicket(Ticket ticket, User user) {
+        log.debug("Buying ticket with id = {}, passenger id = {}", ticket.getTicketId(), user.getUserId());
         ticket.setPassengerId(user.getUserId());
         update(ticket);
     }

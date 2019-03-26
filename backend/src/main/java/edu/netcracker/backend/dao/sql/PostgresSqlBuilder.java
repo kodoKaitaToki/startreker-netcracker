@@ -4,10 +4,12 @@ import edu.netcracker.backend.dao.annotations.Attribute;
 import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.dao.annotations.Table;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.util.Map;
 
+@Slf4j(topic = "log")
 public class PostgresSqlBuilder implements SQLBuilder {
 
     private final PrimaryKey primaryKey;
@@ -46,6 +48,13 @@ public class PostgresSqlBuilder implements SQLBuilder {
         this.deleteSql = assembleDeleteSql();
         this.existsSql = assembleExistsSql();
         this.selectSql = assembleSelectSql();
+
+        String entityName = entityClass.getSimpleName();
+        log.debug("Generated insert sql for [{}]: [{}]", entityName, this.insertSql);
+        log.debug("Generated update sql for [{}]: [{}]", entityName, this.updateSql);
+        log.debug("Generated delete sql for [{}]: [{}]", entityName, this.deleteSql);
+        log.debug("Generated exists sql for [{}]: [{}]", entityName, this.existsSql);
+        log.debug("Generated select sql for [{}]: [{}]", entityName, this.existsSql);
     }
 
     private String assembleInsertSql() {
@@ -100,8 +109,8 @@ public class PostgresSqlBuilder implements SQLBuilder {
     }
 
     private String assembleExistsSql() {
-        String EXISTS_SQL = "SELECT COUNT(*) FROM (SELECT :attributes FROM :table_name WHERE :primary_key LIMIT 1) sub";
-        return EXISTS_SQL.replaceAll(":attributes", attributesSql)
+        String EXISTS_SQL = "SELECT COUNT(*) FROM (SELECT :pk FROM :table_name WHERE :primary_key LIMIT 1) sub";
+        return EXISTS_SQL.replaceAll(":pk", primaryKey.value())
                          .replaceAll(":table_name", tableName)
                          .replaceAll(":primary_key", primaryKeyWhere);
     }
