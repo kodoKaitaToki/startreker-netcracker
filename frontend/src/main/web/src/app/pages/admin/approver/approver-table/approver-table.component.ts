@@ -1,4 +1,4 @@
-import {Component, EventEmitter, HostBinding, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Approver} from '../shared/model/approver';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
@@ -76,7 +76,6 @@ export class ApproverTableComponent implements OnInit {
   }
 
   onSubmitUpdate() {
-
     this.isEditButtonBlockedAfterSubmit = false;
     this.isForUpdateAlertMessage = true;
 
@@ -87,7 +86,6 @@ export class ApproverTableComponent implements OnInit {
   }
 
   onChangePage($event) {
-
     this.page = $event;
     window.scrollTo(0, 0);
   }

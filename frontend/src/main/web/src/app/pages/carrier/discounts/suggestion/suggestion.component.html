@@ -1,18 +1,17 @@
-<hr>
-<div class="container-fluid"
+<div class="card text-center"
      *ngFor="let suggestion of trip.suggestion"
 >
-  <div class="row justify-content-center">
-    <div class="row col-md-5 text-center">
-      <div class="col-5">
+  <div class="row justify-content-center card-header">
+    <div class="row col-md-5 align-items-center justify-content-center">
+      <div class="col-5 card-body">
         <h4>{{trip.departure_planet_name}} (spaceport {{trip.departure_spaceport_name}})</h4>
         <br>
         <h6>at {{trip.departure_date}}</h6>
       </div>
-      <div class="col-2">
+      <div class="col-2 text-center">
         <h4>-></h4>
       </div>
-      <div class="col-5">
+      <div class="col-5 card-body">
         <h4>{{trip.arrival_planet_name}} (spaceport {{trip.arrival_spaceport_name}})</h4>
         <br>
         <h6>at {{trip.arrival_date}}</h6>
@@ -20,37 +19,35 @@
     </div>
   </div>
 
-  <div class="row">
+  <div class="row card-body align-items-center justify-content-center">
     <div class="col-md-3">
       <h5>Price</h5>
     </div>
-    <div class="col-md-6">
-      <h6>{{suggestion.ticket_price}}</h6>
-    </div>
-  </div>
-
-  <div class="row">
     <div class="col-md-3">
       <h5>Class name</h5>
     </div>
-    <div class="col-md-6">
-      <h6>{{suggestion.class_name}}</h6>
-    </div>
-  </div>
-
-  <div class="row">
     <div class="col-md-3">
       <h5>Class seats</h5>
     </div>
-    <div class="col-md-6">
+  </div>
+
+  <div class="row card-body align-items-center justify-content-center">
+    <div class="col-md-3">
+      <h6>{{suggestion.ticket_price}}</h6>
+    </div>
+    <div class="col-md-3">
+      <h6>{{suggestion.class_name}}</h6>
+    </div>
+    <div class="col-md-3">
       <h6>{{suggestion.class_seats}}</h6>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-3">
+  <div class="row align-items-center justify-content-center">
       <h5>Services</h5>
-    </div>
+  </div>
+
+  <div class="row align-items-center justify-content-center">
     <ul class="list-group col-md-6">
       <li class="list-group-item"
           *ngFor="let serviceName of suggestion.service_names"
@@ -62,18 +59,31 @@
 
   <hr>
 
-  <h6 class="text-center">Discount</h6>
+  <div class="row align-items-center justify-content-center">
+    <h6>Discount</h6>
+  </div>
 
-  <div class="container"
+  <div class="card-body"
        *ngIf="suggestion.discount !== null"
-  >
-    <hr>
-
+  ><div class="row justify-content-center">
+    <div class="col-md-2">
+      <h5>Type</h5>
+    </div>
+    <div class="col-md-2">
+      <h5>Rate</h5>
+    </div>
+    <div class="col-md-2">
+      <h5>Price with discount</h5>
+    </div>
+    <div class="col-md-2">
+      <h5>From</h5>
+    </div>
+    <div class="col-md-2">
+      <h5>To</h5>
+    </div>
+  </div>
     <div class="row justify-content-center">
-      <div class="col-md-6 text-center">
-        <h5>Type</h5>
-      </div>
-      <div class="col-md-6 text-center">
+      <div class="col-md-2">
         <h6 *ngIf="suggestion.discount.is_percent">
           By percent
         </h6>
@@ -82,65 +92,38 @@
           By value
         </h6>
       </div>
-    </div>
-
-    <div class="row justify-content-center">
-      <div class="col-md-6 text-center">
-        <h5>Value</h5>
-      </div>
-      <div class="col-md-6 text-center">
+      <div class="col-md-2">
         <h6>
           {{suggestion.discount.discount_rate}}
         </h6>
       </div>
-    </div>
+      <div class="col-md-2">
+        <h6 *ngIf="suggestion.discount.is_percent">
+          {{(suggestion.ticket_price * (1 - suggestion.discount.discount_rate / 100)) | number}}
+        </h6>
 
-    <div class="row justify-content-center">
-      <div class="col-md-6 text-center">
-        <h5>Start date</h5>
+        <h6 *ngIf="!suggestion.discount.is_percent">
+          {{(suggestion.ticket_price - suggestion.discount.discount_rate) | number}}
+        </h6>
       </div>
-      <div class="col-md-6 text-center">
+      <div class="col-md-2">
         <h6>
           {{suggestion.discount.start_date}}
         </h6>
       </div>
-    </div>
-
-    <div class="row justify-content-center">
-      <div class="col-md-6 text-center">
-        <h5>Finish date</h5>
-      </div>
-      <div class="col-md-6 text-center">
+      <div class="col-md-2">
         <h6>
           {{suggestion.discount.finish_date}}
         </h6>
       </div>
     </div>
-
-    <div class="row justify-content-center"
-         *ngIf="suggestion.discount !== null"
-    >
-      <div class="col-md-6 text-center">
-        <h5>Price with discount</h5>
-      </div>
-      <div class="col-md-6 text-center">
-        <h6 *ngIf="suggestion.discount.is_percent">
-          {{suggestion.ticket_price * (1 - suggestion.discount.discount_rate / 100)}}
-        </h6>
-
-        <h6 *ngIf="!suggestion.discount.is_percent">
-          {{(suggestion.ticket_price - suggestion.discount.discount_rate)}}
-        </h6>
-      </div>
-    </div>
-
     <div class="row justify-content-center">
-        <h4 *ngIf="suggestion.discount.is_expired === true"
-            [ngClass]="{color: red === suggestion.discount.is_expired}"
-            class="text-center"
-        >
-          Expired
-        </h4>
+      <h4 *ngIf="suggestion.discount.is_expired === true"
+          style="color: red"
+          class="text-center"
+      >
+        Expired
+      </h4>
     </div>
 
     <div class="row justify-content-center">
@@ -151,7 +134,7 @@
         Delete
       </button>
     </div>
-
+    <br>
   </div>
 
   <div class="container"
@@ -168,9 +151,8 @@
         Add
       </button>
     </div>
+    <br>
   </div>
-
-  <hr>
 
   <discount-form
     [obj]="suggestion"
@@ -180,3 +162,4 @@
     *ngIf="currentSuggestion === suggestion"
   ></discount-form>
 </div>
+

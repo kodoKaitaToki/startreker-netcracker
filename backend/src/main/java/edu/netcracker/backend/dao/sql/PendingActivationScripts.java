@@ -26,7 +26,7 @@ public enum PendingActivationScripts {
             "  INNER JOIN planet planet_departure ON spaceport_departure.planet_id = planet_departure.planet_id\n" +
             "  INNER JOIN planet planet_arrival ON speceport_arrival.planet_id = planet_arrival.planet_id\n" +
             "WHERE trip_status < 4\n" +
-            "ORDER BY t.trip_status ASC;"),
+            "ORDER BY t.trip_status ASC"),
 
     GET_SERVICES_PENDING_ACTIVATION("\n" +
             "SELECT\n" +
