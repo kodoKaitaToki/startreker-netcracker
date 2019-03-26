@@ -178,8 +178,7 @@
       </form>
     </li>
   </ul>
-  <pagination-controls *ngIf="!isProgressSpinnerActivated"
-                       id="listing_pagination" maxSize=5
+  <pagination-controls id="listing_pagination" maxSize=5
                        (pageChange)="onChangePage($event)"
                        class="text-center">
   </pagination-controls>

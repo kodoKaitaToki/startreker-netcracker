@@ -11,8 +11,6 @@ export class CarrierDiscountsService {
 
   private serviceTypeForDiscount: string = '';
 
-  private userName: string = '?username=mstebles6';
-
   private getPostOutletApi;
 
   private deleteOutletApi;
@@ -37,10 +35,10 @@ export class CarrierDiscountsService {
   }
 
   buildApiForGetAndPost() {
-    this.getPostOutletApi = this.url + this.serviceTypeForDiscount + this.userName;
+    this.getPostOutletApi = this.url + this.serviceTypeForDiscount
   }
 
   buildApiForDelete(id: number) {
-    this.deleteOutletApi = `${this.url}${this.serviceTypeForDiscount}/${id}${this.userName}`;
+    this.deleteOutletApi = `${this.url}${this.serviceTypeForDiscount}/${id}`;
   }
 }

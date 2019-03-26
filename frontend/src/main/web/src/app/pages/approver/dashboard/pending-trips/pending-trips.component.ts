@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ServiceTripPendingService} from "../shared/service/service-trip-pending.service";
 import {PendingTrip} from "../shared/model/pending-trip.model";
-import { HttpResponse } from '@angular/common/http';
-import { checkToken } from 'src/app/modules/api';
-import { clone } from 'ramda';
+import {HttpResponse} from '@angular/common/http';
+import {checkToken} from 'src/app/modules/api';
+import {clone} from 'ramda';
 
 @Component({
   selector: 'app-pending-trips',
@@ -14,8 +14,6 @@ import { clone } from 'ramda';
 export class PendingTripsComponent implements OnInit {
 
   private pendingTrips: PendingTrip[];
-
-  private currentPendingTrip: PendingTrip = null;
 
   private filterCriterias = [
     'carrierName',
@@ -28,6 +26,12 @@ export class PendingTripsComponent implements OnInit {
     'arrivalSpaceportName',
     'tripStatus'
   ];
+
+  totalRec: number;
+
+  page: number = 1;
+
+  entriesAmountOnPage = 3;
 
   private currentFilterCriteria: string;
 
@@ -45,19 +49,17 @@ export class PendingTripsComponent implements OnInit {
     this.pendingSrvc.getAllPendingTrips()
       .subscribe((resp: HttpResponse<any>) => {
         checkToken(resp.headers);
-        this.pendingTrips = clone(resp);
+        this.pendingTrips = clone(resp.body);
       })
-  }
-
-  onDetailClick(pendingTrip) {
-    this.currentPendingTrip = pendingTrip;
-  }
-
-  onCloseDetailClick() {
-    this.currentPendingTrip = null;
   }
 
   getFilterCriteria($event) {
     this.currentFilterCriteria = $event.value;
+  }
+
+  onChangePage($event) {
+
+    this.page = $event;
+    window.scrollTo(0, 0);
   }
 }
