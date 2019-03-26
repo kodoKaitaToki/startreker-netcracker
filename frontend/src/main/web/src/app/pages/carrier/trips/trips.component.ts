@@ -200,6 +200,7 @@ export class TripsComponent implements OnInit {
     delete trip.arrival_planet;
     delete trip.arrival_spaceport;
     delete trip.ticket_classes;
+    delete trip.trip_reply;
     return trip;
   }
 
