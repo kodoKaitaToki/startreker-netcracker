@@ -5,6 +5,7 @@ import edu.netcracker.backend.dao.mapper.CarrierRevenueMapper;
 import edu.netcracker.backend.dao.mapper.CarrierViewsMapper;
 import edu.netcracker.backend.message.response.*;
 import edu.netcracker.backend.utils.ReportStatus;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -14,11 +15,14 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j(topic = "log")
 @Repository
 @PropertySource("classpath:sql/statisticsdao.properties")
 public class StatisticsDAOImpl implements StatisticsDAO {
@@ -81,6 +85,21 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     @Value("${SELECT_SERVICE_VIEWS_TOTAL_BY_SERVICE_BY_MONTH}")
     private String SELECT_SERVICE_VIEWS_TOTAL_BY_SERVICE_BY_MONTH;
 
+    @Value("${FIND_COSTS}")
+    private String FIND_COSTS_BY_PERIOD;
+
+    @Value("${FIND_COSTS_BY_CARRIER}")
+    private String FIND_COSTS_BY_CARRIER;
+
+    @Value("${GET_USERS_INCREASING_PER_PERIOD_BY_ROLE}")
+    private String GET_USERS_INCREASING_PER_PERIOD_BY_ROLE;
+
+    @Value("${GET_LOCATIONS_INCREASING_PER_PERIOD}")
+    private String GET_LOCATIONS_INCREASING_PER_PERIOD;
+
+    @Value("${GET_USERS_INCREASING_PER_PERIOD}")
+    private String GET_USERS_INCREASING_PER_PERIOD;
+
     @Autowired
     public StatisticsDAOImpl(JdbcTemplate jdbcTemplate,
                              NamedParameterJdbcTemplate namedJdbcTemplate,
@@ -91,6 +110,80 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         this.carrierRevenueMapper = carrierRevenueMapper;
         this.carrierViewsMapper = carrierViewsMapper;
     }
+
+    @Override
+    public Map<Float, Long> getCosts(LocalDateTime from, LocalDateTime to) {
+        log.debug("Getting all costs by period from {}, to {}", from, to);
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_COSTS_BY_PERIOD, from, to);
+
+        return getCostMap(rows);
+    }
+
+    @Override
+    public Map<Float, Long> getCostsByCarrier(Number carrierId, LocalDateTime from, LocalDateTime to) {
+        log.debug("Getting costs by carrier (id = {}) by period from {}, to {}", carrierId, from, to);
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(FIND_COSTS_BY_CARRIER, carrierId, from, to);
+
+        return getCostMap(rows);
+    }
+
+    private Map<Float, Long> getCostMap(List<Map<String, Object>> rows) {
+        Map<Float, Long> map = new HashMap<>();
+
+        for (Map<String, Object> row : rows) {
+            map.put((Float) row.get("end_price"), (Long) row.get("end_price_count"));
+        }
+
+        return map;
+    }
+
+    @Override
+    public Map<LocalDateTime, Long> getUsersIncreasingByRoleIdPerPeriod(Number id,
+                                                                        LocalDateTime from,
+                                                                        LocalDateTime to) {
+        Map<LocalDateTime, Long> increasing = new HashMap<>();
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(GET_USERS_INCREASING_PER_PERIOD_BY_ROLE,
+                                                                   id,
+                                                                   from,
+                                                                   to);
+
+        for (Map<String, Object> row : rows) {
+            increasing.put(((Timestamp) row.get("user_created")).toLocalDateTime(),
+                           (Long) row.get("user_created_count"));
+        }
+
+        return increasing;
+    }
+
+    @Override
+    public Map<LocalDateTime, Long> getUsersIncreasingPerPeriod(LocalDateTime from, LocalDateTime to) {
+        Map<LocalDateTime, Long> increasing = new HashMap<>();
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(GET_USERS_INCREASING_PER_PERIOD, from, to);
+
+        for (Map<String, Object> row : rows) {
+            increasing.put(((Timestamp) row.get("user_created")).toLocalDateTime(),
+                           (Long) row.get("user_created_count"));
+        }
+
+        return increasing;
+    }
+
+    @Override
+    public Map<LocalDateTime, Long> getLocationsIncreasingPerPeriod(LocalDateTime from, LocalDateTime to) {
+        Map<LocalDateTime, Long> increasing = new HashMap<>();
+
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(GET_LOCATIONS_INCREASING_PER_PERIOD, from, to);
+
+        for (Map<String, Object> row : rows) {
+            increasing.put(((Timestamp) row.get("creation_date")).toLocalDateTime(),
+                           (Long) row.get("creation_date_count"));
+        }
+
+        return increasing;
+    }
+
 
     public List<TripDistributionElement> getTripsStatistics() {
         return jdbcTemplate.query(SELECT_ROUTES_DISTRIBUTION, (rs, rowNum) -> {
@@ -219,8 +312,8 @@ public class StatisticsDAOImpl implements StatisticsDAO {
     }
 
     public ReportStatisticsResponse getTroubleTicketStatistics() {
-        SqlRowSet data =
-                namedJdbcTemplate.queryForRowSet(SELECT_TROUBLE_TICKETS_AMOUNT_IN_STATUS, getStatisticsParameters());
+        SqlRowSet data = namedJdbcTemplate.queryForRowSet(SELECT_TROUBLE_TICKETS_AMOUNT_IN_STATUS,
+                                                          getStatisticsParameters());
         return toResponse(data);
     }
 

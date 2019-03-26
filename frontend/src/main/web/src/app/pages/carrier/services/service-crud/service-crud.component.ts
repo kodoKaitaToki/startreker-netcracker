@@ -83,7 +83,7 @@ export class ServiceCrudComponent implements OnInit {
   }
 
   getDraftServices() {
-    this.serviceService.getServiceByStatus('DRAFT')
+    this.serviceService.getServices(0, 100, 'DRAFT')
                       .subscribe(
                         (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RequestMapping("api/v1/history")
@@ -26,9 +28,12 @@ public class PurchaseHistoryController {
                                                      @RequestParam("offset") Number offset,
                                                      @RequestParam(name = "start-date", required = false)
                                                              String startDate,
-                                                     @RequestParam(name = "end-date", required = false)
-                                                             String endDate) {
+                                                     @RequestParam(name = "end-date", required = false) String endDate,
+                                                     HttpServletResponse response) {
 
+        response.addHeader("X-Total-Count",
+                           phs.countTicketByUser(startDate, endDate)
+                              .toString());
         return phs.getPurchaseHistory(limit, offset, startDate, endDate);
     }
 
