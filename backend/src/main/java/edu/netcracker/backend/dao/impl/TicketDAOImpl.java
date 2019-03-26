@@ -33,14 +33,14 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
     @Value("${FIND_ALL_BY_CLASS}")
     private String FIND_ALL_BY_CLASS;
 
-    private final String FIND_REMAINING_SEATS = "SELECT COUNT(ticket_id) "
-                                                + "FROM ticket "
-                                                + "WHERE class_id = ? AND passenger_id IS NULL";
+    @Value("${FIND_REMAINING_SEATS}")
+    private String FIND_REMAINING_SEATS;
 
+    @Value("${CREATE_EMPTY_TICKET_FOR_TICKET_CLASS}")
+    private String CREATE_EMPTY_TICKET_FOR_TICKET_CLASS;
 
-    private final String CREATE_EMPTY_TICKET_FOR_TICKET_CLASS = "INSERT INTO ticket (class_id, seat) VALUES (?, ?)";
-
-    private final String DELETE_ALL_TICKETS_OF_TICKET_CLASS = "DELETE FROM ticket WHERE class_id = ?";
+    @Value("${DELETE_ALL_TICKETS_OF_TICKET_CLASS}")
+    private String DELETE_ALL_TICKETS_OF_TICKET_CLASS;
 
     @Value("${FIND_ALL_BY_USER}")
     private String FIND_ALL_BY_USER;
