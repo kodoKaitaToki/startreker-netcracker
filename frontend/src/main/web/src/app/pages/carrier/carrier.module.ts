@@ -37,6 +37,7 @@ import { SuggestionsTreeComponent } from './suggestions/suggestions-tree/suggest
 import { SuggestionsTableComponent } from './suggestions/suggestions-table/suggestions-table.component';
 import { TripsTicketClassComponent } from './trips/trips-ticket-class/trips-ticket-class.component';
 import {DialogModule} from 'primeng/dialog';
+import { PaginatorComponent } from '../../shared/paginator/paginator.component';
 
 @NgModule({
             declarations:
@@ -63,7 +64,8 @@ import {DialogModule} from 'primeng/dialog';
                TripFilterPipe,
                SuggestionsTreeComponent,
                SuggestionsTableComponent,
-               TripsTicketClassComponent
+               TripsTicketClassComponent,
+               PaginatorComponent
               ],
             imports: [
               CommonModule,

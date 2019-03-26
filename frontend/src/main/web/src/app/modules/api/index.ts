@@ -79,8 +79,9 @@ const trips = {
   updateTrip(id) {
     return `${baseUrl}api/v1/trips/${id}`
   },
-  getAllTrips() {
-    return `${baseUrl}api/v1/trips`;
+  getAllTrips(limit: number = 10, offset: number = 0) {
+    // return `${baseUrl}api/v1/trips`;
+    return `${baseUrl}api/v1/trips/paging?limit=${limit}&offset=${offset}`
   },
   getCarrierTrips() {
     return `${baseUrl}api/v1/carrier/trips`;

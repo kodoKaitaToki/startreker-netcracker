@@ -274,8 +274,15 @@
       </p-dialog>
     </li>
   </ul>
-  <pagination-controls id="listing_pagination" maxSize=5 (pageChange)="onChangePage($event)" class="text-center">
-  </pagination-controls>
+  <!-- <pagination-controls id="listing_pagination" maxSize=5 (pageChange)="onChangePage($event)" class="text-center">
+  </pagination-controls> -->
+  <app-paginator
+    [page]="trips"
+    [from]="pageFrom"
+    [number]="pageNumber"
+    (update)="onPageUpdate($event)"
+  >
+  </app-paginator>
 </div>
 
 <hr>

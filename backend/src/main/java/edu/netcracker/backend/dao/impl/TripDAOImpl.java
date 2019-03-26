@@ -80,12 +80,13 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     @Value("${GET_ALL_TRIPS_WITH_ARRIVAL_AND_DEPARTURE_DATE_BELONG_TO_CARRIER}")
     private String GET_ALL_TRIPS_WITH_ARRIVAL_AND_DEPARTURE_DATE_BELONG_TO_CARRIER;
 
+    @Value("${ALL_TRIPS_FOR_CARRIER_PAGINATION}")
+    private String ALL_TRIPS_FOR_CARRIER_PAGINATION;
+
     @Value("${FIND_ALL_TRIPS}")
     private String FIND_ALL_TRIPS;
 
     private String PAGINATION = " LIMIT ? OFFSET ?";
-
-    private String ALL_TRIPS_PAGINATION = ALL_TRIPS_FOR_CARRIER + PAGINATION;
 
     private final Logger logger = LoggerFactory.getLogger(TripDAOImpl.class);
 
@@ -128,7 +129,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     @Override
     public List<Trip> paginationForCarrier(Integer limit, Integer offset, Long carrierId) {
         logger.debug("Getting {} trips starting from {} ", limit, offset);
-        List<Trip> trips = getJdbcTemplate().query(ALL_TRIPS_PAGINATION,
+        List<Trip> trips = getJdbcTemplate().query(ALL_TRIPS_FOR_CARRIER_PAGINATION,
                                                    new Object[]{carrierId, limit, offset},
                                                    new TripCRUDMapper());
         logger.debug("Attaching ticket classes to trip");
