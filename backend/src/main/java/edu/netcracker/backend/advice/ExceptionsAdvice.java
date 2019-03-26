@@ -64,16 +64,16 @@ public class ExceptionsAdvice {
                 HttpStatus.UNAUTHORIZED));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<RequestExceptionMessage> handleException(Exception ex){
-        RequestExceptionMessage message = new RequestExceptionMessage();
-        message.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        message.setError(HttpStatus.INTERNAL_SERVER_ERROR.name());
-        message.setTimestamp(System.currentTimeMillis());
-        message.setMessage("Something went wrong");
-
-        return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
-    }
+//    @ExceptionHandler(Exception.class)
+//    public ResponseEntity<RequestExceptionMessage> handleException(Exception ex){
+//        RequestExceptionMessage message = new RequestExceptionMessage();
+//        message.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+//        message.setError(HttpStatus.INTERNAL_SERVER_ERROR.name());
+//        message.setTimestamp(System.currentTimeMillis());
+//        message.setMessage("Something went wrong");
+//
+//        return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+//    }
 
     private RequestExceptionMessage requestExceptionMessage(Exception e, HttpStatus httpStatus) {
         RequestExceptionMessage message = new RequestExceptionMessage();
