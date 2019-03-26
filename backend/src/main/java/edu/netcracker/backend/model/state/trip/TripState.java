@@ -110,7 +110,7 @@ public enum TripState {
     },
 
     REMOVED(7, "REMOVED") {
-        private final List<Integer> allowedStatesToSwitchFrom = Arrays.asList(1, 2, 3, 4, 5, 6);
+        private final List<Integer> allowedStatesToSwitchFrom = Arrays.asList(1, 4, 5, 6);
 
         @Override
         public boolean isStateChangeAllowed(Trip trip, User requestUser) {
