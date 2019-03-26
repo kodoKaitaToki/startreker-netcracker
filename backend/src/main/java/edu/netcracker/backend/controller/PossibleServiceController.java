@@ -27,22 +27,24 @@ public class PossibleServiceController {
         return possibleServiceService.getAllWithClassId(classId);
     }
 
-
     @GetMapping("/api/v1/possible-services/{possibleServiceId}")
     public PossibleServiceDTO getPossibleService(@PathVariable Integer possibleServiceId) {
         return possibleServiceService.getPossibleService(possibleServiceId);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     @PostMapping("/api/v1/possible-services")
     public PossibleServiceDTO createPossibleService(@Valid @RequestBody PossibleServiceDTO possibleServiceDTO) {
         return possibleServiceService.createPossibleService(possibleServiceDTO);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     @PutMapping("/api/v1/possible-services")
     public PossibleServiceDTO updatePossibleService(@Valid @RequestBody PossibleServiceDTO possibleServiceDTO) {
         return possibleServiceService.updatePossibleService(possibleServiceDTO);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     @DeleteMapping("/api/v1/possible-services/{possibleServiceId}")
     public void deletePossibleService(@PathVariable Integer possibleServiceId) {
         possibleServiceService.deletePossibleService(possibleServiceId);
