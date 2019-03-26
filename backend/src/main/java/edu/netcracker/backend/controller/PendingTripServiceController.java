@@ -7,6 +7,7 @@ import edu.netcracker.backend.service.IPendingSrvc;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +24,7 @@ public class PendingTripServiceController {
 
     private IPendingSrvc<TripPendingActivationDto> pendingTripsSrvc;
 
+    @PreAuthorize("hasAuthority('ROLE_APPROVER')")
     @RequestMapping(value = "/all-pending-services", method = RequestMethod.GET)
     public List<ServicePendingActivationDto> getAllServices() {
 
@@ -31,6 +33,7 @@ public class PendingTripServiceController {
         return pendingServicesSrvc.getPendingEntries();
     }
 
+    @PreAuthorize("hasAuthority('ROLE_APPROVER')")
     @RequestMapping(value = "/all-pending-trips", method = RequestMethod.GET)
     public List<TripPendingActivationDto> getAllTrips() {
 
@@ -39,6 +42,7 @@ public class PendingTripServiceController {
         return pendingTripsSrvc.getPendingEntries();
     }
 
+    @PreAuthorize("hasAuthority('ROLE_APPROVER')")
     @RequestMapping(value = "/all-pending-services-paging", method = RequestMethod.GET)
     public List<ServicePendingActivationDto> getServicesLimitOffset(@RequestParam("limit") Number limit, @RequestParam("offset") Number offset) {
 
@@ -53,6 +57,7 @@ public class PendingTripServiceController {
         }
     }
 
+    @PreAuthorize("hasAuthority('ROLE_APPROVER')")
     @RequestMapping(value = "/all-pending-trips-paging", method = RequestMethod.GET)
     public List<TripPendingActivationDto> getTripsLimitOffset(@RequestParam("limit") Number limit, @RequestParam("offset") Number offset) {
 

@@ -24,60 +24,59 @@
 
       <hr>
 
-      <h2 class="text-center">
-        New Approver
-      </h2>
+      <p-fieldset legend="New approver"
+                  [toggleable]="true"
+                  [collapsed]="true"
+      >
 
-      <hr>
-
-      <form [formGroup]="form"
-            (ngSubmit)="onPost()">
-        <div class="form-group">
-          <input type="text" class="form-control"
-                 [ngClass]="{
+        <form [formGroup]="form"
+              (ngSubmit)="onPost()">
+          <div class="form-group">
+            <input type="text" class="form-control"
+                   [ngClass]="{
                    'is-invalid':form.get('email').touched && form.get('email').invalid,
                    'is-valid': form.get('email').valid
                    }"
-                 formControlName="email"
-                 placeholder="Email"
-          >
-          <span *ngIf="form.get('email').touched && form.get('email').invalid"
-                class="invalid-feedback"
-          >
+                   formControlName="email"
+                   placeholder="Email"
+            >
+            <span *ngIf="form.get('email').touched && form.get('email').invalid"
+                  class="invalid-feedback"
+            >
             Input the correct email
           </span>
-        </div>
+          </div>
 
-        <div class="form-group">
-          <input type="text"
-                 class="form-control"
-                 placeholder="Name"
-                 formControlName="username"
-                 [ngClass]="{
+          <div class="form-group">
+            <input type="text"
+                   class="form-control"
+                   placeholder="Name"
+                   formControlName="username"
+                   [ngClass]="{
                    'is-invalid':form.get('username').touched && form.get('username').invalid,
                    'is-valid': form.get('username').valid
                    }"
-          >
-          <span *ngIf="form.get('username').touched && form.get('username').invalid"
-                class="invalid-feedback"
-          >
+            >
+            <span *ngIf="form.get('username').touched && form.get('username').invalid"
+                  class="invalid-feedback"
+            >
             Input the name
           </span>
-        </div>
+          </div>
 
-        <div class="form-group">
-          <input type="password"
-                 class="form-control"
-                 placeholder="Password"
-                 formControlName="password"
-                 [ngClass]="{
+          <div class="form-group">
+            <input type="password"
+                   class="form-control"
+                   placeholder="Password"
+                   formControlName="password"
+                   [ngClass]="{
                    'is-invalid':form.get('password').invalid && form.get('password').touched,
                    'is-valid': form.get('password').valid && form.get('password').touched
                    }"
-          >
-          <span *ngIf="form.get('password').invalid && form.get('password').touched"
-                class="invalid-feedback"
-          >
+            >
+            <span *ngIf="form.get('password').invalid && form.get('password').touched"
+                  class="invalid-feedback"
+            >
             <span *ngIf="form.get('password')['errors']['required']">
               Password cannot be empty
             </span>
@@ -86,78 +85,79 @@
             Now is {{form.get('password')['errors']['minlength']['actualLength']}}
             </span>
           </span>
-        </div>
+          </div>
 
-        <div class="form-group">
-          <input type="password" class="form-control"
-                 placeholder="Repeat password"
-                 formControlName="repeat_password"
-                 [ngClass]="{
+          <div class="form-group">
+            <input type="password" class="form-control"
+                   placeholder="Repeat password"
+                   formControlName="repeat_password"
+                   [ngClass]="{
                    'is-invalid': !checkRepeatedPasswordTheSame() && this.form.get('repeat_password').touched,
                    'is-valid':  checkRepeatedPasswordTheSame() && this.form.get('repeat_password').touched
                    }"
-          >
-        </div>
+            >
+          </div>
 
-        <div class="form-group">
-          <input type="text"
-                 class="form-control"
-                 placeholder="Telephone"
-                 formControlName="telephone_number"
-                 [ngClass]="{
+          <div class="form-group">
+            <input type="text"
+                   class="form-control"
+                   placeholder="Telephone"
+                   formControlName="telephone_number"
+                   [ngClass]="{
                    'is-invalid':form.get('telephone_number').touched && form.get('telephone_number').invalid,
                    'is-valid': form.get('telephone_number').valid
                    }"
-          >
-          <span *ngIf="form.get('telephone_number').touched && form.get('telephone_number').invalid"
-                class="invalid-feedback"
-          >
+            >
+            <span *ngIf="form.get('telephone_number').touched && form.get('telephone_number').invalid"
+                  class="invalid-feedback"
+            >
             Telephone number must be here
           </span>
-        </div>
-
-        <div class="container statusRadio" style="text-align: center">
-          <h4>Status</h4>
-          <div class="custom-control custom-radio">
-            <input type="radio"
-                   class="custom-control-input"
-                   [value]="true"
-                   formControlName="is_activated"
-                   id="new_activated"
-            >
-            <label class="custom-control-label"
-                   for="new_activated"
-            >
-              Activated
-            </label>
           </div>
 
-          <div class="custom-control custom-radio">
-            <input type="radio"
-                   class="custom-control-input"
-                   [value]="false"
-                   formControlName="is_activated"
-                   id="new_deactivated"
-            >
-            <label class="custom-control-label"
-                   for="new_deactivated"
-            >
-              Deactivated
-            </label>
+          <div class="container statusRadio" style="text-align: center">
+            <h4>Status</h4>
+            <div class="custom-control custom-radio">
+              <input type="radio"
+                     class="custom-control-input"
+                     [value]="true"
+                     formControlName="is_activated"
+                     id="new_activated"
+              >
+              <label class="custom-control-label"
+                     for="new_activated"
+              >
+                Activated
+              </label>
+            </div>
+
+            <div class="custom-control custom-radio">
+              <input type="radio"
+                     class="custom-control-input"
+                     [value]="false"
+                     formControlName="is_activated"
+                     id="new_deactivated"
+              >
+              <label class="custom-control-label"
+                     for="new_deactivated"
+              >
+                Deactivated
+              </label>
+            </div>
           </div>
-        </div>
 
-        <hr>
+          <hr>
 
-        <div class="text-center">
-          <button class="btn-success btn col-md-12"
-                  type="submit"
-                  [disabled]="form.invalid"
-          >
-            Add
-          </button>
-        </div>
-      </form>
+          <div class="text-center">
+            <button class="btn-success btn col-md-12"
+                    type="submit"
+                    [disabled]="form.invalid"
+            >
+              Add
+            </button>
+          </div>
+        </form>
+      </p-fieldset>
     </div>
 
     <div class="col-md-9">
