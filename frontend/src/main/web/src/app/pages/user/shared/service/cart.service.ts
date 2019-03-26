@@ -11,7 +11,7 @@ export class CartService{
     buyTicket(ticket: BookedTicket){
         let servIds: number[] = [];
         ticket.services.forEach(service => servIds.push(service.id))
-        let body = {ticket_id: ticket.ticket,
+        let body = {class_id: ticket.ticket.class_id,
                     p_services_ids: servIds}
         return this.http.post(Api.user.buyTicket(), body, Api.HttpOptionsAuthorized);
     }
