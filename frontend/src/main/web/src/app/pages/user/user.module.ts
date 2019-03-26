@@ -24,7 +24,7 @@ import { PurchasePageComponent } from './purchase-page/purchase-page.component';
     UserRoutingModule,
     ReactiveFormsModule,
     NgxPaginationModule,
-    ToastModule,
+    ToastModule
   ],
   providers: [
     ShowMessageService,
