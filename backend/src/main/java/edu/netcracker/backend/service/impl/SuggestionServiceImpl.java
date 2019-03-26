@@ -196,6 +196,12 @@ public class SuggestionServiceImpl implements SuggestionService {
 
         Map<Long, List<Suggestion>> relatedSuggestions = getAllSuggestionBelongToTicketClasses(
                 relatedToTripsTicketClasses);
+
+        if (relatedSuggestions.isEmpty()) {
+            log.warn("No suggestions for ticket classes {}", relatedToTripsTicketClasses);
+            return new HashMap<>();
+        }
+
         Map<Long, List<ServiceDescr>> relationServices = getAllServicesBelongToSuggestions(relatedSuggestions);
         List<DiscountDTO> discountsDTO = getDiscountDTOs(relatedSuggestions);
 
