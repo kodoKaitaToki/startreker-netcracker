@@ -25,6 +25,7 @@ import {NgxPaginationModule} from "ngx-pagination";
 import {SelectServiceInfoPipe} from './dashboard/shared/pipes/select-service-info.pipe';
 import {StatePipe} from "./dashboard/shared/pipes/StatePipe";
 import { ToastModule } from 'primeng/toast';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [ServiceComponent,
@@ -51,7 +52,8 @@ import { ToastModule } from 'primeng/toast';
     ToastModule,
     MessageModule,
     MessagesModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    RouterModule
   ],
   providers: [
     MessageService, ServiceTripPendingService

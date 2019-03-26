@@ -50,18 +50,18 @@
   </div>
 </div>
 
-<div class="container">
+<div class="container-fluid">
   <div class="background-card card">
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs nav-fill">
-        <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-          <a class="nav-link" [routerLink]="['/approver/service/opened']">Economy</a>
+        <li class="nav-item">
+          <a class="nav-link active" [routerLink]="['/approver/service/opened']">Economy</a>
         </li>
-        <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-          <a class="nav-link" [routerLink]="['/approver/service/assigned']">First</a>
+        <li class="nav-item">
+          <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['/approver/service/assigned']">First</a>
         </li>
-        <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-          <a class="nav-link" [routerLink]="['/approver/service/assigned']">Buisness</a>
+        <li class="nav-item">
+          <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['/approver/service/assigned']">Buisness</a>
         </li>
       </ul>
     </div>
