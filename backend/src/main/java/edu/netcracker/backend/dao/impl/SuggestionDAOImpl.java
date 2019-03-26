@@ -20,8 +20,8 @@ import java.util.stream.Collectors;
 @PropertySource("classpath:sql/suggestiondao.properties")
 public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements SuggestionDAO {
 
-    @Value("${FIND_ALL_WITH_CLASS_ID}")
-    private String FIND_ALL_WITH_CLASS_ID;
+    @Value("${FIND_ALL_SUGGESTIONS_WITH_CLASS_ID}")
+    private String FIND_ALL_SUGGESTIONS_WITH_CLASS_ID;
 
     @Value("${ADD_POSSIBLE_SERVICE}")
     private String ADD_POSSIBLE_SERVICE;
@@ -30,7 +30,7 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
     private String DELETE_POSSIBLE_SERVICE;
 
     @Value("${GET_ALL_SUGGESTION_RELATED_TO_CARRIER}")
-    private static String GET_ALL_SUGGESTION_RELATED_TO_CARRIER;
+    private String GET_ALL_SUGGESTION_RELATED_TO_CARRIER;
 
     @Value("${GET_SUGGESTION_WITH_DISCOUNT}")
     private String GET_SUGGESTION_WITH_DISCOUNT;
@@ -73,7 +73,9 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
 
         List<Suggestion> suggestions = new ArrayList<>();
 
-        suggestions.addAll(getJdbcTemplate().query(FIND_ALL_WITH_CLASS_ID, new Object[]{id}, getGenericMapper()));
+        suggestions.addAll(getJdbcTemplate().query(FIND_ALL_SUGGESTIONS_WITH_CLASS_ID,
+                                                   new Object[]{id},
+                                                   getGenericMapper()));
 
         return suggestions;
     }

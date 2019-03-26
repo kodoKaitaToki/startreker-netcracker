@@ -24,8 +24,8 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
     private ServiceDAO serviceDAO;
     private final PossibleServiceMapper possibleServiceMapper;
 
-    @Value("${FIND_ALL_WITH_CLASS_ID}")
-    private String FIND_ALL_WITH_CLASS_ID;
+    @Value("${FIND_ALL_P_SERVICES_WITH_CLASS_ID}")
+    private String FIND_ALL_P_SERVICES_WITH_CLASS_ID;
 
     @Value("${FIND_ALL_P_SERVICES_BY_SUGGESTION_ID}")
     private String FIND_ALL_P_SERVICES_BY_SUGGESTION_ID;
@@ -74,7 +74,9 @@ public class PossibleServiceDAOImpl extends CrudDAOImpl<PossibleService> impleme
 
         List<PossibleService> possibleServices = new ArrayList<>();
 
-        possibleServices.addAll(getJdbcTemplate().query(FIND_ALL_WITH_CLASS_ID, new Object[]{id}, getGenericMapper()));
+        possibleServices.addAll(getJdbcTemplate().query(FIND_ALL_P_SERVICES_WITH_CLASS_ID,
+                                                        new Object[]{id},
+                                                        getGenericMapper()));
 
         possibleServices.forEach(possibleService -> findService(possibleService).ifPresent(possibleService::setService));
 
