@@ -38,17 +38,6 @@ export class SalesService {
                                 {headers: HttpOptionsAuthorized.headers, 
                                   params: params,
                                 observe: HttpOptionsAuthorized.observe})
-        .pipe(map(res => {
-
-          return res.body.map(item => {
-            return new SalesModel(
-                item.sold,
-                item.revenue,
-                new Date(item.from),
-                new Date(item.to),
-            );
-          });
-      }))
   }
 
 }

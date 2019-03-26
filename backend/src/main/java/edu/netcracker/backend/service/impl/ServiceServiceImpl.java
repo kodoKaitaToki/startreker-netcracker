@@ -169,12 +169,12 @@ public class ServiceServiceImpl implements ServiceService {
     public ServiceCRUDDTO reviewService(ServiceCRUDDTO serviceDTO, Integer approverId) {
         String state = serviceDTO.getServiceStatus();
 
-        boolean reviewOnAssigned = (state != ServiceStatus.UNDER_CLARIFICATION.toString()
+        boolean reviewOnIllegalState = (!Objects.equals(state, ServiceStatus.UNDER_CLARIFICATION.toString())
                 && serviceDTO.getReplyText() != null
                 && serviceDTO.getReplyText()
                 .length() > 0);
 
-        if (!reviewOnAssigned) {
+        if (reviewOnIllegalState) {
             log.error("ServiceService.reviewService(ServiceCRUDDTO serviceDTO, Integer approverId)." +
                             "Reviews can only be on under clarification services, the current status is {}, review is {}",
                     state, serviceDTO.getReplyText());
@@ -187,7 +187,7 @@ public class ServiceServiceImpl implements ServiceService {
 
         if (illegalState) {
             log.error("ServiceService.reviewService(ServiceCRUDDTO serviceDTO, Integer approverId)." +
-                            "Reviews can only be on under clarification services, the current status is {}",
+                            "Approver may only assign, publish or review services\", the current status is {}",
                     state);
             throw new RequestException("Approver may only assign, publish or review services", HttpStatus.BAD_REQUEST);
         }
