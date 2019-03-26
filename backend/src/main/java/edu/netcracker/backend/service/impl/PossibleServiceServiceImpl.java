@@ -8,6 +8,7 @@ import edu.netcracker.backend.model.PossibleService;
 import edu.netcracker.backend.model.ServiceDescr;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.PossibleServiceService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j(topic = "log")
 public class PossibleServiceServiceImpl implements PossibleServiceService {
 
     private PossibleServiceDAO possibleServiceDAO;
@@ -90,6 +92,7 @@ public class PossibleServiceServiceImpl implements PossibleServiceService {
 
     @Override
     public List<PossibleServiceDTO> getCarrierPossibleServices(User user) {
+        log.info("Carrier [id: {}] trying to get own possible services");
         return possibleServiceDAO.findAllPossibleServicesByCarrier(user.getUserId())
                                  .stream()
                                  .map(PossibleServiceDTO::from)
