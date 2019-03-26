@@ -22,25 +22,25 @@ import java.util.*;
 public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements TicketClassDAO {
 
     @Value("${SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER}")
-    private static String SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER;
+    private String SELECT_BY_TRIP_ID_WITH_ITEM_NUMBER;
 
     @Value("${SELECT_BY_TRIP_ID}")
-    private static String SELECT_BY_TRIP_ID;
+    private String SELECT_BY_TRIP_ID;
 
     @Value("${GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER}")
-    private static String GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER;
+    private String GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER;
 
     @Value("${GET_TICKET_CLASS_WITH_DISCOUNT}")
-    private static String GET_TICKET_CLASS_WITH_DISCOUNT;
+    private String GET_TICKET_CLASS_WITH_DISCOUNT;
 
     @Value("${GET_ALL_TICKET_CLASSES_BELONG_TO_TRIPS_BELONG_TO_CARRIER}")
-    private static String GET_ALL_TICKET_CLASSES_BELONG_TO_TRIPS_BELONG_TO_CARRIER;
+    private String GET_ALL_TICKET_CLASSES_BELONG_TO_TRIPS_BELONG_TO_CARRIER;
 
     @Value("${GET_TICKET_CLASSES_BELONG_TO_CARRIER}")
-    private static String GET_TICKET_CLASSES_BELONG_TO_CARRIER;
+    private String GET_TICKET_CLASSES_BELONG_TO_CARRIER;
 
     @Value("${INSERT_TICKET_CLASS}")
-    private static String INSERT_TICKET_CLASS;
+    private String INSERT_TICKET_CLASS;
 
     @Value("${UPDATE_TICKET_CLASS}")
     private String UPDATE_TICKET_CLASS;

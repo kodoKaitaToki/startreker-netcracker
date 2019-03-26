@@ -1,17 +1,19 @@
-import { HttpClient, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpHeaders, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import {Api, HttpOptionsAuthorized} from '../../../modules/api/index';
+import { ApiUserService } from '../../../services/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardDeltaService {
   private actionUrl: string;
+  private tokens;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+              private api: ApiUserService) {
     this.actionUrl = Api.baseUrl + 'api/v1/admin/increasing';
   }
 
@@ -34,10 +36,10 @@ export class DashboardDeltaService {
       let params = new HttpParams().set("from", from).set("to", to);
 
       return this.http.get<any>(this.actionUrl + "/" + type, {
-        headers: HttpOptionsAuthorized.headers,
-        params: params,
-        observe: HttpOptionsAuthorized.observe
-      })
+          headers: HttpOptionsAuthorized.headers,
+          params: params,
+          observe: 'response' as 'response'
+        })
       /*resp = resp
         .pipe(map(res => {
           let map = new Map();

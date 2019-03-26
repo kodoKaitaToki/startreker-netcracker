@@ -37,6 +37,7 @@ import { SuggestionsTreeComponent } from './suggestions/suggestions-tree/suggest
 import { SuggestionsTableComponent } from './suggestions/suggestions-table/suggestions-table.component';
 import { TripsTicketClassComponent } from './trips/trips-ticket-class/trips-ticket-class.component';
 import {DialogModule} from 'primeng/dialog';
+import { SharedModule } from '../../shared/shared.module';
 import {ShowMessageService} from "../admin/approver/shared/service/show-message.service";
 import { PaginatorComponent } from '../../shared/paginator/paginator.component';
 
@@ -80,6 +81,7 @@ import { PaginatorComponent } from '../../shared/paginator/paginator.component';
               MessagesModule,
               TreeModule,
               DialogModule,
+              SharedModule,
               CalendarModule
             ],
             providers: [

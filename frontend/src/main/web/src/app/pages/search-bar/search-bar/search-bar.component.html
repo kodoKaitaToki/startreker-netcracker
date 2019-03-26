@@ -8,7 +8,7 @@
 
           <hr class="hr-xs">
 
-          <div class="form-check form-check-inline">
+          <!-- <div class="form-check form-check-inline">
             <input class="form-check-input"
                   type="radio"
                   name="inlineRadioOptions"
@@ -16,8 +16,8 @@
                   value="one_way"
                   (click)="searchForm.get('finishDate').disable();">
             <label class="form-check-label" for="inlineRadio1">One way</label>
-          </div>
-          <div class="form-check form-check-inline">
+          </div> -->
+          <!-- <div class="form-check form-check-inline">
             <input class="form-check-input" 
                   type="radio" 
                   name="inlineRadioOptions" 
@@ -26,7 +26,7 @@
                   checked="checked" 
                   (click)="searchForm.get('finishDate').enable();">
             <label class="form-check-label" for="inlineRadio2">Return</label>
-          </div>
+          </div> -->
           <!-- <div class="form-check">
             <input class="form-check-input" type="checkbox" value="withConnections" id="connections">
             <label class="form-check-label" for="connections">
@@ -91,11 +91,10 @@
                     <p-calendar [minDate]="minimumDate"
                                 formControlName="startDate"
                                 dateFormat="dd.mm.yy"
-                                (onSelect)="onSelect($event)"
                                 readonlyInput="true"
                                 [showIcon]="true"></p-calendar>
             </div>
-            <div class="col-lg-2">
+            <!-- <div class="col-lg-2">
               <h6 class="search-bar__heading">Pick a date of return:</h6>
             </div>
             <div class="col-lg-3">
@@ -104,7 +103,7 @@
                             dateFormat="dd.mm.yy"
                             readonlyInput="true"
                             [showIcon]="true"></p-calendar>
-            </div>
+            </div> -->
           </div>
 
           <hr class="hr-xs">

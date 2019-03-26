@@ -123,7 +123,10 @@ const service = {
     return `${baseUrl}api/v1/service/pagin`;
   },
   servicesByStatus(){
-    return `${baseUrl}api/v1/service/by-status`;
+    return `${baseUrl}api/v1/carrier/service/by-status`;
+  },
+  servicesAmount(){
+    return `${baseUrl}api/v1/carrier/carrier/service/amount`;
   },
   reviewService(id: number) {
     return `${baseUrl}api/v1/service/${id}/review`;
@@ -166,6 +169,12 @@ const history = {
   },
 }
 
+const user = {
+  buyTicket(){
+    return `${baseUrl}api/v1/user/bought-tickets`;
+  }
+}
+
 export const Api = {
   HttpOptions,
   HttpOptionsAuthorized,
@@ -179,6 +188,7 @@ export const Api = {
   trip,
   trips,
   landing,
+  user,
   history
 }
 

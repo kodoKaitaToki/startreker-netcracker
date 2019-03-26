@@ -13,27 +13,27 @@ export class ServiceService{
     constructor(private http: HttpClient) {
     }
 
-    public getAllServices(){
-        return this.http.get<any>(Api.service.services(), HttpOptionsAuthorized);
+    // public getAllServices(){
+    //     return this.http.get<any>(Api.service.services(), HttpOptionsAuthorized);
+    // }
+
+    // public getPaginServices(from:Number, number: Number){
+    //     let url = Api.service.paginServices() + '?from=' + from + '&number=' + number;
+    //     return this.http.get<any>(url, HttpOptionsAuthorized);
+    // }
+
+    public getServiceByStatus(status: string, from: number, amount: number){
+        let params = new HttpParams().set('status', status)
+                                    .set('from', from.toString())
+                                    .set('number', amount.toString());
+        return this.http.get<any>(Api.service.services(), {params: params,
+                                                            headers: HttpOptionsAuthorized.headers,
+                                                           observe: HttpOptionsAuthorized.observe});
     }
 
-    public getPaginServices(from:Number, number: Number){
-        let url = Api.service.paginServices() + '?from=' + from + '&number=' + number;
-        return this.http.get<any>(url, HttpOptionsAuthorized);
-    }
-
-  public getServices(from: number, number: number, status: string){
-        let url = Api.service.services();
-        let params = new HttpParams()
-            .set("from", from.toString())
-            .set("number", number.toString())
-            .set("status", status.toString());
-
-        return this.http.get<any>(url, {
-            headers: HttpOptionsAuthorized.headers, 
-            params: params,
-            observe: HttpOptionsAuthorized.observe
-        });
+    public getServicesAmount(status: string){
+        let url = Api.service.servicesAmount() + '?status=' + status;
+        return this.http.get(url, Api.HttpOptionsAuthorized);
     }
 
     public addService(service: Service){

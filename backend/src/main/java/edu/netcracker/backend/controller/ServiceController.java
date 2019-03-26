@@ -122,6 +122,13 @@ public class ServiceController {
         return serviceService.updateService(serviceCRUDDTO);
     }
 
+    @RequestMapping(value = "/amount", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public Integer getServicesAmount(@RequestParam("status") String status) {
+        log.debug("ServiceController.getServicesAmount(String status) was invoked with status={}", status);
+        return serviceService.getCarrierServicesAmount(status);
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public ServiceCRUDDTO addService(@Valid @RequestBody ServiceCreateForm serviceCreateForm) {

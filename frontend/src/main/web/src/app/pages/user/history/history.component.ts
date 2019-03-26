@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
-import {HistoryService} from "./history.service";
-import {Servicehistorymodel} from "./servicehistorymodel.model";
+import {HistoryService} from "../shared/service/history.service";
+import {Servicehistorymodel} from "../shared/model/servicehistorymodel.model";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MessageService} from "primeng/api";
 import {ShowMessageService} from "../../admin/approver/shared/service/show-message.service";

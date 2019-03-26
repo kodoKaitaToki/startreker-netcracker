@@ -3,44 +3,6 @@
   src: url(src/assets/fonts/bahnschrift.ttf) format("truetype");
 }
 
-.login-form {
-  display: flex;
-  justify-content: center;
-}
-
-.login-form__container {
-  padding: 20px;
-  width: 550px;
-}
-
-.input-group-addon {
-  display: flex;
-  align-items: center;
-  padding: .375rem .75rem;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1;
-  color: #55595c;
-  text-align: center;
-  background-color: #eceeef;
-  border: 1px solid #ccc;
-  border-radius: .25rem;
-  border-right: none;
-  border-radius: .25rem 0 0 .25rem;
-}
-
-.login-form__link {
-  color: #0275d8;
-}
-
-.login-form__link:hover {
-  color: #014c8c;
-}
-
-.login-form__navbar-font {
-  font-size: 130%;
-}
-
 a{
   color: #D5DBe6;
   font-family: "bahnschrift", fantasy;
@@ -133,23 +95,6 @@ span{
   .logo {
     width: 70%;
   }
-
-  .search-bar__heading {
-    text-align: left;
-  }
-
-  .footer-list__item {
-    display: flex;
-    justify-content: center;
-  }
-
-  .footer-list {
-    padding: 0;
-  }
-
-  .footer__img {
-    margin: 20px auto;
-  }
 }
 
 @media only screen and (max-width: 425px) {
@@ -159,14 +104,5 @@ span{
     padding: 0;
     text-transform: capitalize;
     font-size: 20px;
-  }
-
-  .login-form__container {
-    padding: 20px;
-    width: 300px;
-  }
-
-  .login-form__signup {
-    font-size: 15px;
   }
 }

@@ -20,13 +20,16 @@ export class ServiceCrudComponent implements OnInit {
   filterContent = '';
   page: number = 1;
 
+  status: string = 'DRAFT';
+  servicesPerPage = 10;
+  pageFrom: number = 0;
+  serviceNumber: number = 0;
+
   form: FormGroup;
   formTable: FormGroup;
 
   currentServiceForUpdate: Service;
   isForUpdateAlertMessage = false;
-
-  status: String;
 
   constructor(private serviceService: ServiceService,
     private messageService: MessageService) {
@@ -83,7 +86,7 @@ export class ServiceCrudComponent implements OnInit {
   }
 
   getDraftServices() {
-    this.serviceService.getServices(0, 100, 'DRAFT')
+    this.serviceService.getServiceByStatus(this.status, this.pageFrom, this.servicesPerPage)
                       .subscribe(
                         (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
@@ -154,5 +157,19 @@ export class ServiceCrudComponent implements OnInit {
 
   onChangePage(event: number) {
     this.page = event;
+  }
+
+  onChange(event: number){
+    this.pageFrom = event;
+    window.scrollTo(0, 0);
+    this.getDraftServices();
+  }
+
+  getServicesAmount(){
+    this.serviceService.getServicesAmount(this.status)
+                      .subscribe((resp: HttpResponse<any>) => {
+                        checkToken(resp.headers);
+                        this.serviceNumber = clone(resp.body);
+                      });
   }
 }
