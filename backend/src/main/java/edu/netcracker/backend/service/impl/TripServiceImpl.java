@@ -199,7 +199,7 @@ public class TripServiceImpl implements TripService {
                 tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
 
         if (trips.isEmpty()) {
-            log.warn("No trips for carrier {}", carrierId);
+            log.warn("No active trips for carrier {}", carrierId);
             return new ArrayList<>();
         }
 
@@ -216,7 +216,7 @@ public class TripServiceImpl implements TripService {
                 tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
 
         if (trips.isEmpty()) {
-            log.warn("No trips for carrier {}", carrierId);
+            log.warn("No active trips for carrier {}", carrierId);
             return new ArrayList<>();
         }
 
