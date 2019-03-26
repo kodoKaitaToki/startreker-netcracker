@@ -341,6 +341,7 @@ public class StatisticsDAOImpl implements StatisticsDAO {
         while (data.next()) {
             String entry = data.getString("status");
             double count = data.getDouble("count");
+            log.debug("Mapping status {}, count: {}", entry, count);
 
             switch (entry) {
                 case "total": {

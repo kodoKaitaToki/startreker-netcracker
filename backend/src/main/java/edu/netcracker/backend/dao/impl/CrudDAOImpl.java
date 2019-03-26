@@ -85,7 +85,7 @@ public abstract class CrudDAOImpl<T> implements CrudDAO<T> {
         try {
             entityProcessor.putGeneratedPrimaryKey(holder, entity);
         } catch (IllegalAccessException e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
