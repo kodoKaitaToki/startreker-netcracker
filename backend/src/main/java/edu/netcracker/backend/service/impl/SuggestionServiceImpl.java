@@ -198,6 +198,7 @@ public class SuggestionServiceImpl implements SuggestionService {
                 relatedToTripsTicketClasses);
 
         if (relatedSuggestions.isEmpty()) {
+            log.warn("No suggestions for ticket classes {}", relatedToTripsTicketClasses);
             return new HashMap<>();
         }
 

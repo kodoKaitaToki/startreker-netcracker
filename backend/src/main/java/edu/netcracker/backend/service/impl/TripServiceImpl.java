@@ -306,6 +306,7 @@ public class TripServiceImpl implements TripService {
     private List<TripWithArrivalAndDepartureDataDTO> createTripWithArrivalAndDepartureDataAndSuggestionDTOs(List<TripWithArrivalAndDepartureData> trips,
                                                                                                             Map<Long, List<DiscountSuggestionDTO>> suggestionsRelatedToTrips) {
         if (suggestionsRelatedToTrips.isEmpty()) {
+            log.warn("No suggestions for trips {}", trips);
             return new ArrayList<>();
         }
 
