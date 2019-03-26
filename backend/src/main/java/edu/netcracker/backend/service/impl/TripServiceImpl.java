@@ -197,10 +197,12 @@ public class TripServiceImpl implements TripService {
 
         List<TripWithArrivalAndDepartureData> trips =
                 tripDAO.getAllTripsWitArrivalAndDepatureDataBelongToCarrier(carrierId);
+
         if (trips.isEmpty()) {
             log.warn("No active trips for carrier {}", carrierId);
             return new ArrayList<>();
         }
+
         List<DiscountTicketClassDTO> ticketClassDTOs = ticketClassService.getTicketClassesRelatedToCarrier(carrierId);
 
         return createTripWithArrivalAndDepartureDataAndTicketClassesDTOs(trips, ticketClassDTOs);
