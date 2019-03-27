@@ -2,9 +2,9 @@ package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.TicketDAO;
 import edu.netcracker.backend.dao.mapper.history.HistoryTicketMapper;
-import edu.netcracker.backend.model.history.HistoryTicket;
 import edu.netcracker.backend.model.Ticket;
 import edu.netcracker.backend.model.User;
+import edu.netcracker.backend.model.history.HistoryTicket;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -159,6 +160,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
     @Override
     public void buyTicket(Ticket ticket, User user) {
         log.debug("Buying ticket with id = {}, passenger id = {}", ticket.getTicketId(), user.getUserId());
+        ticket.setPurchaseDate(LocalDateTime.now());
         ticket.setPassengerId(user.getUserId());
         update(ticket);
     }
