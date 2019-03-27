@@ -7,16 +7,16 @@
         <h3 class="card-title text-center header">Dashboard charts:</h3>
         <div class="card-body">
           <h5>
-            <a class="nav-link text-secondary" routerLink="/admin/dashboards/popularity">
+            <a class="nav-link text-secondary" [routerLinkActive]="['active']" routerLink="/admin/dashboards/popularity">
               Increasing of carriers, locations, users
             </a>
-            <a class="nav-link text-secondary" routerLink="/admin/dashboards/costs">
+            <a class="nav-link text-secondary" [routerLinkActive]="['active']" routerLink="/admin/dashboards/costs">
               The costs
             </a>
-            <a class="nav-link text-secondary" routerLink="/admin/dashboards/trips-services-distribution">
+            <a class="nav-link text-secondary" [routerLinkActive]="['active']" routerLink="/admin/dashboards/trips-services-distribution">
               Trip’s and the service’s distribution
             </a>
-            <a class="nav-link text-secondary" routerLink="/admin/dashboards/trouble-tickets">
+            <a class="nav-link text-secondary" [routerLinkActive]="['active']" routerLink="/admin/dashboards/trouble-tickets">
               Trouble tickets statistics
             </a>
           </h5>

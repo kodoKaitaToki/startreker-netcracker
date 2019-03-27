@@ -52,6 +52,7 @@ import {AccordionModule} from 'primeng/accordion';
 import { BundlesTreeComponent } from './bundles/bundles-tree/bundles-tree.component';
 import { BundlesFormComponent } from './bundles/bundles-form/bundles-form.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { SharedModule } from 'src/app/shared/shared.module';
     TabViewModule,
     SharedModule,
     ProgressSpinnerModule,
-    GrowlModule
+    GrowlModule,
+    RouterModule
   ],
   providers: [
     FilterPipePipe,

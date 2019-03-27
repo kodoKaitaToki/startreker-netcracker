@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import * as CanvasJS from '../../canvasjs.min';
-import {FormGroup, FormControl} from '@angular/forms';
-import {formatDate} from '@angular/common';
+import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
+import {DatePipe, formatDate} from '@angular/common';
 import {clone} from 'ramda';
 
 import {HttpErrorResponse, HttpResponse} from '@angular/common/http';
@@ -11,6 +11,7 @@ import {TripEntry} from "./tripentry.class";
 import {ServiceEntry} from "./serviceentry.class";
 import {MessageService} from "primeng/api";
 import {ShowMessageService} from "../../../admin/approver/shared/service/show-message.service";
+import {periodError} from "../../../../shared/dateValidator";
 
 @Component({
   selector: 'app-views',
@@ -27,11 +28,8 @@ export class ViewsComponent implements OnInit {
 
   hideChart: boolean = true;
 
-  fromDate: Date;
-  toDate: Date;
-
-  responseCallback = (resp: HttpResponse<any>) => {
-    this.views = clone(resp.body);
+  responseCallback = (resp: ViewsModel[]) => {
+    this.views = resp;
     this.reloadCharts();
   };
 
@@ -41,12 +39,14 @@ export class ViewsComponent implements OnInit {
     );
   };
 
-  form = new FormGroup({
-    dataPeriod: new FormControl('perWeek'),
-    forWhat: new FormControl('forTrips'),
-    selectedTripId: new FormControl("null"),
-    selectedServiceId: new FormControl("null"),
-  });
+  form = this.fb.group({
+    dataPeriod: ['perWeek'],
+    forWhat: ['forTrips'],
+    selectedTripId: ['null'],
+    selectedServiceId: ['null'],
+    fromDate: ['', Validators.required],
+    toDate: ['', Validators.required],
+  }, {validator: periodError("fromDate", "toDate")});
 
   reloadCharts() {
     this.viewsChart.options.data[0].dataPoints = [];
@@ -58,31 +58,23 @@ export class ViewsComponent implements OnInit {
       });
     }
     this.viewsChart.render();
+    if(this.views.length > 0){
+      this.showMsgSrvc.showMessage(this.messageService, 'success', `Loaded views`, ``);
+    } else{
+      this.hideChart = true;
+      this.showMsgSrvc.showMessage(this.messageService, 'warn', `No views found`, ``);
+    }
   }
 
   constructor(private viewsService: ViewsService, private messageService: MessageService,
-    private showMsgSrvc: ShowMessageService) {
+    private showMsgSrvc: ShowMessageService,
+    public datepipe: DatePipe,
+    private fb: FormBuilder,) {
   }
 
   onSubmit() {
-    let fromDateFormatted: string;
-    let toDateFormatted: string;
-    try {
-      fromDateFormatted = formatDate(this.fromDate, 'yyyy-MM-dd', 'en');
-      toDateFormatted = formatDate(this.toDate, 'yyyy-MM-dd', 'en');
-    } catch (e) {
-      this.showMsgSrvc.showMessage(this.messageService, 'error', `Incorrect date`, `Please check your date`
-      );
-      return;
-    }
-    if (fromDateFormatted > toDateFormatted) {
-      this.showMsgSrvc.showMessage(this.messageService,
-        'error',
-        `Incorrect date`,
-        `Starting date is bigger than ending date`
-      );
-      return;
-    }
+    let fromDateFormatted: string = formatDate(this.form.value.fromDate, 'yyyy-MM-dd', 'en');
+    let toDateFormatted: string = formatDate(this.form.value.toDate, 'yyyy-MM-dd', 'en');
     this.hideChart = false;
 
     if (this.form.value.forWhat == "forTrips") {
@@ -174,15 +166,25 @@ export class ViewsComponent implements OnInit {
   }
 
   setToWeek() {
-    this.toDate = new Date();
-    this.fromDate = new Date();
-    this.fromDate.setDate(this.toDate.getDate() - 7);
+    let to = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+    let date = (new Date).getDate();
+    let day = (new Date).getDay();
+    let from = this.datepipe.transform(new Date()
+      .setDate(date - day), 'yyyy-MM-dd');
+    this.form.patchValue({
+      toDate: to,
+      fromDate: from
+    });
   }
 
   setToMonth() {
-    this.toDate = new Date();
-    this.fromDate = new Date();
-    this.fromDate.setDate(1);
+    let to = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+    let from = this.datepipe.transform(new Date()
+      .setDate(1), 'yyyy-MM-dd');
+    this.form.patchValue({
+      toDate: to,
+      fromDate: from
+    });
   }
 
   ngOnInit() {

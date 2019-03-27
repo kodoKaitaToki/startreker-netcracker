@@ -3,9 +3,7 @@
 <div
 style="padding-top: 1rem; width: 100%; height: 100%; max-height: 500px; overflow-y: scroll;"
 *ngIf="!(suggestions === undefined || suggestions.length == 0)">
-  <div
-  class="card"
-  style="width: 90%;"
+<div class="container container-card card"
   *ngFor="let suggestion of suggestions"
   >
     <table class="table">
@@ -22,7 +20,7 @@ style="padding-top: 1rem; width: 100%; height: 100%; max-height: 500px; overflow
             {{suggestion.ticketClass.class_name}}
           </td>
           <td>
-            {{suggestion.ticketClass.ticket_price}}
+            {{suggestion.ticketClass.ticket_price}} $
           </td>
         </tr>
         <ng-container
@@ -33,44 +31,28 @@ style="padding-top: 1rem; width: 100%; height: 100%; max-height: 500px; overflow
               {{service.service_name}}
             </td>
             <td>
-              {{service.service_price}}
+              {{service.service_price}} $
             </td>
           </tr>
         </ng-container>
       </tbody>
     </table>
 
-    <div class="row justify-content-around"
-    >
-      <div class="col-1">
-        <p data-placement="top"
-            data-toggle="tooltip"
-            title="Edit"
-            (click)="onUpdate(suggestion)"
-            class="updatePrgph"
-        >
-          <button class="btn btn-primary btn-md">
-            <i class="fa fa-edit"></i>
-          </button>
-        </p>
+    <footer class="row table-footer justify-content-end">
+      <div class="col-sm-auto">
+        <button class="btn btn-xs btn-secondary list-buttons"
+        type="button"
+        (click)="onUpdate(suggestion)">
+          Edit
+        </button>
       </div>
-
-      <div class="col-1">
-        <p data-placement="top"
-            data-toggle="tooltip"
-            title="Delete"
-            (click)="onDelete(suggestion)"
-            class="deletePrgph"
-        >
-          <button class="btn btn-danger btn-md"
-                  data-title="Delete"
-                  data-toggle="modal"
-                  data-target="#delete">
-            <i class="fa fa-trash"></i>
-          </button>
-        </p>
+      <div class="col-sm-auto">
+        <button class="btn btn-xs btn-danger list-buttons"
+        type="button"
+        (click)="onDelete(suggestion)">
+          Delete
+        </button>
       </div>
-    </div>
-
+    </footer>
   </div>
 </div>

@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
+@RequestMapping("api/v1/bundles")
 public class BundleCrudController {
 
     private final BundleCrudService bcs;
@@ -28,7 +29,7 @@ public class BundleCrudController {
         this.bundleMapper = objectMapper;
     }
 
-    @GetMapping("api/v1/bundles")
+    @GetMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -43,7 +44,7 @@ public class BundleCrudController {
                       .collect(Collectors.toList());
     }
 
-    @GetMapping("api/v1/bundles/fresh")
+    @GetMapping("/fresh")
     @ResponseBody
     public List<BundleDTO> getAllBundles() {
         log.debug("BundleCrudController.getAllBundles() was invoked");
@@ -51,8 +52,8 @@ public class BundleCrudController {
         return bcs.getAll();
     }
 
-    @GetMapping("api/v1/bundles/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')or hasAuthority('ROLE_USER')")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public BundleDTO getBundleById(@PathVariable("id") Number id) {
@@ -60,14 +61,14 @@ public class BundleCrudController {
         return convertToDTO(bcs.getById(id));
     }
 
-    @PostMapping("api/v1/bundles")
+    @PostMapping
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public void addBundle(@RequestBody final BundleForm bundleForm) {
         bcs.add(convertFromDTO(bundleForm));
     }
 
-    @PutMapping("api/v1/bundles/{id}")
+    @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public void updateBundle(@PathVariable("id") final Number id, @RequestBody final BundleForm bundleForm) {
@@ -78,14 +79,14 @@ public class BundleCrudController {
         bcs.update(convertFromDTO(bundleForm));
     }
 
-    @DeleteMapping("api/v1/bundles/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @ResponseStatus(HttpStatus.OK)
     public void deleteBundle(@PathVariable final Number id) {
         bcs.delete(id);
     }
 
-    @GetMapping("api/v1/bundles/count")
+    @GetMapping("/count")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public Long countBundles() {
         return bcs.count();

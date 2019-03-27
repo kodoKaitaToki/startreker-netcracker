@@ -87,13 +87,13 @@ public class TripController {
     public void updateTrip(@NotNull @PathVariable("tripId") Long tripId,
                            @RequestBody TripCreation trip) { tripService.updateTripForCarrier(trip, tripId); }
 
-    @GetMapping("trip/distribution")
+    @GetMapping("trips/distribution")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<TripDistributionElement> getTripsStatistics() {
         return statisticsService.getTripsStatistics();
     }
 
-    @GetMapping(value = "trip/sales")
+    @GetMapping(value = "trips/sales")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public CarrierRevenueResponse getTripsSalesStatistics(OptionalTimeInterval timeInterval) {
         return timeInterval != null && timeInterval.isProvided()
@@ -105,7 +105,7 @@ public class TripController {
                                                                            .getUserId());
     }
 
-    @GetMapping(value = "trip/sales/per_week")
+    @GetMapping(value = "trips/sales/per_week")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierRevenueResponse> getTripsSalesStatisticsByWeek(@Valid MandatoryTimeInterval timeInterval) {
         return statisticsService.getTripSalesStatisticsByWeek(securityContext.getUser()
@@ -132,7 +132,7 @@ public class TripController {
                                               offset);
     }
 
-    @GetMapping(value = "trip/sales/per_month")
+    @GetMapping(value = "trips/sales/per_month")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierRevenueResponse> getTripsSalesStatisticsByMonth(@Valid MandatoryTimeInterval timeInterval) {
         return statisticsService.getTripSalesStatisticsByMonth(securityContext.getUser()
@@ -141,7 +141,7 @@ public class TripController {
                                                                timeInterval.getTo());
     }
 
-    @GetMapping(value = "trip/views/per_week")
+    @GetMapping(value = "trips/views/per_week")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierViewsResponse> getTripsViewsStatisticsByWeek(@Valid MandatoryTimeInterval timeInterval) {
         return statisticsService.getTripsViewsStatisticsByWeek(securityContext.getUser()
@@ -150,7 +150,7 @@ public class TripController {
                                                                timeInterval.getTo());
     }
 
-    @GetMapping(value = "trip/views/per_month")
+    @GetMapping(value = "trips/views/per_month")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierViewsResponse> getTripsViewsStatisticsByMonth(@Valid MandatoryTimeInterval timeInterval) {
         return statisticsService.getTripsViewsStatisticsByMonth(securityContext.getUser()
@@ -159,7 +159,7 @@ public class TripController {
                                                                 timeInterval.getTo());
     }
 
-    @GetMapping(value = "trip/{id}/views/per_week")
+    @GetMapping(value = "trips/{id}/views/per_week")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierViewsResponse> getTripsViewsStatisticsByTripByWeek(@Valid MandatoryTimeInterval timeInterval,
                                                                           @PathVariable("id") Long tripId) {
@@ -169,7 +169,7 @@ public class TripController {
                                                                      timeInterval.getTo());
     }
 
-    @GetMapping(value = "trip/{id}/views/per_month")
+    @GetMapping(value = "trips/{id}/views/per_month")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierViewsResponse> getTripsViewsStatisticsByTripByMonth(@Valid MandatoryTimeInterval timeInterval,
                                                                            @PathVariable("id") Long tripId) {

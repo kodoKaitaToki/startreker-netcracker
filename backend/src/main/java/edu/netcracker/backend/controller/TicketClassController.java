@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @RestController
+@RequestMapping("api/v1/ticket-class")
 public class TicketClassController {
 
     private final TicketClassService ticketClassService;
@@ -19,13 +20,13 @@ public class TicketClassController {
         this.ticketClassService = ticketClassService;
     }
 
-    @PostMapping("api/v1/ticket-class")
+    @PostMapping
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public void createOrUpdateTicketClass(@RequestBody TicketClassCreation ticketClass) {
         this.ticketClassService.createOrUpdate(ticketClass.toTicketClass());
     }
 
-    @DeleteMapping("api/v1/ticket-class/{id}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public void deleteTicketClass(@Valid @NotNull @PathVariable Long id) {
         this.ticketClassService.deleteTicketClass(id);

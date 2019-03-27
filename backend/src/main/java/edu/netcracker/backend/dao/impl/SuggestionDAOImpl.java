@@ -2,6 +2,8 @@ package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.DiscountDAO;
 import edu.netcracker.backend.dao.SuggestionDAO;
+import edu.netcracker.backend.dao.mapper.DiscountMapper;
+import edu.netcracker.backend.dao.mapper.SuggestionWithDiscountMapper;
 import edu.netcracker.backend.model.Suggestion;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
 
     @Value("${FIND_ALL_SUGGESTIONS_WITH_CLASS_ID}")
     private String FIND_ALL_SUGGESTIONS_WITH_CLASS_ID;
+
+    @Value("${FIND_ALL_SUGGESTIONS_WITH_CLASS_ID_WITH_DISCOUNT}")
+    private String FIND_ALL_SUGGESTIONS_WITH_CLASS_ID_WITH_DISCOUNT;
 
     @Value("${ADD_POSSIBLE_SERVICE}")
     private String ADD_POSSIBLE_SERVICE;
@@ -46,9 +51,12 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    private DiscountMapper discountMapper;
+
     @Autowired
-    public SuggestionDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public SuggestionDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, DiscountMapper discountMapper) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+        this.discountMapper = discountMapper;
     }
 
     @Override
@@ -73,9 +81,9 @@ public class SuggestionDAOImpl extends CrudDAOImpl<Suggestion> implements Sugges
 
         List<Suggestion> suggestions = new ArrayList<>();
 
-        suggestions.addAll(getJdbcTemplate().query(FIND_ALL_SUGGESTIONS_WITH_CLASS_ID,
+        suggestions.addAll(getJdbcTemplate().query(FIND_ALL_SUGGESTIONS_WITH_CLASS_ID_WITH_DISCOUNT,
                                                    new Object[]{id},
-                                                   getGenericMapper()));
+                                                   new SuggestionWithDiscountMapper(discountMapper)));
 
         return suggestions;
     }

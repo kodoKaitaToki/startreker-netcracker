@@ -26,6 +26,10 @@ const routes: Routes = [
         component: DashboardComponent,
         children: [
           {
+            path: '',
+            redirectTo: 'pending-services',
+          },
+          {
             path: 'pending-services',
             component: PendingServicesComponent
           },

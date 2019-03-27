@@ -21,7 +21,7 @@
   margin-left: auto;
 }
 
-.col-5 {
+.class-name {
   justify-content: start;
 }
 
@@ -31,8 +31,42 @@
   text-align: center;
 }
 
-span.price {
-  font-size: 20pt;
+.price {
+  display: inline-block;
+  ins {
+    font-size: 32px;
+    text-decoration: none;
+    padding: 1em 1em 1em .5em;
+  }
+}
+
+.price-discount {
+  del {
+    color: rgba(red, 0.5);
+    text-decoration: none;
+    position: relative;
+    &:before {
+      content: " ";
+      display: block;
+      width: 100%;
+      border-top: 2px solid rgba(red, 0.8);
+      height: 12px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      transform: rotate(-7deg);
+    }
+  }
+  ins {
+    color: green;
+    font-size: 32px;
+    text-decoration: none;
+    padding: 1em 1em 1em .5em;
+  }
+}
+
+.remaining-seats {
+  font-size: 2rem;
 }
 
 .btn {
@@ -55,8 +89,8 @@ span.price {
 
 .btn:hover {
   transform: translateY(-2px);
-  -webkit-box-shadow: 0 15px 25px rgba(0,0,0,.12);
-  box-shadow: 0 15px 25px rgba(0,0,0,.12);
+  -webkit-box-shadow: 0 15px 25px rgba(0, 0, 0, .12);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, .12);
 }
 
 .btn:focus, .close:focus {
@@ -65,8 +99,8 @@ span.price {
 
 .btn:active {
   box-shadow: none;
-  -webkit-transition: all .14s cubic-bezier(.55,0,.1,1);
-  transition: all .14s cubic-bezier(.55,0,.1,1);
+  -webkit-transition: all .14s cubic-bezier(.55, 0, .1, 1);
+  transition: all .14s cubic-bezier(.55, 0, .1, 1);
   will-change: transform;
   transform: translateY(0);
 }

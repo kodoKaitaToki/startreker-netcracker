@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {LandingService} from '../../landing/shared/service/landing.service';
 import {Planet} from '../../landing/shared/model/planet.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
@@ -7,6 +7,7 @@ import {Router} from '@angular/router';
 import {DataService} from '../../../shared/data.service';
 import {clone} from 'ramda';
 import {Location} from '@angular/common';
+import {Subscription} from "rxjs/internal/Subscription";
 
 declare function setPoint(point): any;
 
@@ -15,7 +16,7 @@ declare function setPoint(point): any;
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.scss']
 })
-export class SearchBarComponent implements OnInit {
+export class SearchBarComponent implements OnInit, OnDestroy {
 
   searchForm: FormGroup;
 
@@ -30,41 +31,46 @@ export class SearchBarComponent implements OnInit {
 
   @Output() onGetTripsNotifier = new EventEmitter();
 
+  dataServiceSub: Subscription;
+  landingServiceSub: Subscription;
+
   constructor(private landingService: LandingService,
               private router: Router,
               private dataService: DataService,
               private location: Location) {
     this.searchForm = new FormGroup({
-      startPlanet: new FormControl({value: 'Choose a planet', disabled: true}, Validators.required),
-      finishPlanet: new FormControl({value: 'Choose a planet', disabled: true}, Validators.required),
-      startSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}),
-      finishSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}),
-      startDate: new FormControl('')
+      startPlanet: new FormControl(Validators.required),
+      finishPlanet: new FormControl(Validators.required),
+      startSpaceport: new FormControl({value: '', disabled: true}),
+      finishSpaceport: new FormControl({value: '', disabled: true}),
+      startDate: new FormControl(new Date(), Validators.required)
       // finishDate: new FormControl({value: '', disabled: false})
     });
   }
 
   ngOnInit() {
-    // this.enablePlanets();
+    //this.enablePlanets();
     // this.searchForm.get('startSpaceport').enable();
     // this.searchForm.get('finishSpaceport').enable();
-
-    this.dataService.getMessage().subscribe(message => {
+    this.dataServiceSub = this.dataService.getMessage().subscribe(message => {
+      console.log("ngOnInit() message: " + JSON.stringify(message));
+      console.log("ngOnInit() searchForm: " + JSON.stringify(this.searchForm.value));
       this.searchForm.patchValue(message);
     });
-    this.onGetTripsNotifier.emit(this.searchForm.value);
     this.getPlanets();
+    console.log(this.searchForm.value);
+    this.onGetTripsNotifier.emit(this.searchForm.value);
   }
 
 
   getPlanets() {
-    this.landingService.getPlanets()
+    this.dataServiceSub = this.landingService.getPlanets()
       .subscribe((resp: Response) => {
         this.planets = clone(resp);
         this.enablePlanets();
       })
   }
-  
+
   checkPlanet(point){
     if(this.router.url !== '/flights'){
       setPoint(point);
@@ -73,6 +79,7 @@ export class SearchBarComponent implements OnInit {
 
   onSubmit() {
     if (this.location.isCurrentPathEqualTo('/')) {
+      console.log(JSON.stringify(this.searchForm.value));
       this.dataService.sendFormData(this.searchForm.value);
       this.router.navigate(['/flights']);
     } else {
@@ -91,7 +98,7 @@ export class SearchBarComponent implements OnInit {
     }
     for (let planet of this.planets) {
       if (planet.planetName == planetName.toString().toUpperCase()) {
-        this.landingService.getSpaceports(planet.planetId)
+        this.landingServiceSub = this.landingService.getSpaceports(planet.planetId)
           .subscribe((resp: Response) => {
             if (point) {
               this.spaceportsFrom = clone(resp);
@@ -118,4 +125,10 @@ export class SearchBarComponent implements OnInit {
     this.searchForm.get('finishPlanet').enable();
   }
 
+  ngOnDestroy() {
+    if (this.dataServiceSub !== undefined)
+      this.dataServiceSub.unsubscribe();
+    if (this.landingServiceSub !== undefined)
+      this.landingServiceSub.unsubscribe();
+  }
 }

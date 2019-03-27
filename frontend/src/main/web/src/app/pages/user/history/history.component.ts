@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {HistoryService} from "../shared/service/history.service";
 import {Servicehistorymodel} from "../shared/model/servicehistorymodel.model";
 import {HttpErrorResponse} from "@angular/common/http";
 import {MessageService} from "primeng/api";
 import {ShowMessageService} from "../../admin/approver/shared/service/show-message.service";
+import {periodError} from "../../../shared/dateValidator";
 
 @Component({
   selector: 'app-history',
@@ -13,17 +14,16 @@ import {ShowMessageService} from "../../admin/approver/shared/service/show-messa
 })
 export class HistoryComponent implements OnInit {
 
-  public searchParams: FormGroup;
-  public ticketData: any;
+  ticketData: any;
 
-  public page: number = 1;
-  public ticketsPerPage: number = 3;
-  public totalItems: number;
+  page: number = 1;
+  ticketsPerPage: number = 5;
+  totalItems: number;
 
-  public beforeDate: string;
-  public afterDate: string;
+  currentFromDate: string;
+  currentToDate: string;
 
-  public locked: boolean = false;
+  locked: boolean = false;
 
   errorCallback = (error: HttpErrorResponse) => {
     this.locked = false;
@@ -36,13 +36,16 @@ export class HistoryComponent implements OnInit {
     this.totalItems = totalItems;
   };
 
+  searchParams = this.fb.group({
+    fromDate: ['', Validators.required],
+    toDate: ['', Validators.required],
+  }, {validator: periodError("fromDate", "toDate")});
+
+
   constructor(private historyService: HistoryService,
     private messageService: MessageService,
-    private showMsgSrvc: ShowMessageService) {
-    this.searchParams = new FormGroup({
-      beforeDate: new FormControl(""),
-      afterDate: new FormControl(""),
-    });
+    private showMsgSrvc: ShowMessageService, private fb: FormBuilder) {
+
     this.historyService.totalItemsCallback = this.totalItemsCallback;
   }
 
@@ -54,21 +57,17 @@ export class HistoryComponent implements OnInit {
         }, this.errorCallback);
   }
 
-  search(data) {
-    this.beforeDate = data.beforeDate;
-    this.afterDate = data.afterDate;
-
-    if (!this.validateDates(this.beforeDate, this.afterDate)) {
-      return
-    }
-
+  search() {
     if (this.locked) {
       return;
     }
 
+    this.currentFromDate = this.searchParams.value.fromDate;
+    this.currentToDate = this.searchParams.value.toDate;
+
     this.locked = true;
 
-    this.historyService.getUserTicketHistory(0, this.ticketsPerPage, data.beforeDate, data.afterDate)
+    this.historyService.getUserTicketHistory(0, this.ticketsPerPage, this.currentFromDate,this.currentToDate)
         .subscribe(data => {
           this.page = 1;
           this.ticketData = data;
@@ -89,8 +88,8 @@ export class HistoryComponent implements OnInit {
     this.historyService.getUserTicketHistory(
       requestPage * this.ticketsPerPage,
       this.ticketsPerPage,
-      this.beforeDate,
-      this.afterDate
+      this.currentFromDate,
+     this.currentToDate
     )
         .subscribe(data => {
           this.page = page;
@@ -111,32 +110,5 @@ export class HistoryComponent implements OnInit {
             ticket.services[0] = new Servicehistorymodel("No services", 0);
           }
         }, this.errorCallback);
-  }
-
-  validateDates(fromDate: string, toDate: string): boolean {
-    if (!(HistoryComponent.isBlank(fromDate) == HistoryComponent.isBlank(toDate))) {
-      this.showMsgSrvc.showMessage(this.messageService,
-        'error',
-        `Incorrect date`,
-        `Please enter both dates, or no dates at all to search through all of history`
-      );
-      return false;
-
-    }
-
-    if (fromDate > toDate) {
-      this.showMsgSrvc.showMessage(this.messageService,
-        'error',
-        `Incorrect date`,
-        `Starting date is bigger than ending date`
-      );
-      return false;
-    }
-
-    return true;
-  }
-
-  static isBlank(str: string) {
-    return (!str || str.length === 0);
   }
 }
