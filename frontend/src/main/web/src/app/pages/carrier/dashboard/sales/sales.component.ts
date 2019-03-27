@@ -5,8 +5,12 @@ import {formatDate} from '@angular/common';
 import { TRIP_SALES } from './mock_data';
 import { SERVICE_SALES } from './mock_data';
 import { SalesModel } from './sales.model';
+import { clone } from 'ramda';
 
 import { SalesService } from '../sales.service';
+import { HttpResponse } from '@angular/common/http';
+import { checkToken } from '../../../../modules/api';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-sales',
@@ -49,9 +53,9 @@ export class SalesComponent implements OnInit {
     this.revenueChart.render();
   }
 
-  constructor(private salesService: SalesService) {
-    this.tripSales = TRIP_SALES;
-    this.serviceSales = SERVICE_SALES;
+  constructor(
+    private salesService: SalesService,
+    private messageService: MessageService) {
   }
 
   onSubmit() {
@@ -60,24 +64,51 @@ export class SalesComponent implements OnInit {
 
     if(this.form.value.dataPeriod != "perMonth")
     {
-      this.salesService.getServicesSalesStatisticsByWeek(fromDateFormatted, toDateFormatted).subscribe(data => {
-        this.serviceSales = data;
-        this.reloadCharts();
+      this.salesService.getServicesSalesStatisticsByWeek(fromDateFormatted, toDateFormatted).subscribe(
+        (resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          if (resp.body.length == 0) {
+            this.showMessage(this.createMessage('error', `Error message - 404`, "no sales found"));
+          }
+          else {
+            this.serviceSales = this.convertFromDto(clone(resp.body));
+            this.reloadCharts();
+          }
       });
-      this.salesService.getTripsSalesStatisticsByWeek(fromDateFormatted, toDateFormatted).subscribe(data => {
-        this.tripSales = data;
-        this.reloadCharts();
+      this.salesService.getTripsSalesStatisticsByWeek(fromDateFormatted, toDateFormatted).subscribe(
+        (resp: HttpResponse<any>) => {
+          if (resp.body.length == 0) {
+            this.showMessage(this.createMessage('error', `Error message - 404`, "no sales found"));
+          }
+          else {
+            this.tripSales = this.convertFromDto(clone(resp.body));
+            this.reloadCharts();
+          }
       });
     }
     else
     {
-      this.salesService.getServicesSalesStatisticsByMonth(fromDateFormatted, toDateFormatted).subscribe(data => {
-        this.serviceSales = data;
-        this.reloadCharts();
+      this.salesService.getServicesSalesStatisticsByMonth(fromDateFormatted, toDateFormatted).subscribe(
+        (resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          if (resp.body.length == 0) {
+            this.showMessage(this.createMessage('error', `Error message - 404`, "no sales found"));
+          }
+          else {
+            this.serviceSales = this.convertFromDto(clone(resp.body));
+            this.reloadCharts();
+          }
       });
-      this.salesService.getTripsSalesStatisticsByMonth(fromDateFormatted, toDateFormatted).subscribe(data => {
-        this.tripSales = data;
-        this.reloadCharts();
+      this.salesService.getTripsSalesStatisticsByMonth(fromDateFormatted, toDateFormatted).subscribe(
+        (resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          if (resp.body.length == 0) {
+            this.showMessage(this.createMessage('error', `Error message - 404`, "no sales found"));
+          }
+          else {
+            this.tripSales = this.convertFromDto(clone(resp.body));
+            this.reloadCharts();
+          }
       });
     }
   }
@@ -93,6 +124,22 @@ export class SalesComponent implements OnInit {
     this.form.value.fromDate = new Date();
     this.form.value.fromDate.setDate(1);
   }
+
+  convertFromDto(body: Array<any>) {
+    let salesArray: SalesModel[] = body.map(item => {
+      return new SalesModel(
+          item.sold,
+          item.revenue,
+          new Date(item.from),
+          new Date(item.to),
+      );
+    });
+    console.log(body);
+    console.log(salesArray);
+    return salesArray;
+  }
+
+  
 
   ngOnInit() {
     this.soldChart = new CanvasJS.Chart("amountChartContainer", {
@@ -147,6 +194,18 @@ export class SalesComponent implements OnInit {
       }]
     });
     this.onSubmit();
+  }
+
+  showMessage(msgObj: any) {
+    this.messageService.add(msgObj);
+  }
+
+  createMessage(severity: string, summary: string, detail: string): any {
+    return {
+      severity: severity,
+      summary: summary,
+      detail: detail
+    };
   }
 
 }

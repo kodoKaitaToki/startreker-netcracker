@@ -1,0 +1,236 @@
+<form [formGroup]="form"
+  (ngSubmit)="onPost(f)"
+  #f="ngForm">
+
+  <div class="row">
+    <div class="col-md-4">
+      <app-bundles-tree
+      (selectedTrips)="tripsUpdate($event)"
+      >
+      </app-bundles-tree>
+    </div>
+
+    <div class="col-md-8">
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <span>
+            From:
+          </span>
+            <input
+              type="date"
+              id="start_date"
+              class="form-control datepicker"
+              formControlName="start_date"
+              [ngClass]="{
+                'is-invalid':form.get('start_date').touched && form.get('start_date').invalid,
+                'is-valid': form.get('start_date').valid
+              }"
+            >
+
+          <span *ngIf="form.get('start_date').touched && form.get('start_date').invalid"
+                class="invalid-feedback">
+            Input the correct date
+          </span>
+          <span *ngIf="form.get('start_date').hasError('notEarlierThanCurrentDate')"
+                class="invalid-feedback">
+            Date can't be earlier than today
+          </span>
+        </div>
+
+        <div class="form-group col-md-6">
+          <span>
+            To:
+          </span>
+          <input
+            type="date"
+            id="finish_date"
+            class="form-control datepicker"
+            formControlName="finish_date"
+            [ngClass]="{
+              'is-invalid':form.get('finish_date').touched && form.get('finish_date').invalid,
+              'is-valid': form.get('finish_date').valid
+            }"
+          >
+          <span *ngIf="form.get('finish_date').touched && form.get('finish_date').invalid"
+                class="invalid-feedback">
+            Input the correct date
+          </span>
+          <span *ngIf="form.get('finish_date').hasError('notEarlierThanCurrentDate')"
+                class="invalid-feedback">
+            Date can't be earlier than today
+          </span>
+        </div>
+
+        <div *ngIf="form.hasError('periodError')">
+          <span style="color: red">
+              To date must be greater than from date
+          </span>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group col-md-2">
+          <label for="bundle_price">Discount price: </label>
+        </div>
+        <div class="form-group col-md-4">
+          <input type="number"
+          id="bundle_price"
+          class="form-control"
+          placeholder="Discount price"
+          formControlName="bundle_price"
+          [ngClass]="{
+            'is-invalid':form.get('bundle_price').invalid && form.get('bundle_price').touched,
+            'is-valid': form.get('bundle_price').valid && form.get('bundle_price').touched}">
+          <span *ngIf="form.get('bundle_price').touched && form.get('bundle_price').invalid"
+                class="invalid-feedback">
+            Price must be more than zero
+          </span>
+        </div>
+        <div class="form-group col-md-6">
+          Total price: {{getBundlePrice(form.value)}}
+        </div>
+      </div>
+
+      
+
+      <div class="form-group">
+        <textarea class="form-control"
+              placeholder="Description"
+              formControlName="bundle_description"
+              [ngClass]="{
+                'is-invalid':form.get('bundle_description').invalid && form.get('bundle_description').touched,
+                'is-valid': form.get('bundle_description').valid && form.get('bundle_description').touched}">>
+        </textarea>
+        <span
+        *ngIf="form.get('bundle_description').touched && form.get('bundle_description').invalid"
+        class="invalid-feedback">
+          Description is empty!
+        </span>
+      </div>
+
+      <hr>
+
+      <h5>Trips:</h5>
+
+      <ng-container formArrayName="bundle_trips">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Price</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Total Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container
+            *ngFor="let trip of form.get('bundle_trips').controls; let i=index">
+              <ng-container [formGroupName]="i">
+                <tr>
+                  <td scope="row">
+                    <i class="fa fa-rocket" aria-hidden="true"></i>
+                    {{trip.value.departure_spaceport_name}}({{trip.value.departure_planet}}) - 
+                    {{trip.value.arrival_spaceport_name}}({{trip.value.arrival_planet}})
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                  <td>
+                    {{getTripPrice(trip.value)}}
+                  </td>
+                </tr>
+                <ng-container formArrayName="ticket_classes">
+                  <ng-container
+                  *ngFor="let ticket_class of trip.get('ticket_classes').controls; let j=index">
+                    <ng-container [formGroupName]="j">
+                      <tr>
+                        <td scope="row" style="padding-left: 1.25rem;">
+                          <i class="fa fa-ticket" aria-hidden="true"></i>
+                          {{ticket_class.value.class_name}}
+                        </td>
+                        <td>
+                          {{ticket_class.value.ticket_price}}
+                        </td>
+                        <td>
+                          <input type="number"
+                          class="form-control"
+                          id="item_number"
+                          placeholder="amount"
+                          name="item_number"
+                          formControlName="item_number"
+                          [ngClass]="{
+                            'is-invalid': trip.get('ticket_classes').controls[j].invalid && trip.get('ticket_classes').controls[j].touched,
+                            'is-valid': trip.get('ticket_classes').controls[j].valid && trip.get('ticket_classes').controls[j].touched}"
+                          required>
+                          <span *ngIf="trip.get('ticket_classes').controls[j].touched && trip.get('ticket_classes').controls[j].invalid"
+                            class="invalid-feedback">
+                            Amount must be more than zero
+                          </span>
+                        </td>
+                        <td>
+                          {{getTicketPrice(ticket_class.value)}}
+                        </td>
+                      </tr>
+                      <ng-container formArrayName="services">
+                        <ng-container
+                        *ngFor="let service of ticket_class.get('services').controls; let k=index">
+                          <ng-container [formGroupName]="k">
+                            <tr>
+                              <td scope="row" style="padding-left: 1.75rem;">
+                                <i class="fa fa-list-alt" aria-hidden="true"></i>
+                                {{service.value.service_name}}
+                              </td>
+                              <td>
+                                {{service.value.service_price}}
+                              </td>
+                              <td>
+                                <input type="number"
+                                class="form-control"
+                                id="item_number"
+                                placeholder="amount"
+                                name="item_number"
+                                formControlName="item_number"
+                                [ngClass]="{
+                                  'is-invalid': ticket_class.get('services').controls[k].invalid && ticket_class.get('services').controls[k].touched,
+                                  'is-valid': ticket_class.get('services').controls[k].valid && ticket_class.get('services').controls[k].touched}"  
+                                required>
+                                <span *ngIf="ticket_class.get('services').controls[k].invalid && ticket_class.get('services').controls[k].touched"
+                                  class="invalid-feedback">
+                                  Amount must be more than zero
+                                </span>
+                              </td>
+                              <td>
+                                {{getServicePrice(service.value)}}
+                              </td>
+                            </tr>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+
+        <div *ngIf="form.hasError('emptyTable')">
+          <span style="color: red">
+              The table must not be empty
+          </span>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <footer class="row form-footer justify-content-around">
+    <div class="col-md-4">
+      <button class="btn-success btn btn-block"
+      type="submit"
+      [disabled]="form.invalid">
+        Add
+      </button>
+    </div>
+  </footer>
+</form>

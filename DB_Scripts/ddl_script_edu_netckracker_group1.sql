@@ -186,11 +186,12 @@ CREATE TABLE DISCOUNT_SERVICE (
 );
 
 CREATE TABLE SCHEDULE (
+  SCHEDULE_ID   SERIAL PRIMARY KEY,
   TRIP_ID       INTEGER REFERENCES TRIP (TRIP_ID),
-  START_DATE    DATE    NOT NULL,
-  FINISH_DATE   DATE    NOT NULL,
+  START_DATE    TIMESTAMP    NOT NULL,
+  FINISH_DATE   TIMESTAMP    NOT NULL,
   INTERVAL      INTEGER NOT NULL,
-  CREATION_DATE DATE    NOT NULL
+  CREATION_DATE TIMESTAMP    NOT NULL
 );
 
 CREATE TABLE NOTIFICATION_OBJECT (
@@ -426,10 +427,14 @@ insert into VEHICLE (OWNER_ID, VEHICLE_NAME, VEHICLE_SEATS) values (16, 'leo', 1
 insert into VEHICLE (OWNER_ID, VEHICLE_NAME, VEHICLE_SEATS) values (8, 'proin at', 10);
 
 insert into PLANET (PLANET_NAME) values ('EARTH');
-insert into PLANET (PLANET_NAME) values ('MOON');
 insert into PLANET (PLANET_NAME) values ('VENUS');
 insert into PLANET (PLANET_NAME) values ('MARS');
-insert into PLANET (PLANET_NAME) values ('NIBIRU');
+insert into PLANET (PLANET_NAME) values ('MERCURY');
+insert into PLANET (PLANET_NAME) values ('JUPITER');
+insert into PLANET (PLANET_NAME) values ('SATURN');
+insert into PLANET (PLANET_NAME) values ('URANUS');
+insert into PLANET (PLANET_NAME) values ('NEPTUNE');
+insert into PLANET (PLANET_NAME) values ('PLUTO');
 
 insert into SPACEPORT (SPACEPORT_NAME, CREATION_DATE, PLANET_ID) values ('laoreet', '2017-07-06', 5);
 insert into SPACEPORT (SPACEPORT_NAME, CREATION_DATE, PLANET_ID) values ('elementum', '2017-10-04', 4);
@@ -708,8 +713,11 @@ insert into DISCOUNT_SERVICE (DISCOUNT_ID, P_SERVICE_ID) values (2, 3);
 insert into DISCOUNT_SERVICE (DISCOUNT_ID, P_SERVICE_ID) values (3, 14);
 insert into DISCOUNT_SERVICE (DISCOUNT_ID, P_SERVICE_ID) values (3, 22);
 
-insert into SCHEDULE (START_DATE, FINISH_DATE, INTERVAL, CREATION_DATE)
-values ('2016-08-03', '2020-08-03', 365, '2016-08-02');
+insert into SCHEDULE (TRIP_ID, START_DATE, FINISH_DATE, INTERVAL, CREATION_DATE)
+values ('4', '2016-08-03', '2020-08-03', 365, '2016-08-02');
+
+insert into SCHEDULE (TRIP_ID, START_DATE, FINISH_DATE, INTERVAL, CREATION_DATE)
+values ('5', '2017-08-03', '2021-08-03', 365, '2017-08-02');
 
 insert into REPORT (REPORTER_ID, APPROVER_ID, TRIP_ID, STATUS, REPORT_RATE, REPORT_TEXT, CREATION_DATE) values
   (15, null, 7, 1, null, 'donec posuere metus vitae ipsum aliquam non mauris morbi non lectus aliquam sit',

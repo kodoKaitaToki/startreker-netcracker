@@ -2,11 +2,18 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Approver} from '../shared/model/approver';
 import {ApproverService} from "../shared/service/approver.service";
+import {MessageService} from "primeng/api";
+import {HttpErrorResponse} from "@angular/common/http";
+import {ShowMessageService} from "../shared/service/show-message.service";
+import { clone } from 'ramda';
+import {checkToken} from "../../../../modules/api/index";
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
              selector: 'app-approver-component',
              templateUrl: './approver-component.component.html',
-             styleUrls: ['./approver-component.component.scss']
+             styleUrls: ['./approver-component.component.scss'],
+             providers: [ShowMessageService]
            },
 )
 export class ApproverComponentComponent implements OnInit {
@@ -14,8 +21,8 @@ export class ApproverComponentComponent implements OnInit {
   approvers: Approver[] = [];
 
   filterCriteria = [
-    {name: 'id'},
     {name: 'name'},
+    {name: 'email'},
     {name: 'status'},
   ];
 
@@ -29,7 +36,9 @@ export class ApproverComponentComponent implements OnInit {
 
   passwordMinLength = 6;
 
-  constructor(private approverSrvc: ApproverService) {
+  constructor(private approverSrvc: ApproverService,
+              private messageService: MessageService,
+              private showMsgSrvc: ShowMessageService) {
   }
 
   ngOnInit(): void {
@@ -39,7 +48,8 @@ export class ApproverComponentComponent implements OnInit {
         email: new FormControl('', [Validators.required, Validators.email]),
         username: new FormControl('', [Validators.required, Validators.minLength(3), Validators.max(24)]),
         password: new FormControl('', [Validators.required, Validators.minLength(this.passwordMinLength)]),
-        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[\\s\\d+(d+)\\s]+')]),
+        repeat_password: new FormControl('', Validators.required),
+        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[\\s\\d+(d+)-\\s]+')]),
         is_activated: new FormControl(true, Validators.required)
       }
     );
@@ -55,13 +65,18 @@ export class ApproverComponentComponent implements OnInit {
 
   onPost() {
 
-    const approver: Approver = this.form.value;
+    let approver: Approver = this.form.value;
+
+    delete approver['repeat_password'];
 
     this.approverSrvc.postApprover(approver)
-        .subscribe(() => {
+        .subscribe((resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
           this.getAllApprovers();
-        }, () => {
-          alert('Such an email exists');
+          this.showMsgSrvc.showMessage(this.messageService, 'success', 'Approver creation', 'The approver was created');
+        }, (error: HttpErrorResponse) => {
+          this.showMsgSrvc.showMessage(this.messageService, 'error', `Error message - ${error.error.status}`,
+                                       error.error.error);
         });
 
     this.form.reset({is_activated: true});
@@ -70,24 +85,45 @@ export class ApproverComponentComponent implements OnInit {
   getApproverForUpdate(approver) {
 
     this.approverSrvc.putApprover(approver)
-        .subscribe(() => {
+        .subscribe((resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
           this.getAllApprovers();
-        }, () => {
-          alert('Such an email exists');
+          this.showMsgSrvc.showMessage(this.messageService, 'success', 'Approver editing', 'The approver was edited');
+        }, (error: HttpErrorResponse) => {
+          this.showMsgSrvc.showMessage(this.messageService, 'error', `Error message - ${error.error.status}`,
+                                       error.error.error);
         });
   }
 
   getApproverForDelete(approver) {
 
     this.approverSrvc.deleteApprover(approver)
-        .subscribe(() => {
-          this.getAllApprovers();
-        });
+        .subscribe((resp: HttpResponse<any>) => {
+                     checkToken(resp.headers);
+                     this.getAllApprovers();
+                     this.showMsgSrvc.showMessage(this.messageService, 'success', 'Approver deletion', 'The approver was deleted');
+                   }, (error: HttpErrorResponse) => {
+                     this.showMsgSrvc.showMessage(this.messageService, 'error', `Error message - ${error.error.status}`,
+                                                  error.error.error);
+                   }
+        );
   }
 
   getAllApprovers() {
 
     this.approverSrvc.getAll()
-        .subscribe(data => this.approvers = data);
+        .subscribe((resp: HttpResponse<any>) => {
+          checkToken(resp.headers);
+          this.showMsgSrvc.showMessage(this.messageService, 'success', 'Approvers list', 'The list was updated');
+          this.approvers = clone(resp.body);
+        }, (error: HttpErrorResponse) => {
+          this.showMsgSrvc.showMessage(this.messageService, 'error', `Error message - ${error.error.status}`,
+                                       error.error.error);
+        });
+  }
+
+  checkRepeatedPasswordTheSame() {
+
+    return this.form.get('password').value === this.form.get('repeat_password').value;
   }
 }

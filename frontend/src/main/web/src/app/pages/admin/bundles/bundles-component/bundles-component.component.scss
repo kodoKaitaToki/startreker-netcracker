@@ -1,0 +1,21 @@
+.page-header {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 50px;
+    padding-top: 30px;
+    border: none;
+}
+
+.header-container {
+    position: relative;
+    z-index: 1;
+    background-color: rgba(240, 248, 255, 0.9);
+    padding: 30px 30px 20px;
+    box-shadow: 0 5px 25px 0 rgba(0,0,0,.07);
+    font-family: "bahnschrift", sans-serif;
+}
+
+.lead {
+    font-size: 18px;
+    line-height: 30px;
+}

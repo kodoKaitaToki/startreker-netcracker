@@ -9,7 +9,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 
 @Service
@@ -33,13 +33,13 @@ public class AuthorityUtils {
 
     @PostConstruct
     public void init() {
-        ROLE_ADMIN = roleDAO.find(1).orElseThrow(
+        ROLE_ADMIN = roleDAO.find("ROLE_ADMIN").orElseThrow(
                 () -> new BeanInitializationException("AuthorityUtils: ROLE_ADMIN Not Found in the Database"));
-        ROLE_USER = roleDAO.find(2).orElseThrow(
+        ROLE_USER = roleDAO.find("ROLE_USER").orElseThrow(
                 () -> new BeanInitializationException("AuthorityUtils: ROLE_USER Not Found in the Database"));
-        ROLE_CARRIER = roleDAO.find(3).orElseThrow(
+        ROLE_CARRIER = roleDAO.find("ROLE_CARRIER").orElseThrow(
                 () -> new BeanInitializationException("AuthorityUtils: ROLE_CARRIER Not Found in the Database"));
-        ROLE_APPROVER = roleDAO.find(4).orElseThrow(
+        ROLE_APPROVER = roleDAO.find("ROLE_APPROVER").orElseThrow(
                 () -> new BeanInitializationException("AuthorityUtils: ROLE_APPROVER Not Found in the Database"));
 
         DEBUG_SU = Arrays.asList(env.getActiveProfiles()).contains("debug_su");
@@ -48,7 +48,7 @@ public class AuthorityUtils {
             DEBUG_SUPERUSER = new User("su", "su", "su@su.com");
             DEBUG_SUPERUSER.setUserId(0);
             DEBUG_SUPERUSER.setUserIsActivated(true);
-            DEBUG_SUPERUSER.setRegistrationDate(LocalDate.now());
+            DEBUG_SUPERUSER.setRegistrationDate(LocalDateTime.now());
             DEBUG_SUPERUSER.setUserRoles(Arrays.asList(ROLE_ADMIN, ROLE_USER, ROLE_CARRIER, ROLE_APPROVER));
         }
     }

@@ -3,3 +3,5 @@
 frontend/target
 backend/log/
 log/
+backend/log/app.log
+*.log

@@ -63,6 +63,31 @@
               <div class="input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text">
+                    <i class="fa fa-phone"></i>
+                  </span>
+                </div>
+                <label for="phone"></label>
+                <input
+                  type="text"
+                  class="form-control register-form__input"
+                  placeholder="Your phone number"
+                  id="phone"
+                  formControlName="telephone_number"
+                  [ngClass]="{ 'is-invalid': submitted && f.telephone_number.errors }"
+                />
+              </div>
+              <div *ngIf="submitted && f.telephone_number.errors" class="register-form__invalid">
+                <div *ngIf="f.telephone_number.errors.required">This field is required</div>
+                <div *ngIf="f.telephone_number.errors.pattern">Phone number must be valid and contain 12 numbers</div>
+              </div>
+            </div>
+
+            <hr class="hr-xs">
+
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
                     <i class="fa fa-lock"></i>
                   </span>
                 </div>
@@ -112,6 +137,7 @@
             <button
                 type="submit"
                 class="btn btn-primary btn-block"
+                [disabled]="submitBut"
                 >
                 Sign up
             </button>
@@ -128,4 +154,5 @@
       </div>
     </div>
   </div>
+  <p-growl></p-growl>
 </div>

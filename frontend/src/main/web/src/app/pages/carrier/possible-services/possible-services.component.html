@@ -1,0 +1,151 @@
+<header class="page-header">
+  <div class="container header-container">
+    <div class="col-12">
+      <h1 class="text-center">Manage possible services</h1>
+      <p class="lead text-center">Each ticket class can have certain cervices applied to it. Here you can choose which of your valid cervices will be avalable for every ticket class of your trip. You can also set the price of the service.</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="ticket-card card">
+    <div class="row">
+      <div class="col">
+        <div class="row">
+          <h6 class="col-12">From:</h6>
+        </div>
+        <div class="row">
+          <h5 class="col-12">{{trip.arrival_spaceport}} ({{trip.arrival_planet}})
+          </h5>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          <h6 class="col-12">To:</h6>
+        </div>
+        <div class="row">
+          <h5 class="col-12">{{trip.departure_spaceport}} ({{trip.departure_planet}})
+          </h5>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          <h6 class="col-12">Departure date and time:</h6>
+        </div>
+        <div class="row">
+          <h5 class="col-12">{{trip.departure_date}}
+          </h5>
+        </div>
+      </div>
+      <div class="col">
+        <div class="row">
+          <h6 class="col-12">Arrival date and time:</h6>
+        </div>
+        <div class="row">
+          <h5 class="col-12">{{trip.arrival_date}}
+          </h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="background-card card">
+    <div class="card-header">
+      <ul class="nav nav-tabs card-header-tabs nav-fill">
+        <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+          <a class="nav-link" [routerLink]="['/approver/service/opened']">Economy</a>
+        </li>
+        <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+          <a class="nav-link" [routerLink]="['/approver/service/assigned']">First</a>
+        </li>
+        <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+          <a class="nav-link" [routerLink]="['/approver/service/assigned']">Buisness</a>
+        </li>
+      </ul>
+    </div>
+  
+    <div class="card-body row">
+      <div class="col-md-6">
+        <h5>All services:</h5>
+        <div class="container container-card card">
+          <div class="row">
+            <div class="col">
+              <div class="row">
+                <h6 class="col-12">Name:</h6>
+              </div>
+              <div class="row">
+                <h5 class="col-12">Service test name{{service.service_name}}</h5>
+              </div>
+            </div>
+  
+            <div class="col">
+              <div class="row">
+                <h6 class="col-12">Date of creation:</h6>
+              </div>
+              <div class="row">
+                <h5 class="col-12">123444 {{service.creation_date | date}}</h5>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row table-header">
+            <div class="col">
+              <pre class="description">deskllfslgjnlgf {{service.service_descr}}</pre>
+            </div>
+          </div>
+  
+          <footer class="row table-footer justify-content-end">
+            <div class="col-sm-auto">
+              <button class="btn btn-xs btn-secondary list-buttons">
+                Add
+              </button>
+            </div>
+          </footer>
+        </div>
+      </div>
+  
+  
+      <div class="col-md-6">
+        <h5>Possible services:</h5>
+        <div class="container container-card card">
+            <div class="row">
+              <div class="col">
+                <div class="row">
+                  <h6 class="col-12">Name:</h6>
+                </div>
+                <div class="row">
+                  <h5 class="col-12">Service test name{{service.service_name}}</h5>
+                </div>
+              </div>
+    
+              <div class="col">
+                <div class="row">
+                  <h6 class="col-12">Date of creation:</h6>
+                </div>
+                <div class="row">
+                  <h5 class="col-12">123444 {{service.creation_date | date}}</h5>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row table-header">
+              <div class="col">
+                <pre class="description">deskllfslgjnlgf {{service.service_descr}}</pre>
+              </div>
+            </div>
+    
+            <footer class="row table-footer justify-content-end">
+              <div class="col-sm-auto">
+                <button class="btn btn-xs btn-danger list-buttons">
+                  Remove
+                </button>
+              </div>
+            </footer>
+          </div>
+      </div>
+    </div>
+  </div>
+
+</div>

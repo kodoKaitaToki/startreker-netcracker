@@ -1,0 +1,101 @@
+<p-toast></p-toast>
+
+<div class="list-group">
+  <ul>
+    <li class="list-group-item"
+      *ngFor="let service of services"
+    >
+      <div class="row">
+        <div class="col-sm-12">
+
+          <div class="row">
+            <h3 class="col-md-6">
+              Service name:
+            </h3>
+            <h3 class="col-md-6">
+              {{service.service_name}}
+            </h3>
+          </div>
+
+          <hr>
+
+          <div class="row">
+            <h3 class="col-12">Description:</h3>
+          </div>
+
+          <div class="row">
+            <p class="col-12">{{service.service_descr}}</p>
+          </div>
+
+          <hr>
+
+          <div class="row">
+            <h5 class="col-6">Date of creation:</h5>
+            <p class="col-6">
+              {{service.creation_date | date}}
+            </p>
+          </div>
+
+          <hr>
+      </div>
+      </div>
+
+      <div class="row justify-content-around"
+           *ngIf="currentServiceForReply !== service && loadingService !== service"
+      >
+        <button class="btn btn-success col-4"
+                (click)="onPublish(service)"
+        >
+          Publish
+        </button>
+
+        <button class="btn btn-info col-4"
+                (click)="onWriteReply(service)"
+        >
+          Under clarification
+        </button>
+      </div>
+
+      <form [formGroup]="form"
+            (ngSubmit)="onReview(service)"
+            *ngIf="currentServiceForReply == service && loadingService !== service"
+      >
+        <div class="form-group">
+          <label for="reply"><h5>Reply:</h5></label>
+          <textarea class="form-control"
+                    id="reply"
+                    rows="3"
+                    formControlName="reply_text"
+                    [ngClass]="{
+                      'is-invalid':form.get('reply_text').invalid,
+                      'is-valid': form.get('reply_text').valid
+                    }"
+          >
+          </textarea>
+        </div>
+
+        <div class="row justify-content-around"
+        >
+          <button class="btn btn-success col-4"
+                  type="submit"
+                  [disabled]="form.get('reply_text').invalid"
+          >
+            Write a reply
+          </button>
+          <button class="btn btn-danger col-4"
+                  (click)="resetReply()"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </li>
+  </ul>
+  <app-paginator
+    [page]="services"
+    [from]="pageFrom"
+    [number]="pageNumber"
+    (update)="onPageUpdate($event)"
+  >
+  </app-paginator>
+</div>

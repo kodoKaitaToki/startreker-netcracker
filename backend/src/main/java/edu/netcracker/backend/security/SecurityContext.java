@@ -3,6 +3,7 @@ package edu.netcracker.backend.security;
 import edu.netcracker.backend.model.User;
 import edu.netcracker.backend.service.UserService;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -12,11 +13,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.WebApplicationContext;
 
-import javax.annotation.PostConstruct;
-
 @Service
 @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
-@Getter
+@Slf4j(topic = "log")
 public class SecurityContext {
 
     private final UserService userService;
@@ -27,10 +26,14 @@ public class SecurityContext {
         this.userService = userService;
     }
 
-    @PostConstruct
-    public void init(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        user = userService.findByUsername(userDetails.getUsername());
+    public User getUser() {
+        if (user == null) {
+            Authentication authentication = SecurityContextHolder.getContext()
+                                                                 .getAuthentication();
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            log.info("Querying for authorized user [name: {}]", userDetails.getUsername());
+            user = userService.findByUsername(userDetails.getUsername());
+        }
+        return user;
     }
 }

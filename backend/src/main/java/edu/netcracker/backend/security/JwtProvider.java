@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Component
@@ -35,13 +37,13 @@ public class JwtProvider {
     private String jwtSecret;
 
     @Value("${jwt.jwtAuthenticationExpiration}")
-    private int jwtAuthenticationExpiration;
+    private long jwtAuthenticationExpiration;
 
     @Value("${jwt.jwtMailRegistrationExpiration}")
-    private int jwtMailRegistrationExpiration;
+    private long jwtMailRegistrationExpiration;
 
     @Value("${jwt.jwtRefreshExpiration}")
-    private int jwtRefreshExpiration;
+    private long jwtRefreshExpiration;
 
     public String generateAccessToken(UserDetails userPrincipal) {
         String userInformationHolder = userInformationHolderService.convertAsString(userPrincipal);
@@ -50,15 +52,24 @@ public class JwtProvider {
             throw new RuntimeException("Something went wrong");
         }
 
-        return generateToken(userInformationHolder, jwtAuthenticationExpiration, TokenType.ACCESS_TOKEN);
+        return generateToken(userInformationHolder,
+                             new Date((new Date()).getTime() + jwtAuthenticationExpiration),
+                             TokenType.ACCESS_TOKEN);
     }
 
     public String generateRefreshToken(String username) {
-        return generateToken(username, jwtMailRegistrationExpiration, TokenType.REFRESH_TOKEN);
+        return generateToken(username,
+                             Date.from(LocalDate.now()
+                                                .plusYears(100)
+                                                .atStartOfDay(ZoneId.systemDefault())
+                                                .toInstant()),
+                             TokenType.REFRESH_TOKEN);
     }
 
     public String generateMailRegistrationToken(String username) {
-        return generateToken(username, jwtMailRegistrationExpiration, TokenType.REGISTRATION_TOKEN);
+        return generateToken(username,
+                             new Date((new Date()).getTime() + jwtMailRegistrationExpiration),
+                             TokenType.REGISTRATION_TOKEN);
     }
 
     public String retrieveSubject(String jwt) {
@@ -79,11 +90,15 @@ public class JwtProvider {
 
     private boolean validateInputToken(String jwt, HttpServletRequest request) {
         try {
-            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt);
+            Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(jwt);
             return true;
         } catch (ExpiredJwtException e) {
-            logger.error("Expired JWT token -> Message: {}", e.getMessage());
-            if (request != null) request.setAttribute("isExpired", true);
+            logger.debug("Expired JWT token -> Message: {}", e.getMessage());
+            if (request != null) {
+                request.setAttribute("isExpired", true);
+            }
         } catch (Exception e) {
             logger.error("Invalid JWT -> Message: {} " + e.getMessage());
         }
@@ -91,21 +106,21 @@ public class JwtProvider {
         return false;
     }
 
-    private String generateToken(String subject, int expiration, TokenType tokenType) {
-        return Jwts.builder().
-                setSubject(subject).
-                setIssuedAt(new Date()).
-                setIssuer(tokenType.toString()).
-                setExpiration(new Date((new Date()).getTime() + expiration)).
-                signWith(SignatureAlgorithm.HS512, jwtSecret).
-                compact();
+    private String generateToken(String subject, Date expiration, TokenType tokenType) {
+        return Jwts.builder()
+                   .setSubject(subject)
+                   .setIssuedAt(new Date())
+                   .setIssuer(tokenType.toString())
+                   .setExpiration(expiration)
+                   .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                   .compact();
     }
 
     private Claims retrieveClaimsFromToken(String jwt) {
         return Jwts.parser()
-                .setSigningKey(jwtSecret)
-                .parseClaimsJws(jwt)
-                .getBody();
+                   .setSigningKey(jwtSecret)
+                   .parseClaimsJws(jwt)
+                   .getBody();
     }
 
     public boolean isAccessToken(String token) {

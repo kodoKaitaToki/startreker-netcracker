@@ -1,13 +1,12 @@
 package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.CrudDAO;
-import edu.netcracker.backend.dao.annotations.Attribute;
-import edu.netcracker.backend.dao.annotations.PrimaryKey;
 import edu.netcracker.backend.dao.mapper.GenericMapper;
+import edu.netcracker.backend.dao.sql.EntityProcessor;
+import edu.netcracker.backend.dao.sql.EntityProcessorImpl;
 import edu.netcracker.backend.dao.sql.PostgresSqlBuilder;
 import edu.netcracker.backend.dao.sql.SQLBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,153 +14,98 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.*;
 
-import static java.lang.Math.toIntExact;
-
+@Slf4j(topic = "log")
 public abstract class CrudDAOImpl<T> implements CrudDAO<T> {
 
     private JdbcTemplate jdbcTemplate;
-    private Class<T> clazz;
-    private String selectSql;
-    private String createSql;
-    private String updateSql;
-    private String deleteSql;
-    private String existsSql;
-    private GenericMapper<T> genericMapper;
-    private SQLBuilder sqlBuilder;
-    private Map<Field, PrimaryKey> fieldPrimaryKeyMap = new HashMap<>();
-    private Map<Field, Attribute> fieldAttributeMap = new HashMap<>();
-    private final Logger logger = LoggerFactory.getLogger(CrudDAOImpl.class);
+
+    private final SQLBuilder sql;
+
+    private final GenericMapper<T> genericMapper;
+    private final EntityProcessor<T> entityProcessor;
 
     @Autowired
     public CrudDAOImpl() {
         // Hack to get generic type class
         Type t = getClass().getGenericSuperclass();
         ParameterizedType pt = (ParameterizedType) t;
-        this.clazz = (Class<T>) pt.getActualTypeArguments()[0];
-        resolveFields();
-        this.sqlBuilder = new PostgresSqlBuilder(clazz, fieldPrimaryKeyMap, fieldAttributeMap);
-        selectSql = sqlBuilder.assembleSelectSql();
-        createSql = sqlBuilder.assembleInsertSql();
-        updateSql = sqlBuilder.assembleUpdateSql();
-        deleteSql = sqlBuilder.assembleDeleteSql();
-        existsSql = sqlBuilder.assembleExistsSql();
-        genericMapper = new GenericMapper<>();
-        genericMapper.setClazz(clazz);
-        genericMapper.setFieldAttributeMap(fieldAttributeMap);
-        genericMapper.setFieldPrimaryKeyMap(fieldPrimaryKeyMap);
+        Class<T> entityClass = (Class<T>) pt.getActualTypeArguments()[0];
+
+        this.entityProcessor = new EntityProcessorImpl<>(entityClass);
+
+        this.sql = new PostgresSqlBuilder(entityClass,
+                                          entityProcessor.getPrimaryKey(),
+                                          entityProcessor.getFieldAttributeMap());
+
+        genericMapper = new GenericMapper<>(entityClass,
+                                            entityProcessor.getPrimaryKeyField(),
+                                            entityProcessor.getFieldAttributeMap());
     }
 
     public Optional<T> find(Number id) {
         try {
-            T entity = jdbcTemplate.queryForObject(
-                    selectSql,
-                    new Object[]{id},
-                    genericMapper);
+            T entity = jdbcTemplate.queryForObject(sql.getSelectSql(), new Object[]{id}, genericMapper);
             return Optional.ofNullable(entity);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
-    public List<T> findIn(List<?> args){
-        if(args.size() == 0) return new ArrayList<>();
-        return jdbcTemplate.query(
-                sqlBuilder.assembleVariableSelectInSql(args.size()),
-                args.toArray(),
-                genericMapper);
+    public List<T> findIn(List<?> args) {
+        if (args.size() == 0) {
+            return new ArrayList<>();
+        }
+        return jdbcTemplate.query(sql.assembleVariableSelectInSql(args.size()), args.toArray(), genericMapper);
     }
 
     public void save(T entity) {
-        if (!isAlreadyExists(entity)) {
-            PreparedStatementCreator psc = connection -> {
-                PreparedStatement ps = connection.prepareStatement(
-                        createSql,
-                        Statement.RETURN_GENERATED_KEYS);
-                int i = 1;
-                for (Object obj : resolveCreateParameters(entity)) {
-                    ps.setObject(i++, obj);
-                }
-                return ps;
-            };
-            KeyHolder holder = new GeneratedKeyHolder();
-            jdbcTemplate.update(psc, holder);
-            for (Field field : fieldPrimaryKeyMap.keySet()) {
-                try {
-                    Number result = (Number) holder.getKeys().get(field.getAnnotation(PrimaryKey.class).value());
-                    if (field.getType().equals(Long.class)) {
-                        field.set(entity, result.longValue());
-                    } else if (field.getType().equals(Integer.class)) {
-                        field.set(entity, toIntExact(result.longValue()));
-                    }
-                } catch (IllegalAccessException e) {
-                    logger.warn(e.toString());
-                }
+        if (isAlreadyExists(entity)) {
+            update(entity);
+            return;
+        }
+
+        PreparedStatementCreator psc = connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql.getInsertSql(), Statement.RETURN_GENERATED_KEYS);
+            int i = 1; // 1 - first parameter in jdbc
+            for (Object obj : entityProcessor.resolveCreateParameters(entity)) {
+                ps.setObject(i++, obj);
             }
-        } else update(entity);
+            return ps;
+        };
+
+        KeyHolder holder = new GeneratedKeyHolder();
+        jdbcTemplate.update(psc, holder);
+
+        try {
+            entityProcessor.putGeneratedPrimaryKey(holder, entity);
+        } catch (IllegalAccessException e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e);
+        }
     }
 
     public void delete(T entity) {
-        jdbcTemplate.update(deleteSql, resolvePrimaryKeyParameters(entity));
+        jdbcTemplate.update(sql.getDeleteSql(), entityProcessor.resolvePrimaryKeyParameters(entity));
     }
 
     protected void update(T entity) {
-        jdbcTemplate.update(updateSql, resolveUpdateParameters(entity));
+        jdbcTemplate.update(sql.getUpdateSql(), entityProcessor.resolveUpdateParameters(entity));
     }
 
     private boolean isAlreadyExists(T entity) {
-        Long count = jdbcTemplate.queryForObject(
-                existsSql,
-                Long.class,
-                resolvePrimaryKeyParameters(entity));
+        Long count = jdbcTemplate.queryForObject(sql.getExistsSql(),
+                                                 Long.class,
+                                                 entityProcessor.resolvePrimaryKeyParameters(entity));
+        if (count == null) {
+            throw new RuntimeException();
+        }
         return count > 0L;
-    }
-
-    private Object[] resolveCreateParameters(T entity) {
-        List<Object> objects = new ArrayList<>();
-        addMapperParams(objects, entity, fieldAttributeMap);
-        return objects.toArray();
-    }
-
-    private Object[] resolveUpdateParameters(T entity) {
-        List<Object> objects = new ArrayList<>();
-        addMapperParams(objects, entity, fieldAttributeMap);
-        addMapperParams(objects, entity, fieldPrimaryKeyMap);
-        return objects.toArray();
-    }
-
-    private Object[] resolvePrimaryKeyParameters(T entity) {
-        List<Object> objects = new ArrayList<>();
-        addMapperParams(objects, entity, fieldPrimaryKeyMap);
-        return objects.toArray();
-    }
-
-    private void addMapperParams(List<Object> objects, T entity, Map<Field, ?> currMapper) {
-        for (Field field : currMapper.keySet()) {
-            try {
-                objects.add(field.get(entity));
-            } catch (IllegalAccessException e) {
-                logger.warn(e.toString());
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private void resolveFields() {
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            field.setAccessible(true);
-            Attribute attribute = field.getAnnotation(Attribute.class);
-            if (attribute != null) fieldAttributeMap.put(field, attribute);
-            PrimaryKey primaryKey = field.getAnnotation(PrimaryKey.class);
-            if (primaryKey != null) fieldPrimaryKeyMap.put(field, primaryKey);
-        }
     }
 
     protected JdbcTemplate getJdbcTemplate() {

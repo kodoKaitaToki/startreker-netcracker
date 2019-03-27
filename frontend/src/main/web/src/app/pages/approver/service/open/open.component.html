@@ -1,0 +1,66 @@
+<p-toast></p-toast>
+
+<div class="list-group">
+  <ul>
+    <li class="list-group-item"
+      *ngFor="let service of services"
+    >
+      <div class="row">
+        <div class="col-sm-12">
+
+          <div class="row">
+            <h3 class="col-md-6">
+              Service name:
+            </h3>
+            <h3 class="col-md-6">
+              {{service.service_name}}
+            </h3>
+          </div>
+
+          <hr>
+
+          <div class="row">
+            <h3 class="col-12">Description:</h3>
+          </div>
+
+          <div class="row">
+            <p class="col-12">{{service.service_descr}}</p>
+          </div>
+
+          <hr>
+
+          <div class="row">
+            <h5 class="col-6">Date of creation:</h5>
+            <p class="col-6">
+              {{service.creation_date | date}}
+            </p>
+          </div>
+
+          <hr>
+        </div>
+      </div>
+
+      <form
+        *ngIf="loadingService !== service"
+      >
+          <div class="col-sm-12">
+            <div class="row justify-content-around"
+            >
+              <button class="btn btn-primary col-md-4"
+                      (click)="onAssign(service)"
+              >
+                Assign to me
+              </button>
+            </div>
+          </div>
+      </form>
+    </li>
+  </ul>
+  <app-paginator
+    [page]="services"
+    [from]="pageFrom"
+    [number]="pageNumber"
+    (update)="onPageUpdate($event)"
+  >
+  </app-paginator>
+</div>

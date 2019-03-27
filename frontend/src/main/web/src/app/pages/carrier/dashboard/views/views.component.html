@@ -1,9 +1,138 @@
+<p-toast></p-toast>
+
 <div class="container">
   <div class="row justify-content-center">
     <div class="col-md-12 my-auto">
       <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
-        <h1 class="card-title text-center">views works!</h1>
+        <div class="card-body">
+          <h3 class='title'>Views Statistics</h3>
+
+          <hr class="hr-xs">
+
+          <div [hidden]="hideChart" id="viewsChartContainer"
+               style="height: 370px; width: 100%;"></div>
+
+          <hr [hidden]="hideChart" class="hr-xs">
+
+          <div class="form-row justify-content-center">
+            <div class="col-lg-6">
+              <h6 class="search-bar__heading">From:</h6>
+              <input
+                type="date"
+                [ngModel]="fromDate | date:'yyyy-MM-dd'"
+                (ngModelChange)="fromDate = $event"
+                class="form-control datepicker"
+              >
+            </div>
+            <div class="col-lg-6">
+              <h6 class="search-bar__heading">To:</h6>
+              <input
+                type="date"
+                [ngModel]="toDate | date:'yyyy-MM-dd'"
+                (ngModelChange)="toDate = $event"
+                class="form-control datepicker"
+              >
+            </div>
+          </div>
+
+          <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+            <hr class="hr-xs">
+
+            <div class="row justify-content-around">
+              <div class="col-lg-5">
+                <button type="button" (click)="setToWeek()" class="btn btn-primary btn-block">Last week</button>
+              </div>
+              <div class="col-lg-5">
+                <button type="button" (click)="setToMonth()" class="btn btn-primary btn-block">Last month</button>
+              </div>
+            </div>
+
+            <hr class="hr-xs">
+
+            <div class="row">
+              <div class="col-3">
+                <div class="form-check">
+                  <input type="radio"
+                         id="forTrips"
+                         name="forWhat"
+                         class="form-check-input"
+                         value="forTrips"
+                         formControlName="forWhat"
+                         checked
+                  >
+                  <label class="form-check-label" for="forTrips">For Trips</label>
+                </div>
+                <div class="form-check">
+                  <input type="radio"
+                         id="forServices"
+                         name="forWhat"
+                         class="form-check-input"
+                         value="forServices"
+                         formControlName="forWhat"
+                         checked
+                  >
+                  <label class="form-check-label" for="forServices">For Services</label>
+                </div>
+              </div>
+
+              <div class="col-3">
+                <div class="form-check">
+                  <input type="radio"
+                         id="perWeek"
+                         name="dataPeriod"
+                         class="form-check-input"
+                         value="perWeek"
+                         formControlName="dataPeriod"
+                         checked
+                  >
+                  <label class="form-check-label" for="perWeek">Per Week</label>
+                </div>
+                <div class="form-check">
+                  <input type="radio"
+                         id="perMonth"
+                         name="dataPeriod"
+                         class="form-check-input"
+                         value="perMonth"
+                         formControlName="dataPeriod"
+                         checked
+                  >
+                  <label class="form-check-label" for="perMonth">Per Month</label>
+                </div>
+              </div>
+            </div>
+
+            <br>
+
+            <div class="row">
+              <div class="col-5">
+                <div *ngIf="form.value.forWhat == 'forTrips'" class="form-group">
+                  <select class="form-control" formControlName="selectedTripId">
+                    <option [value]="null">All trips</option>
+                    <option *ngFor="let trip of carrierTrips" [value]="trip.trip_id">{{trip.departure_planet_name}}
+                      - {{trip.arrival_planet_name}}</option>
+                  </select>
+                </div>
+
+                <div *ngIf="form.value.forWhat == 'forServices'" class="form-group">
+                  <select class="form-control" formControlName="selectedServiceId">
+                    <option [value]="null">All services</option>
+                    <option *ngFor="let service of carrierServices" [value]="service.service_id">
+                      {{service.service_name}}</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+
+            <hr>
+
+            <button type="submit" class="btn-success btn col-md-12">Update statistics</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+

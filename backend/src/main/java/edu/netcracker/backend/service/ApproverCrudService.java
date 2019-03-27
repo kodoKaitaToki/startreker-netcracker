@@ -1,56 +1,23 @@
 package edu.netcracker.backend.service;
 
-import edu.netcracker.backend.dao.ApproverDAO;
-import edu.netcracker.backend.dao.UserDAO;
 import edu.netcracker.backend.model.User;
-import edu.netcracker.backend.utils.AuthorityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
-@Service
-public class ApproverCrudService {
+public interface ApproverCrudService {
 
-    private ApproverDAO approverDAO;
-    private UserDAO userDAO;
+    List<User> getAllApprovers();
 
-    @Autowired
-    public ApproverCrudService(ApproverDAO approverDAO, UserDAO userDAO) {
-        this.approverDAO = approverDAO;
-        this.userDAO = userDAO;
-    }
+    List<User> getApprovers(Number limit, Number offset);
 
-    public List<User> getAllApprovers() {
-        return approverDAO.findAllApprovers();
-    }
+    User getById(Number id);
 
-    public List<User> getApprovers(Number limit, Number offset) {
-        return approverDAO.find(limit, offset);
-    }
+    void add(User approver);
 
-    public User getById(Number id) {
-        return approverDAO.find(id).get();
-    }
+    void update(User approver);
 
-    public void add(User approver) {
-        approver.getUserRoles().add(AuthorityUtils.ROLE_APPROVER);
-        approver.setRegistrationDate(LocalDate.now(ZoneId.systemDefault()));
-        userDAO.save(approver);
-    }
+    void delete(User approver);
 
-    public void update(User approver) {
-        approverDAO.update(approver);
-    }
-
-    public void delete(User approver) {
-        userDAO.delete(approver);
-    }
-
-    public BigInteger getRecordsCount() {
-        return approverDAO.count();
-    }
+    BigInteger getRecordsCount();
 }

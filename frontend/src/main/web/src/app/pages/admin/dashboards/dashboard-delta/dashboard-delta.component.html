@@ -1,0 +1,88 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-12 my-auto">
+      <div class="card" style="margin-top:5%; background-color: rgba(240, 248, 255, 0.9);">
+        <div class="card-body">
+          <h3 class='title'>Popularity statistics</h3>
+          <div class="row justify-content-center">
+            <div class="col-md-6 my-3">
+              <div id="carrierChartContainer" style="height: 370px; width: 100%;"></div>
+            </div>
+            <div class="col-md-6 my-3">
+              <div id="userChartContainer" style="height: 370px; width: 100%;"></div>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-md-6 my-3">
+              <div id="locationChartContainer" style="height: 370px; width: 100%;"></div>
+            </div>
+            <div class="col-md-6 my-3">
+              <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="row justify-content-center">
+                  <div class="col-lg-6">
+                    <div class="row justify-content-center">
+                      <h6 class="search-bar__heading">From:</h6>
+                      <input
+                        type="date"
+                        id="fromDate"
+                        class="form-control datepicker"
+                        formControlName="fromDate"
+                        ng-model="fromDate"
+                        [ngClass]="{
+                          'is-invalid':form.get('fromDate').touched && form.get('fromDate').invalid,
+                          'is-valid': form.get('fromDate').valid
+                        }"
+                      >
+
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="row justify-content-center">
+                      <h6 class="search-bar__heading">To:</h6>
+
+                      <input
+                        type="date"
+                        id="toDate"
+                        class="form-control datepicker"
+                        formControlName="toDate"
+                        ng-model="toDate"
+                        [ngClass]="{
+                          'is-invalid':form.get('toDate').touched && form.get('toDate').invalid,
+                          'is-valid': form.get('toDate').valid
+                        }"
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="hr-xs">
+
+                <div class="row justify-content-around">
+                  <div class="col-lg-5">
+                    <button type="button" (click)="setToWeek()" class="btn btn-primary btn-block">Last week</button>
+                  </div>
+                  <div class="col-lg-5">
+                    <button type="button" (click)="setToMonth()" class="btn btn-primary btn-block">Last month</button>
+                  </div>
+                </div>
+
+                <hr>
+                <div *ngIf="form.hasError('periodError')">
+                  <span style="color: red">
+                     To date must be greater than from date
+                  </span>
+                </div>
+                
+                <button 
+                [disabled]="form.invalid"
+                type="submit"
+                class="btn-success btn col-md-12">Update statistics</button>
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

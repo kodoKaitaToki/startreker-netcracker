@@ -3,10 +3,10 @@ import {Approver} from '../shared/model/approver';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
-             selector: 'app-approver-table',
-             templateUrl: './approver-table.component.html',
-             styleUrls: ['./approver-table.component.scss']
-           })
+  selector: 'app-approver-table',
+  templateUrl: './approver-table.component.html',
+  styleUrls: ['./approver-table.component.scss']
+})
 export class ApproverTableComponent implements OnInit {
 
   @Input() approvers: Approver[];
@@ -48,7 +48,7 @@ export class ApproverTableComponent implements OnInit {
     this.form = new FormGroup(
       {
         email: new FormControl('', [Validators.required, Validators.email]),
-        username: new FormControl('', [Validators.required, Validators.minLength(3), Validators.max(24)]),
+        username: new FormControl('', Validators.required),
         telephone_number: new FormControl('', Validators.required),
         is_activated: new FormControl(false, Validators.required),
       }
@@ -62,20 +62,20 @@ export class ApproverTableComponent implements OnInit {
     this.currentApproverForUpdate = onClickedApproverForUpdate;
 
     this.form.patchValue({
-                           email: this.currentApproverForUpdate.email,
-                           username: this.currentApproverForUpdate.username,
-                           telephone_number: this.currentApproverForUpdate.telephone_number,
-                           is_activated: this.currentApproverForUpdate.is_activated
-                         });
+      email: this.currentApproverForUpdate.email,
+      username: this.currentApproverForUpdate.username,
+      telephone_number: this.currentApproverForUpdate.telephone_number,
+      is_activated: this.currentApproverForUpdate.is_activated
+    });
   }
 
   onApproverDelete(onClickedApproverForDelete) {
 
-    this.onDeleteDataNotifier.emit((ApproverTableComponent.deleteUnnecessaryFieldAfterClick(onClickedApproverForDelete)));
+    this.onDeleteDataNotifier.emit((ApproverTableComponent.deleteUnnecessaryFieldAfterClick(
+      onClickedApproverForDelete)));
   }
 
   onSubmitUpdate() {
-
     this.isEditButtonBlockedAfterSubmit = false;
     this.isForUpdateAlertMessage = true;
 
@@ -86,7 +86,6 @@ export class ApproverTableComponent implements OnInit {
   }
 
   onChangePage($event) {
-
     this.page = $event;
     window.scrollTo(0, 0);
   }

@@ -1,0 +1,150 @@
+<div class="card text-center"
+     *ngFor="let ticketClass of trip.ticket_classes"
+>
+  <div class="row justify-content-center card-header">
+    <div class="row col-md-5 align-items-center justify-content-center">
+      <div class="col-5 card-body">
+        <h4>{{trip.departure_planet_name}} (spaceport {{trip.departure_spaceport_name}})</h4>
+        <br>
+        <h6>at {{trip.departure_date}}</h6>
+      </div>
+      <div class="col-2 text-center">
+        <h4>-></h4>
+      </div>
+      <div class="col-5 card-body">
+        <h4 class="card-text">{{trip.arrival_planet_name}} (spaceport {{trip.arrival_spaceport_name}})</h4>
+        <br>
+        <h6>at {{trip.arrival_date}}</h6>
+      </div>
+    </div>
+  </div>
+
+  <div class="row card-body align-items-center justify-content-center">
+    <div class="col-md-3">
+      <h5>Name</h5>
+    </div>
+    <div class="col-md-3">
+      <h5>Seats amount</h5>
+    </div>
+    <div class="col-md-3">
+      <h5>Price</h5>
+    </div>
+  </div>
+
+  <div class="row card-body align-items-center justify-content-center">
+    <div class="col-md-3 card-body">
+      <h6>{{ticketClass.class_name}}</h6>
+    </div>
+    <div class="col-md-3 card-body ">
+      <h6>{{ticketClass.class_seats}}</h6>
+    </div>
+    <div class="col-md-3 card-body">
+      <h6>{{ticketClass.ticket_price}}</h6>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="card-body"
+       *ngIf="ticketClass.discount !== null"
+  >
+    <div class="row justify-content-center">
+      <div class="col-md-2">
+        <h5>Type</h5>
+      </div>
+      <div class="col-md-2">
+        <h5>Rate</h5>
+      </div>
+      <div class="col-md-2">
+        <h5>Price with discount</h5>
+      </div>
+      <div class="col-md-2">
+        <h5>From</h5>
+      </div>
+      <div class="col-md-2">
+        <h5>To</h5>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-md-2">
+        <h6 *ngIf="ticketClass.discount.is_percent">
+          By percent
+        </h6>
+
+        <h6 *ngIf="!ticketClass.discount.is_percent">
+          By value
+        </h6>
+      </div>
+      <div class="col-md-2">
+        <h6>
+          {{ticketClass.discount.discount_rate}}
+        </h6>
+      </div>
+      <div class="col-md-2">
+        <h6 *ngIf="ticketClass.discount.is_percent">
+          {{(ticketClass.ticket_price * (1 - ticketClass.discount.discount_rate / 100)) | number}}
+        </h6>
+
+        <h6 *ngIf="!ticketClass.discount.is_percent">
+          {{(ticketClass.ticket_price - ticketClass.discount.discount_rate) | number}}
+        </h6>
+      </div>
+      <div class="col-md-2">
+        <h6>
+          {{ticketClass.discount.start_date}}
+        </h6>
+      </div>
+      <div class="col-md-2">
+        <h6>
+          {{ticketClass.discount.finish_date}}
+        </h6>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <h4 *ngIf="ticketClass.discount.is_expired === true"
+          style="color: red"
+          class="text-center"
+      >
+        Expired
+      </h4>
+    </div>
+
+    <div class="row justify-content-center">
+      <button type="button"
+              class="btn btn-danger"
+              (click)="emitToMainComponentTicketClassOnDeleteEvent(ticketClass)"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+
+  <div class="container"
+       *ngIf="ticketClass.discount === null"
+  >
+    <div class="row justify-content-center">
+      <h4>Discount</h4>
+    </div>
+    <div class="row justify-content-center">
+      <h6>None</h6>
+    </div>
+    <div class="row justify-content-center">
+      <button type="button"
+              class="btn btn-success"
+              (click)="openTicketClassDiscountForm(ticketClass)"
+      >
+        Add
+      </button>
+    </div>
+    <br>
+  </div>
+
+  <discount-form
+    [obj]="ticketClass"
+    [isDiscountFormActivated]="isDiscountFormActivated"
+    (closeDiscountFormNotifier)="closeDiscountForm()"
+    (submitFormEmitter)="emitToMainComponentTicketClassOnAddEvent($event)"
+    *ngIf="currentTicketClass === ticketClass"
+  ></discount-form>
+</div>
+<br>

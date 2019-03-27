@@ -1,47 +1,32 @@
 package edu.netcracker.backend.controller;
 
 import edu.netcracker.backend.message.response.ReportStatisticsResponse;
-import edu.netcracker.backend.service.ReportStatisticsBuilder;
+import edu.netcracker.backend.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("api/v1/trouble/")
 public class TroubleTicketController {
 
-    private ReportStatisticsBuilder reportStatisticsBuilder;
+    private final StatisticsService statisticsService;
 
     @Autowired
-    public TroubleTicketController(ReportStatisticsBuilder reportStatisticsBuilder) {
-        this.reportStatisticsBuilder = reportStatisticsBuilder;
-    }
+    public TroubleTicketController(StatisticsService statisticsService) {this.statisticsService = statisticsService;}
 
-    @GetMapping("api/v1/trouble/statistics")
+    @GetMapping("statistics")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ReportStatisticsResponse getStatistics(){
-        return fullStatBuilder()
-                .build();
+    public ReportStatisticsResponse getStatistics() {
+        return statisticsService.getTroubleTicketStatistics();
     }
 
-    @GetMapping("api/v1/trouble/statistics/{id}")
+    @GetMapping("statistics/approver/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ReportStatisticsResponse getStatistics(@PathVariable Long id){
-        return fullStatBuilder()
-                .forUser(id)
-                .build();
-    }
-
-    private ReportStatisticsBuilder fullStatBuilder(){
-        return reportStatisticsBuilder
-                .addTotalAnsweredCount()
-                .addTotalCount()
-                .addTotalFinishedCount()
-                .addTotalOpenedCount()
-                .addTotalRatedCount()
-                .addTotalReOpenedCount()
-                .addTotalInProgressCount()
-                .addAverageRate();
+    public ReportStatisticsResponse getStatistics(@PathVariable Long id) {
+        return statisticsService.getTroubleTicketStatisticsByApprover(id);
     }
 }

@@ -1,0 +1,140 @@
+<div class="container-fluid">
+  <div class="row col-12">
+    <div class="col-md-8 col-sm-12">
+      <select class="custom-select custom-select-md mb-3"
+              (click)="getFilterCriteria($event.target)"
+      >
+        <option [value]="filterCriteria"
+                *ngFor="let filterCriteria of filterCriterias;"
+
+        >
+          Filter by {{filterCriteria | selectTripInfo: filterCriteria}}
+        </option>
+      </select>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <input type="text"
+             placeholder="Input information here"
+             class="form-control"
+             [(ngModel)]="currentFilterContent"
+      >
+    </div>
+  </div>
+
+</div>
+
+<div class="container-fluid">
+  <div class="row justify-content-center align-items-center"
+       *ngFor="let currentTrip of pendingTrips
+       | itemsFilter: currentFilterCriteria: currentFilterContent
+       | paginate: {id: 'listing_pagination', itemsPerPage: entriesAmountOnPage, currentPage: page ,totalItems: totalRec}"
+  >
+    <div class="card text-center col-6">
+      <div class="card-header">
+        <h5 class="text-center">
+          {{currentTrip.tripStatus | statePipe: currentTrip.tripStatus}}
+        </h5>
+      </div>
+      <div class="card-body">
+        <div class="row col-12 align-items-center justify-content-center">
+          <div class="col-4">
+            <h5 class="card-title">
+              From
+            </h5>
+            <h6 class="card-text">
+              {{currentTrip.departmentPlanetName | titlecase}},
+              spaceport: {{currentTrip.departmentSpaceportName | titlecase}}
+              <br>
+              at {{currentTrip.departureDate | date: 'medium'}}
+            </h6>
+          </div>
+
+          <div class="col-4">
+            <h6>-></h6>
+          </div>
+
+          <div class="col-4">
+            <h5>
+              To
+            </h5>
+            <h6 class="card-title">
+              {{currentTrip.arrivalPlanetName | titlecase}},
+              spaceport: {{currentTrip.arrivalSpaceportName | titlecase}}
+              <br>
+              at {{currentTrip.arrivalDate | date:'medium'}}
+            </h6>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="row justify-content-center">
+          <div class="col-4">
+            <div class="card-body"
+                 *ngIf="currentTrip.approverName !== null"
+            >
+              <h5>Approver</h5>
+              <h6>
+                Name: {{currentTrip.approverName}}
+                <br>
+                Email: {{currentTrip.approverEmail}}
+                <br>
+                Telephone: {{currentTrip.approverTel}}
+              </h6>
+            </div>
+            <div class="card-body"
+                 *ngIf="currentTrip.approverName === null"
+            >
+              <h5>Approver</h5>
+              <h6>
+                Not assigned
+              </h6>
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-4">
+            <div class="card-body"
+                 *ngIf="currentTrip.carrierName !== null"
+            >
+              <hr>
+              <h5>Carrier</h5>
+              <h6>
+                Name: {{currentTrip.carrierName}}
+                <br>
+                Email: {{currentTrip.carrierEmail}}
+                <br>
+                Telephone: {{currentTrip.carrierTel}}
+              </h6>
+            </div>
+
+            <div class="card-body"
+                 *ngIf="currentTrip.carrierName === null"
+            >
+              <hr>
+              <h5>Carrier</h5>
+              <h6>
+                Not assigned
+              </h6>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+      </div>
+
+      <div class="card-footer text-muted">
+        Created
+        <br>
+        {{currentTrip.creationDate | date}}
+      </div>
+      <br>
+    </div>
+  </div>
+  <br>
+
+  <pagination-controls id="listing_pagination"
+                       (pageChange)="onChangePage($event)"
+                       class="text-center">
+  </pagination-controls>
+</div>

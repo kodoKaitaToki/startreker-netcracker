@@ -1,0 +1,30 @@
+$tableContent: center;
+
+.fa-edit {
+  font-size: 14px;
+  color: white;
+}
+
+.idBadge {
+  margin-top: 10px;
+}
+
+.top-button {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 5px;
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.modal-buttons {
+  margin-top: 10px;
+}
+
+.form-footer {
+  padding-top: 14px;
+  padding-bottom: 14px
+}

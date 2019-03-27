@@ -1,5 +1,4 @@
-import {Component, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {Component, OnInit, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -8,11 +7,11 @@ import {HttpClient} from "@angular/common/http";
 })
 export class AppComponent implements OnInit {
 
-  constructor() {
+  title = 'web';
 
-  }
+  user: any = {};
 
-  ngOnInit()  {
+  constructor() {}
 
-  }
+  ngOnInit()  {}
 }
