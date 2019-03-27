@@ -5,7 +5,7 @@ import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 import {FlightService} from "../../../shared/models/flight-service.model";
 import {Router} from "@angular/router";
 import {Trip} from "../../../../../shared/model/trip.model";
-import { BookedTicket } from '../../../../user/shared/model/bought_ticket.model';
+import {BookedTicket} from '../../../../user/shared/model/bought_ticket.model';
 
 
 @Component({
@@ -53,8 +53,8 @@ export class TicketClassInfoComponent implements OnInit {
         chosenServices.push(service);
       }
     });
-    
-    this.parseStorContent(chosenServices);
+
+    this.parseStoredContent(chosenServices);
 
     if (localStorage.getItem('at') !== null) {
       //redirect to buy page
@@ -69,12 +69,13 @@ export class TicketClassInfoComponent implements OnInit {
     }
   }
 
-  parseStorContent(services: FlightService[]){
+  parseStoredContent(services: FlightService[]) {
+    //add total price with discount
     let ticket = new BookedTicket(this.trip,
                                   this.ticket_class,
                                   services,
-                                  this.amount)
-    let boughtTickets = new Array();
+      this.amount);
+    let boughtTickets = [];
     let stContent = JSON.parse(sessionStorage.getItem('boughtTickets'));
     if(stContent !== null){
       if(stContent.length > 0){
