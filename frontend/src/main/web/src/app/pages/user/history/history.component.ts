@@ -14,16 +14,16 @@ import {periodError} from "../../../shared/dateValidator";
 })
 export class HistoryComponent implements OnInit {
 
-  public ticketData: any;
+  ticketData: any;
 
-  public page: number = 1;
-  public ticketsPerPage: number = 5;
-  public totalItems: number;
+  page: number = 1;
+  ticketsPerPage: number = 5;
+  totalItems: number;
 
-  public currentFromDate: string;
-  public currentToDate: string;
+  currentFromDate: string;
+  currentToDate: string;
 
-  public locked: boolean = false;
+  locked: boolean = false;
 
   errorCallback = (error: HttpErrorResponse) => {
     this.locked = false;
