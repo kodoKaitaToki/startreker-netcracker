@@ -129,11 +129,6 @@ public class TripServiceImpl implements TripService {
         trips.removeIf(trip -> trip.getTicketClasses()
                                    .isEmpty());
 
-        if (trips.size() == 0) {
-            log.error("No trips were found with specified criteria");
-            throw new RequestException("No trips found", HttpStatus.NOT_FOUND);
-        }
-
         return getAllTripsDTO(trips);
     }
 

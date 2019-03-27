@@ -33,6 +33,8 @@ public interface TicketClassDAO extends CrudDAO<TicketClass> {
 
     TicketClass getTicketClassByNameAndTripId(Long tripId, String name);
 
+    List<TicketClass> findByTripIdWithDiscount(Number id);
+
     void deleteTicketClassById(Long id);
 
     boolean exists(Long tripId, String className);

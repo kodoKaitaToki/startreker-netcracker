@@ -42,4 +42,5 @@ public class TicketClass {
 
     private List<Service> services = new ArrayList<>();
 
+    private Discount discount;
 }

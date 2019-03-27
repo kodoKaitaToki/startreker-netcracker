@@ -1,6 +1,7 @@
 package edu.netcracker.backend.message.response.trips;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.netcracker.backend.model.Discount;
 import edu.netcracker.backend.model.TicketClass;
 import edu.netcracker.backend.model.Trip;
 import lombok.Getter;
@@ -82,13 +83,24 @@ public class ReadTripsDTO {
         }
         dto.ticketClasses = new ArrayList<>();
 
+        Discount discount;
+
         for (TicketClass ticketClass : trip.getTicketClasses()) {
             Map<String, Object> tcProperties = new HashMap<>();
+
             tcProperties.put("class_id", ticketClass.getClassId());
             tcProperties.put("class_name", ticketClass.getClassName());
             tcProperties.put("ticket_price", ticketClass.getTicketPrice());
             tcProperties.put("class_seats", ticketClass.getClassSeats());
             tcProperties.put("remaining_seats", ticketClass.getRemainingSeats());
+
+            discount = ticketClass.getDiscount();
+
+            if (discount != null) {
+                tcProperties.put("discount_rate", discount.getDiscountRate());
+                tcProperties.put("is_percent", discount.getIsPercent());
+            }
+
             dto.ticketClasses.add(tcProperties);
         }
 
