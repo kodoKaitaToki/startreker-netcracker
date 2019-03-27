@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
 @RestController
+@RequestMapping("/api/v1/user/")
 public class UserController {
     private UserService userService;
 
@@ -20,7 +22,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('ROLE_USER')")
-    @PostMapping("/api/v1/user/bought-tickets")
+    @PostMapping("bought-tickets")
     public BoughtTicketDTO buyTicket(@Valid @RequestBody BoughtTicketDTO boughtTicketDTO) {
         return userService.buyTicket(boughtTicketDTO);
     }

@@ -24,19 +24,19 @@ export const HttpOptionsAuthorized = {
 
 const auth = {
   loginUser() {
-    return `${baseUrl}api/auth/sign-in`;
+    return `${baseUrl}api/v1/auth/sign-in`;
   },
   registerUser() {
-    return `${baseUrl}api/auth/sign-up`;
+    return `${baseUrl}api/v1/auth/sign-up`;
   },
   logoutUser() {
-    return `${baseUrl}api/log-out`;
+    return `${baseUrl}api/v1/auth/log-out`;
   },
   recoverPassword() {
-    return `${baseUrl}api/auth/password-recovery`;
+    return `${baseUrl}api/v1/auth/password-recovery`;
   },
   confirmPassword(){
-    return `${baseUrl}api/auth/confirm-password`;
+    return `${baseUrl}api/v1/auth/confirm-password`;
   }
 }
 
