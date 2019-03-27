@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/v1/")
+@RequestMapping("api/v1/trouble/")
 public class TroubleTicketController {
 
     private final StatisticsService statisticsService;
@@ -18,13 +18,13 @@ public class TroubleTicketController {
     @Autowired
     public TroubleTicketController(StatisticsService statisticsService) {this.statisticsService = statisticsService;}
 
-    @GetMapping("trouble/statistics")
+    @GetMapping("statistics")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ReportStatisticsResponse getStatistics() {
         return statisticsService.getTroubleTicketStatistics();
     }
 
-    @GetMapping("approver/{id}/trouble/statistics")
+    @GetMapping("statistics/approver/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ReportStatisticsResponse getStatistics(@PathVariable Long id) {
         return statisticsService.getTroubleTicketStatisticsByApprover(id);
