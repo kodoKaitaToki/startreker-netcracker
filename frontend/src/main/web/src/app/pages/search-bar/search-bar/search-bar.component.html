@@ -46,7 +46,7 @@
                       class='custom-select form-control'
                       formControlName="startPlanet"
                       (change)="getSpaceports(true)">
-                <option selected [value]="">Choose a planet</option>
+                <option [selected]="true" disabled [value]="">Choose a planet</option>
                 <option *ngFor="let planet of planets"
                         [value]="planet.planetName.toLowerCase()">{{planet.planetName | titlecase}}
                 </option>
@@ -68,7 +68,7 @@
                       class='custom-select form-control'
                       formControlName="finishPlanet"
                       (change)="getSpaceports(false)">
-                <option selected [value]="">Choose a planet</option>
+                <option [selected]="true" disabled [value]="">Choose a planet</option>
                 <option *ngFor="let planet of planets"
                         [value]="planet.planetName.toLowerCase()">{{planet.planetName | titlecase}}
                 </option>

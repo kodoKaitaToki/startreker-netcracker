@@ -39,7 +39,7 @@ export class SearchBarComponent implements OnInit, OnDestroy {
               private dataService: DataService,
               private location: Location) {
     this.searchForm = new FormGroup({
-      startPlanet: new FormControl({value: ''}, Validators.required),
+      startPlanet: new FormControl(Validators.required),
       finishPlanet: new FormControl(Validators.required),
       startSpaceport: new FormControl({value: '', disabled: true}),
       finishSpaceport: new FormControl({value: '', disabled: true}),
@@ -49,16 +49,14 @@ export class SearchBarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.enablePlanets();
+    //this.enablePlanets();
     // this.searchForm.get('startSpaceport').enable();
     // this.searchForm.get('finishSpaceport').enable();
-
     this.dataServiceSub = this.dataService.getMessage().subscribe(message => {
       console.log("ngOnInit() message: " + JSON.stringify(message));
       console.log("ngOnInit() searchForm: " + JSON.stringify(this.searchForm.value));
       this.searchForm.patchValue(message);
     });
-
     this.getPlanets();
     console.log(this.searchForm.value);
     this.onGetTripsNotifier.emit(this.searchForm.value);

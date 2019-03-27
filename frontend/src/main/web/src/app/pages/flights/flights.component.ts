@@ -17,7 +17,8 @@ export class FlightsComponent implements OnInit, OnDestroy {
   constructor(private searchSvc: SearchService) {
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   getTripsByCriteria(event) {
     console.log(JSON.stringify(event));
@@ -29,7 +30,7 @@ export class FlightsComponent implements OnInit, OnDestroy {
       event.finishSpaceport
     ).subscribe((response) => {
       this.trips = response;
-    })
+    });
   }
 
   getUrl() {
