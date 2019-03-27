@@ -33,12 +33,10 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
     private String DELETE_BUNDLE;
     @Value("${COUNT_BUNDLES}")
     private String COUNT_BUNDLES;
-    @Value("${SELECT_BUNDLE_TRIP}")
-    private String SELECT_BUNDLE_TRIP;
-    @Value("${SELECT_TRIP_CLASS}")
-    private String SELECT_TRIP_CLASS;
-    @Value("${SELECT_CLASS_SERVICE}")
-    private String SELECT_CLASS_SERVICE;
+    @Value("${SELECT_BUNDLE_TRIPS_AND_CLASSES}")
+    private String SELECT_BUNDLE_TRIPS_AND_CLASSES;
+    @Value("${SELECT_TRIP_INFO}")
+    private String SELECT_TRIP_INFO;
     @Value("${SELECT_BUNDLE_SERVICES}")
     private String SELECT_BUNDLE_SERVICES;
     @Value("${INSERT_BUNDLE_CLASS}")
@@ -50,12 +48,10 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
     @Value("${DELETE_BUNDLE_SERVICES_BY_ID}")
     private String DELETE_BUNDLE_SERVICES_BY_ID;
 
-    private final TicketClassDAO ticketClassDAO;
     private final Logger logger = LoggerFactory.getLogger(BundleDAOImpl.class);
 
     @Autowired
-    public BundleDAOImpl(TicketClassDAO ticketClassDAO, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
-        this.ticketClassDAO = ticketClassDAO;
+    public BundleDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
@@ -67,11 +63,12 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
 
     @Override
     public List<Bundle> findAll(Number limit, Number offset) {
-        logger.debug("Querying {} bundles from {}", limit, offset);
+        logger.info("Querying {} bundles from {}", limit, offset);
         List<Bundle> bundles = getJdbcTemplate().query(SELECT_BUNDLES,
                                                        new Object[]{limit, offset},
                                                        new BundleRowMapper());
-        logger.debug("Setting bundle dependencies to bundles");
+        logger.info("Got {} bundles", bundles.size());
+        logger.info("Setting bundle dependencies to bundles");
         attachBundleDependencies(bundles);
         return bundles;
     }
@@ -84,7 +81,7 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
                                                                                           new BundleRowMapper()));
         logger.debug("Setting bundle dependencies to bundles");
         List<Bundle> bundles = new ArrayList<>();
-        optBundle.ifPresent(bundle -> bundles.add(bundle));
+        optBundle.ifPresent(bundles::add);
         optBundle.ifPresent(bundle -> attachBundleDependencies(bundles));
         return optBundle;
     }
@@ -118,119 +115,149 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
     }
 
     private void attachBundleDependencies(List<Bundle> bundles) {
-        List<Trip> trips = attachTrips(bundles);
-        List<TicketClass> classes = attachTicketClasses(trips);
-        attachServices(classes);
+        List<Trip> trips = attachTripsAndClasses(bundles);
+        attachTripsInfo(trips);
+        attachServices(bundles);
     }
 
-    private List<Trip> attachTrips(List<Bundle> bundles) {
-        Map<Long, List<Trip>> relatedTrips = findAllTripsForBundles(bundles.stream()
-                                                                           .map(Bundle::getBundleId)
-                                                                           .collect(Collectors.toList()));
+    private List<Trip> attachTripsAndClasses(List<Bundle> bundles) {
+        logger.info("Setting bundle trips to bundles");
+        Map<Integer, List<Trip>> relatedTrips = findAllTripsAndClassesForBundles(bundles.stream()
+                                                                                        .map(Bundle::getBundleId)
+                                                                                        .collect(Collectors.toList()));
         List<Trip> trips = new ArrayList<>();
         for (Bundle bundle : bundles) {
-            bundle.setBundleTrips(relatedTrips.get(bundle.getBundleId()));
-            trips.addAll(relatedTrips.get(bundle.getBundleId()));
+            bundle.setBundleTrips(relatedTrips.get(bundle.getBundleId()
+                                                         .intValue()));
+            trips.addAll(relatedTrips.get(bundle.getBundleId()
+                                                .intValue()));
         }
         return trips;
     }
 
-    private List<TicketClass> attachTicketClasses(List<Trip> trips) {
-        Map<Long, List<TicketClass>> relatedTicketClasses = findAllTicketClassesForTrips(trips.stream()
-                                                                                              .map(Trip::getTripId)
-                                                                                              .collect(Collectors.toList()));
-        List<TicketClass> ticketClasses = new ArrayList<>();
-        for (Trip trip : trips) {
-            trip.setTicketClasses(relatedTicketClasses.get(trip.getTripId()));
-            ticketClasses.addAll(relatedTicketClasses.get(trip.getTripId()));
-        }
-        return ticketClasses;
-    }
-
-    private List<Service> attachServices(List<TicketClass> ticketClasses) {
-        Map<Long, List<Service>> relatedServices = findAllServicesForClass(ticketClasses.stream()
-                                                                                        .map(TicketClass::getClassId)
-                                                                                        .collect(Collectors.toList()));
-        List<Service> services = new ArrayList<>();
-        for (TicketClass ticketClass : ticketClasses) {
-            ticketClass.setServices(relatedServices.get(ticketClass.getClassId()));
-            services.addAll(relatedServices.get(ticketClass.getClassId()));
-        }
-        return services;
-    }
-
-    private Map<Long, List<Trip>> findAllTripsForBundles(List<Long> bundleIds) {
-        Map<Long, List<Trip>> relatedTrips = new HashMap<>();
-        List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(SELECT_BUNDLE_TRIP,
+    private Map<Integer, List<Trip>> findAllTripsAndClassesForBundles(List<Long> bundleIds) {
+        Map<Integer, Map<Integer, List<TicketClass>>> relatedTicketClasses = new HashMap<>();
+        List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(SELECT_BUNDLE_TRIPS_AND_CLASSES,
                                                                                  new MapSqlParameterSource("bundleIds",
                                                                                                            bundleIds));
         for (Map<String, Object> row : rows) {
-            List<Trip> trips = relatedTrips.computeIfAbsent((Long) row.get("bundle_id"), id -> new ArrayList<>());
-            trips.add(createTrip(row));
+            Map<Integer, List<TicketClass>> trips = relatedTicketClasses.computeIfAbsent((Integer) row.get("bundle_id"),
+                                                                                         id -> new HashMap<>());
+            List<TicketClass> ticketClasses = trips.computeIfAbsent((Integer) row.get("trip_id"),
+                                                                    id -> new ArrayList<>());
+            ticketClasses.add(createTicketClass(row));
         }
+        Map<Integer, List<Trip>> relatedTrips = new HashMap<>();
+        relatedTicketClasses.forEach((k, v) -> relatedTrips.put(k, convertTripsToList(v)));
         return relatedTrips;
     }
 
-    private Trip createTrip(Map<String, Object> row) {
-        Trip t = new Trip();
-
-        t.setTripId((Long) row.get("trip_id"));
-
-        t.setDepartureSpaceport(new Spaceport());
-        t.getDepartureSpaceport()
-         .setSpaceportName((String) row.get("departure_spaceport"));
-        t.getDepartureSpaceport()
-         .setPlanet(new Planet());
-        t.getDepartureSpaceport()
-         .getPlanet()
-         .setPlanetName((String) row.get("departure_planet"));
-
-        t.setArrivalSpaceport(new Spaceport());
-        t.getArrivalSpaceport()
-         .setSpaceportName((String) row.get("arrival_spaceport"));
-        t.getArrivalSpaceport()
-         .setPlanet(new Planet());
-        t.getArrivalSpaceport()
-         .getPlanet()
-         .setPlanetName((String) row.get("arrival_planet"));
-
-        return t;
+    private List<Trip> convertTripsToList(Map<Integer, List<TicketClass>> tripData) {
+        List<Trip> trips = new ArrayList<>();
+        tripData.forEach((k, v) -> trips.add(createTrip(k, v)));
+        return trips;
     }
 
-    private Map<Long, List<TicketClass>> findAllTicketClassesForTrips(List<Long> tripIds) {
-        Map<Long, List<TicketClass>> relatedTicketClasses = new HashMap<>();
-        List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(SELECT_TRIP_CLASS,
-                                                                                 new MapSqlParameterSource("tripIds",
-                                                                                                           tripIds));
-        for (Map<String, Object> row : rows) {
-            List<TicketClass> ticketClasses = relatedTicketClasses.computeIfAbsent((Long) row.get("trip_id"),
-                                                                                   id -> new ArrayList<>());
-            ticketClasses.add(createTicketClass(row));
-        }
-        return relatedTicketClasses;
+    private Trip createTrip(Integer tripId, List<TicketClass> ticketClasses) {
+        Trip t = new Trip();
+        t.setTripId(tripId.longValue());
+        t.setTicketClasses(ticketClasses);
+        return t;
     }
 
     private TicketClass createTicketClass(Map<String, Object> row) {
         TicketClass t = new TicketClass();
 
-        t.setTicketPrice((Integer) row.get("class_id"));
+        t.setClassId(((Integer) row.get("class_id")).longValue());
 
         t.setItemNumber((Integer) row.get("item_number"));
+
+        t.setTicketPrice((Integer) row.get("ticket_price"));
+
+        t.setClassName((String) row.get("class_name"));
 
         return t;
     }
 
-    private Map<Long, List<Service>> findAllServicesForClass(List<Long> classIds) {
-        Map<Long, List<Service>> relatedServices = new HashMap<>();
-        List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(SELECT_CLASS_SERVICE,
-                                                                                 new MapSqlParameterSource("classIds",
-                                                                                                           classIds));
+    private void attachTripsInfo(List<Trip> trips) {
+        logger.info("Setting bundle trip info to bundles");
+        findAllTripsInfo(trips.stream()
+                              .collect(Collectors.groupingBy(x -> x.getTripId()
+                                                                   .intValue(),
+                                                             Collectors.toCollection(ArrayList::new))));
+    }
+
+    private void findAllTripsInfo(Map<Integer, List<Trip>> trips) {
+        List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(SELECT_TRIP_INFO,
+                                                                                 new MapSqlParameterSource("tripIds",
+                                                                                                           new ArrayList<>(
+                                                                                                                   trips.keySet())));
         for (Map<String, Object> row : rows) {
-            List<Service> services = relatedServices.computeIfAbsent((Long) row.get("class_id"),
-                                                                     id -> new ArrayList<>());
-            services.add(createService(row));
+            List<Trip> tripsList = trips.computeIfAbsent((Integer) row.get("trip_id"), id -> new ArrayList<>());
+            setTripInfo(tripsList, row);
         }
-        return relatedServices;
+    }
+
+    private void setTripInfo(List<Trip> trips, Map<String, Object> row) {
+        for (Trip t : trips) {
+            System.out.println(t.getTripId());
+            t.setDepartureSpaceport(new Spaceport());
+            t.getDepartureSpaceport()
+             .setSpaceportName((String) row.get("departure_spaceport"));
+            t.setDeparturePlanet(new Planet());
+            t.getDeparturePlanet()
+             .setPlanetName((String) row.get("departure_planet"));
+            t.getDepartureSpaceport()
+             .setPlanet(t.getDeparturePlanet());
+
+            t.setArrivalSpaceport(new Spaceport());
+            t.getArrivalSpaceport()
+             .setSpaceportName((String) row.get("arrival_spaceport"));
+            t.setArrivalPlanet(new Planet());
+            t.getArrivalPlanet()
+             .setPlanetName((String) row.get("arrival_planet"));
+            t.getArrivalSpaceport()
+             .setPlanet(t.getArrivalPlanet());
+        }
+    }
+
+    private void attachServices(List<Bundle> bundles) {
+        logger.info("Setting services to bundles");
+        Map<Integer, Map<Integer, List<Service>>> relatedServicesToBundle = findAllServicesForBundles(bundles.stream()
+                                                                                                             .map(Bundle::getBundleId)
+                                                                                                             .collect(
+                                                                                                                     Collectors.toList()));
+        Map<Integer, List<Service>> relatedServicesToClass;
+        List<TicketClass> ticketClasses;
+        for (Bundle bundle : bundles) {
+            relatedServicesToClass = relatedServicesToBundle.computeIfAbsent(bundle.getBundleId()
+                                                                                   .intValue(), id -> new HashMap<>());
+            ticketClasses = bundle.getBundleTrips()
+                                  .stream()
+                                  .map(Trip::getTicketClasses)
+                                  .flatMap(Collection::stream)
+                                  .collect(Collectors.toList());
+            for (TicketClass ticketClass : ticketClasses) {
+                ticketClass.setServices(relatedServicesToClass.computeIfAbsent(ticketClass.getClassId()
+                                                                                          .intValue(),
+                                                                               id -> new ArrayList<>()));
+            }
+        }
+    }
+
+    private Map<Integer, Map<Integer, List<Service>>> findAllServicesForBundles(List<Long> bundleIds) {
+        Map<Integer, Map<Integer, List<Service>>> relatedServicesToBundle = new HashMap<>();
+        List<Map<String, Object>> rows = namedParameterJdbcTemplate.queryForList(SELECT_BUNDLE_SERVICES,
+                                                                                 new MapSqlParameterSource("bundleIds",
+                                                                                                           bundleIds));
+        for (Map<String, Object> row : rows) {
+            Map<Integer, List<Service>> relatedServicesToClass
+                    = relatedServicesToBundle.computeIfAbsent((Integer) row.get("bundle_id"), id -> new HashMap<>());
+            List<Service> ticketClasses = relatedServicesToClass.computeIfAbsent((Integer) row.get("class_id"),
+                                                                                 id -> new ArrayList<>());
+            ticketClasses.add(createService(row));
+        }
+        return relatedServicesToBundle;
     }
 
     private Service createService(Map<String, Object> row) {
@@ -272,10 +299,7 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
             Integer itemNumber = ticketClass.getItemNumber();
             Long classId = ticketClass.getClassId();
             for (Service service : ticketClass.getServices()) {
-                parameters.add(new Object[]{bundleId,
-                                            itemNumber,
-                                            classId,
-                                            service.getServiceId()});
+                parameters.add(new Object[]{bundleId, itemNumber, classId, service.getServiceId()});
             }
         }
         getJdbcTemplate().batchUpdate(INSERT_BUNDLE_SERVICE, parameters);
