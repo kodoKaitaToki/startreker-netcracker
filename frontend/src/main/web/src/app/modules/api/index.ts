@@ -42,7 +42,7 @@ const auth = {
 
 const dashboard = {
   tripDistribution() {
-    return `${baseUrl}api/v1/trip/distribution`;
+    return `${baseUrl}api/v1/trips/distribution`;
   },
   serviceDistribution() {
     return `${baseUrl}api/v1/service/distribution`;
