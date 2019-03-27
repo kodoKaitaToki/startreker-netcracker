@@ -30,8 +30,8 @@ export class ViewsComponent implements OnInit {
   fromDate: Date;
   toDate: Date;
 
-  responseCallback = (resp: HttpResponse<any>) => {
-    this.views = clone(resp.body);
+  responseCallback = (resp: ViewsModel[]) => {
+    this.views = resp;
     this.reloadCharts();
   };
 

@@ -5,11 +5,13 @@ import edu.netcracker.backend.model.Planet;
 import edu.netcracker.backend.service.PlanetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("api/v1")
 public class PlanetController {
 
     private final PlanetService planetService;
@@ -19,12 +21,12 @@ public class PlanetController {
         this.planetService = planetService;
     }
 
-    @GetMapping("api/v1/planets")
+    @GetMapping("/planets")
     public List<Planet> getAllPlanets() {
         return planetService.getAllPlanets();
     }
 
-    @GetMapping("api/v1/planets-spaceports")
+    @GetMapping("/planets-spaceports")
     public PlanetsResponse getPlanets() {
         return planetService.getPlanets();
     }
