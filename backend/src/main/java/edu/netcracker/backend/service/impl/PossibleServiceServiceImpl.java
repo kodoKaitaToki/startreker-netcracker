@@ -86,7 +86,7 @@ public class PossibleServiceServiceImpl implements PossibleServiceService {
 
         PossibleService possibleService = from(possibleServiceDTO);
         possibleService.setPServiceStatus(1L);
-        
+
         possibleServiceDAO.save(possibleService);
 
         return PossibleServiceDTO.from(possibleServiceDAO.find(possibleServiceDTO.getId())
