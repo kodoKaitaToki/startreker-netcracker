@@ -172,6 +172,9 @@ const history = {
 const user = {
   buyTicket(){
     return `${baseUrl}api/v1/user/bought-tickets`;
+  },
+  getBundle(){
+    return `${baseUrl}api/v1/bundles/`;
   }
 }
 

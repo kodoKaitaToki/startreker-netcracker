@@ -52,7 +52,7 @@ public class BundleCrudController {
     }
 
     @GetMapping("api/v1/bundles/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN') or hasAuthority('ROLE_USER')")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public BundleDTO getBundleById(@PathVariable("id") Number id) {

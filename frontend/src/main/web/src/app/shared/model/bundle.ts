@@ -12,6 +12,6 @@ export class Bundle {
 
     public bundle_description: string,
 
-    public bundle_trips: Trip[],
+    public bundle_trips: Trip[]
   ) {}
 }
