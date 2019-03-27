@@ -17,11 +17,11 @@ export class HistoryComponent implements OnInit {
   public ticketData: any;
 
   public page: number = 1;
-  public ticketsPerPage: number = 3;
+  public ticketsPerPage: number = 5;
   public totalItems: number;
 
-  public beforeDate: string;
-  public afterDate: string;
+  public currentBeforeDate: string;
+  public currentAfterDate: string;
 
   public locked: boolean = false;
 
@@ -39,10 +39,12 @@ export class HistoryComponent implements OnInit {
   constructor(private historyService: HistoryService,
     private messageService: MessageService,
     private showMsgSrvc: ShowMessageService) {
+
     this.searchParams = new FormGroup({
       beforeDate: new FormControl(""),
       afterDate: new FormControl(""),
     });
+
     this.historyService.totalItemsCallback = this.totalItemsCallback;
   }
 
@@ -54,11 +56,8 @@ export class HistoryComponent implements OnInit {
         }, this.errorCallback);
   }
 
-  search(data) {
-    this.beforeDate = data.beforeDate;
-    this.afterDate = data.afterDate;
-
-    if (!this.validateDates(this.beforeDate, this.afterDate)) {
+  search() {
+    if (!this.validateDates(this.searchParams.value.beforeDate, this.searchParams.value.afterDate)) {
       return
     }
 
@@ -66,9 +65,12 @@ export class HistoryComponent implements OnInit {
       return;
     }
 
+    this.currentBeforeDate = this.searchParams.value.beforeDate;
+    this.currentAfterDate = this.searchParams.value.afterDate;
+
     this.locked = true;
 
-    this.historyService.getUserTicketHistory(0, this.ticketsPerPage, data.beforeDate, data.afterDate)
+    this.historyService.getUserTicketHistory(0, this.ticketsPerPage, this.currentBeforeDate, this.currentAfterDate)
         .subscribe(data => {
           this.page = 1;
           this.ticketData = data;
@@ -89,8 +91,8 @@ export class HistoryComponent implements OnInit {
     this.historyService.getUserTicketHistory(
       requestPage * this.ticketsPerPage,
       this.ticketsPerPage,
-      this.beforeDate,
-      this.afterDate
+      this.currentBeforeDate,
+      this.currentAfterDate
     )
         .subscribe(data => {
           this.page = page;

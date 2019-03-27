@@ -22,109 +22,111 @@
 </div>
 
 
-<div class="row justify-content-center align-items-center"
-     *ngFor="let currentService of pendingServcies
+<div class="container-fluid">
+  <div class="row justify-content-center align-items-center"
+       *ngFor="let currentService of pendingServcies
        | itemsFilter: currentFilterCriteria: currentFilterContent
        | paginate: {id: 'listing_pagination', itemsPerPage: entriesAmountOnPage, currentPage: page ,totalItems: totalRec}"
->
-  <div class="card text-center col-4">
-    <div class="card-header">
-      <h5 class="text-center">
-        {{currentService.serviceStatus | statePipe: currentService.serviceStatus}}
-      </h5>
-    </div>
-    <div class="card-body">
-      <div class="container-fluid">
-        <h5 class="card-title text-center">
-          Name
+  >
+    <div class="card text-center col-6">
+      <div class="card-header">
+        <h5 class="text-center">
+          {{currentService.serviceStatus | statePipe: currentService.serviceStatus}}
         </h5>
       </div>
+      <div class="card-body">
+        <div class="container-fluid">
+          <h5 class="card-title text-center">
+            Name
+          </h5>
+        </div>
 
-      <div class="container-fluid">
-        <h5 class="card-title text-center">
-          {{currentService.serviceName}}
-        </h5>
-      </div>
+        <div class="container-fluid">
+          <h5 class="card-title text-center">
+            {{currentService.serviceName}}
+          </h5>
+        </div>
 
-      <hr>
+        <hr>
 
-      <div class="container-fluid">
-        <h5 class="card-title text-center">
-          Description
-        </h5>
-      </div>
+        <div class="container-fluid">
+          <h5 class="card-title text-center">
+            Description
+          </h5>
+        </div>
 
-      <div class="container-fluid">
-        <h6 class="card-title text-center">
-          {{currentService.serviceDescr}}
-        </h6>
-      </div>
+        <div class="container-fluid">
+          <h6 class="card-title text-center">
+            {{currentService.serviceDescr}}
+          </h6>
+        </div>
 
-      <div class="row">
-        <div class="col-6">
-          <div class="card-body"
-               *ngIf="currentService.approverName !== null"
-          >
-            <hr>
-            <h5>Approver</h5>
-            <h6>
-              Name: {{currentService.approverName}}
-              <br>
-              Email: {{currentService.approverEmail}}
-              <br>
-              Telephone: {{currentService.approverTel}}
-            </h6>
+        <div class="row">
+          <div class="col-6">
+            <div class="card-body"
+                 *ngIf="currentService.approverName !== null"
+            >
+              <hr>
+              <h5>Approver</h5>
+              <h6>
+                Name: {{currentService.approverName}}
+                <br>
+                Email: {{currentService.approverEmail}}
+                <br>
+                Telephone: {{currentService.approverTel}}
+              </h6>
+            </div>
+            <div class="card-body"
+                 *ngIf="currentService.approverName === null"
+            >
+              <hr>
+              <h5>Approver</h5>
+              <h6>
+                Not assigned
+              </h6>
+            </div>
           </div>
-          <div class="card-body"
-               *ngIf="currentService.approverName === null"
-          >
-            <hr>
-            <h5>Approver</h5>
-            <h6>
-              Not assigned
-            </h6>
+          <div class="col-6">
+            <div class="card-body"
+                 *ngIf="currentService.carrierName !== null"
+            >
+              <hr>
+              <h5>Carrier</h5>
+              <h6>
+                Name: {{currentService.carrierName}}
+                <br>
+                Email: {{currentService.carrierEmail}}
+                <br>
+                Telephone: {{currentService.carrierTel}}
+              </h6>
+            </div>
+
+            <div class="card-body"
+                 *ngIf="currentService.carrierName === null"
+            >
+              <hr>
+              <h5>Carrier</h5>
+              <h6>
+                Not assigned
+              </h6>
+            </div>
           </div>
         </div>
-        <div class="col-6">
-          <div class="card-body"
-               *ngIf="currentService.carrierName !== null"
-          >
-            <hr>
-            <h5>Carrier</h5>
-            <h6>
-              Name: {{currentService.carrierName}}
-              <br>
-              Email: {{currentService.carrierEmail}}
-              <br>
-              Telephone: {{currentService.carrierTel}}
-            </h6>
-          </div>
 
-          <div class="card-body"
-               *ngIf="currentService.carrierName === null"
-          >
-            <hr>
-            <h5>Carrier</h5>
-            <h6>
-              Not assigned
-            </h6>
-          </div>
-        </div>
+        <hr>
       </div>
 
-      <hr>
-    </div>
-
-    <div class="card-footer text-muted">
-      Created
+      <div class="card-footer text-muted">
+        Created
+        <br>
+        {{currentService.creationDate | date}}
+      </div>
       <br>
-      {{currentService.creationDate | date}}
     </div>
-    <br>
   </div>
+  <br>
+  <pagination-controls id="listing_pagination"
+                       (pageChange)="onChangePage($event)"
+                       class="text-center">
+  </pagination-controls>
 </div>
-
-<pagination-controls id="listing_pagination" maxSize=5
-                     (pageChange)="onChangePage($event)"
-                     class="text-center">
-</pagination-controls>

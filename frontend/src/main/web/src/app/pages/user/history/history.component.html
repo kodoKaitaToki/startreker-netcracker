@@ -8,7 +8,7 @@
         <div class="card-header">
           Search parameters
         </div>
-        <form [formGroup]="searchParams" (ngSubmit)="search(searchParams?.value)">
+        <form [formGroup]="searchParams" (ngSubmit)="search()">
           <div class="form-group">
             <label class="date-padding" for="beforeDate">After:</label>
             <input class="date-width form-control datepicker center" formControlName="beforeDate" type="date"
