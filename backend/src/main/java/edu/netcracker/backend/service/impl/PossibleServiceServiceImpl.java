@@ -84,7 +84,10 @@ public class PossibleServiceServiceImpl implements PossibleServiceService {
                                        HttpStatus.NOT_FOUND);
         }
 
-        possibleServiceDAO.save(from(possibleServiceDTO));
+        PossibleService possibleService = from(possibleServiceDTO);
+        possibleService.setPServiceStatus(1L);
+
+        possibleServiceDAO.save(possibleService);
 
         return PossibleServiceDTO.from(possibleServiceDAO.find(possibleServiceDTO.getId())
                                                          .get());

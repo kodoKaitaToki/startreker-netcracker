@@ -9,7 +9,8 @@ import { ApiUserService } from '../../services/auth.service';
 @Component({
   selector: 'app-confirm-message',
   templateUrl: './confirm-message.component.html',
-  styleUrls: ['./confirm-message.component.scss']
+  styleUrls: ['./confirm-message.component.scss'],
+  providers: [ShowMessageService]
 })
 export class ConfirmMessageComponent implements OnInit {
 
@@ -21,10 +22,8 @@ export class ConfirmMessageComponent implements OnInit {
               private showMsgSrvc: ShowMessageService) {}
 
   ngOnInit() {
-    let token: string;
     this.activatedRoute.queryParams.subscribe(data => {
-      token = data['token'];
-      let params = new HttpParams().set("token", token);
+      let params = new HttpParams().set("token", data['token']);
       this.apiUserService.sendConfirmToken(params).subscribe(
         () => this.checkBtn = false),
         error => this.showMsgSrvc.showMessage(this.messageService, 

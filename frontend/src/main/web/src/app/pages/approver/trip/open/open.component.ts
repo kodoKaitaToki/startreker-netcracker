@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { clone } from 'ramda';
 import {MessageService} from 'primeng/components/common/messageservice';
 
@@ -8,7 +8,7 @@ import { HttpResponse } from '@angular/common/http';
 import { checkToken } from '../../../../modules/api';
 
 @Component({
-  selector: 'app-open',
+  selector: 'app-open-trip',
   templateUrl: './open.component.html',
   styleUrls: ['./open.component.scss']
 })
@@ -17,15 +17,19 @@ export class OpenTripComponent implements OnInit {
   trips: Trip[] = [];
   loadingTrip: Trip;
 
+  status = "OPEN";
+  tripsPerPage = 10;
+  recordNumber: number = 0;
+
   constructor(private tripService: TripService,
               private messageService: MessageService) { }
 
   ngOnInit() {
-    this.getTrips("OPEN");
+    this.getTrips();
   }
 
-  getTrips(status: String){
-    this.tripService.getTrips(status, 0, 10)
+  getTrips(){
+    this.tripService.getTrips(this.status, 0, 10)
                       .subscribe((resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
                           this.loadingTrip = null;
@@ -40,7 +44,6 @@ export class OpenTripComponent implements OnInit {
 
   onAssign(trip: Trip) {
     trip.trip_status = "ASSIGNED";
-    //trip.trip_reply.writer_id = 3;
 
     this.loadingTrip = trip;
 
@@ -51,7 +54,7 @@ export class OpenTripComponent implements OnInit {
                         this.showMessage(this.createMessage('success',
                                                             'The trip was assigned by you',
                                                             'You can find it in "Assigned to me"'));
-                        this.getTrips("ASSIGNED");
+                        this.getTrips();
                         this.loadingTrip = null;
                       }, 
                       error => {
@@ -72,4 +75,9 @@ export class OpenTripComponent implements OnInit {
     };
   }
 
+  onChange(event: number){
+    this.recordNumber = event;
+    window.scrollTo(0, 0);
+    this.getTrips();
+  }
 }

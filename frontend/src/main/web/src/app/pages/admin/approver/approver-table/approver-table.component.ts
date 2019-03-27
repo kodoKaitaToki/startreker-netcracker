@@ -49,7 +49,7 @@ export class ApproverTableComponent implements OnInit {
       {
         email: new FormControl('', [Validators.required, Validators.email]),
         username: new FormControl('', Validators.required),
-        telephone_number: new FormControl('', Validators.required),
+        telephone_number: new FormControl('', [Validators.required, Validators.pattern("[0-9]{10}")]),
         is_activated: new FormControl(false, Validators.required),
       }
     );

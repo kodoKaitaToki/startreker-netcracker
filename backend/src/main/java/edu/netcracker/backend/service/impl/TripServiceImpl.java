@@ -66,11 +66,6 @@ public class TripServiceImpl implements TripService {
                                                      .getUserId());
         List<Trip> trips = tripDAO.allCarriersTrips(carrierId);
 
-        if (trips.size() == 0) {
-            log.error("No trips were found for carrier with id {}", carrierId);
-            throw new RequestException("No trips found", HttpStatus.NOT_FOUND);
-        }
-
         return getAllTripsDTO(trips);
     }
 
@@ -78,11 +73,6 @@ public class TripServiceImpl implements TripService {
     public List<ReadTripsDTO> getAllTripsForCarrier(Long carrierId) {
         log.debug("Getting all trips for carrier from TripDAO");
         List<Trip> trips = tripDAO.allCarriersTrips(carrierId);
-
-        if (trips.size() == 0) {
-            log.error("No trips found for carrier with id {}", carrierId);
-            throw new RequestException("No trips found", HttpStatus.NOT_FOUND);
-        }
 
         return getAllTripsDTO(trips);
     }
@@ -93,11 +83,6 @@ public class TripServiceImpl implements TripService {
         Long carrierId = Long.valueOf(securityContext.getUser()
                                                      .getUserId());
         List<Trip> trips = tripDAO.paginationForCarrier(limit, offset, carrierId);
-
-        if (trips.size() == 0) {
-            log.error("No trips were found for carrier with id {} starting from {}", carrierId, offset);
-            throw new RequestException("No trips found", HttpStatus.NOT_FOUND);
-        }
 
         return getAllTripsDTO(trips);
     }

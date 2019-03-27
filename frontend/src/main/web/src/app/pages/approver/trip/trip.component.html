@@ -1,21 +1,7 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-12 my-auto">
-      <div class="card" style="margin-top:2%; background-color: rgba(240, 248, 255, 0.9);">
-        <div class="card-header">
-          <ul class="nav nav-tabs card-header-tabs nav-fill">
-            <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-              <a class="nav-link" [routerLink]="['/approver/trip/open']">Open</a>
-            </li>
-            <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-              <a class="nav-link" [routerLink]="['/approver/trip/assigned']">Assigned to me</a>
-            </li>
-          </ul>
-        </div>
-        <div class="card-body">
-          <router-outlet></router-outlet>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="container-fluid">
+  <p-tabView (onChange)="handleChange($event)">
+      <p-tabPanel header="Open trips"></p-tabPanel>
+      <p-tabPanel header="Assigned to me"></p-tabPanel>
+      <router-outlet></router-outlet>
+  </p-tabView>
 </div>
