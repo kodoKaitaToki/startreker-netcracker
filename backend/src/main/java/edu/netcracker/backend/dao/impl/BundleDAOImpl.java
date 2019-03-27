@@ -1,67 +1,78 @@
 package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.BundleDAO;
-import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.dao.mapper.BundleRowMapper;
-import edu.netcracker.backend.dao.mapper.BundleTripRowMapper;
-import edu.netcracker.backend.dao.sql.BundleQueries;
-import edu.netcracker.backend.model.Bundle;
-import edu.netcracker.backend.model.Service;
-import edu.netcracker.backend.model.Trip;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import edu.netcracker.backend.model.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Repository
+@PropertySource("classpath:sql/bundledao.properties")
 public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
 
+    @Value("${GET_FRESH_BUNDLES}")
+    private String GET_FRESH_BUNDLES;
+    @Value("${SELECT_BUNDLES}")
+    private String SELECT_BUNDLES;
+    @Value("${SELECT_BY_ID}")
+    private String SELECT_BY_ID;
+    @Value("${DELETE_BUNDLE}")
+    private String DELETE_BUNDLE;
+    @Value("${COUNT_BUNDLES}")
+    private String COUNT_BUNDLES;
+    @Value("${INSERT_BUNDLE_CLASS}")
+    private String INSERT_BUNDLE_CLASS;
+    @Value("${INSERT_BUNDLE_SERVICE}")
+    private String INSERT_BUNDLE_SERVICE;
+    @Value("${DELETE_BUNDLE_CLASSES_BY_ID}")
+    private String DELETE_BUNDLE_CLASSES_BY_ID;
+    @Value("${DELETE_BUNDLE_SERVICES_BY_ID}")
+    private String DELETE_BUNDLE_SERVICES_BY_ID;
 
-    private final TicketClassDAO ticketClassDAO;
-    private final BundleTripRowMapper tripMapper;
-    private final Logger logger = LoggerFactory.getLogger(BundleDAOImpl.class);
+
+    private BundleDAOAttacher bundleDAOAttacher;
 
     @Autowired
-    public BundleDAOImpl(TicketClassDAO ticketClassDAO, BundleTripRowMapper tripMapper) {
-        this.ticketClassDAO = ticketClassDAO;
-        this.tripMapper = tripMapper;
-    }
-
-    @Override
-    public List<Bundle> findAll(Number limit, Number offset) {
-        logger.debug("Querying {} bundles from {}", limit, offset);
-        List<Bundle> bundles = getJdbcTemplate().query(BundleQueries.PAGING_SELECT_BUNDLES.toString(),
-                                                       new Object[]{limit, offset}, new BundleRowMapper());
-        logger.debug("Setting bundle trip to bundles");
-        bundles.forEach(bundle -> bundle.setBundleTrips(attachBundleTrips(bundle)));
-        return bundles;
+    public BundleDAOImpl(BundleDAOAttacher bundleDAOAttacher) {
+        this.bundleDAOAttacher = bundleDAOAttacher;
     }
 
     @Override
     public List<Bundle> findAll() {
-        logger.debug("BundleDAO.findAll was invoked");
-        return getJdbcTemplate().query(BundleQueries.GET_FRESH_BUNDLES.toString(),
-                getGenericMapper());
+        log.debug("BundleDAO.findAll was invoked");
+        return getJdbcTemplate().query(GET_FRESH_BUNDLES, getGenericMapper());
+    }
+
+    @Override
+    public List<Bundle> findAll(Number limit, Number offset) {
+        log.info("Querying {} bundles from {}", limit, offset);
+        List<Bundle> bundles = getJdbcTemplate().query(SELECT_BUNDLES,
+                                                       new Object[]{limit, offset},
+                                                       new BundleRowMapper());
+        log.debug("Got {} bundles", bundles.size());
+        log.debug("Setting bundle dependencies to bundles");
+        bundleDAOAttacher.attachBundleDependencies(bundles);
+        return bundles;
     }
 
     @Override
     public Optional<Bundle> find(Number id) throws EmptyResultDataAccessException {
-        logger.debug("Searching for bundle with id: {}", id);
-        Optional<Bundle> optBundle
-                = Optional.ofNullable(getJdbcTemplate().queryForObject(BundleQueries.SELECT_BY_ID.toString(),
-                                                                       new Object[]{id},
-                                                                       new BundleRowMapper()));
-        logger.debug("Setting bundle trip to bundle");
-        optBundle.ifPresent(bundle -> bundle.setBundleTrips(attachBundleTrips(bundle)));
-        logger.debug("Attaching bundle services");
-
+        log.debug("Searching for bundle with id: {}", id);
+        Optional<Bundle> optBundle = Optional.ofNullable(getJdbcTemplate().queryForObject(SELECT_BY_ID,
+                                                                                          new Object[]{id},
+                                                                                          new BundleRowMapper()));
+        log.debug("Setting bundle dependencies to bundle");
+        List<Bundle> bundles = new ArrayList<>();
+        optBundle.ifPresent(bundles::add);
+        optBundle.ifPresent(bundle -> bundleDAOAttacher.attachBundleDependencies(bundles));
         return optBundle;
     }
 
@@ -81,81 +92,61 @@ public class BundleDAOImpl extends CrudDAOImpl<Bundle> implements BundleDAO {
 
     @Override
     public void delete(Number id) {
-        int services = getJdbcTemplate().update(BundleQueries.DELETE_BUNDLE_SERVICES_BY_ID.toString(), id);
-        logger.debug("Bundle services deleted: {}", services);
-        int classes = getJdbcTemplate().update(BundleQueries.DELETE_BUNDLE_CLASSES_BY_ID.toString(), id);
-        logger.debug("Bundle classes deleted: {}", classes);
-        getJdbcTemplate().update(BundleQueries.DELETE_BUNDLE.toString(), id);
+        log.debug("Deleting bundle {}", id);
+        int services = getJdbcTemplate().update(DELETE_BUNDLE_SERVICES_BY_ID, id);
+        log.debug("Bundle services deleted: {}", services);
+        int classes = getJdbcTemplate().update(DELETE_BUNDLE_CLASSES_BY_ID, id);
+        log.debug("Bundle classes deleted: {}", classes);
+        getJdbcTemplate().update(DELETE_BUNDLE, id);
     }
 
     @Override
     public Long count() {
-        return getJdbcTemplate().queryForObject(BundleQueries.COUNT_BUNDLES.toString(), Long.class);
-    }
-
-    private List<Trip> attachBundleTrips(Bundle bundle) {
-        List<Trip> trips = getJdbcTemplate().query(BundleQueries.SELECT_BUNDLE_TRIP.toString(),
-                                                   new Object[]{bundle.getBundleId()},
-                                                   tripMapper);
-        for (Trip trip : trips) {
-            trip.setTicketClasses(ticketClassDAO.findTicketClassWithItemNumber(bundle.getBundleId(), trip.getTripId()));
-            trip.getTicketClasses()
-                .forEach(ticketClass -> ticketClass.setServices(attachBundleServices(bundle.getBundleId(),
-                                                                                     ticketClass.getClassId())));
-        }
-
-
-        return trips;
-    }
-
-    private List<Service> attachBundleServices(Long bundleId, Long ticketClassId) {
-        List<Service> services = new ArrayList<>();
-
-        List<Map<String, Object>> rows = getJdbcTemplate().queryForList(BundleQueries.SELECT_BUNDLE_SERVICES.toString(),
-                                                                        bundleId,
-                                                                        ticketClassId);
-        for (Map<String, Object> row : rows) {
-            Service service = new Service();
-            service.setServiceId((Integer) row.get("service_id"));
-            service.setServiceName((String) row.get("service_name"));
-            service.setServiceDescription((String) row.get("service_description"));
-            service.setServicePrice((Integer) row.get("service_price"));
-            service.setItemNumber((Integer) row.get("item_number"));
-            services.add(service);
-        }
-        return services;
+        return getJdbcTemplate().queryForObject(COUNT_BUNDLES, Long.class);
     }
 
     private void saveBundleTrips(Bundle bundle) {
-        bundle.getBundleTrips()
-              .forEach(trip -> trip.getTicketClasses()
-                                   .forEach(ticketClass -> getJdbcTemplate().update(BundleQueries.INSERT_BUNDLE_CLASS.toString(),
-                                                                                    bundle.getBundleId(),
-                                                                                    ticketClass.getClassId(),
-                                                                                    ticketClass.getItemNumber())));
+        Long bundleId = bundle.getBundleId();
+        List<TicketClass> ticketClasses = bundle.getBundleTrips()
+                                                .stream()
+                                                .map(Trip::getTicketClasses)
+                                                .flatMap(Collection::stream)
+                                                .collect(Collectors.toList());
+        getJdbcTemplate().batchUpdate(INSERT_BUNDLE_CLASS,
+                                      ticketClasses.stream()
+                                                   .map(x -> new Object[]{bundleId, x.getClassId(), x.getItemNumber()})
+                                                   .collect(Collectors.toList()));
+        log.debug("Saved bundle {} trips", bundleId);
     }
 
     private void saveBundleServices(Bundle bundle) {
-        bundle.getBundleTrips()
-              .forEach(trip -> trip.getTicketClasses()
-                                   .forEach(ticketClass -> ticketClass.getServices()
-                                                                      .forEach(service -> getJdbcTemplate().update(
-                                                                              BundleQueries.INSERT_BUNDLE_SERVICE.toString(),
-                                                                              bundle.getBundleId(),
-                                                                              ticketClass.getItemNumber(),
-                                                                              ticketClass.getClassId(),
-                                                                              service.getServiceId()))));
+        Long bundleId = bundle.getBundleId();
+        List<TicketClass> ticketClasses = bundle.getBundleTrips()
+                                                .stream()
+                                                .map(Trip::getTicketClasses)
+                                                .flatMap(Collection::stream)
+                                                .collect(Collectors.toList());
+        List<Object[]> parameters = new ArrayList<>();
+        for (TicketClass ticketClass : ticketClasses) {
+            Integer itemNumber = ticketClass.getItemNumber();
+            Long classId = ticketClass.getClassId();
+            for (Service service : ticketClass.getServices()) {
+                parameters.add(new Object[]{bundleId, itemNumber, classId, service.getServiceId()});
+            }
+        }
+        getJdbcTemplate().batchUpdate(INSERT_BUNDLE_SERVICE, parameters);
+        log.debug("Saved bundle {} services", bundleId);
     }
 
     private void updateBundleTrip(Bundle bundle) {
         //Not the best but quick and easy solution.
-        getJdbcTemplate().update(BundleQueries.DELETE_BUNDLE_CLASSES_BY_ID.toString(), bundle.getBundleId());
+        getJdbcTemplate().update(DELETE_BUNDLE_CLASSES_BY_ID, bundle.getBundleId());
         saveBundleTrips(bundle);
     }
 
     private void updateBundleServices(Bundle bundle) {
         //Not the best but quick and easy solution.
-        getJdbcTemplate().update(BundleQueries.DELETE_BUNDLE_SERVICES_BY_ID.toString(), bundle.getBundleId());
+        getJdbcTemplate().update(DELETE_BUNDLE_SERVICES_BY_ID, bundle.getBundleId());
         saveBundleServices(bundle);
     }
 
