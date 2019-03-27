@@ -1,10 +1,11 @@
 package edu.netcracker.backend.dao.impl;
 
 import edu.netcracker.backend.dao.IPendingDao;
-import edu.netcracker.backend.dao.sql.PendingActivationScripts;
 import edu.netcracker.backend.message.request.TripPendingActivationDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -15,16 +16,23 @@ import java.util.stream.Collectors;
 
 @Repository
 @Slf4j(topic = "log")
+@PropertySource("classpath:sql/pendingTripAndServicesDao.properties")
 public class TripPendingDao implements IPendingDao<TripPendingActivationDto> {
 
     private JdbcTemplate jdbcTemplate;
+
+    @Value("${GET_TRIPS_PENDING_ACTIVATION}")
+    private String GET_SERVICES_PENDING_ACTIVATION;
+
+    @Value("${LIMIT_AND_OFFSET}")
+    private String LIMIT_AND_OFFSET;
 
     @Override
     public List<TripPendingActivationDto> getPendingEntries() {
 
         log.debug("TripPendingDao.getPendingEntries() was invoked");
 
-        return jdbcTemplate.queryForList(PendingActivationScripts.GET_TRIPS_PENDING_ACTIVATION.script)
+        return jdbcTemplate.queryForList(GET_SERVICES_PENDING_ACTIVATION)
                 .stream()
                 .map(this::getPendingActivationTrip)
                 .collect(Collectors.toList());
@@ -35,7 +43,7 @@ public class TripPendingDao implements IPendingDao<TripPendingActivationDto> {
 
         log.debug("TripPendingDao.getPendingWithOffsetAndLimit(Number limit, Number offset) was invoked with parameters limit = {} offset = {}", limit, offset);
 
-        return jdbcTemplate.queryForList(PendingActivationScripts.GET_TRIPS_PENDING_ACTIVATION.script + PendingActivationScripts.LIMIT_AND_OFFSET.script, new Object[]{limit, offset})
+        return jdbcTemplate.queryForList(GET_SERVICES_PENDING_ACTIVATION + LIMIT_AND_OFFSET, new Object[]{limit, offset})
                 .stream()
                 .map(this::getPendingActivationTrip)
                 .collect(Collectors.toList());

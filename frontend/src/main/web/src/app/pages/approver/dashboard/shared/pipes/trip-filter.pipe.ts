@@ -12,18 +12,24 @@ export class ItemsFilter implements PipeTransform {
       return trip;
     }
 
-    switch (currentFilterContent) {
-      case 'draft':
-        currentFilterContent = '1';
-        break;
-      case 'open':
-        currentFilterContent = '2';
-        break;
-      case 'assigned':
-        currentFilterContent = '3';
-        break;
-    }
+    return trip.filter(value => {
+      if (value[currentFilterCriteria] === null) {
+        value[currentFilterCriteria] = '';
+      }
 
-    return trip.filter(value => value[currentFilterCriteria].toString().toLowerCase().indexOf(currentFilterContent.toLowerCase()) !== -1);
+      switch (currentFilterContent) {
+        case 'draft':
+          currentFilterContent = '1';
+          break;
+        case 'open':
+          currentFilterContent = '2';
+          break;
+        case 'assigned':
+          currentFilterContent = '3';
+          break;
+      }
+
+      return value[currentFilterCriteria].toString().toLowerCase().indexOf(currentFilterContent.toLowerCase()) !== -1;
+    });
   }
 }
