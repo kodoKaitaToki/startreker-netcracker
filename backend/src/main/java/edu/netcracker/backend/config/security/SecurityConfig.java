@@ -86,9 +86,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                                       "Accept",
                                                       "Authorization",
                                                       "Authorization-Refresh",
-                                                      "New-Access-Token"));
+                                                      "New-Access-Token",
+                                                      "X-Total-Count"));
         configuration.setAllowCredentials(false);
         configuration.addExposedHeader("New-Access-Token");
+        configuration.addExposedHeader("X-Total-Count");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

@@ -109,8 +109,8 @@ export class CarCostDashComponent implements OnInit {
 		let secondDateTitle = this.datePipe.transform(this.curFinishDate);
 		this.title = firstDateTitle + ' - ' + secondDateTitle;
 
-		this.setDate(this.curStartDate, this.curFinishDate);
-
+		this.curDateFrom = this.curStartDate.toISOString();
+		this.curDateTo = this.curFinishDate.toISOString();
 	}
 
 	setDate(dateFrom: Date, dateTo: Date){
@@ -129,7 +129,7 @@ export class CarCostDashComponent implements OnInit {
                       .subscribe(
                         (resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
-						    this.carriers = clone(resp.body);
+						    					this.carriers = clone(resp.body);
                         }
                       );
 	}
@@ -170,11 +170,11 @@ export class CarCostDashComponent implements OnInit {
 		}
 		this.minDate = event;
 		this.checkBtn();
-	  }
+	}
 	
-	  checkBtn(){
+	checkBtn(){
 		if((this.curFinishDate !== undefined) && (this.curStartDate !== undefined)){
 			this.buttons.checkBut = false;
 		}
-	  }
+	}
 }

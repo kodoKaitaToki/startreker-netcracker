@@ -66,7 +66,7 @@
           </div>
         </div>
         <div
-            *ngIf="trip.trip_status_id === 1"
+            *ngIf="trip.trip_status_id === 1 || trip.trip_status_id === 6"
             class="col-12 top-button"
             [ngClass]="{
               'disabled': !trip.ticket_classes.length > 0
@@ -229,6 +229,16 @@
                 {{trip.creation_date}}
               </p>
             </div>
+
+            <hr>
+            
+            <div class="row"
+              *ngIf="trip.trip_status_id === 6">
+              <h5 class="col-5">Reply from approver</h5>
+              <p class="col-6 offset-1">
+                {{trip.trip_reply}}
+              </p>
+            </div>
   
             <div class="row"
               *ngIf="currentTripForUpdate === trip && isEditButtonBlockedAfterSubmit && !isForUpdateAlertMessage">
@@ -243,19 +253,39 @@
           </form>
         </div>
         <div class="col-md-5">
-          <app-suggestions
-          [trip]="trip">
-          </app-suggestions>
+          
         </div>
       </div>
-      <div class="row">
-        <button
-          class="btn btn-success col-4 modal-buttons"
+      <div class="row form-footer justify-content-around">
+        <div class="col-md-4">
+          <button
+          class="btn btn-secondary modal-buttons"
           type="button"
           (click)="toggleShowTicketClass(trip.ticket_classes)"
-        >
-          Manage ticket classes
-        </button>
+          >
+            Manage ticket classes
+          </button>
+        </div>
+        <div class="col-md-4">
+          <button
+          class="btn btn-secondary modal-buttons"
+          type="button"
+          [disabled]="trip.ticket_classes === undefined || trip.ticket_classes.length == 0"
+          (click)="toggleShowSuggestions(trip)"
+          >
+            Manage suggestions
+          </button>
+        </div>
+        <div class="col-md-4">
+          <button
+          class="btn btn-secondary modal-buttons"
+          type="button"
+          [disabled]="trip.ticket_classes === undefined || trip.ticket_classes.length == 0"
+          (click)="toggleShowServices(trip)"
+          >
+            Manage possible services
+          </button>
+        </div>
       </div>
       <p-dialog
         [(visible)]="showTicketClass"
@@ -272,10 +302,44 @@
           [uneditTicketClasses]="isUneditAble(trip.trip_status_id)"
         ></app-trips-ticket-class>
       </p-dialog>
+      <p-dialog
+        [(visible)]="showSuggestions"
+        *ngIf="currentTripForSuggestionEdit === trip"
+        modal="true"
+        [style]="{width: '600px'}"
+      >
+        <p-header>
+          Suggestions
+        </p-header>
+        <app-suggestions
+        [trip]="trip">
+        </app-suggestions>
+      </p-dialog>
+      <p-dialog
+        [(visible)]="showPossibleServices"
+        *ngIf="currentServicesTrip === trip"
+        [modal]="true"
+        [style]="{width: '970px'}"
+        [breakpoint]="970"
+        [blockScroll]="true"
+      >
+        <p-header>
+          Possible services
+        </p-header>
+        <app-possible-services>
+        </app-possible-services>
+      </p-dialog>
     </li>
   </ul>
-  <pagination-controls id="listing_pagination" maxSize=5 (pageChange)="onChangePage($event)" class="text-center">
-  </pagination-controls>
+  <!-- <pagination-controls id="listing_pagination" maxSize=5 (pageChange)="onChangePage($event)" class="text-center">
+  </pagination-controls> -->
+  <app-paginator
+    [page]="trips"
+    [from]="pageFrom"
+    [number]="pageNumber"
+    (update)="onPageUpdate($event)"
+  >
+  </app-paginator>
 </div>
 
 <hr>

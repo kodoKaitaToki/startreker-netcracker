@@ -1,6 +1,5 @@
 package edu.netcracker.backend.controller;
 
-import edu.netcracker.backend.controller.exception.RequestException;
 import edu.netcracker.backend.message.request.MandatoryTimeInterval;
 import edu.netcracker.backend.message.request.OptionalTimeInterval;
 import edu.netcracker.backend.message.request.ServiceCreateForm;
@@ -8,10 +7,8 @@ import edu.netcracker.backend.message.response.*;
 import edu.netcracker.backend.security.SecurityContext;
 import edu.netcracker.backend.service.ServiceService;
 import edu.netcracker.backend.service.StatisticsService;
-import edu.netcracker.backend.utils.ServiceStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +17,7 @@ import java.util.List;
 
 @RestController
 @Slf4j(topic = "log")
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/service")
 public class ServiceController {
 
     private final StatisticsService statisticsService;
@@ -37,13 +34,13 @@ public class ServiceController {
         this.serviceService = serviceService;
     }
 
-    @RequestMapping(value = "/service/distribution", method = RequestMethod.GET)
+    @RequestMapping(value = "/distribution", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<ServiceDistributionElement> getServiceStatistics() {
         return statisticsService.getServiceStatistics();
     }
 
-    @RequestMapping(value = "/service/sales", method = RequestMethod.GET)
+    @RequestMapping(value = "/sales", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public CarrierRevenueResponse getServicesSalesStatistics(OptionalTimeInterval timeInterval) {
         return timeInterval != null && timeInterval.isProvided()
@@ -55,7 +52,7 @@ public class ServiceController {
                                                                               .getUserId());
     }
 
-    @RequestMapping(value = "/service/sales/per_week", method = RequestMethod.GET)
+    @RequestMapping(value = "/sales/per_week", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierRevenueResponse> getServicesSalesStatisticsByWeek(@Valid MandatoryTimeInterval timeInterval) {
         return statisticsService.getServicesSalesStatisticsByWeek(securityContext.getUser()
@@ -64,7 +61,7 @@ public class ServiceController {
                                                                   timeInterval.getTo());
     }
 
-    @RequestMapping(value = "/service/sales/per_month", method = RequestMethod.GET)
+    @RequestMapping(value = "/sales/per_month", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierRevenueResponse> getServicesSalesStatisticsByMonth(@Valid MandatoryTimeInterval timeInterval) {
         return statisticsService.getServicesSalesStatisticsByMonth(securityContext.getUser()
@@ -73,7 +70,7 @@ public class ServiceController {
                                                                    timeInterval.getTo());
     }
 
-    @RequestMapping(value = "/service/views/per_week", method = RequestMethod.GET)
+    @RequestMapping(value = "/views/per_week", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierViewsResponse> getServiceViewsStatisticsByWeek(@Valid MandatoryTimeInterval timeInterval) {
         return statisticsService.getServiceViewsStatisticsByWeek(securityContext.getUser()
@@ -82,7 +79,7 @@ public class ServiceController {
                                                                  timeInterval.getTo());
     }
 
-    @RequestMapping(value = "/service/views/per_month", method = RequestMethod.GET)
+    @RequestMapping(value = "/views/per_month", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierViewsResponse> getServiceViewsStatisticsByMonth(@Valid MandatoryTimeInterval timeInterval) {
         return statisticsService.getServiceViewsStatisticsByMonth(securityContext.getUser()
@@ -91,7 +88,7 @@ public class ServiceController {
                                                                   timeInterval.getTo());
     }
 
-    @RequestMapping(value = "/service/{id}/views/per_week", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/views/per_week", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByWeek(@Valid MandatoryTimeInterval timeInterval,
                                                                                @PathVariable("id") Long serviceId) {
@@ -101,7 +98,7 @@ public class ServiceController {
                                                                           timeInterval.getTo());
     }
 
-    @RequestMapping(value = "/service/{id}/views/per_month", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/views/per_month", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<CarrierViewsResponse> getServiceViewsStatisticsByServiceByMonth(@Valid MandatoryTimeInterval timeInterval,
                                                                                 @PathVariable("id") Long serviceId) {
@@ -111,23 +108,13 @@ public class ServiceController {
                                                                            timeInterval.getTo());
     }
 
-    @RequestMapping(value = "/carrier/service", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    public List<ServiceCRUDDTO> getPaginServices(@RequestParam("status") String status,
-                                                 @RequestParam("from") Integer from,
-                                                 @RequestParam("number") Integer number) {
-        log.debug("ServiceController.getPaginServices(String status, Integer from, Integer number) was invoked "
-                  + "with parameters status={}, from={}, number={}", status, from, number);
-        return serviceService.getServicesOfCarrier(from, number, status);
-    }
-
-    @RequestMapping(value = "/carrier/services/preload", method = RequestMethod.GET)
+    @RequestMapping(value = "/preload", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<ServicePreload> preloadServices() {
         return serviceService.preloadForCarrier(securityContext.getUser());
     }
 
-    @RequestMapping(value = "/carrier/service", method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public ServiceCRUDDTO updateService(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO) {
         log.debug("ServiceController.updateService(ServiceCRUDDTO serviceCRUDDTO) was invoked "
@@ -135,7 +122,14 @@ public class ServiceController {
         return serviceService.updateService(serviceCRUDDTO);
     }
 
-    @RequestMapping(value = "/carrier/service", method = RequestMethod.POST)
+    @RequestMapping(value = "/amount", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('ROLE_CARRIER')")
+    public Integer getServicesAmount(@RequestParam("status") String status) {
+        log.debug("ServiceController.getServicesAmount(String status) was invoked with status={}", status);
+        return serviceService.getCarrierServicesAmount(status);
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public ServiceCRUDDTO addService(@Valid @RequestBody ServiceCreateForm serviceCreateForm) {
         log.debug("ServiceController.addService(ServiceCreateForm serviceCreateForm) was invoked "
@@ -145,41 +139,23 @@ public class ServiceController {
         return serviceService.addService(serviceCreateForm);
     }
 
-    @RequestMapping(value = "/approver/service", method = RequestMethod.GET)
-    @PreAuthorize("hasAuthority('ROLE_APPROVER')")
-    public List<ServiceCRUDDTO> getServicesForApprover(@RequestParam("from") int from,
+    @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('ROLE_CARRIER') or hasAuthority('ROLE_APPROVER')")
+    public List<ServiceCRUDDTO> getServices(@RequestParam("from") int from,
                                                        @RequestParam("number") int number,
                                                        @RequestParam("status") String status) {
-        if ((!status.equals(ServiceStatus.OPEN.toString())) && (!status.equals(ServiceStatus.ASSIGNED.toString()))) {
-            throw new RequestException("Approver may only read open or assigned services", HttpStatus.BAD_REQUEST);
-        }
+        log.debug("ServiceController.getServices(int from,\n" +
+                "                                                       int number,\n" +
+                "                                                       String status) was invoked " +
+                "with parameters status={}, from={}, number={}", status, from, number);
 
-        int approverId = securityContext.getUser()
-                                        .getUserId();
-        return serviceService.getServicesForApprover(from, number, status, approverId);
+        return serviceService.getServices(from, number, status);
     }
 
-    @RequestMapping(value = "/approver/service", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/review", method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('ROLE_APPROVER')")
-    public ServiceCRUDDTO updateServiceReview(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO) {
-        boolean reviewOnAssigned = (serviceCRUDDTO.getServiceStatus() != ServiceStatus.UNDER_CLARIFICATION.toString()
-                                    && serviceCRUDDTO.getReplyText() != null
-                                    && serviceCRUDDTO.getReplyText()
-                                                     .length() > 0);
-        if (reviewOnAssigned) {
-            throw new RequestException("Reviews can only be on under clarification services", HttpStatus.BAD_REQUEST);
-        }
-
-        String state = serviceCRUDDTO.getServiceStatus();
-
-        boolean illegalState = (state.equals(ServiceStatus.DRAFT.toString())
-                                || state.equals(ServiceStatus.OPEN.toString())
-                                || state.equals(ServiceStatus.ARCHIVED.toString()));
-
-        if (illegalState) {
-            throw new RequestException("Approver may only assign, publish or review services", HttpStatus.BAD_REQUEST);
-        }
-
+    public ServiceCRUDDTO updateServiceReview(@Valid @RequestBody ServiceCRUDDTO serviceCRUDDTO,
+                                              @PathVariable("id") Long serviceId) {
         int approverId = securityContext.getUser()
                                         .getUserId();
         return serviceService.reviewService(serviceCRUDDTO, approverId);

@@ -20,31 +20,38 @@
               <form [formGroup]="form" (ngSubmit)="onSubmit()">
                 <div class="row justify-content-center">
                   <div class="col-lg-6">
-                    <h6 class="search-bar__heading">From:</h6>
-                  </div>
-                  <div class="col-lg-6">
-                    <h6 class="search-bar__heading">To:</h6>
-                  </div>
-                </div>
+                    <div class="row justify-content-center">
+                      <h6 class="search-bar__heading">From:</h6>
+                      <input
+                        type="date"
+                        id="fromDate"
+                        class="form-control datepicker"
+                        formControlName="fromDate"
+                        ng-model="fromDate"
+                        [ngClass]="{
+                          'is-invalid':form.get('fromDate').touched && form.get('fromDate').invalid,
+                          'is-valid': form.get('fromDate').valid
+                        }"
+                      >
 
-                <div class="row justify-content-center">
-                  <div class="col-lg-6">
-                    <input
-                      type="date"
-                      id="fromDate"
-                      [value]="form.value.fromDate | date:'yyyy-MM-dd'"
-                      (input)="form.value.fromDate = $event.target.valueAsDate"
-                      class="form-control datepicker"
-                    >
+                    </div>
                   </div>
                   <div class="col-lg-6">
-                    <input
-                      type="date"
-                      id="toDate"
-                      [value]="form.value.toDate | date:'yyyy-MM-dd'"
-                      (input)="form.value.toDate = $event.target.valueAsDate"
-                      class="form-control datepicker"
-                    >
+                    <div class="row justify-content-center">
+                      <h6 class="search-bar__heading">To:</h6>
+
+                      <input
+                        type="date"
+                        id="toDate"
+                        class="form-control datepicker"
+                        formControlName="toDate"
+                        ng-model="toDate"
+                        [ngClass]="{
+                          'is-invalid':form.get('toDate').touched && form.get('toDate').invalid,
+                          'is-valid': form.get('toDate').valid
+                        }"
+                      >
+                    </div>
                   </div>
                 </div>
 
@@ -60,8 +67,16 @@
                 </div>
 
                 <hr>
-
-                <button type="submit" class="btn-success btn col-md-12">Update statistics</button>
+                <div *ngIf="form.hasError('periodError')">
+                  <span style="color: red">
+                     To date must be greater than from date
+                  </span>
+                </div>
+                
+                <button 
+                [disabled]="form.invalid"
+                type="submit"
+                class="btn-success btn col-md-12">Update statistics</button>
               </form>
 
             </div>

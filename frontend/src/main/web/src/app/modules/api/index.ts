@@ -61,6 +61,9 @@ const carrier = {
   },
   getCarrierNumber(){
     return `${baseUrl}api/v1/admin/carrier/amount`;
+  },
+  getCarrierTrips(){
+    return `${baseUrl}api/v1/carrier/trip`;
   }
 }
 
@@ -82,8 +85,9 @@ const trips = {
   updateTrip(id) {
     return `${baseUrl}api/v1/trips/${id}`
   },
-  getAllTrips() {
-    return `${baseUrl}api/v1/trips`;
+  getAllTrips(limit: number = 10, offset: number = 0) {
+    // return `${baseUrl}api/v1/trips`;
+    return `${baseUrl}api/v1/trips/paging?limit=${limit}&offset=${offset}`
   },
   getCarrierTrips() {
     return `${baseUrl}api/v1/carrier/trips`;
@@ -113,13 +117,22 @@ const possibleServices = {
 
 const service = {
   services(){
-    return `${baseUrl}api/v1/carrier/service`;
+    return `${baseUrl}api/v1/service`;
   },
   paginServices(){
-    return `${baseUrl}api/v1/carrier/service/pagin`;
+    return `${baseUrl}api/v1/service/pagin`;
   },
   servicesByStatus(){
     return `${baseUrl}api/v1/carrier/service/by-status`;
+  },
+  servicesAmount(){
+    return `${baseUrl}api/v1/carrier/carrier/service/amount`;
+  },
+  reviewService(id: number) {
+    return `${baseUrl}api/v1/service/${id}/review`;
+  },
+  preloadServices() {
+    return `${baseUrl}api/v1/service/preload`;
   }
 }
 
@@ -147,6 +160,21 @@ const landing = {
   }
 }
 
+const history = {
+  getBoughtTickets(){
+    return `${baseUrl}api/v1/history/user/ticket`;
+  },
+  getTicketService(id: number){
+    return `${baseUrl}api/v1/history/ticket/${id}/service`;
+  },
+}
+
+const user = {
+  buyTicket(){
+    return `${baseUrl}api/v1/user/bought-tickets`;
+  }
+}
+
 export const Api = {
   HttpOptions,
   HttpOptionsAuthorized,
@@ -159,7 +187,9 @@ export const Api = {
   possibleServices,
   trip,
   trips,
-  landing
+  landing,
+  user,
+  history
 }
 
 export const options = {

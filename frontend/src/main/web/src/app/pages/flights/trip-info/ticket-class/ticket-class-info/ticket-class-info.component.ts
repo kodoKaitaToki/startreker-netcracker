@@ -4,6 +4,8 @@ import {SearchService} from "../../../shared/services/search.service";
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 import {FlightService} from "../../../shared/models/flight-service.model";
 import {Router} from "@angular/router";
+import {Trip} from "../../../../../shared/model/trip.model";
+import { BookedTicket } from '../../../../user/shared/model/bought_ticket.model';
 
 
 @Component({
@@ -17,6 +19,7 @@ export class TicketClassInfoComponent implements OnInit {
 
   @Input('ticket_class') ticket_class: FlightClass;
   @Input('amount') amount: number;
+  @Input('trip') trip: Trip;
 
   @Output('total_price') total_price: number;
 
@@ -24,9 +27,7 @@ export class TicketClassInfoComponent implements OnInit {
 
   constructor(private searchSvc: SearchService,
               public activeModal: NgbActiveModal,
-              private router: Router
-  ) {
-  }
+              private router: Router) { }
 
   ngOnInit() {
     this.searchSvc.getServices(this.ticket_class.class_id).subscribe(resp =>
@@ -45,8 +46,6 @@ export class TicketClassInfoComponent implements OnInit {
   }
 
   onBuyClick() {
-    sessionStorage.setItem('amount', this.amount.toString());
-    sessionStorage.setItem('ticket_class', JSON.stringify(this.ticket_class));
 
     let chosenServices: FlightService[] = [];
     this.services.forEach(service => {
@@ -54,18 +53,37 @@ export class TicketClassInfoComponent implements OnInit {
         chosenServices.push(service);
       }
     });
-
-    console.log(JSON.stringify(chosenServices));
-    sessionStorage.setItem('services', JSON.stringify(chosenServices));
+    
+    this.parseStorContent(chosenServices);
 
     if (localStorage.getItem('at') !== null) {
       //redirect to buy page
-      console.log("Authorized user")
+      console.log("Authorized user");
+      this.activeModal.close('Close click');
+      this.router.navigate(['user/cart']);
     } else {
       console.log("Non authorized user");
       this.activeModal.close('Close click');
 
       this.router.navigate(["login"], {state: {message: 'Please, log in or sign up to proceed!'}});
     }
+  }
+
+  parseStorContent(services: FlightService[]){
+    let ticket = new BookedTicket(this.trip,
+                                  this.ticket_class,
+                                  services,
+                                  this.amount)
+    let boughtTickets = new Array();
+    let stContent = JSON.parse(sessionStorage.getItem('boughtTickets'));
+    if(stContent !== null){
+      if(stContent.length > 0){
+        for(ticket of stContent){
+          boughtTickets.push(ticket);
+        }
+      }
+    }
+    boughtTickets.push(ticket);
+    sessionStorage.setItem('boughtTickets', JSON.stringify(boughtTickets));
   }
 }

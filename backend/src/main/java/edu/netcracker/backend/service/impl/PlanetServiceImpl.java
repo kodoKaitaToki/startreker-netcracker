@@ -20,7 +20,7 @@ import java.util.Map;
 @Service
 public class PlanetServiceImpl implements PlanetService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TicketClassService.class);
+    private static final Logger logger = LoggerFactory.getLogger(PlanetServiceImpl.class);
 
     private final PlanetDAO planetDAO;
     private final SpaceportDAO spaceportDAO;
@@ -38,7 +38,7 @@ public class PlanetServiceImpl implements PlanetService {
 
     public PlanetsResponse getPlanets() {
         PlanetsResponse planetsResponse = new PlanetsResponse();
-        List<Planet> allPlanets = this.planetDAO.findAllPlanets();
+        List<Planet> allPlanets = this.planetDAO.getAllPlanets();
         List<String> planetNames = new ArrayList<>();
         Map<String, List<String>> spaceportsForPlanet = new HashMap<>();
 

@@ -15,68 +15,60 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@RequestMapping("v1/api/admin/approvers")
 public class ApproverCrudController {
 
     private final ApproverCrudService acs;
 
     @Autowired
     public ApproverCrudController(ApproverCrudService acs) {
-
         this.acs = acs;
     }
 
-    @GetMapping("v1/api/admin/approvers/all")
+    @GetMapping("/all")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<UserDTO> getAllApprovers() {
-
         List<User> users = acs.getAllApprovers();
-        return convertIntoDTO(users);
+        return convertToDTO(users);
     }
 
-    @GetMapping("v1/api/admin/approvers/paging")
+    @GetMapping("/paging")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<UserDTO> getApprovers(@RequestParam("limit") Number limit, @RequestParam("offset") Number offset) {
-
-        return convertIntoDTO(acs.getApprovers(limit, offset));
+        return convertToDTO(acs.getApprovers(limit, offset));
     }
 
-    @GetMapping("v1/api/admin/approvers")
+    @GetMapping("")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public UserDTO getApprover(@RequestParam("id") Number id) {
-
         return UserDTO.from(acs.getById(id));
     }
 
-    @PostMapping("v1/api/admin/approvers")
+    @PostMapping("")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void addApprover(@RequestBody UserCreateForm approver) {
-
         acs.add(fromUserCreateForm(approver));
     }
 
-    @PutMapping("v1/api/admin/approvers")
+    @PutMapping("")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void updateApprover(@RequestBody UserUpdateForm approver) {
-
         acs.update(fromUserUpdateForm(approver));
     }
 
-    @DeleteMapping("v1/api/admin/approvers")
+    @DeleteMapping("")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void deleteApprover(@RequestBody UserUpdateForm approver) {
-
         acs.delete(fromUserUpdateForm(approver));
     }
 
-    @GetMapping("v1/api/admin/approvers/count")
+    @GetMapping("/count")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public BigInteger getRecordsCount() {
-
         return acs.getRecordsCount();
     }
 
-    private List<UserDTO> convertIntoDTO(List<User> users) {
-
+    private List<UserDTO> convertToDTO(List<User> users) {
         List<UserDTO> userDTOS = new ArrayList<>();
         for (User user : users) {
             userDTOS.add(UserDTO.from(user));
@@ -85,7 +77,6 @@ public class ApproverCrudController {
     }
 
     private static User fromUserForm(UserForm approver) {
-
         User user = new User();
         user.setUserName(approver.getUsername());
         user.setUserEmail(approver.getEmail());
@@ -95,17 +86,14 @@ public class ApproverCrudController {
     }
 
     private static User fromUserCreateForm(UserCreateForm approver) {
-
         User user = fromUserForm(approver);
         user.setUserPassword(approver.getPassword());
         return user;
     }
 
     private static User fromUserUpdateForm(UserUpdateForm approver) {
-
         User user = fromUserForm(approver);
         user.setUserId(approver.getUserId());
         return user;
     }
-
 }

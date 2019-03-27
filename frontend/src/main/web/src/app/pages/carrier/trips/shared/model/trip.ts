@@ -11,6 +11,7 @@ export class Trip {
     arrival_time?: string;
     departure_time?: string;
     trip_status_id: number;
+    trip_reply: string;
     ticket_classes: object[];
 
     constructor() {

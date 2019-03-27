@@ -9,6 +9,7 @@ import { LoginFormData } from './interfaces/login-form.interface';
 import { RegisterFormData } from './interfaces/registration-form.interface';
 import { RegisterResponse } from './interfaces/register-response.interface';
 import { LoginResponse } from './interfaces/login-response.interface';
+import { LoginLocations } from '../shared/loginLocations';
 
 @Injectable({
   providedIn: 'root'
@@ -29,13 +30,10 @@ export class ApiUserService {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
     private location: Location
     ) {}
 
-    get userInfo() {
-      return this.userData;
-    }
+    public getuserData() {return this.userData; }
 
     loginUser(userData: LoginFormData){
       return this.http.post<any>(Api.auth.loginUser(), userData, HttpOptions);
@@ -45,6 +43,8 @@ export class ApiUserService {
       this.setUserData(userData);
       localStorage.setItem('at', userData.access_token);
       localStorage.setItem('rt', userData.refresh_token);
+      let role = userData.roles[0];
+      this.router.navigateByUrl(LoginLocations[role]);
     }
 
     public registerUser(userData: RegisterFormData){

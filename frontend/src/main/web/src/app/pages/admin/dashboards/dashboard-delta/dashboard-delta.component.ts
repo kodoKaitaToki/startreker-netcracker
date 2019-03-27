@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterContentInit } from '@angular/core';
 import * as CanvasJS from '../../canvasjs.min';
 
-import { FormGroup, FormControl } from '@angular/forms';
-import {formatDate} from '@angular/common';
+import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import {formatDate, DatePipe} from '@angular/common';
 import { clone } from 'ramda';
 
 import { DashboardDeltaService } from '../dashboard-delta.service';
 import {checkToken} from "../../../../modules/api/index";
 import { HttpResponse } from '@angular/common/http';
+import { periodError } from 'src/app/shared/dateValidator';
 
 @Component({
   selector: 'app-dashboard-delta',
   templateUrl: './dashboard-delta.component.html',
   styleUrls: ['./dashboard-delta.component.scss']
 })
-export class DashboardDeltaComponent implements OnInit {
+export class DashboardDeltaComponent implements OnInit{
 
   userMap: Map<Date, number> = new Map();
   userChart: CanvasJS.Chart;
@@ -25,17 +26,21 @@ export class DashboardDeltaComponent implements OnInit {
   locationsMap: Map<Date, number> = new Map();
   locationsChart: CanvasJS.Chart;
 
-  form = new FormGroup({
-    fromDate: new FormControl(new Date().setDate(1)),
-    toDate: new FormControl(new Date()),
-  });
+  form = this.fb.group({
+    fromDate: ['', Validators.required ],
+    toDate: ['', Validators.required],
+  }, {validator: periodError("fromDate", "toDate")});
 
-  constructor(private dashboardDeltaService: DashboardDeltaService) { }
+  constructor(
+    private dashboardDeltaService: DashboardDeltaService,
+    private fb: FormBuilder,
+    public datepipe: DatePipe) {
+  }
 
   onSubmit() {
     let fromDateFormatted: string = formatDate(this.form.value.fromDate, 'yyyy-MM-dd', 'en');
     let toDateFormatted: string = formatDate(this.form.value.toDate, 'yyyy-MM-dd', 'en');
-
+    
     this.dashboardDeltaService.getUsersIncreasingPerPeriod(fromDateFormatted, toDateFormatted)
       .subscribe((resp: HttpResponse<any>) => {
         checkToken(resp.headers);
@@ -73,15 +78,25 @@ export class DashboardDeltaComponent implements OnInit {
   }
 
   setToWeek() {
-    this.form.value.toDate = new Date();
-    this.form.value.fromDate = new Date();
-    this.form.value.fromDate.setDate(this.form.value.toDate.getDate() - this.form.value.toDate.getDay());
+    let to = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+    let date = (new Date).getDate();
+    let day = (new Date).getDay();
+    let from = this.datepipe.transform(new Date()
+    .setDate(date - day), 'yyyy-MM-dd');
+    this.form.patchValue({
+      toDate: to,
+      fromDate: from
+    });
   }
 
   setToMonth() {
-    this.form.value.toDate = new Date();
-    this.form.value.fromDate = new Date();
-    this.form.value.fromDate.setDate(1);
+    let to = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
+    let from = this.datepipe.transform(new Date()
+    .setDate(1), 'yyyy-MM-dd');
+    this.form.patchValue({
+      toDate: to,
+      fromDate: from
+    });
   }
 
   reloadCharts()
@@ -110,8 +125,10 @@ export class DashboardDeltaComponent implements OnInit {
     }
     this.locationsChart.render();
   }
-
+  
   ngOnInit() {
+    this.setToMonth();
+
     this.userChart = new CanvasJS.Chart("userChartContainer", {
       animationEnabled: true,
       exportEnabled: true,

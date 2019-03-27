@@ -10,6 +10,7 @@ import {ViewsService} from "./views.service";
 import {TripEntry} from "./tripentry.class";
 import {ServiceEntry} from "./serviceentry.class";
 import {MessageService} from "primeng/api";
+import {ShowMessageService} from "../../../admin/approver/shared/service/show-message.service";
 
 @Component({
   selector: 'app-views',
@@ -24,18 +25,20 @@ export class ViewsComponent implements OnInit {
   carrierTrips: TripEntry[];
   carrierServices: ServiceEntry[];
 
-  showChart: boolean = false;
+  hideChart: boolean = true;
 
   fromDate: Date;
   toDate: Date;
 
-  responseCallback = (resp: HttpResponse<any>) => {
-    this.views = clone(resp);
+  responseCallback = (resp: ViewsModel[]) => {
+    this.views = resp;
     this.reloadCharts();
   };
 
   errorCallback = (error: HttpErrorResponse) => {
-    this.showMessage(this.createMessage('error', `Error message - ${error.error.status}`, error.error.error));
+    this.showMsgSrvc.showMessage(this.messageService, 'error', `Error message - ${error.error.status}`,
+      error.error.error
+    );
   };
 
   form = new FormGroup({
@@ -57,15 +60,8 @@ export class ViewsComponent implements OnInit {
     this.viewsChart.render();
   }
 
-  constructor(private viewsService: ViewsService, private messageService: MessageService,) {
-    this.viewsService.getCarrierTrips()
-        .subscribe((trips) => {
-          this.carrierTrips = trips;
-        }, this.errorCallback);
-    this.viewsService.getCarrierServices()
-        .subscribe((services) => {
-          this.carrierServices = services;
-        }, this.errorCallback);
+  constructor(private viewsService: ViewsService, private messageService: MessageService,
+    private showMsgSrvc: ShowMessageService) {
   }
 
   onSubmit() {
@@ -75,9 +71,19 @@ export class ViewsComponent implements OnInit {
       fromDateFormatted = formatDate(this.fromDate, 'yyyy-MM-dd', 'en');
       toDateFormatted = formatDate(this.toDate, 'yyyy-MM-dd', 'en');
     } catch (e) {
+      this.showMsgSrvc.showMessage(this.messageService, 'error', `Incorrect date`, `Please check your date`
+      );
       return;
     }
-    this.showChart = true;
+    if (fromDateFormatted > toDateFormatted) {
+      this.showMsgSrvc.showMessage(this.messageService,
+        'error',
+        `Incorrect date`,
+        `Starting date is bigger than ending date`
+      );
+      return;
+    }
+    this.hideChart = false;
 
     if (this.form.value.forWhat == "forTrips") {
       return this.loadForTrips(fromDateFormatted, toDateFormatted);
@@ -99,14 +105,14 @@ export class ViewsComponent implements OnInit {
       this.viewsService.getTripsViewsStatisticsByMonth(fromDateFormatted,
         toDateFormatted
       )
-          .subscribe(this.responseCallback);
+          .subscribe(this.responseCallback, this.errorCallback);
     } else {
 
       this.viewsService.getTripsViewsStatisticsByWeek(
         fromDateFormatted,
         toDateFormatted
       )
-          .subscribe(this.responseCallback);
+          .subscribe(this.responseCallback, this.errorCallback);
     }
   }
 
@@ -181,6 +187,16 @@ export class ViewsComponent implements OnInit {
 
   ngOnInit() {
 
+    this.viewsService.getCarrierTrips()
+        .subscribe((trips) => {
+          this.carrierTrips = trips;
+        }, this.errorCallback);
+
+    this.viewsService.getCarrierServices()
+        .subscribe((services) => {
+          this.carrierServices = services;
+        }, this.errorCallback);
+
     this.setToMonth();
 
     this.viewsChart = new CanvasJS.Chart("viewsChartContainer", {
@@ -207,16 +223,5 @@ export class ViewsComponent implements OnInit {
         }]
     });
   }
-
-  showMessage(msgObj: any) {
-    this.messageService.add(msgObj);
-  }
-
-  createMessage(severity: string, summary: string, detail: string): any {
-    return {
-      severity: severity,
-      summary: summary,
-      detail: detail
-    };
-  }
 }
+

@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("api/v1/trouble/")
 public class TroubleTicketController {
 
     private final StatisticsService statisticsService;
@@ -16,13 +18,13 @@ public class TroubleTicketController {
     @Autowired
     public TroubleTicketController(StatisticsService statisticsService) {this.statisticsService = statisticsService;}
 
-    @GetMapping("api/v1/trouble/statistics")
+    @GetMapping("statistics")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ReportStatisticsResponse getStatistics() {
         return statisticsService.getTroubleTicketStatistics();
     }
 
-    @GetMapping("api/v1/approver/{id}/trouble/statistics")
+    @GetMapping("statistics/approver/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ReportStatisticsResponse getStatistics(@PathVariable Long id) {
         return statisticsService.getTroubleTicketStatisticsByApprover(id);

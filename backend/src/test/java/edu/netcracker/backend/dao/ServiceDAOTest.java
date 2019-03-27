@@ -46,7 +46,7 @@ public class ServiceDAOTest {
                         "2015-11-16",
                         DateTimeFormatter.ofPattern("yyyy-MM-dd")
                 ).atStartOfDay());
-        ServiceCRUDDTO testService = ServiceCRUDDTO.form(serviceDescr, null);
+        ServiceCRUDDTO testService = ServiceCRUDDTO.form(serviceDescr);
         ret = new ArrayList<>();
         ret.add(testService);
     }

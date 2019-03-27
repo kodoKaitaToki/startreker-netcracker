@@ -49,6 +49,9 @@ public class ReadTripsDTO {
     @JsonProperty("ticket_classes")
     private List<Map<String, Object>> ticketClasses;
 
+    @JsonProperty("trip_reply")
+    private String reply;
+
     public static ReadTripsDTO from(Trip trip) {
         ReadTripsDTO dto = new ReadTripsDTO();
         dto.tripId = trip.getTripId();
@@ -69,6 +72,14 @@ public class ReadTripsDTO {
         dto.departureDate = getStringFromDate(trip.getDepartureDate());
         dto.arrivalDate = getStringFromDate(trip.getArrivalDate());
         dto.creationDate = getStringFromDate(trip.getCreationDate());
+        dto.reply = "";
+        if (trip.getReplies() != null && !trip.getReplies()
+                                              .isEmpty()) {
+            dto.reply = trip.getReplies()
+                            .get(trip.getReplies()
+                                     .size() - 1)
+                            .getReportText();
+        }
         dto.ticketClasses = new ArrayList<>();
 
         for (TicketClass ticketClass : trip.getTicketClasses()) {

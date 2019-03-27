@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {GrowlModule, MessageService, ProgressBarModule} from "primeng/primeng";
+import {GrowlModule, MessageService, ProgressBarModule, CalendarModule, TabViewModule} from "primeng/primeng";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 import {CarrierRoutingModule} from './carrier-routing.module';
@@ -37,6 +37,12 @@ import { SuggestionsTreeComponent } from './suggestions/suggestions-tree/suggest
 import { SuggestionsTableComponent } from './suggestions/suggestions-table/suggestions-table.component';
 import { TripsTicketClassComponent } from './trips/trips-ticket-class/trips-ticket-class.component';
 import {DialogModule} from 'primeng/dialog';
+import { PossibleServicesComponent } from './possible-services/possible-services.component';
+import { PossibleServicesListComponent } from './possible-services/possible-services-list/possible-services-list.component';
+import { PossibleServicesFormComponent } from './possible-services/possible-services-form/possible-services-form.component';
+import { TripTransfer } from './trip-transfer';
+import { SharedModule } from '../../shared/shared.module';
+import {ShowMessageService} from "../admin/approver/shared/service/show-message.service";
 
 @NgModule({
             declarations:
@@ -63,7 +69,10 @@ import {DialogModule} from 'primeng/dialog';
                TripFilterPipe,
                SuggestionsTreeComponent,
                SuggestionsTableComponent,
-               TripsTicketClassComponent
+               TripsTicketClassComponent,
+               PossibleServicesComponent,
+               PossibleServicesListComponent,
+               PossibleServicesFormComponent
               ],
             imports: [
               CommonModule,
@@ -76,11 +85,16 @@ import {DialogModule} from 'primeng/dialog';
               MessageModule,
               MessagesModule,
               TreeModule,
-              DialogModule
+              DialogModule,
+              TabViewModule,
+              SharedModule,
+              CalendarModule
             ],
             providers: [
               MessageService,
-              CarrierDiscountsService
+              CarrierDiscountsService,
+              TripTransfer,
+              ShowMessageService
             ]
           })
 export class CarrierModule {

@@ -63,11 +63,8 @@
             }" formControlName="departure_date" />
           <span class="invalid-feedback">
             <span *ngIf="form.get('departure_date').touched && form.get('departure_date').invalid">
-              Please choose a departure date
+              Please choose a departure date not earlier thant current date
             </span>
-            <!-- <span *ngIf="f.departure_date.errors.notEarlierThanCurrentDate">
-              Departure date can't be earlier than current date
-            </span> -->
           </span>
         </div>
 
@@ -116,9 +113,9 @@
             <span *ngIf="form.get('arrival_date').touched && form.get('arrival_date').invalid">
               Please choose an arrival date
             </span>
-            <!-- <span *ngIf="f.arrival_date.errors.notEarlierThanCurrentDate">
-              Arrival date can't be earlier than current date
-            </span> -->
+          </span>
+          <span class="date-error" *ngIf="departureDateError">
+            Arrival date can't be earlier than departure date
           </span>
         </div>
         <input class="form-control" type="time" formControlName="arrival_time" />
@@ -150,6 +147,7 @@
         (approvementTripEmitter$)="tripSendForApprovement($event)"
         (archiveTripEmitter$)="tripArchive($event)"
         (restoreTripEmitter$)="tripRestore($event)"
+        (getTripsAfterChanges$)="getTripsAfterChanges($event)"
       >
       </app-trips-table>
     </div>

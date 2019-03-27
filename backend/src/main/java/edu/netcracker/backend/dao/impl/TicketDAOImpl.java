@@ -17,29 +17,30 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Slf4j
 @PropertySource("classpath:sql/ticketdao.properties")
 public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
 
+    private NamedParameterJdbcTemplate namedTemplate;
+
     public TicketDAOImpl(NamedParameterJdbcTemplate namedTemplate) {
         this.namedTemplate = namedTemplate;
     }
 
-    private NamedParameterJdbcTemplate namedTemplate;
-
     @Value("${FIND_ALL_BY_CLASS}")
     private String FIND_ALL_BY_CLASS;
 
-    private final String FIND_REMAINING_SEATS = "SELECT COUNT(ticket_id) "
-                                                + "FROM ticket "
-                                                + "WHERE class_id = ? AND passenger_id IS NULL";
+    @Value("${FIND_REMAINING_SEATS}")
+    private String FIND_REMAINING_SEATS;
 
+    @Value("${CREATE_EMPTY_TICKET_FOR_TICKET_CLASS}")
+    private String CREATE_EMPTY_TICKET_FOR_TICKET_CLASS;
 
-    private final String CREATE_EMPTY_TICKET_FOR_TICKET_CLASS = "INSERT INTO ticket (class_id, seat) VALUES (?, ?)";
-
-    private final String DELETE_ALL_TICKETS_OF_TICKET_CLASS = "DELETE FROM ticket WHERE class_id = ?";
+    @Value("${DELETE_ALL_TICKETS_OF_TICKET_CLASS}")
+    private String DELETE_ALL_TICKETS_OF_TICKET_CLASS;
 
     @Value("${FIND_ALL_BY_USER}")
     private String FIND_ALL_BY_USER;
@@ -47,8 +48,42 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
     @Value("${COUNT_ALL_BY_USER}")
     private String COUNT_ALL_BY_USER;
 
+    @Value("${FIND_NOT_BOUGHT_BY_CLASS}")
+    private String FIND_NOT_BOUGHT_BY_CLASS;
+
+    @Override
+    public Optional<Ticket> findNotBoughtTicketByClass(Long id) {
+        log.debug("Getting 1 not bought ticket by class with id = {}", id);
+
+        List<Ticket> tickets = new ArrayList<>();
+        tickets.addAll(findNotBoughtByClass(id, 1));
+
+        if (tickets.size() == 1) {
+            return Optional.of(tickets.get(0));
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Ticket> findNotBoughtByClass(Number id, int count) {
+        log.debug("Getting all not bought tickets by class with id {} (count = {})", id, count);
+        List<Ticket> tickets = new ArrayList<>();
+
+        try {
+            tickets.addAll(getJdbcTemplate().query(FIND_NOT_BOUGHT_BY_CLASS,
+                                                   new Object[]{id, count},
+                                                   getGenericMapper()));
+        } catch (EmptyResultDataAccessException e) {
+            log.error(e.getMessage());
+        }
+
+        return tickets;
+    }
+
+    @Override
     public List<Ticket> findAllByClass(Number id) {
-        ArrayList<Ticket> tickets = new ArrayList<>();
+        List<Ticket> tickets = new ArrayList<>();
 
         try {
             tickets.addAll(getJdbcTemplate().query(FIND_ALL_BY_CLASS, new Object[]{id}, getGenericMapper()));
@@ -67,6 +102,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
      */
     @Override
     public void deleteAllTicketsOfTicketClass(Long id) {
+        log.debug("Deleting all tickets of ticket class with id {}", id);
         getJdbcTemplate().update(DELETE_ALL_TICKETS_OF_TICKET_CLASS, id);
     }
 
@@ -122,6 +158,7 @@ public class TicketDAOImpl extends CrudDAOImpl<Ticket> implements TicketDAO {
 
     @Override
     public void buyTicket(Ticket ticket, User user) {
+        log.debug("Buying ticket with id = {}, passenger id = {}", ticket.getTicketId(), user.getUserId());
         ticket.setPassengerId(user.getUserId());
         update(ticket);
     }

@@ -2,6 +2,8 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Trip} from '../shared/model/trip';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import { DateValidator } from '../trips.helper';
+import { TripTransfer } from '../../trip-transfer';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-trips-table',
@@ -12,6 +14,10 @@ export class TripsTableComponent implements OnInit {
 
   @Input() trips: Trip[];
 
+  readonly pageNumber: number = 10;
+
+  pageFrom: number;
+
   @Input() filterCriteria: string;
 
   @Input() filterContent: string;
@@ -19,6 +25,11 @@ export class TripsTableComponent implements OnInit {
   @Input() exisitngDirections: any;
 
   currentTripForUpdate: Trip;
+
+  currentTripForSuggestionEdit: Trip;
+
+  currentServicesTrip: Trip;
+
   currentTicketClassForUpdate: any;
 
   isForUpdateAlertMessage = false;
@@ -49,14 +60,29 @@ export class TripsTableComponent implements OnInit {
 
   @Output() restoreTripEmitter$ = new EventEmitter();
 
+  @Output() getTripsAfterChanges$ = new EventEmitter();
+
   showTicketClass: boolean = false;
 
-  constructor() {
+  showSuggestions: boolean = false;
+
+  showPossibleServices: boolean = false;
+
+  constructor(
+    private router: Router,
+    private tripTransfer: TripTransfer) {
 
   }
 
-  ngOnInit() {
+  onPageUpdate(from: number) {
+    this.pageFrom = from;
+    // console.log(this.pageFrom)
+    this.getTripsAfterChanges$.emit(from);
+    // this.getServices();
+  }
 
+  ngOnInit() {
+    this.pageFrom = 0;
     this.setFormInDefault();
     this.totalRec = this.trips.length;
   }
@@ -70,6 +96,16 @@ export class TripsTableComponent implements OnInit {
   toggleShowTicketClass(ticketClassforUpdate) {
     this.showTicketClass = !this.showTicketClass;
     this.currentTicketClassForUpdate = ticketClassforUpdate;
+  }
+
+  toggleShowSuggestions(trip) {
+    this.showSuggestions = !this.showSuggestions;
+    this.currentTripForSuggestionEdit = trip;
+  }
+
+  toggleShowServices(trip: Trip) {
+    this.tripTransfer.storage = trip;
+    this.router.navigate(["carrier/possible-services", trip.trip_id]);
   }
 
   setFormInDefault() {

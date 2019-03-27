@@ -12,6 +12,7 @@ import {ServiceTableComponent} from './services/service-table/service-table.comp
 import {ClarificationComponent} from './services/clarification/clarification.component';
 import {ArchiveComponent} from './services/archive/archive.component';
 import {DiscountMainPageComponent} from "./discounts/discount-main-page/discount-main-page.component";
+import { PossibleServicesComponent } from './possible-services/possible-services.component';
 
 const routes: Routes = [
   {
@@ -20,7 +21,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: IndexComponent
+        redirectTo: 'dashboards',
       },
       {
         path: 'trips',
@@ -49,6 +50,9 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'possible-services/:tripId',
+        component: PossibleServicesComponent},
+      {
         path: 'discounts',
         component: DiscountMainPageComponent
       },
@@ -56,6 +60,10 @@ const routes: Routes = [
         path: 'dashboards',
         component: DashboardsComponent,
         children: [
+          {
+            path: '',
+            redirectTo: 'sales',
+          },
           {
             path: 'sales',
             component: SalesComponent

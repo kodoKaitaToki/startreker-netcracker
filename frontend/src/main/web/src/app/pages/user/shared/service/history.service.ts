@@ -1,20 +1,19 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {map} from "rxjs/operators";
-import {Api, checkToken, HttpOptionsAuthorized} from "../../../modules/api";
-import {HistoryElement} from "./historyelement.model";
-import {Triphistorymodel} from "./triphistorymodel.model";
-import {Servicehistorymodel} from "./servicehistorymodel.model";
+import {Api, checkToken, HttpOptionsAuthorized} from "../../../../modules/api";
+import { HistoryElement } from '../model/historyelement.model';
+import { Triphistorymodel } from '../model/triphistorymodel.model';
+import { Servicehistorymodel } from '../model/servicehistorymodel.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HistoryService {
 
-  private actionUrl: string;
+  private _totalItemsCallback;
 
   constructor(private http: HttpClient) {
-    this.actionUrl = Api.baseUrl + 'api/v1';
   }
 
   public getUserTicketHistory(offset: number, limit: number, from: string, to: string) {
@@ -24,19 +23,18 @@ export class HistoryService {
       .set("limit", limit.toString())
       .set("offset", offset.toString());
 
-    if (from) {
+    if (from && to) {
       params = params.set("start-date", from);
-    }
-    if (to) {
       params = params.set("end-date", to);
     }
 
-    return this.http.get<any>(this.actionUrl + "/history/user/ticket",
+    return this.http.get<any>(Api.history.getBoughtTickets(),
       {headers: HttpOptionsAuthorized.headers, params: params, observe: HttpOptionsAuthorized.observe}
     )
                .pipe(map(res => {
 
                  checkToken(res.headers);
+                 if(this._totalItemsCallback) this._totalItemsCallback(res.headers.get("X-Total-Count"));
 
                  return res.body.map(item => {
                    return new HistoryElement(
@@ -63,7 +61,7 @@ export class HistoryService {
 
   public getTicketServices(ticketId: number) {
 
-    return this.http.get<any>(this.actionUrl + "/history/ticket/" + ticketId + "/service",
+    return this.http.get<any>(Api.history.getTicketService(ticketId),
       {headers: HttpOptionsAuthorized.headers, observe: HttpOptionsAuthorized.observe}
     )
                .pipe(map(res => {
@@ -74,5 +72,9 @@ export class HistoryService {
                    return new Servicehistorymodel(item.bought_services_name, item.bought_services_count);
                  });
                }))
+  }
+
+  set totalItemsCallback(value) {
+    this._totalItemsCallback = value;
   }
 }
