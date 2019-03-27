@@ -20,11 +20,12 @@ export class FlightsComponent implements OnInit, OnDestroy {
   ngOnInit() {}
 
   getTripsByCriteria(event) {
+    console.log(JSON.stringify(event));
     this.sub = this.searchSvc.getTrips(
       event.startPlanet,
-      event.startSpaceport,
-      event.startDate,
       event.finishPlanet,
+      event.startDate,
+      event.startSpaceport,
       event.finishSpaceport
     ).subscribe((response) => {
       this.trips = response;
