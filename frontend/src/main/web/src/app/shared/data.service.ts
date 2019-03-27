@@ -10,10 +10,12 @@ export class DataService {
   constructor() { }
 
   sendFormData(formData) {
+    console.log("sendFormData()" + JSON.stringify(formData));
     this.formData.next(formData);
   }
 
   getMessage(): Observable<FormGroup> {
+    console.log("getMessage()");
     return this.formData.asObservable();
   }
 }
