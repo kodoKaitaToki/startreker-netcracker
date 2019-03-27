@@ -37,9 +37,9 @@ export class SearchBarComponent implements OnInit {
     this.searchForm = new FormGroup({
       startPlanet: new FormControl({value: 'Choose a planet', disabled: true}, Validators.required),
       finishPlanet: new FormControl({value: 'Choose a planet', disabled: true}, Validators.required),
-      startSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}, Validators.required),
-      finishSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}, Validators.required),
-      startDate: new FormControl('', Validators.required)
+      startSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}),
+      finishSpaceport: new FormControl({value: 'Choose a spaceport', disabled: true}),
+      startDate: new FormControl('')
       // finishDate: new FormControl({value: '', disabled: false})
     });
   }
@@ -64,13 +64,16 @@ export class SearchBarComponent implements OnInit {
         this.enablePlanets();
       })
   }
-
-  setPoint(point) {
-    setPoint(point);
+  
+  checkPlanet(point){
+    if(this.router.url !== '/flights'){
+      setPoint(point);
+    }
   }
 
   onSubmit() {
     if (this.location.isCurrentPathEqualTo('/')) {
+      this.dataService.sendFormData(this.searchForm.value);
       this.router.navigate(['/flights']);
     } else {
       this.onGetTripsNotifier.emit(this.searchForm.value);

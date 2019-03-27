@@ -57,6 +57,8 @@ export class FlightsComponent implements OnInit, OnDestroy {
     return "url('assets/images/bg.jpg')";
   }
 
-  ngOnDestroy() {this.sub.unsubscribe();}
+  ngOnDestroy() {
+    // this.sub.unsubscribe();
+  }
 
 }

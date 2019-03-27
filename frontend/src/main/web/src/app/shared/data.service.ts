@@ -5,7 +5,7 @@ import {FormGroup} from '@angular/forms';
 @Injectable({ providedIn: 'root' })
 export class DataService {
 
-  private formData = new BehaviorSubject<FormGroup>(new FormGroup({}));
+  private formData = new BehaviorSubject<any>(new Object);
 
   constructor() { }
 
@@ -13,7 +13,7 @@ export class DataService {
     this.formData.next(formData);
   }
 
-  getMessage(): Observable<FormGroup> {
+  getMessage(): Observable<any> {
     return this.formData.asObservable();
   }
 }

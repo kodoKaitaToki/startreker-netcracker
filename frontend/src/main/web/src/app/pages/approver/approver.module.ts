@@ -25,6 +25,7 @@ import {NgxPaginationModule} from "ngx-pagination";
 import {SelectServiceInfoPipe} from './dashboard/shared/pipes/select-service-info.pipe';
 import {StatePipe} from "./dashboard/shared/pipes/StatePipe";
 import { ToastModule } from 'primeng/toast';
+import {TabViewModule} from 'primeng/tabview';
 
 @NgModule({
   declarations: [ServiceComponent,
@@ -51,10 +52,12 @@ import { ToastModule } from 'primeng/toast';
     ToastModule,
     MessageModule,
     MessagesModule,
-    NgxPaginationModule
+    NgxPaginationModule,
+    TabViewModule
   ],
   providers: [
-    MessageService, ServiceTripPendingService
+    MessageService, 
+    ServiceTripPendingService
   ]
 })
 export class ApproverModule {

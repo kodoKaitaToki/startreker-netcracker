@@ -12,16 +12,16 @@
                 </h3>
                 <div class="col-6">
                   <div class="row align-items-start">
-                    <div class="col">
+                    <div class="col" style="text-align: right">
                       {{trip.departure_spaceport.planet.planet_name}}
                     </div>
                     <div class="col"></div>
                     <div class="col">
                       {{trip.arrival_spaceport.planet.planet_name}}
                     </div>
-                   </div>
+                  </div>
                   <div class="row align-items-center">
-                    <div class="col">
+                    <div class="col"  style="text-align: right">
                       {{trip.departure_spaceport.spaceport_name}}
                     </div>
                     <div class="col" style="text-align: center">
@@ -32,10 +32,10 @@
                     </div>
                   </div>
                   <div class="row align-items-end">
-                    <div class="col">
+                    <div class="col" style="text-align: right">
                       {{trip.departure_date | date}}
-                  </div>
-                  <div class="col"></div>
+                    </div>
+                    <div class="col"></div>
                     <div class="col">
                       {{trip.arrival_date | date}}
                     </div>
@@ -44,41 +44,44 @@
                   
               </div>
   
-            <hr>
+              <hr>
   
-            <div class="row">
-              <h3 class="col-6">Carrier:</h3>
-              <p class="col-6">{{trip.carrier_name}}</p>
-            </div>
+              <div class="row">
+                <h3 class="col-6">Carrier:</h3>
+                <div style="text-align: center" class="col-6">
+                    <span>{{trip.carrier_name}}</span>
+                </div>
+              </div>
   
-            <hr>
+              <hr>
   
-            <div class="row">
-              <h5 class="col-6">Date of creation:</h5>
-              <p class="col-6">
-                {{trip.creation_date | date}}
-              </p>
-            </div>
-  
-            <hr>
+              <div class="row">
+                <h5 class="col-6">Date of creation:</h5>
+                <div style="text-align: center" class="col-6">
+                    <span>{{trip.creation_date | date}}</span>
+                  </div>
+              </div>
 
-            <div class="row">
-              <h5 class="col-2">History:</h5>
-              <button class="btn btn-success btn-md offset-9"
-                      (click) = "moreFlag = !moreFlag;"
-                      [disabled] = "(trip.trip_reply.length == 0) || (loadingTrip == trip)">
-                <i *ngIf="!moreFlag" class="fa fa-caret-down"></i>
-                <i *ngIf="moreFlag" class="fa fa-caret-up"></i>
-              </button>
-                <ul class="col-10 offset-1" *ngIf="moreFlag">
-                  <li *ngFor="let reply of trip.trip_reply">
-                    <p style="font-weight: bold">{{reply.creation_date | date}}</p>
-                    <div class="offset-1">{{reply.writer_name}}:</div>
-                    <div class="offset-2">{{reply.reply_text}}</div>
-                  </li>
-                </ul>
-            </div>
-
+              <div *ngIf="trip.trip_reply.length !== 0">
+                <hr>
+                <button class="btn btn-primary service-btn" type="button" data-toggle="collapse"
+                        [attr.data-target]="'#btncollapse'"
+                        aria-expanded="false" aria-controls="Collapse">
+                  History of clarification
+                </button>
+              
+               <div class="collapse date-width" [attr.id]="'btncollapse'">
+                <div class="card" style="background-color: rgba(240, 248, 255, 0.25);">
+                  <ul type="disc" style="background-color: transparent; margin-top: 1rem;">
+                      <li *ngFor="let reply of trip.trip_reply">
+                        <p style="font-weight: bold">{{reply.creation_date | date}}</p>
+                        <div class="offset-1">{{reply.writer_name}}:</div>
+                        <div class="offset-2">{{reply.reply_text}}</div>
+                      </li>
+                  </ul>
+                </div>
+                </div>
+              </div>
             <hr>
 
           </div>
@@ -127,13 +130,11 @@
         </form>
       </li>
     </ul>
-</div>
-  <!--<app-paginator
+  <app-paginator *ngIf="trips.length == tripsPerPage"
     [page]="trips"
-    [allNotes]=10
-    [from]="pageFrom"
-    [number]="pageNumber"
-    (update)="onPageUpdate($event)"
-  >
-  </app-paginator>-->
+    [from]="recordNumber"
+    [number]="tripsPerPage"
+    (update)="onChange($event)">
+  </app-paginator>
+</div>
 <p-growl></p-growl> 
