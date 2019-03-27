@@ -29,8 +29,8 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
     @Value("${SELECT_BY_TRIP_ID}")
     private String SELECT_BY_TRIP_ID;
 
-//    @Value("SELECT_BY_TRIP_ID_WITH_DISCOUNTS")
-    private String SELECT_BY_TRIP_ID_WITH_DISCOUNTS = "SELECT * FROM ticket_class INNER JOIN discount d on ticket_class.discount_id = d.discount_id WHERE trip_id = ?";
+    @Value("${SELECT_BY_TRIP_ID_WITH_DISCOUNTS}")
+    private String SELECT_BY_TRIP_ID_WITH_DISCOUNTS;
 
     @Value("${GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER}")
     private String GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER;
