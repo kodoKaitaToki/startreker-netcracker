@@ -1,6 +1,5 @@
 package edu.netcracker.backend.dao.mapper;
 
-import edu.netcracker.backend.model.Discount;
 import edu.netcracker.backend.model.TicketClass;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -10,6 +9,10 @@ import java.sql.SQLException;
 
 @Component
 public class TicketClassWithDiscountMapper implements RowMapper<TicketClass> {
+
+    private DiscountMapper discountRowMapper;
+
+    public TicketClassWithDiscountMapper(DiscountMapper discountRowMapper) {this.discountRowMapper = discountRowMapper;}
 
     @Override
     public TicketClass mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -22,17 +25,7 @@ public class TicketClassWithDiscountMapper implements RowMapper<TicketClass> {
         ticketClass.setDiscountId(resultSet.getLong("discount_id"));
         ticketClass.setTicketPrice(resultSet.getInt("ticket_price"));
 
-        Discount discount = new Discount();
-
-        discount.setDiscountId(resultSet.getLong("discount_id"));
-        discount.setStartDate(resultSet.getTimestamp("start_date")
-                                       .toLocalDateTime());
-        discount.setFinishDate(resultSet.getTimestamp("finish_date")
-                                        .toLocalDateTime());
-        discount.setDiscountRate(resultSet.getInt("discount_rate"));
-        discount.setIsPercent(resultSet.getBoolean("is_percent"));
-
-        ticketClass.setDiscount(discount);
+        ticketClass.setDiscount(discountRowMapper.mapRow(resultSet, i));
 
         return ticketClass;
     }

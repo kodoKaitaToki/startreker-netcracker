@@ -20,16 +20,26 @@ public class SuggestionDTO {
     @JsonProperty("discount_id")
     private Long discountId;
 
+    @JsonProperty("discount_rate")
+    private Integer discountRate;
+
+    @JsonProperty("is_percent")
+    private Boolean isPercent;
+
     private List<Long> pServiceIds;
 
     private SuggestionDTO(Long id,
                           Long classId,
                           Long discountId,
+                          Integer discountRate,
+                          Boolean isPercent,
                           List<Long> pServiceIds) {
 
         this.id = id;
         this.classId = classId;
         this.discountId = discountId;
+        this.discountRate = discountRate;
+        this.isPercent = isPercent;
         this.pServiceIds = pServiceIds;
     }
 
@@ -38,6 +48,8 @@ public class SuggestionDTO {
                 suggestion.getSuggestionId(),
                 suggestion.getClassId(),
                 suggestion.getDiscountId(),
+                suggestion.getDiscount().getDiscountRate(),
+                suggestion.getDiscount().getIsPercent(),
                 pServiceIds);
     }
 }
