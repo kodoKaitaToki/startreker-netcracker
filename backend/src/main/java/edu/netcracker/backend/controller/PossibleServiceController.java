@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/v1")
 public class PossibleServiceController {
 
     private PossibleServiceService possibleServiceService;
@@ -22,35 +23,35 @@ public class PossibleServiceController {
         this.securityContext = securityContext;
     }
 
-    @GetMapping("/api/v1/possible-services")
+    @GetMapping("/possible-services")
     public List<PossibleServiceDTO> getAll(@RequestParam("class-id") Integer classId) {
         return possibleServiceService.getAllWithClassId(classId);
     }
 
-    @GetMapping("/api/v1/possible-services/{possibleServiceId}")
+    @GetMapping("/possible-services/{possibleServiceId}")
     public PossibleServiceDTO getPossibleService(@PathVariable Integer possibleServiceId) {
         return possibleServiceService.getPossibleService(possibleServiceId);
     }
 
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    @PostMapping("/api/v1/possible-services")
+    @PostMapping("/possible-services")
     public PossibleServiceDTO createPossibleService(@Valid @RequestBody PossibleServiceDTO possibleServiceDTO) {
         return possibleServiceService.createPossibleService(possibleServiceDTO);
     }
 
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    @PutMapping("/api/v1/possible-services")
+    @PutMapping("/possible-services")
     public PossibleServiceDTO updatePossibleService(@Valid @RequestBody PossibleServiceDTO possibleServiceDTO) {
         return possibleServiceService.updatePossibleService(possibleServiceDTO);
     }
 
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
-    @DeleteMapping("/api/v1/possible-services/{possibleServiceId}")
+    @DeleteMapping("/possible-services/{possibleServiceId}")
     public void deletePossibleService(@PathVariable Integer possibleServiceId) {
         possibleServiceService.deletePossibleService(possibleServiceId);
     }
 
-    @GetMapping("/api/v1/carrier/possible-services")
+    @GetMapping("/carrier/possible-services")
     @PreAuthorize("hasAuthority('ROLE_CARRIER')")
     public List<PossibleServiceDTO> getCarrierPossibleServices() {
         return possibleServiceService.getCarrierPossibleServices(securityContext.getUser());

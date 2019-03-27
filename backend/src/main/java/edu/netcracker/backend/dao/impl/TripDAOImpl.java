@@ -9,8 +9,7 @@ import edu.netcracker.backend.dao.mapper.TripReplyMapper;
 import edu.netcracker.backend.dao.mapper.TripWithArrivalAndDepartureDataMapper;
 import edu.netcracker.backend.model.Trip;
 import edu.netcracker.backend.model.TripWithArrivalAndDepartureData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -24,12 +23,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
+@Slf4j
 @PropertySource("classpath:sql/tripdao.properties")
 public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
 
     private TicketClassDAO ticketClassDAO;
-
-    private final String FIND_ALL_TICKET_TRIPS = "SELECT class_id FROM ticket_class WHERE trip_id = ?";
 
     private final UserDAO userDAO;
 
@@ -37,9 +35,14 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
 
     private final TripReplyMapper tripReplyMapper;
 
-    private final String findAllByCarrierId = "SELECT * FROM trip WHERE carrier_id = ?";
+    @Value("${FIND_ALL_TICKET_TRIPS}")
+    private String FIND_ALL_TICKET_TRIPS;
 
-    private final String findAll = "SELECT * FROM trip";
+    @Value("${FIND_BY_CARRIER_ID}")
+    private String FIND_BY_CARRIER_ID;
+
+    @Value("${FIND_ALL}")
+    private String FIND_ALL;
 
     @Value("${SELECT_FULL}")
     private String SELECT_FULL;
@@ -88,8 +91,6 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
 
     private String PAGINATION = " LIMIT ? OFFSET ?";
 
-    private final Logger logger = LoggerFactory.getLogger(TripDAOImpl.class);
-
     @Autowired
     public TripDAOImpl(TicketClassDAO ticketClassDAO,
                        UserDAO userDAO,
@@ -109,13 +110,13 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
      */
     @Override
     public List<Trip> allCarriersTrips(Long carrierId) {
-        logger.debug("Getting all trips for carrier");
+        log.debug("Getting all trips for carrier");
         List<Trip> trips = getJdbcTemplate().query(ALL_TRIPS_FOR_CARRIER,
                                                    new Object[]{carrierId},
                                                    new TripCRUDMapper());
-        logger.debug("Attaching ticket classes to trip");
+        log.debug("Attaching ticket classes to trip");
         trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findByTripId(trip.getTripId())));
-        logger.debug("Attaching replies to trip");
+        log.debug("Attaching replies to trip");
         trips.forEach(trip -> this.attachReplies(trip));
         return trips;
     }
@@ -130,13 +131,13 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
      */
     @Override
     public List<Trip> paginationForCarrier(Integer limit, Integer offset, Long carrierId) {
-        logger.debug("Getting {} trips starting from {} ", limit, offset);
+        log.debug("Getting {} trips starting from {} ", limit, offset);
         List<Trip> trips = getJdbcTemplate().query(ALL_TRIPS_FOR_CARRIER_PAGINATION,
                                                    new Object[]{carrierId, limit, offset},
                                                    new TripCRUDMapper());
-        logger.debug("Attaching ticket classes to all trips");
+        log.debug("Attaching ticket classes to all trips");
         trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findByTripId(trip.getTripId())));
-        logger.debug("Attaching replies to all trips");
+        log.debug("Attaching replies to all trips");
         trips.forEach(trip -> this.attachReplies(trip));
         return trips;
     }
@@ -147,7 +148,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
      * @param trip - trip to be added
      */
     public void add(Trip trip) {
-        logger.debug("Inserting new trip to database");
+        log.debug("Inserting new trip to database");
         getJdbcTemplate().update(INSERT_TRIP,
                                  trip.getOwner()
                                      .getUserId(),
@@ -170,7 +171,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
      */
     @Override
     public void updateTripInfo(Trip trip) {
-        logger.debug("Updating info about trip with id {}", trip.getTripId());
+        log.debug("Updating info about trip with id {}", trip.getTripId());
         getJdbcTemplate().update(UPDATE_TRIP_INFO,
                                  trip.getDepartureSpaceport()
                                      .getSpaceportId(),
@@ -238,31 +239,31 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
                .append(" WHERE trip_status = 4 ");
 
         if (departurePlanet != null) {
-            logger.debug("Getting all from planet {}");
+            log.debug("Getting all from planet {}");
             objects.add(departurePlanet.toLowerCase());
             builder.append("AND LOWER(dp.planet_name) = ? ");
         }
 
         if (departureSpaceport != null) {
-            logger.debug("Getting all from port {}");
+            log.debug("Getting all from port {}");
             objects.add(departureSpaceport.toLowerCase());
             builder.append("AND LOWER(ds.spaceport_name) = ? ");
         }
 
         if (arrivalPlanet != null) {
-            logger.debug("Getting all to planet {}");
+            log.debug("Getting all to planet {}");
             objects.add(arrivalPlanet.toLowerCase());
             builder.append("AND LOWER(arp.planet_name) = ? ");
         }
 
         if (arrivalSpaceport != null) {
-            logger.debug("Getting all to port {}");
+            log.debug("Getting all to port {}");
             objects.add(arrivalSpaceport.toLowerCase());
             builder.append("AND LOWER(ars.spaceport_name) = ? ");
         }
 
         if (departureDate != null) {
-            logger.debug("Getting all ON {}");
+            log.debug("Getting all ON {}");
             objects.add(departureDate);
             builder.append("AND TO_CHAR(departure_date, 'YYYY-MM-DD') = ? ");
         }
@@ -276,7 +277,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
                                              objects.toArray(),
                                              new TripCRUDMapper()));
 
-        logger.debug("Attaching ticket classes to trip");
+        log.debug("Attaching ticket classes to trip");
         trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findByTripId(trip.getTripId())));
 
         return trips;
@@ -353,7 +354,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     public List<Trip> findByCarrierId(Number id) {
         List<Trip> trips = new ArrayList<>();
 
-        trips.addAll(getJdbcTemplate().query(findAllByCarrierId, new Object[]{id}, getGenericMapper()));
+        trips.addAll(getJdbcTemplate().query(FIND_BY_CARRIER_ID, new Object[]{id}, getGenericMapper()));
 
         return trips.stream()
                     .map(trip -> attachTicketClassed(trip).orElse(null))
@@ -364,7 +365,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
     public List<Trip> findAll() {
         List<Trip> trips = new ArrayList<>();
 
-        trips.addAll(getJdbcTemplate().query(findAll, getGenericMapper()));
+        trips.addAll(getJdbcTemplate().query(FIND_ALL, getGenericMapper()));
 
         return trips.stream()
                     .map(trip -> attachTicketClassed(trip).orElse(null))
