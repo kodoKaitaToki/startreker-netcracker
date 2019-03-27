@@ -1,6 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FlightService } from '../../flights/shared/models/flight-service.model';
-import { FlightClass } from '../../flights/shared/models/flight-class.model';
 import { BookedTicket } from '../shared/model/bought_ticket.model';
 import { CartService } from '../shared/service/cart.service';
 import { HttpResponse } from '@angular/common/http';
@@ -23,15 +21,11 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
               private router: Router,
               private dataService: DataService,
               private messageService: MessageService,
-              private showMsgSrvc: ShowMessageService) {
-    this.tickets = JSON.parse(sessionStorage.getItem('boughtTickets'));
-    if(this.tickets !== null){
-      this.tickets.forEach(ticket => 
-        ticket.totalPrice = this.getTotalPrice(ticket.services, ticket.ticket, ticket.amount));
-    }
-  }
+              private showMsgSrvc: ShowMessageService) {}
 
-  ngOnInit() { }
+  ngOnInit() { 
+    this.tickets = JSON.parse(sessionStorage.getItem('boughtTickets'));  
+  }
 
   ngOnDestroy(){
     if (this.tickets !== null){
@@ -41,12 +35,6 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
         }
       }
     }
-  }
-
-  getTotalPrice(services: FlightService[], ticket: FlightClass, amount: number): number{
-    let servicesPrice = 0;
-    services.forEach(service => {servicesPrice += service.service_price;});
-    return amount*(ticket.ticket_price + servicesPrice);
   }
 
   delete(bookedTicket: BookedTicket){

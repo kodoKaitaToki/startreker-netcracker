@@ -63,7 +63,7 @@
       <div class="row">
           <span class="col-4">Ticket class:</span>
           <span class="col-4 offset-4" style="text-align: right;">{{ticket.ticket.class_name}}</span>
-        </div>
+      </div>
       <div class="row">
         <span class="col-4">Amount:</span>
         <span class="col-4 offset-4" style="text-align: right;">{{ticket.amount}}</span>
@@ -71,7 +71,8 @@
       <hr>
       <div class="row header">
         <span class="col-4">To pay</span>
-        <span class="col-4 offset-4" style="text-align: right;">{{ticket.totalPrice}} $</span>
+        <span class="col-4 offset-4" 
+              style="text-align: right;">{{ticket.totalPrice}} $</span>
       </div>
       <hr>
       <div class="row" *ngIf="ticket.is_bought">
@@ -84,12 +85,6 @@
                       <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
                     </svg>
         </div>
-        <!-- <div class="col-3">
-          <svg class="checkmark" viewBox="0 0 52 52" style="margin-bottom: 1.5%">
-            <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-            <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-          </svg>
-        </div> -->
       </div>
       <div class="row" *ngIf="!ticket.is_bought">
           <button class="btn-del col-4 offset-1 controlBtn" 
