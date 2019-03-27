@@ -25,10 +25,10 @@ export class SalesService {
   }
 
   public getTripsSalesStatisticsByWeek(from: string, to: string){
-    return this.getSalesStatistics(from, to, "trip/sales/per_week");
+    return this.getSalesStatistics(from, to, "trips/sales/per_week");
   }
   public getTripsSalesStatisticsByMonth(from: string, to: string){
-    return this.getSalesStatistics(from, to, "trip/sales/per_month");
+    return this.getSalesStatistics(from, to, "trips/sales/per_month");
   }
 
   public getSalesStatistics(from: string, to: string, type: string){

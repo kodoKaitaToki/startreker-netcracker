@@ -28,11 +28,11 @@ export class ViewsService {
   }
 
   public getTripsViewsStatisticsByWeek(from: string, to: string) {
-    return this.getViewsStatistics(from, to, "trip/views/per_week");
+    return this.getViewsStatistics(from, to, "trips/views/per_week");
   }
 
   public getTripsViewsStatisticsByMonth(from: string, to: string) {
-    return this.getViewsStatistics(from, to, "trip/views/per_month");
+    return this.getViewsStatistics(from, to, "trips/views/per_month");
   }
 
   public getServicesViewsStatisticsByWeekByService(serviceId: number, from: string, to: string) {
@@ -44,11 +44,11 @@ export class ViewsService {
   }
 
   public getTripsViewsStatisticsByWeekByTrip(tripId: number, from: string, to: string) {
-    return this.getViewsStatistics(from, to, "trip/" + tripId + "/views/per_week");
+    return this.getViewsStatistics(from, to, "trips/" + tripId + "/views/per_week");
   }
 
   public getTripsViewsStatisticsByMonthByTrip(tripId: number, from: string, to: string) {
-    return this.getViewsStatistics(from, to, "trip/" + tripId + "/views/per_month");
+    return this.getViewsStatistics(from, to, "trips/" + tripId + "/views/per_month");
   }
 
   public getViewsStatistics(from: string, to: string, type: string) {

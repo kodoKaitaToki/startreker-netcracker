@@ -59,10 +59,10 @@ export class ViewsComponent implements OnInit {
     }
     this.viewsChart.render();
     if(this.views.length > 0){
-      this.showMsgSrvc.showMessage(this.messageService, 'success', `Loaded views`);
+      this.showMsgSrvc.showMessage(this.messageService, 'success', `Loaded views`, ``);
     } else{
       this.hideChart = true;
-      this.showMsgSrvc.showMessage(this.messageService, 'warn', `No views found`);
+      this.showMsgSrvc.showMessage(this.messageService, 'warn', `No views found`, ``);
     }
   }
 
