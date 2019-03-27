@@ -13,7 +13,7 @@ import { TroubleStatisticsComponent } from './dashboards/trouble-statistics/trou
 const routes: Routes = [
   {
       path: '',
-      redirectTo: 'dashboards/popularity'
+      redirectTo: 'dashboards'
   },
   {
       path: 'approvers',
@@ -31,10 +31,11 @@ const routes: Routes = [
       path: 'dashboards',
       component: DashboardsComponent,
       children: [
-              { path: 'costs', component: CostsComponent },
-              { path: 'popularity', component: DashboardDeltaComponent},
-              { path: 'trouble-tickets', component: TroubleStatisticsComponent},
-              { path: 'trips-services-distribution', component: TripsServicesComponent}
+        { path: '', redirectTo: 'popularity'},
+        { path: 'costs', component: CostsComponent },
+        { path: 'popularity', component: DashboardDeltaComponent},
+        { path: 'trouble-tickets', component: TroubleStatisticsComponent},
+        { path: 'trips-services-distribution', component: TripsServicesComponent}
           ]
   },
 ];

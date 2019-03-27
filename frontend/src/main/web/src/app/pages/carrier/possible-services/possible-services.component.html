@@ -1,3 +1,5 @@
+<p-toast></p-toast>
+
 <header class="page-header">
   <div class="container header-container">
     <div class="col-12">
@@ -7,6 +9,7 @@
   </div>
 </header>
 
+<!-- 
 <div class="container">
   <div class="ticket-card card">
     <div class="row">
@@ -49,34 +52,54 @@
     </div>
   </div>
 </div>
+ -->
 
-<div class="container">
+<div class="container-fluid">
   <div class="background-card card">
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs nav-fill">
-        <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-          <a class="nav-link" [routerLink]="['/approver/service/opened']">Economy</a>
+        <li class="nav-item">
+          <a class="nav-link"
+          [class.active]="currentClassName == economyClassName"
+          (click)="setClassName(economyClassName)">
+            Economy
+          </a>
         </li>
-        <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-          <a class="nav-link" [routerLink]="['/approver/service/assigned']">First</a>
+        <li class="nav-item">
+          <a class="nav-link"
+          [class.active]="currentClassName == firstClassName"
+          (click)="setClassName(firstClassName)">
+            First
+          </a>
         </li>
-        <li class="nav-item" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-          <a class="nav-link" [routerLink]="['/approver/service/assigned']">Buisness</a>
+        <li class="nav-item">
+          <a class="nav-link"
+          [class.active]="currentClassName == buisnessClassName"
+          (click)="setClassName(buisnessClassName)">
+            Buisness
+          </a>
         </li>
       </ul>
     </div>
   
     <div class="card-body row">
-      <div class="col-md-6">
+      <div class="col-12"
+      *ngIf="getCurrentTicketClass() === undefined">
+        <p style="color: red;">This ticket class does not exist</p>
+      </div>
+
+      <div class="col-md-6"
+      *ngIf="getCurrentTicketClass() !== undefined">
         <h5>All services:</h5>
-        <div class="container container-card card">
+        <div class="container container-card card"
+        *ngFor="let service of services">
           <div class="row">
             <div class="col">
               <div class="row">
                 <h6 class="col-12">Name:</h6>
               </div>
               <div class="row">
-                <h5 class="col-12">Service test name{{service.service_name}}</h5>
+                <h5 class="col-12">{{service.service_name}}</h5>
               </div>
             </div>
   
@@ -85,20 +108,21 @@
                 <h6 class="col-12">Date of creation:</h6>
               </div>
               <div class="row">
-                <h5 class="col-12">123444 {{service.creation_date | date}}</h5>
+                <h5 class="col-12">{{service.creation_date | date}}</h5>
               </div>
             </div>
           </div>
           
           <div class="row table-header">
             <div class="col">
-              <pre class="description">deskllfslgjnlgf {{service.service_descr}}</pre>
+              <pre class="description">{{service.service_descr}}</pre>
             </div>
           </div>
   
           <footer class="row table-footer justify-content-end">
             <div class="col-sm-auto">
-              <button class="btn btn-xs btn-secondary list-buttons">
+              <button class="btn btn-xs btn-secondary list-buttons"
+              (click)="addServiceToForm(service)">
                 Add
               </button>
             </div>
@@ -107,43 +131,70 @@
       </div>
   
   
-      <div class="col-md-6">
+      <div class="col-md-6"
+      *ngIf="getCurrentTicketClass() !== undefined"
+      [formGroup]="form">
         <h5>Possible services:</h5>
-        <div class="container container-card card">
-            <div class="row">
-              <div class="col">
+        <ng-container formArrayName="possibleServices">
+          <div class="container container-card card"
+          *ngFor="let possibleService of form.get('possibleServices').controls; let i=index">
+            <ng-container [formGroupName]="i">
+              <form [formGroup]="form.get('possibleServices').controls[i]"
+              (ngSubmit)="onSave(f.control)"
+              #f="ngForm">
                 <div class="row">
-                  <h6 class="col-12">Name:</h6>
+                  <div class="col">
+                    <div class="row">
+                      <h6 class="col-12">Name:</h6>
+                    </div>
+                    <div class="row">
+                      <h5 class="col-12">{{possibleService.value.service_name}}</h5>
+                    </div>
+                  </div>
+        
+                  <div class="col">
+                    <div class="row">
+                      <h6 class="col-12">Price:</h6>
+                    </div>
+                    <div class="row">
+                      <input type="number"
+                      class="form-control"
+                      placeholder="price"
+                      formControlName="service_price"
+                      [ngClass]="{
+                        'is-invalid': form.get('possibleServices').controls[i].invalid && form.get('possibleServices').controls[i].touched,
+                        'is-valid': form.get('possibleServices').controls[i].valid && form.get('possibleServices').controls[i].touched}"
+                      required>
+                    </div>
+                  </div>
                 </div>
-                <div class="row">
-                  <h5 class="col-12">Service test name{{service.service_name}}</h5>
+                
+                <div class="row table-header">
+                  <div class="col">
+                    <pre class="description">{{possibleService.value.service_description}}</pre>
+                  </div>
                 </div>
-              </div>
-    
-              <div class="col">
-                <div class="row">
-                  <h6 class="col-12">Date of creation:</h6>
-                </div>
-                <div class="row">
-                  <h5 class="col-12">123444 {{service.creation_date | date}}</h5>
-                </div>
-              </div>
-            </div>
-            
-            <div class="row table-header">
-              <div class="col">
-                <pre class="description">deskllfslgjnlgf {{service.service_descr}}</pre>
-              </div>
-            </div>
-    
-            <footer class="row table-footer justify-content-end">
-              <div class="col-sm-auto">
-                <button class="btn btn-xs btn-danger list-buttons">
-                  Remove
-                </button>
-              </div>
-            </footer>
+        
+                <footer class="row table-footer justify-content-end">
+                  <div class="col-sm-auto">
+                    <button class="btn btn-xs btn-success list-buttons"
+                    type="submit"
+                    [disabled]="form.get('possibleServices').controls[i].invalid">
+                      Save
+                    </button>
+                  </div>
+                  <div class="col-sm-auto">
+                    <button class="btn btn-xs btn-danger list-buttons"
+                    type="button"
+                    (click)="onDelete(f.control)">
+                      Delete
+                    </button>
+                  </div>
+                </footer>
+              </form>
+            </ng-container>
           </div>
+        </ng-container>
       </div>
     </div>
   </div>
