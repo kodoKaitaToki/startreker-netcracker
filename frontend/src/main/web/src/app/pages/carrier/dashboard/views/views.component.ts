@@ -58,6 +58,12 @@ export class ViewsComponent implements OnInit {
       });
     }
     this.viewsChart.render();
+    if(this.views.length > 0){
+      this.showMsgSrvc.showMessage(this.messageService, 'success', `Loaded views`);
+    } else{
+      this.hideChart = true;
+      this.showMsgSrvc.showMessage(this.messageService, 'warn', `No views found`);
+    }
   }
 
   constructor(private viewsService: ViewsService, private messageService: MessageService,
@@ -67,16 +73,8 @@ export class ViewsComponent implements OnInit {
   }
 
   onSubmit() {
-    let fromDateFormatted: string;
-    let toDateFormatted: string;
-    try {
-      fromDateFormatted = formatDate(this.form.value.fromDate, 'yyyy-MM-dd', 'en');
-      toDateFormatted = formatDate(this.form.value.toDate, 'yyyy-MM-dd', 'en');
-    } catch (e) {
-      this.showMsgSrvc.showMessage(this.messageService, 'error', `Incorrect date`, `Please check your date`
-      );
-      return;
-    }
+    let fromDateFormatted: string = formatDate(this.form.value.fromDate, 'yyyy-MM-dd', 'en');
+    let toDateFormatted: string = formatDate(this.form.value.toDate, 'yyyy-MM-dd', 'en');
     this.hideChart = false;
 
     if (this.form.value.forWhat == "forTrips") {
