@@ -72,7 +72,7 @@
       <div class="row header">
         <span class="col-4">To pay</span>
         <span class="col-4 offset-4" 
-              style="text-align: right;">{{ticket.totalPrice}} $</span>
+              style="text-align: right;">{{ticket.totalPrice*ticket.amount}} $</span>
       </div>
       <hr>
       <div class="row" *ngIf="ticket.is_bought">
