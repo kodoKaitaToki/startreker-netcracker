@@ -278,7 +278,7 @@ public class TripDAOImpl extends CrudDAOImpl<Trip> implements TripDAO {
                                              new TripCRUDMapper()));
 
         log.debug("Attaching ticket classes to trip");
-        trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findByTripId(trip.getTripId())));
+        trips.forEach(trip -> trip.setTicketClasses(ticketClassDAO.findByTripIdWithDiscount(trip.getTripId())));
 
         return trips;
     }
