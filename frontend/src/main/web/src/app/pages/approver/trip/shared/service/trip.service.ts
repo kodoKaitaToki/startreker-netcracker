@@ -30,6 +30,7 @@ export class TripService{
             trip_status: trip.trip_status,
             trip_reply: trip.trip_reply
         };
+        console.log(updatedTrip);
         return this.http.patch(uri, updatedTrip,HttpOptionsAuthorized);
     }
 }

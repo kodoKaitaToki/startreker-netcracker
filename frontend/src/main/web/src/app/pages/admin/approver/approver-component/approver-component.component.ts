@@ -49,7 +49,7 @@ export class ApproverComponentComponent implements OnInit {
         username: new FormControl('', [Validators.required, Validators.minLength(3), Validators.max(24)]),
         password: new FormControl('', [Validators.required, Validators.minLength(this.passwordMinLength)]),
         repeat_password: new FormControl('', Validators.required),
-        telephone_number: new FormControl('', [Validators.required, Validators.pattern('[\\s\\d+(d+)-\\s]+')]),
+        telephone_number: new FormControl('', [Validators.required, Validators.pattern("[0-9]{10}")]),
         is_activated: new FormControl(true, Validators.required)
       }
     );

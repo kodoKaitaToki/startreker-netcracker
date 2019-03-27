@@ -287,6 +287,7 @@
       </div>
       <hr>
       <app-paginator
+          *ngIf="carriers.length===carPerPage"
           [page]="carriers"
           [from]="pageFrom"
           [number]="carPerPage"

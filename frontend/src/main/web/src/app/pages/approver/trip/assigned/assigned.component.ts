@@ -9,7 +9,7 @@ import { checkToken } from '../../../../modules/api';
 import { HttpResponse } from '@angular/common/http';
 
 @Component({
-  selector: 'app-assigned',
+  selector: 'app-assigned-trip',
   templateUrl: './assigned.component.html',
   styleUrls: ['./assigned.component.scss']
 })
@@ -18,22 +18,19 @@ export class AssignedTripComponent implements OnInit {
   trips: Trip[] = [];
   loadingTrip: Trip;
 
-  moreFlag: Boolean = false;
-
   form: FormGroup;
 
   currentTripForReply: Trip;
 
-  pageNumber: number = 10;
-
-  pageFrom: number;
+  status = "ASSIGNED";
+  tripsPerPage = 10;
+  recordNumber: number = 0;
 
   constructor(private tripService: TripService,
               private messageService: MessageService) { }
 
   ngOnInit() {
-    this.pageFrom = 0;
-    this.getTrips("ASSIGNED");
+    this.getTrips();
     this.setFormInDefault();
   }
 
@@ -50,8 +47,8 @@ export class AssignedTripComponent implements OnInit {
     this.form.reset();
   }
 
-  getTrips(status: String){
-    this.tripService.getTrips(status, 0, 10)
+  getTrips(){
+    this.tripService.getTrips(this.status, this.recordNumber, this.tripsPerPage)
                       .subscribe((resp: HttpResponse<any>) => {
                           checkToken(resp.headers);
                           this.loadingTrip = null;
@@ -61,7 +58,6 @@ export class AssignedTripComponent implements OnInit {
   }
 
   onReview(trip: Trip) {
-    this.moreFlag = false;
     trip.trip_status = "UNDER_CLARIFICATION";
 
     trip.trip_reply.push({
@@ -81,7 +77,7 @@ export class AssignedTripComponent implements OnInit {
                           this.showMessage(this.createMessage('success',
                                                               'The trip is succeesfully reviewed',
                                                               'The carrier of the trip will see your reply'));
-                          this.getTrips("ASSIGNED");
+                          this.getTrips();
                       }, 
                       error => {
                         this.loadingTrip = null;
@@ -90,7 +86,7 @@ export class AssignedTripComponent implements OnInit {
   }
 
   onPublish(trip: Trip){
-    this.moreFlag = false;
+
     trip.trip_status = "PUBLISHED";
     this.loadingTrip = trip;
 
@@ -101,7 +97,7 @@ export class AssignedTripComponent implements OnInit {
                         this.showMessage(this.createMessage('success',
                                                             'The trip was published',
                                                             'Users can buy tickets of this trip'));
-                        this.getTrips("ASSIGNED");
+                        this.getTrips();
                         this.loadingTrip = null;
                       }, 
                       error => {
@@ -109,12 +105,7 @@ export class AssignedTripComponent implements OnInit {
                       }
                     );
   }
-
-  onPageUpdate(from: number) {
-    this.pageFrom = from;
-    this.getTrips("ASSIGNED");
-  }
-
+  
   showMessage(msgObj: any){
     this.messageService.add(msgObj);
   }
@@ -125,6 +116,12 @@ export class AssignedTripComponent implements OnInit {
       summary: summary,
       detail: detail
     };
+  }
+
+  onChange(event: number){
+    this.recordNumber = event;
+    window.scrollTo(0, 0);
+    this.getTrips();
   }
 
 }

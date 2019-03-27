@@ -41,7 +41,7 @@
               <h6 class="search-bar__heading">From:</h6>
             </div>
             <div class="col-lg-2">
-              <select onclick='setPoint("start")'
+              <select (click)="checkPlanet('start')"
                       id="select_from"
                       class='custom-select form-control'
                       formControlName="startPlanet"
@@ -63,7 +63,7 @@
               <h6 class="search-bar__heading">To:</h6>
             </div>
             <div class="col-lg-2">
-              <select onclick='setPoint("finish")'
+              <select (click)="checkPlanet('finish')"
                       id="select_to"
                       class='custom-select form-control'
                       formControlName="finishPlanet"

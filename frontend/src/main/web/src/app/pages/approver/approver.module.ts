@@ -26,6 +26,7 @@ import {SelectServiceInfoPipe} from './dashboard/shared/pipes/select-service-inf
 import {StatePipe} from "./dashboard/shared/pipes/StatePipe";
 import { ToastModule } from 'primeng/toast';
 import { RouterModule } from '@angular/router';
+import {TabViewModule} from 'primeng/tabview';
 
 @NgModule({
   declarations: [ServiceComponent,

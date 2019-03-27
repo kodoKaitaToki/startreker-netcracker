@@ -3,8 +3,6 @@
       <li class="list-group-item" 
           *ngFor="let trip of trips" 
           style="margin-top:1.5%;">
-      <div class="row">
-        <div class="col-12">
 
           <div class="row">
             <h3 class="col-6">
@@ -12,7 +10,7 @@
             </h3>
             <div class="col-6">
                 <div class="row align-items-start">
-                  <div class="col">
+                  <div class="col" style="text-align: right">
                     {{trip.departure_spaceport.planet.planet_name}}
                   </div>
                   <div class="col"></div>
@@ -21,7 +19,7 @@
                   </div>
                 </div>
                 <div class="row align-items-center">
-                  <div class="col">
+                  <div class="col" style="text-align: right">
                     {{trip.departure_spaceport.spaceport_name}}
                   </div>
                   <div class="col" style="text-align: center">
@@ -32,7 +30,7 @@
                   </div>
                 </div>
                 <div class="row align-items-end">
-                  <div class="col">
+                  <div class="col" style="text-align: right">
                     {{trip.departure_date | date}}
                   </div>
                   <div class="col"></div>
@@ -48,21 +46,22 @@
 
           <div class="row">
             <h3 class="col-6">Carrier:</h3>
-            <p class="col-6">{{trip.carrier_name}}</p>
+            <div style="text-align: center" class="col-6">
+              <span class="col-6">{{trip.carrier_name}}</span>
+            </div>
           </div>
 
           <hr>
 
           <div class="row">
             <h5 class="col-6">Date of creation:</h5>
-            <p class="col-6">
-              {{trip.creation_date | date}}
-            </p>
+            <div style="text-align: center" class="col-6">
+                <span class="col-6">{{trip.creation_date | date}}</span>
+            </div>
+
           </div>
 
           <hr>
-        </div>
-      </div>
 
       <form *ngIf="loadingTrip !== trip">
           <div class="col-sm-12">
@@ -76,5 +75,11 @@
       </form>
     </li>
   </ul>
+  <app-paginator *ngIf="trips.length == tripsPerPage"
+                  [page]="trips"
+                  [from]="recordNumber"
+                  [number]="tripsPerPage"
+                  (update)="onChange($event)">
+  </app-paginator>
 </div>
 <p-growl></p-growl>

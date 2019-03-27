@@ -45,16 +45,16 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            redirectTo: 'open',
+            redirectTo: 'open'
           },
           {
             path: 'open',
             component: OpenTripComponent
           },
           {
-            path: 'assigned',
+            path:'assigned',
             component: AssignedTripComponent
-          },
+          }
         ]
       },
       {
@@ -63,7 +63,7 @@ const routes: Routes = [
         children: [
           {
             path: '',
-            redirectTo: 'opened',
+            redirectTo: 'opened'
           },
           {
             path: 'opened',

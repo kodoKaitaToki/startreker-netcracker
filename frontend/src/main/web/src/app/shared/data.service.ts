@@ -5,17 +5,15 @@ import {FormGroup} from '@angular/forms';
 @Injectable({ providedIn: 'root' })
 export class DataService {
 
-  private formData = new BehaviorSubject<FormGroup>(new FormGroup({}));
+  private formData = new BehaviorSubject<any>(new Object);
 
   constructor() { }
 
   sendFormData(formData) {
-    console.log("sendFormData()" + JSON.stringify(formData));
     this.formData.next(formData);
   }
 
-  getMessage(): Observable<FormGroup> {
-    console.log("getMessage()");
+  getMessage(): Observable<any> {
     return this.formData.asObservable();
   }
 }

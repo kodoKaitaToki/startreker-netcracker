@@ -71,8 +71,10 @@ export class SearchBarComponent implements OnInit, OnDestroy {
       })
   }
 
-  setPoint(point) {
-    setPoint(point);
+  checkPlanet(point){
+    if(this.router.url !== '/flights'){
+      setPoint(point);
+    }
   }
 
   onSubmit() {
