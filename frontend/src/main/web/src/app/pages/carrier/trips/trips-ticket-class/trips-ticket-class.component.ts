@@ -174,7 +174,7 @@ export class TripsTicketClassComponent implements OnInit, OnChanges {
         this.formEconomy.patchValue({
           class_name: el.class_name,
           class_seats: el.class_seats,
-          remaining_seats: 0,
+          remaining_seats: el.remaining_seats,
           ticket_price: el.ticket_price,
         });
 
