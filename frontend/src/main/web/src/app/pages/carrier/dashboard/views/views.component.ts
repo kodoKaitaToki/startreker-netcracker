@@ -77,14 +77,6 @@ export class ViewsComponent implements OnInit {
       );
       return;
     }
-    if (fromDateFormatted > toDateFormatted) {
-      this.showMsgSrvc.showMessage(this.messageService,
-        'error',
-        `Incorrect date`,
-        `Starting date is bigger than ending date`
-      );
-      return;
-    }
     this.hideChart = false;
 
     if (this.form.value.forWhat == "forTrips") {
