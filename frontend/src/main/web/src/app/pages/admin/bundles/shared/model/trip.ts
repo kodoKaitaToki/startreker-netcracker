@@ -7,8 +7,8 @@ export class Trip {
     public ticket_classes : TicketClass[],
     public departure_spaceport_name: string,
     public arrival_spaceport_name: string,
-    public departure_planet: string,
-    public arrival_planet: string
+    public departure_planet_name: string,
+    public arrival_planet_name: string
   ) {}
 
   getTotalPrice() {
