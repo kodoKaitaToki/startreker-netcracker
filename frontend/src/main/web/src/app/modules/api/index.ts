@@ -1,8 +1,7 @@
 import { HttpHeaders } from '@angular/common/http';
 
 let baseUrl;
-const apiPort = ':8080/'
-//const apiPort = '/'
+const apiPort = '/'
 
 // baseUrl = `http://startreker-netcracker.herokuapp.com${apiPort}`
 baseUrl = `https://startreker-netcracker.herokuapp.com${apiPort}`
