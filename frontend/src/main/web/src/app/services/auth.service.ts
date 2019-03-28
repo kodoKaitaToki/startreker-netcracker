@@ -58,9 +58,7 @@ export class ApiUserService {
 
     public logoutUser() {
       this.http.post<any>(Api.auth.logoutUser(), {}, HttpOptionsAuthorized);
-      localStorage.removeItem('at');
-      localStorage.removeItem('rt');
-      localStorage.removeItem('userdata');
+      localStorage.clear();
       this.userData = clone({});
       if(this.location.isCurrentPathEqualTo('/')){
         location.reload();

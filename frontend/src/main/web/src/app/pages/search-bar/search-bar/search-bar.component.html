@@ -1,4 +1,4 @@
-<div class="row custom-font"  id="search">
+<div class="row custom-font" id="search">
   <div class="col-lg-12">
     <div class="card" style="background-color: rgba(240, 248, 255, 0.9);">
       <div class="card-body card-block container-fluid">
@@ -18,12 +18,12 @@
             <label class="form-check-label" for="inlineRadio1">One way</label>
           </div> -->
           <!-- <div class="form-check form-check-inline">
-            <input class="form-check-input" 
-                  type="radio" 
-                  name="inlineRadioOptions" 
-                  id="inlineRadio2" 
-                  value="return" 
-                  checked="checked" 
+            <input class="form-check-input"
+                  type="radio"
+                  name="inlineRadioOptions"
+                  id="inlineRadio2"
+                  value="return"
+                  checked="checked"
                   (click)="searchForm.get('finishDate').enable();">
             <label class="form-check-label" for="inlineRadio2">Return</label>
           </div> -->
@@ -38,44 +38,46 @@
 
           <div class="row justify-content-center">
             <div class="col-lg-1">
-              <h6 class= "search-bar__heading">From:</h6>
+              <h6 class="search-bar__heading">From:</h6>
             </div>
             <div class="col-lg-2">
-              <select onclick='setPoint("start")'
+              <select (click)="checkPlanet('start')"
                       id="select_from"
                       class='custom-select form-control'
                       formControlName="startPlanet"
                       (change)="getSpaceports(true)">
-                <option selected hidden>Choose a planet</option>
+                <option [selected]="true" disabled [value]="">Choose a planet</option>
                 <option *ngFor="let planet of planets"
-                        [value]="planet.planetName.toLowerCase()">{{planet.planetName | titlecase}}</option>
+                        [value]="planet.planetName.toLowerCase()">{{planet.planetName | titlecase}}
+                </option>
               </select>
             </div>
             <div class="col-lg-2">
               <select class="custom-select form-control"
                       formControlName="startSpaceport">
-                <option selected>Choose a spaceport</option>
+                <option selected [value]="">Any spaceport</option>
                 <option *ngFor="let spaceport of spaceportsFrom">{{spaceport.spaceport_name}}</option>
               </select>
             </div>
             <div class="col-lg-1">
-              <h6 class= "search-bar__heading">To:</h6>
+              <h6 class="search-bar__heading">To:</h6>
             </div>
             <div class="col-lg-2">
-              <select onclick='setPoint("finish")'
+              <select (click)="checkPlanet('finish')"
                       id="select_to"
                       class='custom-select form-control'
                       formControlName="finishPlanet"
                       (change)="getSpaceports(false)">
-                <option selected>Choose a planet</option>
+                <option [selected]="true" disabled [value]="">Choose a planet</option>
                 <option *ngFor="let planet of planets"
-                        [value]="planet.planetName.toLowerCase()">{{planet.planetName | titlecase}}</option>
+                        [value]="planet.planetName.toLowerCase()">{{planet.planetName | titlecase}}
+                </option>
               </select>
             </div>
             <div class="col-lg-2">
               <select class="custom-select form-control"
                       formControlName="finishSpaceport">
-                <option selected>Choose a spaceport</option>
+                <option selected [value]="">Any spaceport</option>
                 <option *ngFor="let spaceport of spaceportsTo">{{spaceport.spaceport_name}}</option>
               </select>
             </div>
@@ -88,11 +90,11 @@
               <h6 class="search-bar__heading">Pick a date of flight:</h6>
             </div>
             <div class="col-lg-3">
-                    <p-calendar [minDate]="minimumDate"
-                                formControlName="startDate"
-                                dateFormat="dd.mm.yy"
-                                readonlyInput="true"
-                                [showIcon]="true"></p-calendar>
+              <p-calendar [minDate]="minimumDate"
+                          formControlName="startDate"
+                          dateFormat="dd.mm.yy"
+                          readonlyInput="true"
+                          [showIcon]="true"></p-calendar>
             </div>
             <!-- <div class="col-lg-2">
               <h6 class="search-bar__heading">Pick a date of return:</h6>
@@ -112,7 +114,7 @@
             <div class="col-lg-5"></div>
             <div class="col-lg-2">
               <input type="submit" value="Search" class="btn btn-primary btn-block"
-                      [disabled]="searchForm.invalid">
+                     [disabled]="searchForm.invalid">
             </div>
           </div>
         </form>

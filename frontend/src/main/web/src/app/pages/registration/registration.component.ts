@@ -42,7 +42,7 @@ export class RegistrationComponent implements OnInit {
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(this.passwrodMinLength), Validators.maxLength(this.passwrodMaxLength)]],
-      telephone_number: ['', [Validators.required, Validators.pattern("[0-9]{12}")]],
+      telephone_number: ['', [Validators.required, Validators.pattern("[0-9]{10}")]],
       match_password: ['', Validators.required]
     }, {
       validator: MustMatch('password', 'match_password')
@@ -78,6 +78,10 @@ export class RegistrationComponent implements OnInit {
 
   ngOnInit() {
     this.createRegisterForm();
+  }
+
+  getUrl() {
+    return "url('assets/images/bg.jpg')";
   }
 
 }

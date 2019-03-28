@@ -3,10 +3,10 @@ package edu.netcracker.backend.dao.impl;
 import edu.netcracker.backend.dao.DiscountDAO;
 import edu.netcracker.backend.dao.TicketClassDAO;
 import edu.netcracker.backend.dao.TicketDAO;
+import edu.netcracker.backend.dao.mapper.DiscountMapper;
+import edu.netcracker.backend.dao.mapper.TicketClassWithDiscountMapper;
 import edu.netcracker.backend.model.TicketClass;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -27,6 +27,9 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
 
     @Value("${SELECT_BY_TRIP_ID}")
     private String SELECT_BY_TRIP_ID;
+
+    @Value("${SELECT_BY_TRIP_ID_WITH_DISCOUNTS}")
+    private String SELECT_BY_TRIP_ID_WITH_DISCOUNTS;
 
     @Value("${GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER}")
     private String GET_ALL_TICKET_CLASSES_RELATED_TO_CARRIER;
@@ -58,12 +61,17 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
     @Value("${GET_TICKET_CLASS_BY_NAME_AND_TRIP_ID}")
     private String GET_TICKET_CLASS_BY_NAME_AND_TRIP_ID;
 
+    private DiscountMapper discountMapper;
+
     private final TicketDAO ticketDAO;
 
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
-    public TicketClassDAOImpl(NamedParameterJdbcTemplate namedParameterJdbcTemplate, TicketDAO ticketDAO) {
+    public TicketClassDAOImpl(DiscountMapper discountMapper,
+                              NamedParameterJdbcTemplate namedParameterJdbcTemplate,
+                              TicketDAO ticketDAO) {
+        this.discountMapper = discountMapper;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.ticketDAO = ticketDAO;
     }
@@ -86,6 +94,22 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
 
         log.debug("Getting all ticket classes for trip with id {}", id);
         ticketClasses.addAll(getJdbcTemplate().query(SELECT_BY_TRIP_ID, new Object[]{id}, getGenericMapper()));
+
+        log.debug("Counting number of remaining seats for each ticket class");
+        ticketClasses.forEach(ticketClass -> ticketClass.setRemainingSeats(ticketDAO.getRemainingSeatsForClass(
+                ticketClass.getClassId())));
+
+        return ticketClasses;
+    }
+
+    @Override
+    public List<TicketClass> findByTripIdWithDiscount(Number id) {
+        List<TicketClass> ticketClasses = new ArrayList<>();
+
+        log.debug("Getting all ticket classes with discounts for trip with id {}", id);
+        ticketClasses.addAll(getJdbcTemplate().query(SELECT_BY_TRIP_ID_WITH_DISCOUNTS,
+                                                     new Object[]{id},
+                                                     new TicketClassWithDiscountMapper(discountMapper)));
 
         log.debug("Counting number of remaining seats for each ticket class");
         ticketClasses.forEach(ticketClass -> ticketClass.setRemainingSeats(ticketDAO.getRemainingSeatsForClass(
@@ -201,10 +225,7 @@ public class TicketClassDAOImpl extends CrudDAOImpl<TicketClass> implements Tick
                                                                        getGenericMapper());
             return ticketClass != null ? Optional.of(ticketClass) : Optional.empty();
         } catch (EmptyResultDataAccessException e) {
-            log.warn(
-                    "No such ticketClass that has discount with id {} and belongs to user {}",
-                    discountId,
-                    userId);
+            log.warn("No such ticketClass that has discount with id {} and belongs to user {}", discountId, userId);
             return Optional.empty();
         }
     }

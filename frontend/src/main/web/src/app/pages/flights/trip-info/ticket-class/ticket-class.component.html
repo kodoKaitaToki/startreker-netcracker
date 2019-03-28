@@ -1,6 +1,6 @@
 <div class="row class-item">
-  <div class="col col-5">
-    <h4>{{ticket_class.class_name}}</h4>
+  <div class="col col-4 class-name">
+    <h4>{{ticket_class.class_name | titlecase}}</h4>
   </div>
   <div class="col col-2">
     <form [formGroup]="amountForm">
@@ -8,11 +8,24 @@
              (change)="onAmountChanged()">
     </form>
   </div>
-  <div class="col col-2">
+  <div class="col col-2 remaining-seats">
     {{ticket_class.remaining_seats}}
   </div>
-  <div class="col-3 ticket-price">
-    <span class="price">{{ticket_class.ticket_price}}</span>$
+  <div class="col-4 ticket-price">
+    <div class="price" *ngIf="ticket_class.discount === undefined">
+      <ins>
+        <span class="amount">{{ticket_class.ticket_price}}$</span>
+      </ins>
+    </div>
+
+    <div class="price-discount" *ngIf="ticket_class.discount !== undefined && !ticket_class.discount.is_expired">
+      <del>
+        <span class="amount">{{ticket_class.ticket_price}}$</span>
+      </del>
+      <ins>
+        <span class="amount">{{newTicketPrice}}$</span>
+      </ins>
+    </div>
     <button class="btn btn-outline-primary mb-2 mr-2" (click)="openVerticallyCentered(trip)">
       CHOOSE
     </button>

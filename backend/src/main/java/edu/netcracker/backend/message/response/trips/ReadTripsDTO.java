@@ -1,6 +1,7 @@
 package edu.netcracker.backend.message.response.trips;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import edu.netcracker.backend.model.Discount;
 import edu.netcracker.backend.model.TicketClass;
 import edu.netcracker.backend.model.Trip;
 import lombok.Getter;
@@ -25,16 +26,16 @@ public class ReadTripsDTO {
     @JsonProperty("trip_status_id")
     private Integer tripStatusId;
 
-    @JsonProperty("departure_spaceport")
+    @JsonProperty("departure_spaceport_name")
     private String departureSpaceportName;
 
-    @JsonProperty("arrival_spaceport")
+    @JsonProperty("arrival_spaceport_name")
     private String arrivalSpaceportName;
 
-    @JsonProperty("departure_planet")
+    @JsonProperty("departure_planet_name")
     private String departurePlanet;
 
-    @JsonProperty("arrival_planet")
+    @JsonProperty("arrival_planet_name")
     private String arrivalPlanet;
 
     @JsonProperty("departure_date")
@@ -82,13 +83,24 @@ public class ReadTripsDTO {
         }
         dto.ticketClasses = new ArrayList<>();
 
+        Discount discount;
+
         for (TicketClass ticketClass : trip.getTicketClasses()) {
             Map<String, Object> tcProperties = new HashMap<>();
+
             tcProperties.put("class_id", ticketClass.getClassId());
             tcProperties.put("class_name", ticketClass.getClassName());
             tcProperties.put("ticket_price", ticketClass.getTicketPrice());
             tcProperties.put("class_seats", ticketClass.getClassSeats());
             tcProperties.put("remaining_seats", ticketClass.getRemainingSeats());
+
+            discount = ticketClass.getDiscount();
+
+            if (discount != null) {
+                tcProperties.put("discount_rate", discount.getDiscountRate());
+                tcProperties.put("is_percent", discount.getIsPercent());
+            }
+
             dto.ticketClasses.add(tcProperties);
         }
 

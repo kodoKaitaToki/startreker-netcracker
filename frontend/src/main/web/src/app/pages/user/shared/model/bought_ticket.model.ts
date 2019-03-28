@@ -1,6 +1,6 @@
-import { Trip } from '../../../../shared/model/trip.model';
-import { FlightClass } from '../../../flights/shared/models/flight-class.model';
-import { FlightService } from '../../../flights/shared/models/flight-service.model';
+import {Trip} from '../../../../shared/model/trip.model';
+import {FlightClass} from '../../../flights/shared/models/flight-class.model';
+import {FlightService} from '../../../flights/shared/models/flight-service.model';
 
 export class BookedTicket{
     trip: Trip;
@@ -13,10 +13,12 @@ export class BookedTicket{
     constructor(trip: Trip,
                 ticket: FlightClass,
                 services: FlightService[],
+                totalPrice: number,
                 amount: number){
         this.trip = trip;
         this.ticket = ticket;
         this.services =  services;
-        this.amount = amount;          
+      this.totalPrice = totalPrice;
+      this.amount = amount;
     }
 }

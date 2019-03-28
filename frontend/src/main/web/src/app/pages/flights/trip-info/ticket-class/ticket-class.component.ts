@@ -5,6 +5,7 @@ import {SearchService} from "../../shared/services/search.service";
 import {TicketClassInfoComponent} from "./ticket-class-info/ticket-class-info.component";
 import {FormControl, FormGroup} from "@angular/forms";
 import {Trip} from "../../../../shared/model/trip.model";
+import {calcPriceWithDiscount} from "../../shared/services/discount-calc.helper";
 
 @Component({
   selector: 'app-ticket-class',
@@ -17,6 +18,8 @@ export class TicketClassComponent implements OnInit {
   @Input('ticket_class') ticket_class: FlightClass;
   amountForm: FormGroup;
 
+  private newTicketPrice: number;
+
   private amount: number = 1;
 
   constructor(private searchSvc: SearchService,
@@ -26,7 +29,9 @@ export class TicketClassComponent implements OnInit {
     })
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.newTicketPrice = calcPriceWithDiscount(this.ticket_class);
+  }
 
   openVerticallyCentered(trip: Trip) {
     const modalRef = this.modalService.open(TicketClassInfoComponent, {centered: true, size: 'lg'});

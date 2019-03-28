@@ -13,8 +13,6 @@ export class UserComponent implements OnInit {
   ngOnInit() {
   }
 
-  getUrl() {
-    return "url('assets/images/bg.jpg')";
-  }
+  getUrl() {return "url('assets/images/bg.jpg')";}
 
 }

@@ -40,8 +40,8 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(this.passwrodMinLength), Validators.maxLength(this.passwrodMaxLength)]]
     });
 
-    if (this.router.getCurrentNavigation().extras.state !== undefined)
-      this.message = this.router.getCurrentNavigation().extras.state.message;
+    // if (this.router.getCurrentNavigation().extras.state !== undefined)
+    //   this.message = this.router.getCurrentNavigation().extras.state.message;
 
     if(localStorage.getItem('userdata') !== null){
       let role = JSON.parse(localStorage.getItem('userdata')).roles[0];

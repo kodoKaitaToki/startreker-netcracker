@@ -20,6 +20,7 @@ import javax.validation.Valid;
 
 @RestController
 @Slf4j
+@RequestMapping("/api/v1/auth/")
 public class AuthController {
 
     private AuthenticationService authenticationService;
@@ -29,14 +30,14 @@ public class AuthController {
         this.authenticationService = authenticationService;
     }
 
-    @PostMapping(path = "/api/auth/sign-up")
+    @PostMapping(path = "sign-up")
     public UserDTO signUp(@Valid @RequestBody SignUpForm signUpForm, HttpServletRequest request) {
         log.debug("AuthController.signUp(SignUpForm signUpForm, HttpServletRequest request) was invoked");
         User user = authenticationService.signUp(signUpForm, request);
         return UserDTO.from(user);
     }
 
-    @PostMapping(path = "/api/auth/password-recovery")
+    @PostMapping(path = "password-recovery")
     public EmailFrom passwordRecovery(@Valid @RequestBody EmailFrom emailFrom) {
         log.debug("AuthController.passwordRecovery(EmailFrom emailFrom) was invoked");
         authenticationService.passwordRecovery(emailFrom);
@@ -44,7 +45,7 @@ public class AuthController {
         return emailFrom;
     }
 
-    @PostMapping(path = "/api/log-out")
+    @PostMapping(path = "log-out")
     @PreAuthorize("hasRole('ADMIN') or hasRole('CARRIER') or hasRole('APPROVER') or hasRole('USER')")
     public ResponseEntity<Message> logOut() {
         log.debug("AuthController.logOut() was invoked");
@@ -52,7 +53,7 @@ public class AuthController {
                              .body(authenticationService.logOut());
     }
 
-    @PatchMapping(path = "/api/change-password")
+    @PatchMapping(path = "change-password")
     @PreAuthorize("hasRole('ADMIN') or hasRole('CARRIER') or hasRole('APPROVER') or hasRole('USER')")
     public ResponseEntity<Message> changePassword(@Valid @RequestBody ChangePasswordForm changePasswordForm) {
         log.debug("AuthController.changePassword(ChangePasswordForm changePasswordForm) was invoked");
@@ -60,14 +61,14 @@ public class AuthController {
                              .body(authenticationService.changePassword(changePasswordForm));
     }
 
-    @GetMapping(path = "api/auth/confirm-password")
+    @GetMapping(path = "confirm-password")
     public ResponseEntity<Message> confirmPassword(@Valid @RequestParam("token") String token) {
         log.debug("AuthController.confirmPassword(String token) was invoked");
         return ResponseEntity.ok()
                              .body(authenticationService.confirmPassword(token));
     }
 
-    @PostMapping("/api/auth/sign-in")
+    @PostMapping("sign-in")
     public ResponseEntity<JwtResponse> signIn(@Valid @RequestBody SignInForm signInForm) {
         log.debug("AuthController.signIn(SignInForm signInForm) was invoked");
         return ResponseEntity.ok(authenticationService.signIn(signInForm));

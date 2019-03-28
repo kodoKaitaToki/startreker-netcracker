@@ -15,4 +15,8 @@ export class CartService{
                     p_services_ids: servIds}
         return this.http.post(Api.user.buyTicket(), body, Api.HttpOptionsAuthorized);
     }
+
+    getBundle(id: number){
+        return this.http.get(Api.user.getBundle() + id, Api.HttpOptionsAuthorized);
+    }
 }  

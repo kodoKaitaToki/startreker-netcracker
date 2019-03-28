@@ -14,7 +14,7 @@
     </div>
   </div>
     <div class="row class-header">
-      <div class="col col-5">
+      <div class="col col-4 name-header">
         Ticket class name
       </div>
       <div class="col col-2">
@@ -23,9 +23,9 @@
       <div class="col col-2">
         Tickets left
       </div>
-      <div class="col col-3">Price</div>
+      <div class="col col-4" style="text-align: left">Price</div>
     </div>
-  <app-ticket-class *ngFor="let ticket_class of trip.ticket_classes" 
+  <app-ticket-class *ngFor="let ticket_class of trip.ticket_classes"
                     [ticket_class]="ticket_class"
                     [trip]="trip"></app-ticket-class>
 </div>
