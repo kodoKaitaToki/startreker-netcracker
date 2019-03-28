@@ -62,7 +62,7 @@ export class RegistrationComponent implements OnInit {
                                               'success', 
                                               'The confirmation was sent', 
                                               'You can find it in your e-mail account');
-                   this.apiService.setUserData(clone(userData));
+                   //this.apiService.setUserData(clone(userData));
                    this.submitBut = false;
                    this.registerForm.reset();
                   },
