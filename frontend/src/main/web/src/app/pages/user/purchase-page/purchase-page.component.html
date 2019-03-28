@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="row" *ngIf="tickets===null || tickets.length===0">
+  <div class="row" *ngIf="(tickets===null || tickets.length===0) && (bundles===null || bundles.length===0)">
     <div class="card col-8 offset-2 window-card" style="text-align:center;">
       <span style="font-size: 2em;">Cart is empty.<br>Choose a ticket on your dream trip right now!</span>
       <div class="row">
@@ -7,7 +7,7 @@
       </div>
     </div>
   </div>
-  <div class="row" *ngIf="tickets!==null && tickets.length>0">
+  <div class="row" *ngIf="(tickets!==null && tickets.length>0) || (bundles!==null && bundles.length>0)">
     <div class="card col-8 offset-2 table-card" *ngFor="let ticket of tickets; index as i;">
       <div class="row" style="margin-top: 1.5%">
           <span class="header col-6">About trip</span>
@@ -83,7 +83,7 @@
                   <svg class="checkmark" viewBox="0 0 52 52" style="margin-bottom: 1.5%">
                       <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
                       <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-                    </svg>
+                  </svg>
         </div>
       </div>
       <div class="row" *ngIf="!ticket.is_bought">
@@ -96,6 +96,65 @@
                   [disabled]="btnBlock" 
                   (click)="buy(ticket)">Buy</button>
       </div>
+
+    </div>
+
+    <div class="card col-8 offset-2 table-card" *ngFor="let bundle of bundles; index as i;">
+      <div class="row" style="margin-top: 1.5%">
+          <span class="header col-6">About bundle</span>
+          <div class="col-1 offset-5">
+              <a class="close" (click)="deleteBundle(bundle)" [class.disabled]="btnBlock"></a>
+          </div>
+      </div>
+      <hr>
+      <span>{{bundle.bundle_description}}</span>
+      
+      <div *ngFor="let trip of bundle.bundle_trips">
+        <hr>
+        <div class="row">
+            <div class="col-4" style="text-align: right">
+              <span>{{trip.departure_date}}</span><br>
+              <span>{{trip.departure_planet}}</span><br>
+              <span>{{trip.departure_spaceport_name}}</span>
+            </div>
+            <div class="col-4">
+              <div class="icon">
+                <div class="arrow"></div>
+              </div>
+            </div>
+            <div class="col-4">
+              <span>{{trip.arrival_date}}</span><br>
+              <span>{{trip.arrival_planet}}</span><br>
+              <span>{{trip.arrival_spaceport_name}}</span>
+            </div>
+        </div>
+        <div *ngFor="let ticket of trip.ticket_classes">
+            <button class="btn btn-primary service-btn" type="button" data-toggle="collapse"
+                    [attr.data-target]="'#btncollapse' + ticket.class_id"
+                    aria-expanded="false" aria-controls="Collapse"
+                    *ngIf="ticket.services.length>0">
+                      Services:
+            </button>
+            <div class="collapse date-width" 
+                [attr.id]="'btncollapse' + ticket.class_id"
+                *ngIf="ticket.services.length>0">
+              <div class="card" style="background-color: rgba(240, 248, 255, 0.25);">
+                <ul type="disc" style="background-color: transparent; margin-top: 1rem;">
+                  <li *ngFor="let service of ticket.services" style="background-color: transparent;">
+                    {{service.service_name}}
+                  </li>
+                </ul>
+              </div>
+            </div>         
+        </div>
+      </div>
+      <hr>
+      <div class="row header">
+        <span class="col-4">To pay</span>
+        <span class="col-4 offset-4" 
+              style="text-align: right;">{{bundle.bundle_price}} $</span>
+      </div>
+      <hr>
 
     </div>
   </div>

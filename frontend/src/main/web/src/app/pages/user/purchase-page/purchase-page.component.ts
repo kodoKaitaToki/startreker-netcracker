@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { DataService } from '../../../shared/data.service';
 import {MessageService} from "primeng/api";
 import {ShowMessageService} from "../../admin/approver/shared/service/show-message.service";
+import { Bundle } from '../../../shared/model/bundle';
 
 @Component({
   selector: 'app-purchase-page',
@@ -15,6 +16,8 @@ import {ShowMessageService} from "../../admin/approver/shared/service/show-messa
 export class PurchasePageComponent implements OnInit, OnDestroy {
 
   tickets: BookedTicket[] = [];
+  bundles: Bundle[] = [];
+  bundlesIds: number[] = [];
   btnBlock: boolean = false;
 
   constructor(private cartService: CartService,
@@ -24,6 +27,14 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
               private showMsgSrvc: ShowMessageService) {}
 
   ngOnInit() { 
+    this.bundlesIds = JSON.parse(sessionStorage.getItem('bundles'));
+    if(this.bundlesIds !== null){
+      for(let id of this.bundlesIds){
+        this.cartService.getBundle(id).subscribe((resp: HttpResponse<any>) => {
+          this.bundles.push(resp.body);
+        })
+      }
+    }
     this.tickets = JSON.parse(sessionStorage.getItem('boughtTickets'));  
   }
 
@@ -46,10 +57,22 @@ export class PurchasePageComponent implements OnInit, OnDestroy {
     }
   }
 
-  buy(ticket: BookedTicket){
+  deleteBundle(bundle: Bundle){
+    for(let i=0; i < this.bundles.length; i++){
+      if(bundle === this.bundles[i]){
+        this.bundles.splice(i, 1);
+        this.bundlesIds.splice(i, 1);
+        sessionStorage.setItem('bundles', JSON.stringify(this.bundlesIds));
+      }
+    }
+  }
+
+  buy(ticket){
     this.btnBlock = true;
     this.cartService.buyTicket(ticket).subscribe((resp: HttpResponse<any>) => {
-      ticket.is_bought = true;
+      if(ticket instanceof BookedTicket){
+        ticket.is_bought = true;
+      }
       this.btnBlock = false;
     }),error => {
       this.btnBlock = false;
