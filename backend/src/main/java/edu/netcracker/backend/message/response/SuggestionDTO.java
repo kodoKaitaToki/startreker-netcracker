@@ -48,8 +48,8 @@ public class SuggestionDTO {
                 suggestion.getSuggestionId(),
                 suggestion.getClassId(),
                 suggestion.getDiscountId(),
-                suggestion.getDiscount().getDiscountRate(),
-                suggestion.getDiscount().getIsPercent(),
+                suggestion.getDiscount() != null ? suggestion.getDiscount().getDiscountRate() : null,
+                suggestion.getDiscount() != null ? suggestion.getDiscount().getIsPercent() : null,
                 pServiceIds);
     }
 }

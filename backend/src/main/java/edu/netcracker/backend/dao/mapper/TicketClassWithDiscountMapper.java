@@ -12,7 +12,9 @@ public class TicketClassWithDiscountMapper implements RowMapper<TicketClass> {
 
     private DiscountMapper discountRowMapper;
 
-    public TicketClassWithDiscountMapper(DiscountMapper discountRowMapper) {this.discountRowMapper = discountRowMapper;}
+    public TicketClassWithDiscountMapper(DiscountMapper discountRowMapper) {
+        this.discountRowMapper = discountRowMapper;
+    }
 
     @Override
     public TicketClass mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -25,7 +27,9 @@ public class TicketClassWithDiscountMapper implements RowMapper<TicketClass> {
         ticketClass.setDiscountId(resultSet.getLong("discount_id"));
         ticketClass.setTicketPrice(resultSet.getInt("ticket_price"));
 
-        ticketClass.setDiscount(discountRowMapper.mapRow(resultSet, i));
+        if (ticketClass.getDiscountId() != 0) {
+            ticketClass.setDiscount(discountRowMapper.mapRow(resultSet, i));
+        }
 
         return ticketClass;
     }

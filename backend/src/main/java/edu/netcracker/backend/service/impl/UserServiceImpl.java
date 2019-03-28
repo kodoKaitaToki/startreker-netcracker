@@ -21,7 +21,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,6 +49,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private TicketClassDAO ticketClassDAO;
+
+    @Autowired
+    private DiscountDAO discountDAO;
 
     @Override
     public void save(User user) {
@@ -253,6 +255,10 @@ public class UserServiceImpl implements UserService {
                                                      ticket.getTicketId()), HttpStatus.BAD_REQUEST);
         }
 
+        Integer endPrice = calcEndPrice(ticketClass, possibleServices);
+
+        ticket.setEndPrice((float) endPrice);
+
 
         ticketDAO.buyTicket(ticket, user);
         possibleServices.forEach(possibleService -> possibleServiceDAO.buyService(ticket, possibleService));
@@ -260,6 +266,42 @@ public class UserServiceImpl implements UserService {
         boughtTicketDTO.setBoughtTicketId(ticket.getTicketId());
 
         return boughtTicketDTO;
+    }
+
+    private Integer calcEndPrice(TicketClass ticketClass, List<PossibleService> possibleServices) {
+        Integer endPrice = 0;
+
+        endPrice += possibleServices.stream()
+                                    .map(possibleService -> possibleService.getServicePrice()
+                                                                           .intValue())
+                                    .reduce((x, y) -> x + y)
+                                    .orElse(0);
+
+        if (ticketClass.getDiscountId() == null || ticketClass.getDiscountId() == 0) {
+            return endPrice + ticketClass.getTicketPrice();
+        }
+
+        Optional<Discount> optDiscount = discountDAO.find(ticketClass.getDiscountId());
+
+        if (!optDiscount.isPresent()) {
+            log.error("Discount with id {} not found!", ticketClass.getDiscountId());
+
+            return endPrice + ticketClass.getTicketPrice();
+        }
+
+        Discount discount = optDiscount.get();
+        if (discount.getFinishDate()
+                    .isAfter(LocalDateTime.now())) {
+            if (discount.getIsPercent()) {
+                endPrice -= (endPrice * discount.getDiscountRate() / 100);
+            } else {
+                endPrice -= discount.getDiscountRate();
+            }
+        } else {
+            endPrice = ticketClass.getTicketPrice();
+        }
+
+        return endPrice;
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<String> roles) {

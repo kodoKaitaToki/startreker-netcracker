@@ -22,7 +22,8 @@ public class SuggestionWithDiscountMapper implements RowMapper<Suggestion> {
         suggestion.setDiscountId(resultSet.getLong("discount_id"));
         suggestion.setClassId(resultSet.getLong("class_id"));
 
-        suggestion.setDiscount(discountRowMapper.mapRow(resultSet, i));
+        if (suggestion.getDiscountId() != 0)
+            suggestion.setDiscount(discountRowMapper.mapRow(resultSet, i));
 
         return suggestion;
     }
