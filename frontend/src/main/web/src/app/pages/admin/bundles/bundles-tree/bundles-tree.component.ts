@@ -94,10 +94,10 @@ export class BundlesTreeComponent implements OnInit {
       let trips = clone(resp.body);
       let properTrips = trips.map(trip => {
         let properTrip = trip;
-        properTrip.departure_spaceport_name = properTrip.departure_spaceport;
+        /*properTrip.departure_spaceport_name = properTrip.departure_spaceport;
         delete properTrip.departure_spaceport;
         properTrip.arrival_spaceport_name = properTrip.arrival_spaceport;
-        delete properTrip.arrival_spaceport;
+        delete properTrip.arrival_spaceport;*/
         return properTrip;
       });
       console.log(properTrips);
@@ -106,7 +106,7 @@ export class BundlesTreeComponent implements OnInit {
       })
       .map(trip => {
           let node: TreeNode = {
-            label: `${trip.departure_spaceport_name}(${trip.departure_planet}) -  ${trip.arrival_spaceport_name}(${trip.arrival_planet})`,
+            label: `${trip.departure_spaceport_name}(${trip.departure_planet_name}) -  ${trip.arrival_spaceport_name}(${trip.departure_planet_name})`,
             data: trip,
             icon: "fa fa-rocket",
             type: "trip",
