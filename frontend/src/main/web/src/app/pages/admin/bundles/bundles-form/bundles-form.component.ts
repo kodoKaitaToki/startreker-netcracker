@@ -127,9 +127,9 @@ export class BundlesFormComponent implements OnInit {
       control.push(this.fb.group({
         trip_id: trip.trip_id,
         departure_spaceport_name: trip.departure_spaceport_name,
-        departure_planet: trip.departure_planet,
+        departure_planet_name: trip.departure_planet_name,
         arrival_spaceport_name: trip.arrival_spaceport_name,
-        arrival_planet: trip.arrival_planet,
+        arrival_planet_name: trip.arrival_planet_name,
         ticket_classes: this.setTicketClasses(trip)
       }))
     });
