@@ -7,15 +7,15 @@ export class Trip {
 
   departure_date: string;
 
-  departure_spaceport: string;
+  departure_spaceport_name: string;
 
-  departure_planet: string;
+  departure_planet_name: string;
 
   arrival_date: string;
 
-  arrival_spaceport: string;
+  arrival_spaceport_name: string;
 
-  arrival_planet: string;
+  arrival_planet_name: string;
 
   ticket_classes?: FlightClass[];
 }
