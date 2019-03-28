@@ -17,8 +17,8 @@ export class SearchService {
            departure_spaceport?: string,
            arrival_spaceport?: string): Observable<any> {
     let params = new HttpParams()
-      .set("departure_planet", departure_planet.toUpperCase())
-      .set("arrival_planet", arrival_planet.toUpperCase())
+      .set("departure_planet", departure_planet)
+      .set("arrival_planet", arrival_planet)
       .set("departure_date", this.datePipe.transform(departure_date, "yyyy-MM-dd"));
 
     if (departure_spaceport !== undefined && departure_spaceport !== "")
