@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import {Component, Input, OnInit, ViewEncapsulation} from '@angular/core';
 import {FlightClass} from "../../../shared/models/flight-class.model";
 import {SearchService} from "../../../shared/services/search.service";
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
@@ -22,7 +22,8 @@ export class TicketClassInfoComponent implements OnInit {
   @Input('amount') amount: number;
   @Input('trip') trip: Trip;
 
-  @Output('total_price') total_price: number;
+  //@Output('total_price')
+  total_price: number;
 
   services: FlightService[] = [];
 

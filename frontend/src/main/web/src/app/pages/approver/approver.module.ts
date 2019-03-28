@@ -24,8 +24,8 @@ import {ItemsFilter} from './dashboard/shared/pipes/trip-filter.pipe';
 import {NgxPaginationModule} from "ngx-pagination";
 import {SelectServiceInfoPipe} from './dashboard/shared/pipes/select-service-info.pipe';
 import {StatePipe} from "./dashboard/shared/pipes/StatePipe";
-import { ToastModule } from 'primeng/toast';
-import { RouterModule } from '@angular/router';
+import {ToastModule} from 'primeng/toast';
+import {RouterModule} from '@angular/router';
 import {TabViewModule} from 'primeng/tabview';
 
 @NgModule({
@@ -54,7 +54,8 @@ import {TabViewModule} from 'primeng/tabview';
     MessageModule,
     MessagesModule,
     NgxPaginationModule,
-    RouterModule
+    RouterModule,
+    TabViewModule
   ],
   providers: [
     MessageService, ServiceTripPendingService

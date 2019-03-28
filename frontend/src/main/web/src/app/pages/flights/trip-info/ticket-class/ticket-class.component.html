@@ -18,7 +18,7 @@
       </ins>
     </div>
 
-    <div class="price-discount" *ngIf="ticket_class.discount !== undefined">
+    <div class="price-discount" *ngIf="ticket_class.discount !== undefined && !ticket_class.discount.is_expired">
       <del>
         <span class="amount">{{ticket_class.ticket_price}}$</span>
       </del>

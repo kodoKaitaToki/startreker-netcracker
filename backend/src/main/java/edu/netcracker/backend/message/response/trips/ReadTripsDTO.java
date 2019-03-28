@@ -26,16 +26,16 @@ public class ReadTripsDTO {
     @JsonProperty("trip_status_id")
     private Integer tripStatusId;
 
-    @JsonProperty("departure_spaceport")
+    @JsonProperty("departure_spaceport_name")
     private String departureSpaceportName;
 
-    @JsonProperty("arrival_spaceport")
+    @JsonProperty("arrival_spaceport_name")
     private String arrivalSpaceportName;
 
-    @JsonProperty("departure_planet")
+    @JsonProperty("departure_planet_name")
     private String departurePlanet;
 
-    @JsonProperty("arrival_planet")
+    @JsonProperty("arrival_planet_name")
     private String arrivalPlanet;
 
     @JsonProperty("departure_date")
