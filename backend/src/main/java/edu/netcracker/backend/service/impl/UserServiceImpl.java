@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User find(Number id) {
         return userDAO.find(id)
-                .orElse(null);
+                      .orElse(null);
     }
 
     @Override
@@ -72,25 +72,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean ifUsernameExist(String username) {
         return userDAO.findByUsername(username)
-                .isPresent();
+                      .isPresent();
     }
 
     @Override
     public boolean ifEmailExist(String email) {
         return userDAO.findByEmail(email)
-                .isPresent();
+                      .isPresent();
     }
 
     @Override
     public User findByUsername(String userName) {
         return userDAO.findByUsername(userName)
-                .orElse(null);
+                      .orElse(null);
     }
 
     @Override
     public User findByEmail(String email) {
         return userDAO.findByEmail(email)
-                .orElse(null);
+                      .orElse(null);
     }
 
     @Override
@@ -119,8 +119,8 @@ public class UserServiceImpl implements UserService {
     public User createUser(SignUpForm signUpForm, boolean isActivated, List<Role> roles) {
         log.debug("UserServiceImpl.createUser(SignUpForm signUpForm, boolean isActivated, List<Role> roles) was invoked");
         User user = new User(signUpForm.getUsername(),
-                passwordEncoder.encode(signUpForm.getPassword()),
-                signUpForm.getEmail());
+                             passwordEncoder.encode(signUpForm.getPassword()),
+                             signUpForm.getEmail());
         user.setUserIsActivated(isActivated);
         user.setUserRoles(roles);
         user.setUserTelephone(signUpForm.getTelephoneNumber());
@@ -133,8 +133,8 @@ public class UserServiceImpl implements UserService {
     public User createUser(UserCreateForm userCreateForm, List<Role> roles) {
         log.debug("UserServiceImpl.createUser(UserCreateForm userCreateForm, List<Role> roles) was invoked");
         User user = new User(userCreateForm.getUsername(),
-                passwordEncoder.encode(userCreateForm.getPassword()),
-                userCreateForm.getEmail());
+                             passwordEncoder.encode(userCreateForm.getPassword()),
+                             userCreateForm.getEmail());
         user.setUserIsActivated(userCreateForm.getIsActivated());
         user.setUserRoles(roles);
         user.setUserTelephone(userCreateForm.getTelephoneNumber());
@@ -147,19 +147,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByUsernameWithRole(String userName, Role role) {
         return userDAO.findByUsernameWithRole(userName, role)
-                .orElse(null);
+                      .orElse(null);
     }
 
     @Override
     public User findByEmailWithRole(String email, Role role) {
         return userDAO.findByEmailWithRole(email, role)
-                .orElse(null);
+                      .orElse(null);
     }
 
     @Override
     public User findByIdWithRole(Number id, Role role) {
         return userDAO.findByIdWithRole(id, role)
-                .orElse(null);
+                      .orElse(null);
     }
 
     @Override
@@ -184,14 +184,14 @@ public class UserServiceImpl implements UserService {
         }
 
         return new org.springframework.security.core.userdetails.User(userInformationHolder.getUsername(),
-                userInformationHolder.getPassword(),
-                mapRolesToAuthorities(userInformationHolder.getRoles()));
+                                                                      userInformationHolder.getPassword(),
+                                                                      mapRolesToAuthorities(userInformationHolder.getRoles()));
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userDAO.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
+                      .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
     }
 
     @Override
@@ -208,7 +208,7 @@ public class UserServiceImpl implements UserService {
         if (!optTicketClass.isPresent()) {
             log.error("Ticket class with id {} not found", boughtTicketDTO.getClassId());
             throw new RequestException(String.format("Ticket class with id %s not found", boughtTicketDTO.getClassId()),
-                    HttpStatus.NOT_FOUND);
+                                       HttpStatus.NOT_FOUND);
         }
 
         TicketClass ticketClass = optTicketClass.get();
@@ -226,7 +226,7 @@ public class UserServiceImpl implements UserService {
         if (!optTicket.isPresent()) {
             log.error("Not bought ticket of class with id {} not found", boughtTicketDTO.getClassId());
             throw new RequestException(String.format("Not bought ticket of class with id %s not found",
-                    boughtTicketDTO.getClassId()), HttpStatus.NOT_FOUND);
+                                                     boughtTicketDTO.getClassId()), HttpStatus.NOT_FOUND);
         }
 
         Ticket ticket = optTicket.get();
@@ -236,51 +236,29 @@ public class UserServiceImpl implements UserService {
 
         log.debug("Getting services by id");
         boughtTicketDTO.getPServicesIds()
-                .forEach(id -> {
-                    Optional<PossibleService> optPossibleService = possibleServiceDAO.find(id);
+                       .forEach(id -> {
+                           Optional<PossibleService> optPossibleService = possibleServiceDAO.find(id);
 
-                    if (!optPossibleService.isPresent()) {
-                        log.error("User with id {} not found", ticket.getTicketId());
-                        throw new RequestException(String.format("Possible service with id %s not found",
-                                setCurUser()), HttpStatus.NOT_FOUND);
-                    }
+                           if (!optPossibleService.isPresent()) {
+                               log.error("User with id {} not found", ticket.getTicketId());
+                               throw new RequestException(String.format("Possible service with id %s not found",
+                                                                        setCurUser()), HttpStatus.NOT_FOUND);
+                           }
 
-                    possibleServices.add(optPossibleService.get());
-                });
+                           possibleServices.add(optPossibleService.get());
+                       });
 
 
         if (ticket.getPassengerId() != null) {
             log.error("Ticket with id {} has already been purchased.", ticket.getTicketId());
             throw new RequestException(String.format("Ticket with id %s has already been purchased.",
-                    ticket.getTicketId()), HttpStatus.BAD_REQUEST);
+                                                     ticket.getTicketId()), HttpStatus.BAD_REQUEST);
         }
-        //PIZDEC
-        if (ticketClass.getDiscountId() != null && ticketClass.getDiscountId() != 0) {
-            Discount discount = discountDAO.find(ticketClass.getDiscountId()).orElse(null);
 
-            if (discount != null) {
-                if (discount.getFinishDate().isAfter(LocalDateTime.now())) {
-                    Integer endPrice = ticketClass.getTicketPrice();
-                    if (discount.getIsPercent()) {
-                        endPrice = endPrice - (endPrice * discount.getDiscountRate() / 100);
-                    } else {
-                        endPrice = endPrice - discount.getDiscountRate();
-                    }
+        Integer endPrice = calcEndPrice(ticketClass, possibleServices);
 
-                    endPrice = endPrice + possibleServices.stream().map(
-                            possibleService -> possibleService.getServicePrice().intValue()).reduce((x, y) -> x + y).orElse(0);
+        ticket.setEndPrice((float) endPrice);
 
-                    ticket.setEndPrice((float) endPrice);
-                }
-            }
-
-        } else {
-            Integer endPrice = ticketClass.getTicketPrice();
-            endPrice = endPrice + possibleServices.stream().map(
-                    possibleService -> possibleService.getServicePrice().intValue()).reduce((x, y) -> x + y).orElse(0);
-
-            ticket.setEndPrice((float) endPrice);
-        }
 
         ticketDAO.buyTicket(ticket, user);
         possibleServices.forEach(possibleService -> possibleServiceDAO.buyService(ticket, possibleService));
@@ -290,10 +268,46 @@ public class UserServiceImpl implements UserService {
         return boughtTicketDTO;
     }
 
+    private Integer calcEndPrice(TicketClass ticketClass, List<PossibleService> possibleServices) {
+        Integer endPrice = 0;
+
+        endPrice += possibleServices.stream()
+                                    .map(possibleService -> possibleService.getServicePrice()
+                                                                           .intValue())
+                                    .reduce((x, y) -> x + y)
+                                    .orElse(0);
+
+        if (ticketClass.getDiscountId() == null || ticketClass.getDiscountId() == 0) {
+            return endPrice + ticketClass.getTicketPrice();
+        }
+
+        Optional<Discount> optDiscount = discountDAO.find(ticketClass.getDiscountId());
+
+        if (!optDiscount.isPresent()) {
+            log.error("Discount with id {} not found!", ticketClass.getDiscountId());
+
+            return endPrice + ticketClass.getTicketPrice();
+        }
+
+        Discount discount = optDiscount.get();
+        if (discount.getFinishDate()
+                    .isAfter(LocalDateTime.now())) {
+            if (discount.getIsPercent()) {
+                endPrice -= (endPrice * discount.getDiscountRate() / 100);
+            } else {
+                endPrice -= discount.getDiscountRate();
+            }
+        } else {
+            endPrice = ticketClass.getTicketPrice();
+        }
+
+        return endPrice;
+    }
+
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<String> roles) {
         return roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
     }
 
     private boolean oldPasswordNotMatched(String userPassword, String oldPassword) {
@@ -302,6 +316,6 @@ public class UserServiceImpl implements UserService {
 
     private Integer setCurUser() {
         return securityContext.getUser()
-                .getUserId();
+                              .getUserId();
     }
 }
