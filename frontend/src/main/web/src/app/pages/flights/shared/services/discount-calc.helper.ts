@@ -9,5 +9,7 @@ export function calcPriceWithDiscount(ticketClass: TicketClass): number {
       return price * (1 - rate / 100);
     else
       return price - rate;
+  } else {
+    return ticketClass.ticket_price;
   }
 }
