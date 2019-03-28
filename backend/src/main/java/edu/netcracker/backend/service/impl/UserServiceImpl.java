@@ -254,9 +254,8 @@ public class UserServiceImpl implements UserService {
             throw new RequestException(String.format("Ticket with id %s has already been purchased.",
                                                      ticket.getTicketId()), HttpStatus.BAD_REQUEST);
         }
-        //PIZDEC
 
-        Integer endPrice = culcEndPrice(ticketClass, possibleServices);
+        Integer endPrice = calcEndPrice(ticketClass, possibleServices);
 
         ticket.setEndPrice((float) endPrice);
 
@@ -269,7 +268,7 @@ public class UserServiceImpl implements UserService {
         return boughtTicketDTO;
     }
 
-    private Integer culcEndPrice(TicketClass ticketClass, List<PossibleService> possibleServices) {
+    private Integer calcEndPrice(TicketClass ticketClass, List<PossibleService> possibleServices) {
         Integer endPrice = 0;
 
         endPrice += possibleServices.stream()
@@ -278,19 +277,25 @@ public class UserServiceImpl implements UserService {
                                     .reduce((x, y) -> x + y)
                                     .orElse(0);
 
-        if (ticketClass.getDiscountId() != null && ticketClass.getDiscountId() != 0) {
-            Optional<Discount> optDiscount = discountDAO.find(ticketClass.getDiscountId());
+        if (ticketClass.getDiscountId() == null || ticketClass.getDiscountId() == 0) {
+            return endPrice + ticketClass.getTicketPrice();
+        }
 
-            if (optDiscount.isPresent()) {
-                Discount discount = optDiscount.get();
-                if (discount.getFinishDate()
-                            .isAfter(LocalDateTime.now())) {
-                    if (discount.getIsPercent()) {
-                        endPrice -= (endPrice * discount.getDiscountRate() / 100);
-                    } else {
-                        endPrice -= discount.getDiscountRate();
-                    }
-                }
+        Optional<Discount> optDiscount = discountDAO.find(ticketClass.getDiscountId());
+
+        if (!optDiscount.isPresent()) {
+            log.error("Discount with id {} not found!", ticketClass.getDiscountId());
+
+            return endPrice + ticketClass.getTicketPrice();
+        }
+
+        Discount discount = optDiscount.get();
+        if (discount.getFinishDate()
+                    .isAfter(LocalDateTime.now())) {
+            if (discount.getIsPercent()) {
+                endPrice -= (endPrice * discount.getDiscountRate() / 100);
+            } else {
+                endPrice -= discount.getDiscountRate();
             }
         } else {
             endPrice = ticketClass.getTicketPrice();
