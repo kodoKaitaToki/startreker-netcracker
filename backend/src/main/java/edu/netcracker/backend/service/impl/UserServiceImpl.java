@@ -290,18 +290,19 @@ public class UserServiceImpl implements UserService {
         }
 
         Discount discount = optDiscount.get();
+
         if (discount.getFinishDate()
-                    .isAfter(LocalDateTime.now())) {
-            if (discount.getIsPercent()) {
-                endPrice -= (endPrice * discount.getDiscountRate() / 100);
-            } else {
-                endPrice -= discount.getDiscountRate();
-            }
-        } else {
-            endPrice = ticketClass.getTicketPrice();
+                    .isBefore(LocalDateTime.now())) {
+            log.warn("Discount with id {} is expired", discount.getDiscountId());
+
+            return endPrice + ticketClass.getTicketPrice();
         }
 
-        return endPrice;
+        if (discount.getIsPercent()) {
+            return endPrice - (endPrice * discount.getDiscountRate() / 100);
+        }
+
+        return endPrice - discount.getDiscountRate();
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<String> roles) {
